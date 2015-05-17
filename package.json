@@ -1,0 +1,32 @@
+{
+  "name": "oam-browser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "install": "bundle install --path bundle/cache"
+  },
+  "author": "DevelopmentSeed",
+  "devDependencies": {
+    "browser-sync": "^2.5.3",
+    "browserify": "^6.2.0",
+    "glob": "^4.0.6",
+    "gulp": "^3.8.11",
+    "gulp-compass": "^2.0.4",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-streamify": "0.0.5",
+    "gulp-util": "^3.0.4",
+    "reactify": "^0.15.2",
+    "run-sequence": "^1.0.2",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^0.1.1",
+    "watchify": "^2.1.1"
+  },
+  "dependencies": {
+    "lodash": "^3.8.0",
+    "react": "^0.13.3",
+    "react-router": "^0.13.3",
+    "reflux": "^0.2.7"
+  }
+}

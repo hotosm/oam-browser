@@ -6,9 +6,13 @@ var RouteHandler = Router.RouteHandler;
 module.exports = React.createClass({
   render: function() {
     return (
-      <div className='site-body'>
-        <h1>This it the app wrapper</h1>
-        <RouteHandler />
+      <div>
+        <header id="site-header">
+          <h1>OpenAerialMap</h1>
+        </header>
+        <main id="site-body">
+          <RouteHandler />
+        </main>
       </div>
     );
   }

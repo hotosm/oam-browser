@@ -8,7 +8,7 @@ var App = React.createClass({
     return (
       <div>
         <header id="site-header">
-          <h1>OpenAerialMap</h1>
+          <h1 id="site-title"><img src="/assets/graphics/layout/oam-logo-h-pos.svg" width="167" height="32" alt="OpenAerialMap logo" /><span>OpenAerialMap</span></h1>
         </header>
         <main id="site-body">
           <RouteHandler />

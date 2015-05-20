@@ -1,9 +1,19 @@
-// Make sure the charset is set appropriately
+// Charset
 @charset "UTF-8";
+
+// Libs
 @import "compass";
 
+// Reset and normalize
 @import "normalize";
 @import "reset";
 @import "normalize-opentype";
 
+// Settings
+// @import "variables";
+// @import "functions";
+// @import "mixins";
+
+// Custom styles
 @import "base";
+@import "helpers";

@@ -16,3 +16,23 @@
   background-color: #FFF;
   padding: 1rem;
 }
+
+#site-header {
+  position: fixed;
+  top: 1rem;
+  left: 0;
+  z-index: 100;
+  width: 100%;
+  pointer-events: none;
+}
+
+#site-title {
+  position: absolute;
+  top: 0;
+  z-index: 10;
+  left: 50%;
+  @include transform(translate(-50%, 0));
+  span {
+    @extend .visually-hidden;
+  }
+}

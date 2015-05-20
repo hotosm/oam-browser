@@ -8,7 +8,7 @@ var ResultsListItem = React.createClass({
 
     return (
       <li>
-        <a href="#" title="image" onClick={actions.imageSelect.bind(actions, d)} >{d.title}</a>
+        <a href="#" title="image" onClick={actions.resultOpen.bind(actions, d)} >{d.title}</a>
       </li>
     );
   }

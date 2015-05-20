@@ -47,6 +47,7 @@ var Map = React.createClass({
   // Actions listener.
   onMapSquareUnselected: function() {
     actions.resultsChange([]);
+    actions.resultClose();
     
     // The component will update and with it the grid.
     //this.updateGrid();

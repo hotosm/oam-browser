@@ -13,14 +13,16 @@ var Home = React.createClass({
   onResults: function(data) {
     this.setState({
       results: data.results,
-      selectedItem: data.selectedItem
+      selectedItem: data.selectedItem,
+      selectedItemIndex: data.selectedItemIndex
     });
   },
 
   getInitialState: function() {
     return {
       results: [],
-      selectedItem: null
+      selectedItem: null,
+      selectedItemIndex: null
     }
   },
 
@@ -29,7 +31,11 @@ var Home = React.createClass({
 
     if (mapStore.isSelectedSquare()) {
       if (this.state.selectedItem) {
-        resultsPane = <ResultsItem data={this.state.selectedItem} />
+        var pg = {
+          current: this.state.selectedItemIndex + 1,
+          total: this.state.results.length
+        }
+        resultsPane = <ResultsItem data={this.state.selectedItem} pagination={pg} />
       }
       else if (this.state.results.length) {
         resultsPane = <ResultsList results={this.state.results} />

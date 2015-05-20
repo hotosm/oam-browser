@@ -6,12 +6,16 @@ module.exports = Reflux.createStore({
 
   storage: {
     results: [],
-    selectedItem: null
+    selectedItem: null,
+    selectedItemIndex: null,
   },
 
   init: function() {
     this.listenTo(actions.resultsChange, this.onResultsChange);
-    this.listenTo(actions.imageSelect, this.onImageSelect);
+    this.listenTo(actions.resultOpen, this.onResultOpen);
+    this.listenTo(actions.resultClose, this.onResultClose);
+    this.listenTo(actions.nextResult, this.onNextResult);
+    this.listenTo(actions.prevResult, this.onPrevResult);
   },
 
   // Action listener.
@@ -22,10 +26,40 @@ module.exports = Reflux.createStore({
   },
 
   // Action listener.
-  onImageSelect: function(data) {
+  onResultOpen: function(data) {
+    console.log('onImageSelect');
     this.storage.selectedItem = data;
+    // Find the object index.
+    for (var i in this.storage.results) {
+      if (this.storage.results[i]._id == data._id) {
+        this.storage.selectedItemIndex = parseInt(i);
+        break;
+      }
+    }
     this.trigger(this.storage);
-  }
+  },
 
+  // Action listener.
+  onResultClose: function() {
+    this.storage.selectedItemIndex = null;
+    this.storage.selectedItem = null;
+    this.trigger(this.storage);
+  },
+
+  // Action listener.
+  onNextResult: function() {
+    this.storage.selectedItemIndex++;
+    var i = this.storage.selectedItemIndex;
+    this.storage.selectedItem = this.storage.results[i];
+    this.trigger(this.storage);
+  },
+
+  // Action listener.
+  onPrevResult: function() {
+    this.storage.selectedItemIndex--;
+    var i = this.storage.selectedItemIndex;
+    this.storage.selectedItem = this.storage.results[i];
+    this.trigger(this.storage);
+  },
 
 });

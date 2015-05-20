@@ -2,19 +2,25 @@
 require('mapbox.js');
 var React = require('react');
 var Reflux = require('reflux');
-// Not working. Using cdn. (turf.intersect was trowing a weird error)
+// Not working. Using cdn. (turf.intersect was throwing a weird error)
 //var turf = require('turf');
 var actions = require('../actions/actions');
 var mapStore = require('../stores/map_store');
+var resultsStore = require('../stores/results_store');
 var overlaps = require('turf-overlaps');
+
 L.mapbox.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6IlhHVkZmaW8ifQ.hAMX5hSW-QnTeRCMAy9A8Q';
 
-module.exports = React.createClass({
+var Map = React.createClass({
   // Connect to the store "mapStore". Whenever the store calls "this.trigger()"
   // the "onMapData" function will be notified.
   // The listener could be setup manually but in this way Reflux takes care of
   // removing the listener when the component is unmounted. 
-  mixins: [Reflux.listenTo(mapStore, "onMapData")],
+  mixins: [
+    Reflux.listenTo(mapStore, "onMapData"),
+    Reflux.listenTo(actions.mapSquareSelected, "onMapSquareSelected"),
+    Reflux.listenTo(actions.mapSquareUnselected, "onMapSquareUnselected"),
+  ],
 
   map: null,
 
@@ -23,10 +29,27 @@ module.exports = React.createClass({
   gridLayer: null,
   fauxLineGridLayer: null,
 
+  // Store listener.
   onMapData: function(data) {
     this.setState({
       mapData: data
     });
+  },
+
+  // Actions listener.
+  onMapSquareSelected: function(sqrFeature) {
+    var intersected = mapStore.getResultsIntersect(sqrFeature);
+    actions.resultsChange(intersected);
+    // The component will update and with it the grid.
+    //this.updateGrid();
+  },
+
+  // Actions listener.
+  onMapSquareUnselected: function() {
+    actions.resultsChange([]);
+    
+    // The component will update and with it the grid.
+    //this.updateGrid();
   },
 
   // Redraws the line grid.
@@ -166,46 +189,45 @@ module.exports = React.createClass({
     squareGrid.features.forEach(function (feature) {
       var intersectCount = 0;
 
-      // Centroid of the square.
-      // Why this is needed:
-      // To check whether a footprint intersects a square, turf-overlap is
-      // being used. (turf intersect computes the intersection and is too slow)
-      // However turf-overlap returns false if the square is fully inside
-      // the footprint. Don't know if this is the desired behavior?
-      // To solve this we check if the square's centroid is inside the footprint.
       var featureCenter = turf.centroid(feature);
 
-      _this.state.mapData.forEach(function(o) {
-        var footprint = {
-          type: 'Feature',
-          geometry: {
-            type: "Polygon",
-            coordinates: o.geojson.coordinates
-          }
-        };
-
-        if (turf.inside(featureCenter, footprint) || overlaps(footprint, feature)) {
-          intersectCount++;
-        }
+      mapStore.forEachResultIntersecting(feature, function(result) {
+        intersectCount++;
       });
 
+      // Base features.
       feature.properties = {
         intersectCount: intersectCount,
-
         // Style properties. 
         'fill': 'black',
         'fill-opacity': 0,
         'stroke': false
-      };
+      }
 
-      if (intersectCount > 0) {
-        feature.properties['fill-opacity'] = 0.2;
-      }
-      if (intersectCount >= 5) {
-        feature.properties['fill-opacity'] = 0.35;
-      }
+      // Gradation.
       if (intersectCount >= 10) {
         feature.properties['fill-opacity'] = 0.55;
+      }
+      else if (intersectCount >= 5) {
+        feature.properties['fill-opacity'] = 0.35;
+      }
+      else if (intersectCount > 0) {
+        feature.properties['fill-opacity'] = 0.2;
+      }
+
+      // If there's a square selected.
+      if (mapStore.isSelectedSquare()) {
+        var selSqrCenter = mapStore.getSelectedSquareCenter();
+
+        // Dim everything.
+        feature.properties['fill-opacity'] /= 2;
+
+        // Color the selected square.
+        if (selSqrCenter[0] == featureCenter.geometry.coordinates[0] &&
+          selSqrCenter[1] == featureCenter.geometry.coordinates[1]) {
+          feature.properties['fill'] = 'red';
+          feature.properties['fill-opacity'] = 0.8;
+        }
       }
 
     });
@@ -216,27 +238,25 @@ module.exports = React.createClass({
     // Layer from geojson.
     var gridLayer = L.geoJson(squareGrid, { style: L.mapbox.simplestyle.style });
 
-    // IMPROVE!!!
     gridLayer.on('click', function(e) {
-      var feature = e.layer.feature;
-      var featureCenter = turf.centroid(feature);
+      // No previous square selected.
+      // Select.
+      if (mapStore.isSelectedSquare()) {
+        actions.mapSquareUnselected();
+      }
+      else {
+        actions.mapSquareSelected(e.layer.feature);
+      }
+    });
 
-      var intersected = [];
-      _this.state.mapData.forEach(function(o) {
-        var footprint = {
-          type: 'Feature',
-          geometry: {
-            type: "Polygon",
-            coordinates: o.geojson.coordinates
-          }
-        };
+    gridLayer.on('mouseover', function(e) {
+      if (!mapStore.isSelectedSquare() && e.layer.feature.properties.intersectCount > 0) {
+        e.layer.setStyle({stroke: true, color: 'red'});
+      }
+    });
 
-        if (turf.inside(featureCenter, footprint) || overlaps(footprint, feature)) {
-          intersected.push(o);
-        }
-
-      });
-      console.log(intersected);
+    gridLayer.on('mouseout', function(e) {
+      e.layer.setStyle({stroke: false});
     });
 
     this.gridLayer = gridLayer;
@@ -265,12 +285,14 @@ module.exports = React.createClass({
   // Called once as soon as the component has a DOM representation.
   componentDidMount: function() {
     console.log('componentDidMount MapBoxMap');
+    var view = [40.75, -73.9];
+
     this.map = L.mapbox.map(this.getDOMNode(), 'mapbox.light', {
       zoomControl: false,
       minZoom : 4,
       maxZoom : 18,
       maxBounds: L.latLngBounds([-90, -180], [90, 180])
-    }).setView([40.75, -73.9], 8);
+    }).setView(view, 8);
 
     // Map move listener.
     this.map.on('moveend', function() {
@@ -280,11 +302,15 @@ module.exports = React.createClass({
     }.bind(this));
 
     this.updateFauxGrid();
+
+    // Manually trigger mapMove to force first load
+    actions.mapMove(this.map);
   },
 
   // Lifecycle method.
   // Called when the component gets updated.
   componentDidUpdate: function(/*prevProps, prevState*/) {
+    console.log('componentDidUpdate');
     //console.log(this.state.mapData);
     //this.updatePolys();
     this.updateGrid();
@@ -417,6 +443,6 @@ module.exports = React.createClass({
     return fc;
   }
 
-
-
 });
+
+module.exports = Map;

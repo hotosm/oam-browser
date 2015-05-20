@@ -16,8 +16,8 @@ var Home = require('./components/home');
 
 var routes = (
   <Route path="/" handler={App}>
-    <DefaultRoute name="home" handler={Home} />
     <Route path="about" name="about" handler={About} />
+    <DefaultRoute name="home" handler={Home} />
   </Route>
 );
 

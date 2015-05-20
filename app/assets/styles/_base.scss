@@ -1,8 +1,18 @@
-
 #map {
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
+}
+
+#results-pane {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  bottom: 2rem;
+  z-index: 100;
+  width: 20rem;
+  background-color: #FFF;
+  padding: 1rem;
 }

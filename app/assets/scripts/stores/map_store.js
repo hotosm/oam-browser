@@ -103,7 +103,8 @@ module.exports = Reflux.createStore({
           coordinates: o.geojson.coordinates
         }
       };
-      if (turf.inside(featureCenter, footprint) || overlaps(footprint, feature)) {
+      var footprintCenter = turf.centroid(footprint);
+      if (turf.inside(featureCenter, footprint) || turf.inside(footprintCenter, feature) || overlaps(footprint, feature)) {
         iterator(o);
       }
     });

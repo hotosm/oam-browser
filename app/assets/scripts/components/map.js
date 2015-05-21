@@ -42,7 +42,7 @@ var Map = React.createClass({
     });
   },
 
-  // Store listener.
+  // Actions listener.
   onResultOpen: function(feature) {
     // Remove footprint highlight.
     this.overFootprintLayer.clearLayers();
@@ -52,6 +52,10 @@ var Map = React.createClass({
   onMapSquareSelected: function(sqrFeature) {
     var intersected = mapStore.getResultsIntersect(sqrFeature);
     actions.resultsChange(intersected);
+
+    // On click, center the square.
+    // Coordinates must be inverted for panTo.
+    this.map.panTo([sqrFeature.properties.centroid[1], sqrFeature.properties.centroid[0]]);
     // The component will update and with it the grid.
     //this.updateGrid();
   },

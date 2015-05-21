@@ -23,7 +23,7 @@ var Map = React.createClass({
     Reflux.listenTo(actions.mapSquareUnselected, "onMapSquareUnselected"),
     Reflux.listenTo(actions.resultOver, "onResultOver"),
     Reflux.listenTo(actions.resultOut, "onResultOut"),
-    Reflux.listenTo(actions.resultOpen, "onResultOpen"),
+    Reflux.listenTo(actions.resultItemView, "onResultItemView"),
   ],
 
   map: null,
@@ -43,7 +43,7 @@ var Map = React.createClass({
   },
 
   // Actions listener.
-  onResultOpen: function(feature) {
+  onResultItemView: function(feature) {
     // Remove footprint highlight.
     this.overFootprintLayer.clearLayers();
   },
@@ -63,7 +63,7 @@ var Map = React.createClass({
   // Actions listener.
   onMapSquareUnselected: function() {
     actions.resultsChange([]);
-    actions.resultClose();
+    actions.resultListView();
     // The component will update and with it the grid.
     //this.updateGrid();
   },

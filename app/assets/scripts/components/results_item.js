@@ -15,7 +15,7 @@ var ResultsItem = React.createClass({
 
         <div>Image {pagination.current} of {pagination.total}</div>
         <div><a href="#" onClick={actions.prevResult}>Prev</a> | <a href="#" onClick={actions.nextResult}>Next</a></div>
-        <div><a href="#" onClick={actions.resultClose}>All</a></div>
+        <div><a href="#" onClick={actions.resultListView}>All</a></div>
       </div>
     );
   }

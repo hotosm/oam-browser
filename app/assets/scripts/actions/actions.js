@@ -10,10 +10,12 @@ module.exports = Reflux.createActions({
   'resultsChange': {},
 
   // Results pane related actions.
-  'resultOpen': {},
-  'resultClose': {},
+  'resultItemView': {},
+  'resultListView': {},
+
   'prevResult' : {},
   'nextResult' : {},
+
   'resultOver': {},
   'resultOut': {},
 });

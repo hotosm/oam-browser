@@ -24,3 +24,14 @@ module.exports.strToCoods = function(str) {
 
   return [parseFloat(res[1]), parseFloat(res[2])];
 };
+
+
+module.exports.getPolygonFeature = function(coords) {
+  return {
+    type: 'Feature',
+    geometry: {
+      type: "Polygon",
+      coordinates: coords
+    }
+  };
+};

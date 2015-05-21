@@ -14,4 +14,6 @@ module.exports = Reflux.createActions({
   'resultClose': {},
   'prevResult' : {},
   'nextResult' : {},
+  'resultOver': {},
+  'resultOut': {},
 });

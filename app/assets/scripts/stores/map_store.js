@@ -3,6 +3,7 @@ var Reflux = require('reflux');
 var $ = require('jquery');
 var actions = require('../actions/actions');
 var overlaps = require('turf-overlaps');
+var utils = require('../utils/utils');
 
 module.exports = Reflux.createStore({
 
@@ -77,13 +78,12 @@ module.exports = Reflux.createStore({
   },
 
   /**
-   * [forEachResultIntersecting description]
+   * Calls iterator(result) for each result that intersects the given feature.
    * 
    * @param  feature
    *   The feature with which to check the intersection.
    * @param  iterator function(result)
    *   The function called for each result that intersects the feature
-   * 
    */
   forEachResultIntersecting: function(feature, iterator) {
     // Centroid of the feature.
@@ -96,13 +96,7 @@ module.exports = Reflux.createStore({
     var featureCenter = turf.centroid(feature);
 
     this.storage.results.forEach(function(o) {
-      var footprint = {
-        type: 'Feature',
-        geometry: {
-          type: "Polygon",
-          coordinates: o.geojson.coordinates
-        }
-      };
+      var footprint = utils.getPolygonFeature(o.geojson.coordinates);
       var footprintCenter = turf.centroid(footprint);
       if (turf.inside(featureCenter, footprint) || turf.inside(footprintCenter, feature) || overlaps(footprint, feature)) {
         iterator(o);

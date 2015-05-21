@@ -2,12 +2,13 @@
 require('mapbox.js');
 var React = require('react');
 var Reflux = require('reflux');
+var overlaps = require('turf-overlaps');
 // Not working. Using cdn. (turf.intersect was throwing a weird error)
 //var turf = require('turf');
 var actions = require('../actions/actions');
 var mapStore = require('../stores/map_store');
 var resultsStore = require('../stores/results_store');
-var overlaps = require('turf-overlaps');
+var utils = require('../utils/utils');
 
 L.mapbox.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6IlhHVkZmaW8ifQ.hAMX5hSW-QnTeRCMAy9A8Q';
 
@@ -20,20 +21,31 @@ var Map = React.createClass({
     Reflux.listenTo(mapStore, "onMapData"),
     Reflux.listenTo(actions.mapSquareSelected, "onMapSquareSelected"),
     Reflux.listenTo(actions.mapSquareUnselected, "onMapSquareUnselected"),
+    Reflux.listenTo(actions.resultOver, "onResultOver"),
+    Reflux.listenTo(actions.resultOut, "onResultOut"),
+    Reflux.listenTo(actions.resultOpen, "onResultOpen"),
   ],
 
   map: null,
 
   // Layers.
-  polysLayer: null,
+  polysLayer: null, // debug
   gridLayer: null,
   fauxLineGridLayer: null,
+  // Layer to store the footprint when hovering a result. 
+  overFootprintLayer: null,
 
   // Store listener.
   onMapData: function(data) {
     this.setState({
       mapData: data
     });
+  },
+
+  // Store listener.
+  onResultOpen: function(feature) {
+    // Remove footprint highlight.
+    this.overFootprintLayer.clearLayers();
   },
 
   // Actions listener.
@@ -48,18 +60,24 @@ var Map = React.createClass({
   onMapSquareUnselected: function() {
     actions.resultsChange([]);
     actions.resultClose();
-    
     // The component will update and with it the grid.
     //this.updateGrid();
+  },
+
+  // Actions listener.
+  onResultOver: function(feature) {
+    var f = utils.getPolygonFeature(feature.geojson.coordinates);
+    this.overFootprintLayer.clearLayers().addData(f);
+  },
+
+  // Actions listener.
+  onResultOut: function(feature) {
+    this.overFootprintLayer.clearLayers();
   },
 
   // Redraws the line grid.
   // This is a pixel grid with 200px squares at zoom level 8.
   updateFauxGrid: function() {
-    if (this.map.hasLayer(this.fauxLineGridLayer)) {
-      this.map.removeLayer(this.fauxLineGridLayer);
-    }
-
     var bounds = this.map.getBounds();
     var extent = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
 
@@ -71,11 +89,8 @@ var Map = React.createClass({
         'stroke-width': 0.5
       }
     });
-    this.fauxLineGridLayer = L.geoJson(grid, {
-      style: L.mapbox.simplestyle.style,
-    });
-    this.map.addLayer(this.fauxLineGridLayer);
 
+    this.fauxLineGridLayer.clearLayers().addData(grid);
     return this;
   },
 
@@ -92,14 +107,7 @@ var Map = React.createClass({
     };
 
     this.state.mapData.forEach(function(o) {
-      var f = {
-        type: 'Feature',
-        geometry: {
-          type: "Polygon",
-          coordinates: o.geojson.coordinates
-        }
-      };
-
+      var f = utils.getPolygonFeature(o.geojson.coordinates);
       polys.features.push(f);
     });
 
@@ -113,10 +121,7 @@ var Map = React.createClass({
   // the stroke/content.
   updateGrid: function() {
     var _this = this;
-    if (this.map.hasLayer(this.gridLayer)) {
-      this.map.removeLayer(this.gridLayer);
-    }
-
+    this.gridLayer.clearLayers();
     // Do not draw below zoom level 6
     if (this.map.getZoom() < 6) { return; }
 
@@ -237,48 +242,7 @@ var Map = React.createClass({
     // Zooming out once clocks 240ms
     
     // Layer from geojson.
-    var gridLayer = L.geoJson(squareGrid, { style: L.mapbox.simplestyle.style });
-
-    gridLayer.on('click', function(e) {
-      // No previous square selected.
-      // Select.
-      if (mapStore.isSelectedSquare()) {
-        actions.mapSquareUnselected();
-      }
-      else {
-        actions.mapSquareSelected(e.layer.feature);
-      }
-    });
-
-    gridLayer.on('mouseover', function(e) {
-      if (!mapStore.isSelectedSquare() && e.layer.feature.properties.intersectCount > 0) {
-        e.layer.setStyle({stroke: true, color: 'red'});
-      }
-    });
-
-    gridLayer.on('mouseout', function(e) {
-      e.layer.setStyle({stroke: false});
-    });
-
-    this.gridLayer = gridLayer;
-    this.map.addLayer(this.gridLayer);
-  },
-
-  // Removes all computed layers from map.
-  clearMapLayers: function() {
-    if (this.map.hasLayer(this.polysLayer)) {
-      this.map.removeLayer(this.polysLayer);
-      this.polysLayer = null;
-    }
-    if (this.map.hasLayer(this.gridLayer)) {
-      this.map.removeLayer(this.gridLayer);
-      this.gridLayer = null;
-    }
-    if (this.map.hasLayer(this.fauxGridLayer)) {
-      this.map.removeLayer(this.fauxGridLayer);
-      this.fauxGridLayer = null;
-    }
-
+    this.gridLayer.addData(squareGrid);
     return this;
   },
 
@@ -286,6 +250,7 @@ var Map = React.createClass({
   // Called once as soon as the component has a DOM representation.
   componentDidMount: function() {
     console.log('componentDidMount MapBoxMap');
+    var _this = this;
     var view = [40.75, -73.9];
 
     this.map = L.mapbox.map(this.getDOMNode(), 'mapbox.light', {
@@ -295,16 +260,46 @@ var Map = React.createClass({
       maxBounds: L.latLngBounds([-90, -180], [90, 180])
     }).setView(view, 8);
 
+    // Prepare layers. Their data will be updated when needed.
+    this.fauxLineGridLayer = L.geoJson(null, { style: L.mapbox.simplestyle.style }).addTo(this.map);
+
+    // Grid layer colorized.
+    this.gridLayer = L.geoJson(null, { style: L.mapbox.simplestyle.style }).addTo(this.map);
+    // On click select the square.
+    this.gridLayer.on('click', function(e) {
+      // No previous square selected.
+      if (mapStore.isSelectedSquare()) {
+        // Unselect.
+        actions.mapSquareUnselected();
+      }
+      else {
+        // Select.
+        actions.mapSquareSelected(e.layer.feature);
+      }
+    });
+    // On mouseover add stroke.
+    this.gridLayer.on('mouseover', function(e) {
+      if (!mapStore.isSelectedSquare() && e.layer.feature.properties.intersectCount > 0) {
+        e.layer.setStyle({stroke: true, color: 'red'});
+      }
+    });
+    // On mouseout remove stroke.
+    this.gridLayer.on('mouseout', function(e) {
+      e.layer.setStyle({stroke: false});
+    });
+
+    // Footprint layer.
+    this.overFootprintLayer = L.geoJson(null, { style: L.mapbox.simplestyle.style }).addTo(this.map);
+
     // Map move listener.
     this.map.on('moveend', function() {
-      actions.mapMove(this.map);
-      //this.clearMapLayers();
-      this.updateFauxGrid();
-    }.bind(this));
+      actions.mapMove(_this.map);
+      _this.updateFauxGrid();
+    });
 
+    // Create fauxGrid.
     this.updateFauxGrid();
-
-    // Manually trigger mapMove to force first load
+    // Manually trigger mapMove to force first load.
     actions.mapMove(this.map);
   },
 
@@ -312,7 +307,6 @@ var Map = React.createClass({
   // Called when the component gets updated.
   componentDidUpdate: function(/*prevProps, prevState*/) {
     console.log('componentDidUpdate');
-    //console.log(this.state.mapData);
     //this.updatePolys();
     this.updateGrid();
   },
@@ -322,8 +316,6 @@ var Map = React.createClass({
       <div id="map"></div>
     );
   },
-
-
 
   /**
    * Creates a equidistant pixel line grid for the given bbox.

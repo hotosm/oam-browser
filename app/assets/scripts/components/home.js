@@ -6,6 +6,7 @@ var ResultsList = require('./results_list');
 var ResultsItem = require('./results_item');
 var resultsStore = require('../stores/results_store');
 var mapStore = require('../stores/map_store');
+var actions = require('../actions/actions');
 
 var Home = React.createClass({
   mixins: [Reflux.listenTo(resultsStore, "onResults")],
@@ -26,6 +27,11 @@ var Home = React.createClass({
     }
   },
 
+  closeResults: function(e) {
+    e.preventDefault();
+    actions.mapSquareUnselected();
+  },
+
   render: function() {
     var resultsPane = null;
 
@@ -41,11 +47,16 @@ var Home = React.createClass({
         resultsPane = <ResultsList results={this.state.results} />
       }
       else {
-        resultsPane = 'No results to show.';
+        resultsPane = (<p>No results to show.</p>);
       }
 
       // Add wrapper.
-      resultsPane = <div id="results-pane">{resultsPane}</div>
+      resultsPane = (
+        <div id="results-pane">
+          <a href="" onClick={this.closeResults} >close</a>
+          {resultsPane}
+        </div>
+      );
     }
 
     return (

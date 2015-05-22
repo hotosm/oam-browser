@@ -1,7 +1,11 @@
 // GLOBAL
 
-*, *:before, *:after {
+html {
   @include box-sizing(border-box);
+}
+
+*, *:before, *:after, input[type="search"] {
+  @include box-sizing(inherit);
 }
 
 html, body {
@@ -99,10 +103,10 @@ a:active{
 .input-search {
   display: block;
   width: 100%;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.5rem;
   font-size: 0.875rem;
   line-height: 1.5rem;
-  min-height: 2rem;
+  height: 2rem;
   color: $base-font-color;
   background-color: #fff;
   background-image: none;
@@ -111,8 +115,6 @@ a:active{
   @include transform(translateZ(0));
   @include transition(all 0.24s ease 0s);
   box-shadow: inset 0 2px 0 0 rgba($base-color, 0.12), 0 0 0 1px rgba($base-color, 0.08), 0 1px 2px 0 rgba($base-color, 0.24);
-  -webkit-box-sizing: border-box; /* 2 */
-  box-sizing: border-box;
   @include input-placeholder {
     color: tint($base-color, 64%);
   }

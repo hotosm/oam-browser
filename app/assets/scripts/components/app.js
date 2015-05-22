@@ -11,7 +11,7 @@ var App = React.createClass({
           <h1 id="site-title"><img src="/assets/graphics/layout/oam-logo-h-pos.svg" width="167" height="32" alt="OpenAerialMap logo" /><span>OpenAerialMap</span></h1>
           <nav id="site-prime-nav" role="navigation">
             <div className="nav-block-prime">
-              <form className="search-form">
+              <form className="form-search">
                 <input type="search" placeholder="Search location" className="input-search" />
                 <button type="submit" className="bttn-search"><span>Search</span></button>
                 <button type="button" className="bttn-mylocation"><span>My location</span></button>

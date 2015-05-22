@@ -120,6 +120,8 @@ input[type=submit] {
   &.all:before { @extend .icon-grid-3x3; }
   &.settings:before { @extend .icon-sliders-hor; }
   &.info:before { @extend .icon-circle-info; }
+  &.plus:before { @extend .icon-s-add; }
+  &.minus:before { @extend .icon-s-subtract; }
 }
 
 .bttn-notxt {
@@ -133,16 +135,6 @@ input[type=submit] {
   > * {
     @extend .visually-hidden;
   }
-}
-
-// EXTENDS
-
-.bttn-settings {
-  @extend .bttn, .bttn-base, .bttn-m, .bttn-notxt, .settings;
-}
-
-.bttn-info {
-  @extend .bttn, .bttn-base, .bttn-m, .bttn-notxt, .info;
 }
 
 // GROUP
@@ -203,12 +195,6 @@ input[type=submit] {
   > .bttn:first-child:not(:last-child) {
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
-    box-shadow: inset 0 0 0 1px rgba($base-color, 0.16);
-    .open > &,
-    &:active,
-    &.active {
-      box-shadow: inset 0 4px 0 0 rgba($base-color, 0.16), inset 0 0 0 1px rgba($base-color, 0.16);
-    }
   }
   > *:last-child:not(:first-child) .bttn,
   > .bttn:last-child:not(:first-child) {
@@ -218,15 +204,28 @@ input[type=submit] {
   > *:not(:first-child):not(:last-child) .bttn,
   > .bttn:not(:first-child):not(:last-child) {
     border-radius: 0;
-    box-shadow: inset 0 0 0 1px rgba($base-color, 0.16);
-    .open > &,
-    &:active,
-    &.active {
-      box-shadow: inset 0 4px 0 0 rgba($base-color, 0.16), inset 0 0 0 1px rgba($base-color, 0.16);
-    }
   }
-  > .bttn + .bttn,
-  &.bttn-list > li + li {
-    margin-top: -1px;
-  }
+}
+
+
+// EXTENDS
+
+.bttn-settings {
+  @extend .bttn, .bttn-base, .bttn-m, .bttn-notxt, .settings;
+}
+
+.bttn-info {
+  @extend .bttn, .bttn-base, .bttn-m, .bttn-notxt, .info;
+}
+
+.zoom-controls {
+  @extend .bttn-group-vertical;
+}
+
+.bttn-zoomin {
+  @extend .bttn, .bttn-base, .bttn-m, .bttn-notxt, .plus;
+}
+
+.bttn-zoomout {
+  @extend .bttn, .bttn-base, .bttn-m, .bttn-notxt, .minus;
 }

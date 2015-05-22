@@ -141,11 +141,11 @@ h6, .hd-xxs {
   .details-list {
     @extend .clearfix;
     padding: 0;
-    box-shadow: 0 1px 0 0 $pos-brdr-rgba;
+    box-shadow: 0 1px 0 0 $brdr-rgba;
     dt {
       margin: 0;
       padding: 0.25rem 0;
-      box-shadow: inset 0 1px 0 0 $pos-brdr-rgba;
+      box-shadow: inset 0 1px 0 0 $brdr-rgba;
       &:first-of-type {
         box-shadow: none;
       }
@@ -179,7 +179,7 @@ h6, .hd-xxs {
     padding: 1rem;
     word-break: break-all;
     word-wrap: break-word;
-    box-shadow: inset 0 0 0 1px $pos-brdr-rgba;
+    box-shadow: inset 0 0 0 1px $brdr-rgba;
     overflow: auto;
   }
 
@@ -280,7 +280,7 @@ h6, .hd-xxs {
         width: 50%;
         margin: 0;
         padding: 0.25rem 0;
-        box-shadow: inset 0 1px 0 0 $pos-brdr-rgba;
+        box-shadow: inset 0 1px 0 0 $brdr-rgba;
         &:first-of-type {
           box-shadow: none;
         }

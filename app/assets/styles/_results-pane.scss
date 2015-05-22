@@ -1,0 +1,12 @@
+// RESULTS PANE
+
+#results-pane {
+  position: absolute;
+  top: 4rem;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 100;
+  width: 24rem;
+  padding: 1rem;
+  @extend %press-box-skin;
+}

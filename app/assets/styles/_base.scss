@@ -56,16 +56,22 @@ a:active{
 
 #site-header {
   position: fixed;
-  top: 1rem;
-  left: 1rem;
-  right: 1rem;
+  top: 0;
+  left: 0;
+  right: 0;
   background: red;
   z-index: 100;
+  pointer-events: none;
+  height: 5rem;
+  @include background(linear-gradient(rgba(#fff, 0.64), rgba(#fff, 0.32), rgba(#fff, 0.16), rgba(#fff, 0)));
+  > * {
+    pointer-events: all;
+  }
 }
 
 #site-title {
   position: absolute;
-  top: 0;
+  top: 1rem;
   z-index: 10;
   left: 50%;
   @include transform(translate(-50%, 0));
@@ -77,7 +83,7 @@ a:active{
 .nav-block-prime,
 .nav-block-sec {
   position: absolute;
-  top: 0;
+  top: 1rem;
   z-index: 10;
   > * {
     float: left;
@@ -89,11 +95,11 @@ a:active{
 }
 
 .nav-block-prime {
-  left: 0;
+  left: 1rem;
 }
 
 .nav-block-sec {
-  right: 0;
+  right: 1rem;
 }
 
 .form-search {

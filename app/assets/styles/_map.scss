@@ -1,0 +1,45 @@
+// GRID
+
+.gl {
+  fill-opacity: 0;
+  stroke: rgba($base-color, 0.08);
+  stroke-width: 1;
+}
+
+.gs {
+  fill-opacity: 0;
+  fill: $primary-color;
+  stroke: rgba($base-color, 0);
+  stroke-width: 4;
+  @include transition(all 0.2s ease 0s);
+}
+.gs-active {
+  fill-opacity: 0.64;
+  fill: $secondary-color;
+}
+
+.gs-density-high {
+  fill-opacity: 0.48;
+}
+.gs-density-med {
+  fill-opacity: 0.24;
+}
+.gs-density-low {
+  fill-opacity: 0.08;
+}
+
+.gs-density-high.gs-inactive,
+.gs-density-med.gs-inactive,
+.gs-density-low.gs-inactive {
+  opacity: 0.48;
+}
+
+.g-footprint {
+  fill-opacity: 0;
+  stroke: rgba($base-color, 0.48);
+  stroke-width: 1;
+}
+.gs-highlight {
+  stroke: rgba($base-color, 0.48);
+  stroke-width: 1;
+}

@@ -1,0 +1,28 @@
+// SKINS
+
+%base-box-skin {
+  background: #fff;
+  box-shadow: 0 0 0 1px $pos-brdr-rgba;
+  border-radius: $global-radius;
+}
+
+%base-overlay-skin {
+  background: #fff;
+  box-shadow: 0 2px 12px 0 $spread-shadow-rgba, 0 0 0 1px $pos-brdr-rgba;
+  border-radius: $global-radius;
+}
+
+%base-pos-framed {
+	position: relative;
+  &:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    content: "";
+    box-shadow: inset 0 0 0 1px $pos-brdr-rgba;
+    pointer-events: none;
+  }
+}

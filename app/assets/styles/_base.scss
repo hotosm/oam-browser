@@ -1,29 +1,62 @@
-#map {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
+// GLOBAL
+
+*, *:before, *:after {
+  @include box-sizing(border-box);
 }
 
-#results-pane {
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-  bottom: 2rem;
-  z-index: 100;
-  width: 20rem;
-  background-color: #FFF;
-  padding: 1rem;
+html, body {
+  height: 100%;
+  font-size: 100%;
+  line-height: 1.5;
 }
+
+body {
+  background: #fff;
+  color: $base-font-color;
+  font-family: $base-font-family;
+  font-weight: $base-font-weight;
+  font-style: $base-font-style;
+  min-width: $row-min-width;
+}
+
+// Links
+
+a {
+  cursor: pointer;
+  color: $primary-color;
+  text-decoration: none;
+  @include transition(opacity 0.2s ease 0s);
+}
+
+a:visited {
+  color: $primary-color;
+}
+
+a:hover {
+  opacity: 0.64;
+  outline: none;
+}
+
+a:active{
+  outline: none;
+  @include transform(translate(0, 1px));
+}
+
+// SITE CANVAS
+
+#site-canvas {
+  background: #fff;
+}
+
+// SITE HEADER
 
 #site-header {
   position: fixed;
   top: 1rem;
-  left: 0;
+  left: 1rem;
+  right: 1rem;
+  background: red;
   z-index: 100;
-  width: 100%;
-  pointer-events: none;
 }
 
 #site-title {
@@ -35,4 +68,84 @@
   span {
     @extend .visually-hidden;
   }
+}
+
+.nav-block-prime,
+.nav-block-sec {
+  position: absolute;
+  top: 0;
+  z-index: 10;
+  > * {
+    float: left;
+    margin-right: 0.5rem;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.nav-block-prime {
+  left: 0;
+}
+
+.nav-block-sec {
+  right: 0;
+}
+
+.form-search {
+  width: 20rem;
+}
+
+.input-search {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  min-height: 2rem;
+  color: $base-font-color;
+  background-color: #fff;
+  background-image: none;
+  border-radius: $global-radius;
+  font-family: inherit;
+  @include transform(translateZ(0));
+  @include transition(all 0.24s ease 0s);
+  box-shadow: inset 0 2px 0 0 rgba($base-color, 0.12), 0 0 0 1px rgba($base-color, 0.08), 0 1px 2px 0 rgba($base-color, 0.24);
+  -webkit-box-sizing: border-box; /* 2 */
+  box-sizing: border-box;
+  @include input-placeholder {
+    color: tint($base-color, 64%);
+  }
+  &:focus {
+    outline: 0;
+    box-shadow: inset 0 2px 0 0 rgba($primary-color, 0.12), 0 0 0 1px rgba($primary-color, 0.64), 0 1px 2px 0 rgba($primary-color, 0.24);
+  }
+}
+
+.bttn-search,
+.bttn-mylocation {
+  display: none;
+}
+
+// MAP
+
+#map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+// RESULTS PANE
+
+#results-pane {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  bottom: 2rem;
+  z-index: 100;
+  width: 20rem;
+  background-color: #FFF;
+  padding: 1rem;
 }

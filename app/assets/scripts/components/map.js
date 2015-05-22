@@ -9,6 +9,7 @@ var actions = require('../actions/actions');
 var mapStore = require('../stores/map_store');
 var resultsStore = require('../stores/results_store');
 var utils = require('../utils/utils');
+var dsZoom = require('../utils/ds_zoom');
 
 L.mapbox.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6IlhHVkZmaW8ifQ.hAMX5hSW-QnTeRCMAy9A8Q';
 
@@ -262,6 +263,15 @@ var Map = React.createClass({
       maxZoom : 18,
       maxBounds: L.latLngBounds([-90, -180], [90, 180])
     }).setView(view, 8);
+
+    // Custom zoom control.
+    var zoom = new dsZoom({
+      position: 'bottomleft',
+      containerClasses: 'zoom-controls',
+      zoomInClasses: 'bttn-zoomin',
+      zoomOutClasses: 'bttn-zoomout',
+    });
+    this.map.addControl(zoom);
 
     // Prepare layers. Their data will be updated when needed.
     this.fauxLineGridLayer = L.geoJson(null, { style: L.mapbox.simplestyle.style }).addTo(this.map);

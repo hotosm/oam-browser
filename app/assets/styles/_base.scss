@@ -1,3 +1,142 @@
+// GLOBAL
+
+html {
+  @include box-sizing(border-box);
+}
+
+*, *:before, *:after, input[type="search"] {
+  @include box-sizing(inherit);
+}
+
+html, body {
+  height: 100%;
+  font-size: 100%;
+  line-height: 1.5;
+}
+
+body {
+  background: #fff;
+  color: $base-font-color;
+  font-family: $base-font-family;
+  font-weight: $base-font-weight;
+  font-style: $base-font-style;
+  min-width: $row-min-width;
+}
+
+// Links
+
+a {
+  cursor: pointer;
+  color: $primary-color;
+  text-decoration: none;
+  @include transition(opacity 0.2s ease 0s);
+}
+
+a:visited {
+  color: $primary-color;
+}
+
+a:hover {
+  opacity: 0.64;
+  outline: none;
+}
+
+a:active{
+  outline: none;
+  @include transform(translate(0, 1px));
+}
+
+// SITE CANVAS
+
+#site-canvas {
+  background: #fff;
+}
+
+// SITE HEADER
+
+#site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: red;
+  z-index: 100;
+  pointer-events: none;
+  height: 5rem;
+  @include background(linear-gradient(rgba(#fff, 0.64), rgba(#fff, 0.32), rgba(#fff, 0.16), rgba(#fff, 0)));
+  > * {
+    pointer-events: all;
+  }
+}
+
+#site-title {
+  position: absolute;
+  top: 1rem;
+  z-index: 10;
+  left: 50%;
+  @include transform(translate(-50%, 0));
+  span {
+    @extend .visually-hidden;
+  }
+}
+
+.nav-block-prime,
+.nav-block-sec {
+  position: absolute;
+  top: 1rem;
+  z-index: 10;
+  > * {
+    float: left;
+    margin-right: 0.5rem;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.nav-block-prime {
+  left: 1rem;
+}
+
+.nav-block-sec {
+  right: 1rem;
+}
+
+.form-search {
+  width: 20rem;
+}
+
+.input-search {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  height: 2rem;
+  color: $base-font-color;
+  background-color: #fff;
+  background-image: none;
+  border-radius: $global-radius;
+  font-family: inherit;
+  @include transform(translateZ(0));
+  @include transition(all 0.24s ease 0s);
+  box-shadow: inset 0 2px 0 0 rgba($base-color, 0.12), 0 0 0 1px rgba($base-color, 0.08), 0 1px 2px 0 rgba($base-color, 0.24);
+  @include input-placeholder {
+    color: tint($base-color, 64%);
+  }
+  &:focus {
+    outline: 0;
+    box-shadow: inset 0 2px 0 0 rgba($base-color, 0.12), 0 0 0 1px rgba($base-color, 0.64), 0 1px 2px 0 rgba($base-color, 0.24);
+  }
+}
+
+.bttn-search,
+.bttn-mylocation {
+  display: none;
+}
+
+// MAP
+
 #map {
   position: absolute;
   top: 0;
@@ -5,6 +144,19 @@
   bottom: 0;
   right: 0;
 }
+
+.leaflet-bottom.leaflet-left {
+  top: auto;
+  bottom: 50%;
+  left: 1rem;
+  @include transform(translate(0, 50%));
+}
+
+.zoom-controls {
+  margin: 0 !important;
+}
+
+// RESULTS PANE
 
 #results-pane {
   position: absolute;
@@ -15,24 +167,4 @@
   width: 20rem;
   background-color: #FFF;
   padding: 1rem;
-}
-
-#site-header {
-  position: fixed;
-  top: 1rem;
-  left: 0;
-  z-index: 100;
-  width: 100%;
-  pointer-events: none;
-}
-
-#site-title {
-  position: absolute;
-  top: 0;
-  z-index: 10;
-  left: 50%;
-  @include transform(translate(-50%, 0));
-  span {
-    @extend .visually-hidden;
-  }
 }

@@ -10,11 +10,15 @@
 @import "normalize-opentype";
 
 // Settings
-// @import "variables";
-// @import "functions";
-// @import "mixins";
+@import "variables";
+@import "functions";
+@import "mixins";
 
 // Custom styles
+@import "skins";
+@import "buttons";
+@import "type";
+@import "overlays";
 @import "icons";
 @import "base";
 @import "helpers";

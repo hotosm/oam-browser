@@ -20,8 +20,10 @@ module.exports = Reflux.createStore({
 
   // Action listener.
   onResultsChange: function(results) {
-    console.log('onResultsChange', Date.now());
+    console.log('onResultsChange');
     this.storage.results = results;
+    this.storage.selectedItem = null;
+    this.storage.selectedItemIndex = null;
     this.trigger(this.storage);
   },
 

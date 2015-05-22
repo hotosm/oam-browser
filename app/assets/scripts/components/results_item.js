@@ -7,6 +7,9 @@ var ResultsItem = React.createClass({
     var d = this.props.data;
     var pagination = this.props.pagination;
 
+    var isFirst = pagination.current == 1;
+    var isLast = pagination.current == pagination.total;
+
     return (
       <div>
         <small>{d._id}</small>
@@ -14,8 +17,8 @@ var ResultsItem = React.createClass({
         <p>{d.contact}</p>
 
         <div>Image {pagination.current} of {pagination.total}</div>
-        <div><a href="#" onClick={actions.prevResult}>Prev</a> | <a href="#" onClick={actions.nextResult}>Next</a></div>
-        <div><a href="#" onClick={actions.resultClose}>All</a></div>
+        <div><a href="#" onClick={actions.prevResult} className={isFirst ? 'disabled' : ''}>Prev</a> | <a href="#" onClick={actions.nextResult} className={isLast ? 'disabled' : ''}>Next</a></div>
+        <div><a href="#" onClick={actions.resultListView}>All</a></div>
       </div>
     );
   }

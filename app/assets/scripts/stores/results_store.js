@@ -12,8 +12,8 @@ module.exports = Reflux.createStore({
 
   init: function() {
     this.listenTo(actions.resultsChange, this.onResultsChange);
-    this.listenTo(actions.resultOpen, this.onResultOpen);
-    this.listenTo(actions.resultClose, this.onResultClose);
+    this.listenTo(actions.resultItemView, this.onResultItemView);
+    this.listenTo(actions.resultListView, this.onResultListView);
     this.listenTo(actions.nextResult, this.onNextResult);
     this.listenTo(actions.prevResult, this.onPrevResult);
   },
@@ -26,7 +26,7 @@ module.exports = Reflux.createStore({
   },
 
   // Action listener.
-  onResultOpen: function(data) {
+  onResultItemView: function(data) {
     console.log('onImageSelect');
     this.storage.selectedItem = data;
     // Find the object index.
@@ -40,7 +40,7 @@ module.exports = Reflux.createStore({
   },
 
   // Action listener.
-  onResultClose: function() {
+  onResultListView: function() {
     this.storage.selectedItemIndex = null;
     this.storage.selectedItem = null;
     this.trigger(this.storage);

@@ -9,6 +9,7 @@ var actions = require('../actions/actions');
 var mapStore = require('../stores/map_store');
 var resultsStore = require('../stores/results_store');
 var utils = require('../utils/utils');
+var dsZoom = require('../utils/ds_zoom');
 
 L.mapbox.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6IlhHVkZmaW8ifQ.hAMX5hSW-QnTeRCMAy9A8Q';
 
@@ -23,7 +24,7 @@ var Map = React.createClass({
     Reflux.listenTo(actions.mapSquareUnselected, "onMapSquareUnselected"),
     Reflux.listenTo(actions.resultOver, "onResultOver"),
     Reflux.listenTo(actions.resultOut, "onResultOut"),
-    Reflux.listenTo(actions.resultOpen, "onResultOpen"),
+    Reflux.listenTo(actions.resultItemView, "onResultItemView"),
   ],
 
   map: null,
@@ -42,8 +43,8 @@ var Map = React.createClass({
     });
   },
 
-  // Store listener.
-  onResultOpen: function(feature) {
+  // Actions listener.
+  onResultItemView: function(feature) {
     // Remove footprint highlight.
     this.overFootprintLayer.clearLayers();
   },
@@ -52,6 +53,10 @@ var Map = React.createClass({
   onMapSquareSelected: function(sqrFeature) {
     var intersected = mapStore.getResultsIntersect(sqrFeature);
     actions.resultsChange(intersected);
+
+    // On click, center the square.
+    // Coordinates must be inverted for panTo.
+    this.map.panTo([sqrFeature.properties.centroid[1], sqrFeature.properties.centroid[0]]);
     // The component will update and with it the grid.
     //this.updateGrid();
   },
@@ -59,7 +64,7 @@ var Map = React.createClass({
   // Actions listener.
   onMapSquareUnselected: function() {
     actions.resultsChange([]);
-    actions.resultClose();
+    actions.resultListView();
     // The component will update and with it the grid.
     //this.updateGrid();
   },
@@ -68,6 +73,9 @@ var Map = React.createClass({
   onResultOver: function(feature) {
     var f = utils.getPolygonFeature(feature.geojson.coordinates);
     this.overFootprintLayer.clearLayers().addData(f);
+    this.overFootprintLayer.eachLayer(function(l) {
+      L.DomUtil.addClass(l._path, 'g-footprint');
+    });
   },
 
   // Actions listener.
@@ -82,15 +90,11 @@ var Map = React.createClass({
     var extent = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
 
     var grid = this.linePixelGrid(extent, 200, 8);
-    grid.features.forEach(function (feature) {
-      feature.properties = {
-        'fill-opacity': 0,
-        'stroke': '#888888',
-        'stroke-width': 0.5
-      }
-    });
 
     this.fauxLineGridLayer.clearLayers().addData(grid);
+    this.fauxLineGridLayer.eachLayer(function(l) {
+      L.DomUtil.addClass(l._path, 'gl');
+    });
     return this;
   },
 
@@ -195,47 +199,13 @@ var Map = React.createClass({
     squareGrid.features.forEach(function (feature) {
       var intersectCount = 0;
 
-      var featureCenter = turf.centroid(feature);
-
       mapStore.forEachResultIntersecting(feature, function(result) {
         intersectCount++;
       });
 
-      // Base features.
       feature.properties = {
         intersectCount: intersectCount,
-        // Style properties. 
-        'fill': 'black',
-        'fill-opacity': 0,
-        'stroke': false
       }
-
-      // Gradation.
-      if (intersectCount >= 10) {
-        feature.properties['fill-opacity'] = 0.55;
-      }
-      else if (intersectCount >= 5) {
-        feature.properties['fill-opacity'] = 0.35;
-      }
-      else if (intersectCount > 0) {
-        feature.properties['fill-opacity'] = 0.2;
-      }
-
-      // If there's a square selected.
-      if (mapStore.isSelectedSquare()) {
-        var selSqrCenter = mapStore.getSelectedSquareCenter();
-
-        // Dim everything.
-        feature.properties['fill-opacity'] /= 2;
-
-        // Color the selected square.
-        if (selSqrCenter[0] == featureCenter.geometry.coordinates[0] &&
-          selSqrCenter[1] == featureCenter.geometry.coordinates[1]) {
-          feature.properties['fill'] = 'red';
-          feature.properties['fill-opacity'] = 0.8;
-        }
-      }
-
     });
     //console.timeEnd('intersect');
     // First render clocked at 50ms
@@ -243,6 +213,40 @@ var Map = React.createClass({
     
     // Layer from geojson.
     this.gridLayer.addData(squareGrid);
+    this.gridLayer.eachLayer(function(l) {
+      L.DomUtil.addClass(l._path, 'gs');
+
+      // If there's a square selected.
+      if (mapStore.isSelectedSquare()) {
+        var selSqrCenter = mapStore.getSelectedSquareCenter();
+
+        var featureCenter = turf.centroid(l.feature);
+
+        // Color the selected square.
+        if (selSqrCenter[0] == featureCenter.geometry.coordinates[0] &&
+          selSqrCenter[1] == featureCenter.geometry.coordinates[1]) {
+          L.DomUtil.addClass(l._path, 'gs-active');
+          // No gradation for active square.
+          return;
+        }
+        else {
+           L.DomUtil.addClass(l._path, 'gs-inactive');
+        }
+      }
+
+      var intersectCount = l.feature.properties.intersectCount;
+      // Gradation.
+      if (intersectCount >= 10) {
+        L.DomUtil.addClass(l._path, 'gs-density-high');
+      }
+      else if (intersectCount >= 5) {
+        L.DomUtil.addClass(l._path, 'gs-density-med');
+      }
+      else if (intersectCount > 0) {
+        L.DomUtil.addClass(l._path, 'gs-density-low');
+      }
+
+    });
     return this;
   },
 
@@ -259,6 +263,15 @@ var Map = React.createClass({
       maxZoom : 18,
       maxBounds: L.latLngBounds([-90, -180], [90, 180])
     }).setView(view, 8);
+
+    // Custom zoom control.
+    var zoom = new dsZoom({
+      position: 'bottomleft',
+      containerClasses: 'zoom-controls',
+      zoomInClasses: 'bttn-zoomin',
+      zoomOutClasses: 'bttn-zoomout',
+    });
+    this.map.addControl(zoom);
 
     // Prepare layers. Their data will be updated when needed.
     this.fauxLineGridLayer = L.geoJson(null, { style: L.mapbox.simplestyle.style }).addTo(this.map);
@@ -277,15 +290,15 @@ var Map = React.createClass({
         actions.mapSquareSelected(e.layer.feature);
       }
     });
-    // On mouseover add stroke.
+    // On mouseover add gs-highlight.
     this.gridLayer.on('mouseover', function(e) {
       if (!mapStore.isSelectedSquare() && e.layer.feature.properties.intersectCount > 0) {
-        e.layer.setStyle({stroke: true, color: 'red'});
+        L.DomUtil.addClass(e.layer._path, 'gs-highlight');
       }
     });
-    // On mouseout remove stroke.
+    // On mouseout remove gs-highlight.
     this.gridLayer.on('mouseout', function(e) {
-      e.layer.setStyle({stroke: false});
+      L.DomUtil.removeClass(e.layer._path, 'gs-highlight');
     });
 
     // Footprint layer.

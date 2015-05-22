@@ -8,7 +8,7 @@ var ResultsListItem = React.createClass({
 
     return (
       <li>
-        <a href="#" title="image" onClick={actions.resultOpen.bind(actions, d)} onMouseOver={actions.resultOver.bind(actions, d)} onMouseOut={actions.resultOut.bind(actions, d)} >{d.title}</a>
+        <a href="#" title="image" onClick={actions.resultItemView.bind(actions, d)} onMouseOver={actions.resultOver.bind(actions, d)} onMouseOut={actions.resultOut.bind(actions, d)} >{d.title}</a>
       </li>
     );
   }

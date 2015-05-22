@@ -57,16 +57,14 @@ var Map = React.createClass({
     // On click, center the square.
     // Coordinates must be inverted for panTo.
     this.map.panTo([sqrFeature.properties.centroid[1], sqrFeature.properties.centroid[0]]);
-    // The component will update and with it the grid.
-    //this.updateGrid();
+
+    this.updateGrid();
   },
 
   // Actions listener.
   onMapSquareUnselected: function() {
     actions.resultsChange([]);
-    actions.resultListView();
-    // The component will update and with it the grid.
-    //this.updateGrid();
+    this.updateGrid();
   },
 
   // Actions listener.
@@ -286,8 +284,11 @@ var Map = React.createClass({
         actions.mapSquareUnselected();
       }
       else {
-        // Select.
-        actions.mapSquareSelected(e.layer.feature);
+        // Can only select if there's data.
+        if (e.layer.feature.properties.intersectCount > 0) {
+          // Select.
+          actions.mapSquareSelected(e.layer.feature);
+        }
       }
     });
     // On mouseover add gs-highlight.

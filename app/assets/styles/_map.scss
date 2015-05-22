@@ -1,0 +1,42 @@
+.gl {
+  fill-opacity: 0;
+  stroke: #888888;
+  stroke-width: 0.5;
+}
+
+.gs {
+  fill-opacity: 0;
+  fill: black;
+  stroke: none;
+}
+.gs-active {
+  fill-opacity: 0.8;
+  fill: red;
+}
+
+.gs-density-high {
+  fill-opacity: 0.60;
+}
+.gs-density-med {
+  fill-opacity: 0.40;
+}
+.gs-density-low {
+  fill-opacity: 0.2;
+}
+
+.gs-density-high.gs-inactive {
+  fill-opacity: 0.3;
+}
+.gs-density-med.gs-inactive {
+  fill-opacity: 0.2;
+}
+.gs-density-low.gs-inactive {
+  fill-opacity: 0.1;
+}
+
+.g-footprint {
+  fill: blue;
+}
+.gs-highlight {
+  stroke: red;
+}

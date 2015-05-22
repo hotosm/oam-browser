@@ -245,6 +245,7 @@ var Map = React.createClass({
       }
 
     });
+    this.gridLayer.bringToBack();
     return this;
   },
 

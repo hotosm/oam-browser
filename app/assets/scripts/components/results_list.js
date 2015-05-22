@@ -21,16 +21,20 @@ var ResultsListItem = React.createClass({
 
     return (
       <li>
-        <article>
+        <article className="card card-result-entry">
           <a href="#" onClick={this.onClick} onMouseOver={this.onOver} onMouseOut={this.onOut}>
-            <h1>{d.title}</h1>
-            <div className="media">
+            <h1 className="card-title">{d.title}</h1>
+            <div className="card-media">
               <img src={'http://lorempixel.com/600/400/?v=' + d._id} alt=""/>
             </div>
-            <div>
-              <dl>
-                <dd>Term</dd>
-                <dt>Value</dt>
+            <div className="card-body">
+              <dl className="card-details">
+                <dd>Term 1</dd>
+                <dt>Value 1</dt>
+                <dd>Term 2</dd>
+                <dt>Value 2</dt>
+                <dd>Term 3</dd>
+                <dt>Value 3</dt>
               </dl>
             </div>
           </a>
@@ -47,15 +51,15 @@ var ResultsList = React.createClass({
       return (<ResultsListItem key={o._id} data={o} />);
     });
     return (
-      <section className="results-list">
-        <header>
-          <h1>Selection</h1>
-          <p>{numRes} results</p>
+      <section className="results-hub">
+        <header className="pane-header">
+          <h1 className="pane-title">Selection</h1>
+          <p className="pane-subtitle">{numRes} results</p>
         </header>
-        <div>
-          <ol>{results}</ol>
+        <div className="pane-body">
+          <ol className="results-list">{results}</ol>
         </div>
-        <footer></footer>
+        <footer className="pane-footer"></footer>
       </section>
     );
   }

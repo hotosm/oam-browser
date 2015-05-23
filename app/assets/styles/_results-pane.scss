@@ -18,7 +18,7 @@
 
 .pane-dismiss {
   position: absolute;
-  top: 0.5rem;
+  top: 0.75rem;
   right: 0.5rem;
   z-index: 30;
   span {
@@ -60,6 +60,7 @@
   margin: 0;
   padding-right: 2rem;
   @include heading(1rem);
+  @extend .truncated;
 }
 
 .pane-subtitle {
@@ -119,12 +120,62 @@
     &:nth-child(2n) {
       margin-right: 0;
     }
+    &:last-child,
+    &:nth-last-child(2) {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.single-media {
+  position: relative;
+  text-align: center;
+  background: tint($base-color, 80%);
+  margin: -1rem -1rem 1rem -1rem;
+  &:after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: $brdr-rgba;
+    content: "";
+  }
+  img {
+    width: 100%;
+    height: auto;
+    vertical-align: top;
+  }
+}
+
+.single-details {
+  margin: 0 -1rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  dt, dd {
+    float: left;
+    margin: 0;
+    padding: 0.5rem 1rem;
+    box-shadow: inset 0 1px 0 0 $brdr-rgba;
+    &:first-of-type {
+      box-shadow: none;
+    }
+  }
+  dt {
+    width: 32%;
+    text-transform: uppercase;
+    clear: left;
+    padding-right: 0.5rem;
+    opacity: 0.64;
+  }
+  dd {
+    width: 68%;
+    text-align: right;
+    padding-left: 0.5rem;
   }
 }
 
 // CARDS
-
-// GLOBAL
 
 $card-padding: 0.5rem;
 

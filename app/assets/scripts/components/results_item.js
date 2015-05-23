@@ -25,20 +25,24 @@ var ResultsItem = React.createClass({
 
     return (
       <article className="results-single">
-        <header>
-          <h1>{d.title}</h1>
-          <p>{pagination.current} of {pagination.total} results</p>
+        <header className="pane-header">
+          <h1 className="pane-title" title="{d.title}">{d.title}</h1>
+          <p className="pane-subtitle">{pagination.current} of {pagination.total} results</p>
         </header>
-        <div>
-          <div className="media">
-            <img src={'http://lorempixel.com/600/400/?v=' + d._id} alt=""/>
+        <div className="pane-body">
+          <div className="single-media">
+            <img src={'http://lorempixel.com/600/400/?v=' + d._id} alt="Image {pagination.current}" />
           </div>
-          <dl>
-            <dd>Term</dd>
-            <dt>Value</dt>
+          <dl className="single-details">
+            <dt>Type</dt>
+            <dd>Multiscene TMS</dd>
+            <dt>Date</dt>
+            <dd>2015-05-18</dd>
+            <dt>Res</dt>
+            <dd>50 cm</dd>
           </dl>
         </div>
-        <footer className="actions">
+        <footer className="pane-footer">
           <ul>
             <li><a href=""><span>thing 1</span></a></li>
             <li><a href=""><span>thing 2</span></a></li>

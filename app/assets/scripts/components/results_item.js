@@ -24,7 +24,7 @@ var ResultsItem = React.createClass({
     var isLast = pagination.current == pagination.total;
 
     return (
-      <article className="result">
+      <article className="results-single">
         <header>
           <h1>{d.title}</h1>
           <p>{pagination.current} of {pagination.total} results</p>

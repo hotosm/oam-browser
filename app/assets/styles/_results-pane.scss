@@ -20,7 +20,7 @@
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  z-index: 10;
+  z-index: 30;
   span {
     @extend .visually-hidden;
   }
@@ -44,6 +44,7 @@
   padding: 1rem;
   background: #fff;
   border-radius: $global-radius $global-radius 0 0;
+  z-index: 20;
   &:after {
     position: absolute;
     bottom: -1px;
@@ -58,13 +59,28 @@
 .pane-title {
   margin: 0;
   padding-right: 2rem;
+  @include heading(1rem);
+}
+
+.pane-subtitle {
+  opacity: 0.64;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  margin: 0;
 }
 
 .pane-footer {
-  position: relative;
-  padding: 1rem;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
   background: #fff;
   border-radius: 0 0 $global-radius $global-radius;
+  min-height: 1rem;
+  .results-single & {
+    padding: 1rem;
+  }
   &:before {
     position: absolute;
     top: -1px;
@@ -77,9 +93,19 @@
 }
 
 .pane-body {
-  height: 100%;
+  position: absolute;
+  top: 4.75rem;
+  left: 0;
+  right: 0;
   overflow-y: scroll;
   padding: 1rem;
+  z-index: 10;
+  .results-hub & {
+    bottom: 1rem;
+  }
+  .results-single & {
+    bottom: 2rem;
+  }
 }
 
 .results-list {

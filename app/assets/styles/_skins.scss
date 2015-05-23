@@ -18,7 +18,7 @@
   border-radius: $global-radius;
 }
 
-%base-pos-framed {
+%base-framed {
 	position: relative;
   &:before {
     position: absolute;

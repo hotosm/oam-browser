@@ -23,18 +23,20 @@ var ResultsListItem = React.createClass({
       <li>
         <article className="card card-result-entry">
           <a href="#" onClick={this.onClick} onMouseOver={this.onOver} onMouseOut={this.onOut}>
-            <h1 className="card-title">{d.title}</h1>
-            <div className="card-media">
-              <img src={'http://lorempixel.com/600/400/?v=' + d._id} alt=""/>
-            </div>
+            <header className="card-header">
+              <h1 className="card-title">{d.title}</h1>
+              <div className="card-media">
+                <img src={'http://lorempixel.com/600/400/?v=' + d._id} alt=""/>
+              </div>
+            </header>
             <div className="card-body">
               <dl className="card-details">
-                <dd>Term 1</dd>
-                <dt>Value 1</dt>
-                <dd>Term 2</dd>
-                <dt>Value 2</dt>
-                <dd>Term 3</dd>
-                <dt>Value 3</dt>
+                <dt>Type</dt>
+                <dd>Multiscene TMS</dd>
+                <dt>Date</dt>
+                <dd>2015-05-18</dd>
+                <dt>Res</dt>
+                <dd>50 cm</dd>
               </dl>
             </div>
           </a>

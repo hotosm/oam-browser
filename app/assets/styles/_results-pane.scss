@@ -88,8 +88,11 @@
   padding: 0;
   > li {
     float: left;
-    width: calc(50% - 0.5rem);
-    margin-right: 1rem;
+    width: calc(50% - 0.25rem);
+    margin: 0 0.5rem 0.5rem 0;
+    &:nth-child(2n) {
+      margin-right: 0;
+    }
   }
 }
 
@@ -97,7 +100,7 @@
 
 // GLOBAL
 
-$card-padding: 1rem;
+$card-padding: 0.5rem;
 
 .card {
   @extend %base-box-skin;
@@ -106,33 +109,55 @@ $card-padding: 1rem;
   > a {
     display: block;
   }
+  > a, a:visited {
+    color: inherit;
+  }
   .card-header,
   .card-body {
-    padding: 1rem;
+    padding: $card-padding;
+  }
+  .card-header + .card-body {
+    margin-top: -$card-padding;
   }
   .card-media {
-    position: relative;
-    margin: -1rem -0.5rem 1rem -0.5rem;
-    min-height: 2.5rem;
+    @extend %base-framed;
+    margin: (-$card-padding) (-$card-padding) 0 (-$card-padding);
+    height: 6rem;
     background: tint($base-color, 96%);
-    a {
-      @extend %base-pos-framed;
-      max-height: 12rem;
-      overflow-y: hidden;
+    overflow: hidden;
+    &:before, & {
+      border-radius: $global-radius $global-radius 0 0;
     }
-    img, a, a:before, & {
+    img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
       display: block;
-      border-radius: $global-radius/2;
-    }
-
-    // Temporary solution for unpreprocessed images
-    @include media(medium-up) {
-      a {
-        max-height: 10rem;
-      }
+      @include transform(translate(-50%, -50%));
+      width: 120%;
+      height: auto;
     }
   }
   &.card-result-entry .card-title {
     @extend .visually-hidden;
+  }
+  .card-details {
+    font-size: 0.775rem;
+    line-height: 1rem;
+    overflow: hidden;
+    dt, dd {
+      float: left;
+      margin: 0;
+    }
+    dt {
+      text-transform: uppercase;
+      font-size: 0.625rem;
+      clear: left;
+      padding-right: 0.5rem;
+      width: 30%;
+    }
+    dd {
+      width: 70%;
+    }
   }
 }

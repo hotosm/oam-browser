@@ -32,7 +32,7 @@ var ResultsItem = React.createClass({
         <div className="pane-body">
           <div className="pane-body-inner">
             <div className="single-media">
-              <img src={'http://lorempixel.com/600/400/?v=' + d._id} alt="Image {pagination.current}" />
+              <img alt="Result thumbnail" src="/assets/graphics/layout/img-placeholder.svg" />
             </div>
             <dl className="single-details">
               <dt>Type</dt>

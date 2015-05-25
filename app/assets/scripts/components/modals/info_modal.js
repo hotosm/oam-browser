@@ -23,7 +23,9 @@ var InfoModal = React.createClass({
   },
 
   getFooter: function() {
-    return (null);
+    return (
+      <p>Made with love by <a href="http://developmentseed.com/" title="Visit Development Seed website">Development Seed</a> and <a href="http://hot.openstreetmap.org/" title="Visit the Humanitarian OpenStreetMap Team website">HOT</a>.</p>
+    );
   },
 
   render: function () {

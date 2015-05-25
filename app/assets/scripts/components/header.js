@@ -16,14 +16,14 @@ var Header = React.createClass({
         <nav id="site-prime-nav" role="navigation">
           <div className="nav-block-prime">
             <form className="form-search">
-              <div className="input-group">
+              <div className="input-group disabled">
                 <input className="form-control input-m input search" type="search" placeholder="Search location" />
                 <span className="input-group-bttn"><button type="submit" className="bttn-search"><span>Search</span></button></span>
               </div>
             </form>
             <ul className="app-menu">
               <li className="drop dropdown center">
-                <a href="#" title="Settings" className="bttn-settings" data-toggle="drop"><span>Settings</span></a>
+                <a href="#" title="Settings" className="bttn-settings disabled" data-toggle="drop"><span>Settings</span></a>
                 <div className="drop-content">
                   <p>Settings go here.</p>
                 </div>

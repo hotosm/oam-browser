@@ -1,6 +1,5 @@
 'use strict';
 var React = require('react/addons');
-var Modal = require('./modal');
 var actions = require('../actions/actions');
 
 var Header = React.createClass({

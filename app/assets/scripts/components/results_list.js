@@ -59,7 +59,9 @@ var ResultsList = React.createClass({
           <p className="pane-subtitle">{numRes} results</p>
         </header>
         <div className="pane-body">
-          <ol className="results-list">{results}</ol>
+          <div className="pane-body-inner">
+            <ol className="results-list">{results}</ol>
+          </div>
         </div>
         <footer className="pane-footer"></footer>
       </section>

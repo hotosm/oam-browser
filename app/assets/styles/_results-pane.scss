@@ -99,7 +99,6 @@
   left: 0;
   right: 0;
   overflow-y: scroll;
-  padding: 1rem;
   z-index: 10;
   .results-hub & {
     bottom: 1rem;
@@ -107,6 +106,11 @@
   .results-single & {
     bottom: 3rem;
   }
+}
+
+.pane-body-inner {
+  padding: 1rem;
+  overflow: hidden;
 }
 
 .results-list {

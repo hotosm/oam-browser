@@ -30,17 +30,19 @@ var ResultsItem = React.createClass({
           <p className="pane-subtitle">{pagination.current} of {pagination.total} results</p>
         </header>
         <div className="pane-body">
-          <div className="single-media">
-            <img src={'http://lorempixel.com/600/400/?v=' + d._id} alt="Image {pagination.current}" />
+          <div className="pane-body-inner">
+            <div className="single-media">
+              <img src={'http://lorempixel.com/600/400/?v=' + d._id} alt="Image {pagination.current}" />
+            </div>
+            <dl className="single-details">
+              <dt>Type</dt>
+              <dd>Multiscene TMS</dd>
+              <dt>Date</dt>
+              <dd>2015-05-18</dd>
+              <dt>Res</dt>
+              <dd>50 cm</dd>
+            </dl>
           </div>
-          <dl className="single-details">
-            <dt>Type</dt>
-            <dd>Multiscene TMS</dd>
-            <dt>Date</dt>
-            <dd>2015-05-18</dd>
-            <dt>Res</dt>
-            <dd>50 cm</dd>
-          </dl>
         </div>
         <footer className="pane-footer">
           <ul className="single-pager">

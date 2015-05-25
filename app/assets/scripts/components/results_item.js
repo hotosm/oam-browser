@@ -24,16 +24,13 @@ var ResultsItem = React.createClass({
     var isFirst = pagination.current == 1;
     var isLast = pagination.current == pagination.total;
 
-    var useImage = null;
+    var tmsOptions = null;
     if (d.properties.tms) {
-      useImage = (<ZcInput value={d.properties.tms} />);
-    }
-    else {
-      useImage = (<a title="Download image" className="bttn-download"><span>Download</span></a>);
+      tmsOptions = (<ZcInput value={d.properties.tms} />);
     }
 
     return (
-      <article className="results-single">
+      <article className={(d.properties.tms ? 'has-tms ' : '') + 'results-single'}>
         <header className="pane-header">
           <h1 className="pane-title" title="{d.title}">{d.title}</h1>
           <p className="pane-subtitle">{pagination.current} of {pagination.total} results</p>
@@ -44,7 +41,8 @@ var ResultsItem = React.createClass({
               <img alt="Result thumbnail" src={d.properties.thumbnail || "/assets/graphics/layout/img-placeholder.svg" } />
             </div>
             <div className="single-actions">
-              {useImage}
+              {tmsOptions}
+              <a title="Download image" className="bttn-download"><span>Download</span></a>
             </div>
             <dl className="single-details">
               <dt>Type</dt>

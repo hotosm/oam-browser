@@ -42,7 +42,7 @@ var ResultsItem = React.createClass({
             </div>
             <div className="single-actions">
               {tmsOptions}
-              <a title="Download image" className="bttn-download"><span>Download</span></a>
+              <a title="Download image" className="bttn-download" target="_blank"><span>Download</span></a>
             </div>
             <dl className="single-details">
               <dt>Type</dt>

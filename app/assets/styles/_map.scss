@@ -1,3 +1,24 @@
+// MAP
+
+#map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.leaflet-bottom.leaflet-left {
+  top: auto;
+  bottom: 50%;
+  left: 1rem;
+  @include transform(translate(0, 50%));
+}
+
+.zoom-controls {
+  margin: 0 !important;
+}
+
 // GRID
 
 .gl {
@@ -36,10 +57,10 @@
 
 .g-footprint {
   fill-opacity: 0;
-  stroke: rgba($base-color, 0.48);
+  stroke: rgba($base-color, 0.64);
   stroke-width: 1;
 }
 .gs-highlight {
-  stroke: rgba($base-color, 0.48);
+  stroke: rgba($base-color, 0.64);
   stroke-width: 1;
 }

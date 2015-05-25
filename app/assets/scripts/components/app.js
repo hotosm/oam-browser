@@ -12,7 +12,7 @@ var App = React.createClass({
           <nav id="site-prime-nav" role="navigation">
             <div className="nav-block-prime">
               <form className="form-search">
-                <input type="search" placeholder="Search location" className="input-search" />
+                <input type="search" placeholder="Search location" className="input-search form-control input-m" />
                 <button type="submit" className="bttn-search"><span>Search</span></button>
                 <button type="button" className="bttn-mylocation"><span>My location</span></button>
               </form>

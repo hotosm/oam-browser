@@ -35,7 +35,11 @@ var ResultsItem = React.createClass({
               <img alt="Result thumbnail" src="/assets/graphics/layout/img-placeholder.svg" />
             </div>
             <div className="single-actions">
-              <button type="button" className="bttn-download"><span>Download</span></button>
+              {/* <a title="Download image" className="bttn-download"><span>Download</span></a> */}
+              <div className="input-group">
+                <input className="form-control input-m" type="text" value="http://openaerialmap.org/" readOnly />
+                <a href="#" title="Copy URL to clipboard" className="bttn-clipboard"><span>Copy to clipboard</span></a>
+              </div>
             </div>
             <dl className="single-details">
               <dt>Type</dt>

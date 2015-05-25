@@ -1,18 +1,5 @@
 // MODALS
 
-// <section class="modal">
-//   <div class="modal-inner">
-//     <a class="close" title="Close"><span>Close</span></a>
-//     <header class="modal-header">
-//       <h1 class="modal-title">Modal title</h1>
-//     </header>
-//     <div class="modal-body">
-//     </div>
-//     <footer class="modal-footer">
-//     </footer>
-//   </div>
-// </section>
-
 $modal-padding: 1rem;
 
 // This parent can be any width and height
@@ -31,32 +18,27 @@ $modal-padding: 1rem;
   
   // The ghost, nudged to maintain perfect centering
   // Only medium-up queries
-  //@media #{$large-up} {
-    &:before {
-      content: '';
-      display: inline-block;
-      height: 100%;
-      vertical-align: middle;
-      width: 1px;
-      margin-right: -6px; // Adjusts for spacing
-    }
-  //}
+  &:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    width: 1px;
+    margin-right: -6px; // Adjusts for spacing
+  }
 }
 
 // The element to be centered, can also be of any width and height
 .modal-inner {
-  @extend %base-box-skin;
+  @extend %base-overlay-skin;
   position: relative;
   width: 100%;
   max-width: 46rem;
   display: inline-block;
   vertical-align: middle;
   margin: 4rem 0;
-  padding: $modal-padding;
   text-align: left;
-  //@media #{$large-up} {
-    padding: ($modal-padding*2);
-  //}
+  padding: ($modal-padding*2);
 }
 
 // Modal sizes
@@ -75,32 +57,25 @@ $modal-padding: 1rem;
 // For the animation.
 .modal-enter {
   @include transform(translate3d(0, 0, 0));
-  @include transition-property(opacity, visibility);
-  @include transition-duration(0.1s, 0.1s);
-  @include transition-timing-function(ease, linear);
-  @include transition-delay(0s, 0s);
+  @include transition(opacity 0.32s ease 0s, visibility 0.32s linear 0s);
 
-  @include opacity(0);
+  opacity: 0;
   visibility: hidden;
 
   .modal-inner {
-    @include transform(translate3d(0, 0, 0));
-    @include transition-property(opacity, margin, visibility);
-    @include transition-duration(0.1s, 0.1s, 0.1s);
-    @include transition-timing-function(ease, ease, linear);
-    @include transition-delay(0.2s, 0.2s, 0.2s);
+    @include transition(opacity 0.24s ease 0s, margin 0.24s ease 0s, visibility 0.24s linear 0s);
     
-    @include opacity(0);
+    opacity: 0;
     margin-top: -4rem;
     visibility: hidden;
   }
   
   &.modal-enter-active {
-    @include opacity(1);
+    opacity: 1;
     visibility: visible;
     
     .modal-inner {
-      @include opacity(1);
+      opacity: 1;
       margin-top: 4rem;
       visibility: visible;
     }
@@ -108,33 +83,24 @@ $modal-padding: 1rem;
 }
 
 .modal-leave {
-  @include transform(translate3d(0, 0, 0));
-  @include transition-property(opacity, visibility);
-  @include transition-duration(0.1s, 0.1s);
-  @include transition-timing-function(ease, linear);
-  @include transition-delay(0.2s, 0.2s);
+  @include transition(opacity 0.32s ease 0s, visibility 0.32s linear 0s);
 
-  @include opacity(1);
+  opacity: 1;
   visibility: visible;
 
   .modal-inner {
-    @include transform(translate3d(0, 0, 0));
-    @include transition-property(opacity, margin, visibility);
-    @include transition-duration(0.1s, 0.1s, 0.1s);
-    @include transition-timing-function(ease, ease, linear);
-    @include transition-delay(0s, 0s, 0s);
-    
-    @include opacity(1);
+    @include transition(opacity 0.24s ease 0s, margin 0.24s ease 0s, visibility 0.24s linear 0s);
+    opacity: 1;
     margin-top: 4rem;
     visibility: visible;
   }
   
   &.modal-leave-active {
-    @include opacity(0);
+    opacity: 0;
     visibility: hidden;
     
     .modal-inner {
-      @include opacity(0);
+      opacity: 0;
       margin-top: -4rem;
       visibility: hidden;
     }
@@ -153,7 +119,9 @@ $modal-padding: 1rem;
     }
   }
   &-title {
-    //@extend .hd-xxxs;
+    margin: 0;
+    @include heading(1rem);
+    @extend .truncated;
     .alt {
       display: block;
     }

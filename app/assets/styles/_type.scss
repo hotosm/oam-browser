@@ -39,3 +39,96 @@ h6, .hd-xxs {
 .hd-s, .hd-xs, .hd-xxs {
   @include heading(1rem, xlarge-up);      // 16, 20, 24, 28
 }
+
+.prose {
+
+  code, kbd, pre, samp {
+    font-family: $code-font-family;
+  }
+
+  code, pre {
+    border-radius: $global-radius;
+    background: tint($base-color, 96%);
+  }
+
+  code {
+    padding: 0.125rem 0.25rem;
+    font-size: 80%;
+  }
+
+  pre {
+    display: block;
+    padding: 1rem;
+    word-break: break-all;
+    word-wrap: break-word;
+    box-shadow: inset 0 0 0 1px $brdr-rgba;
+    overflow: auto;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    margin: 1.5rem 0 0.75rem 0;
+  }
+
+  h1 {
+    @include heading(1.75rem);   // 28
+  }
+
+  h2 {
+    @include heading(1.5rem);    // 24
+  }
+
+  h3 {
+    @include heading(1.25rem);   // 20
+  }
+
+  h4, h5, h6 {
+    @include heading(1rem);      // 16
+  }
+  
+  p, ul, ol, dl, blockquote, figure, .highlight, .callout, pre, table, .table-responsive {
+    margin-bottom: 0.75rem;
+  }
+
+  ol ol, ol ul, ul ol, ul ul {
+    margin-bottom: 0;
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
+
+  ul, ol {
+    list-style-position: outside;
+    margin-left: 1rem; 
+  }
+
+  dt {
+    font-weight: $base-font-bold;
+  }
+
+  dd {
+    margin-bottom: 0.5rem;
+  }
+
+  hr {
+    border: 0;
+    height: 1px;
+    background: $base-color;
+    opacity: 0.08;
+    width: 80%;
+    max-width: 16rem;
+    margin: 1.5rem auto;
+  }
+
+  > *:first-child {
+    margin-top: 0 !important;
+  }
+
+  > *:last-child {
+    margin-bottom: 0 !important;
+  }
+}

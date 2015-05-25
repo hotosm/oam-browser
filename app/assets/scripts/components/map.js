@@ -254,14 +254,14 @@ var Map = React.createClass({
   componentDidMount: function() {
     console.log('componentDidMount MapBoxMap');
     var _this = this;
-    var view = [40.75, -73.9];
+    var view = [60.177, 25.148];
 
     this.map = L.mapbox.map(this.getDOMNode(), 'mapbox.light', {
       zoomControl: false,
       minZoom : 4,
       maxZoom : 18,
       maxBounds: L.latLngBounds([-90, -180], [90, 180])
-    }).setView(view, 8);
+    }).setView(view, 6);
 
     // Custom zoom control.
     var zoom = new dsZoom({

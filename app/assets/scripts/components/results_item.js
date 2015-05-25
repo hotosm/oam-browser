@@ -42,15 +42,15 @@ var ResultsItem = React.createClass({
             </div>
             <div className="single-actions">
               {tmsOptions}
-              <a title="Download image" className="bttn-download" target="_blank"><span>Download</span></a>
+              <a title="Download image" className="bttn-download" target="_blank" href={d.uuid}><span>Download</span></a>
             </div>
             <dl className="single-details">
               <dt>Type</dt>
               <dd>{d.properties.tms ? 'Multiscene TMS' : 'Single Scene'}</dd>
               <dt>Date</dt>
-              <dd>2015-05-18</dd>
+              <dd>{d.acquisition_start.slice(0,10)}</dd>
               <dt>Res</dt>
-              <dd>50 cm</dd>
+              <dd>{Number(Math.round((d.gsd * 100)+'e2')+'e-2')}</dd>
             </dl>
           </div>
         </div>

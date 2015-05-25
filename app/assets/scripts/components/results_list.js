@@ -34,9 +34,9 @@ var ResultsListItem = React.createClass({
                 <dt>Type</dt>
                 <dd>{d.properties.tms ? 'Multiscene TMS' : 'Single Scene'}</dd>
                 <dt>Date</dt>
-                <dd>2015-05-18</dd>
+                <dd>{d.acquisition_start.slice(0,10)}</dd>
                 <dt>Res</dt>
-                <dd>50 cm</dd>
+                <dd>{Number(Math.round((d.gsd * 100)+'e2')+'e-2')}</dd>
               </dl>
             </div>
           </a>

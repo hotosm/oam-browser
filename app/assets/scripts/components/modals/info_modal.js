@@ -12,19 +12,19 @@ var InfoModal = React.createClass({
   getBody: function() {
     return (
       <div className="prose">
-        <h2>What</h2>
-        <p>OpenAerialMap (OAM) is a collection of openly licensed satellite and unmanned aerial vehicle (UAV) imagery. OAM is an open serivce that will provide storage and search of this imagery.</p>
-        <h2>Why</h2>
-        <p>Imagery is being generated more and more, however after a disaster it is difficult to determine what imagery is available and where to access it. OAM seeks to solve this by providing a simple, open way to process and provide imagery for humanitarian response and disaster preparedness.</p>
-        <h2>Join</h2>
-        <p>There are plenty of ways to get involved in OpenAerialMap. Check out the <a href="https://github.com/hotosm/OpenAerialMap" title="Visit the GitHub repository">GitHub repository</a> to learn more about the design and how to get involved in the project.</p>
+        <h2>OpenAerialMap</h2>
+        <p>OpenAerialMap (OAM) is a set of tools for searching, sharing, and using openly licensed satellite and unmanned aerial vehicle (UAV) imagery. Built on top of the <a href="https://github.com/openimagerynetwork">Open Imagery Network (OIN)</a>, OAM is an open service that will provide search and access to this imagery.</p>
+        <h2>How to use?</h2>
+        <p>Use the map to pan and zoom to search available imagery. Available imagery can be previewed by selecting a tile and browsing the imagery in the sidebar. All imagery is publicly licensed and made available through the Humanitarian OpenStreetMap Team&#39;s Beta OIN Node.</p>
+        <h2>Join in the Development</h2>
+        <p>OAM is releasing a beta version to preview and test functionality. There are plenty of ways to get involved in OpenAerialMap. Check out the <a href="https://github.com/hotosm/OpenAerialMap" title="Visit the GitHub repository">GitHub repository</a> to learn more about the design and how to get involved in the project.</p>
       </div>
     );
   },
 
   getFooter: function() {
     return (
-      <p>Made with love by <a href="http://developmentseed.com/" title="Visit Development Seed website">Development Seed</a> and <a href="http://hot.openstreetmap.org/" title="Visit the Humanitarian OpenStreetMap Team website">HOT</a>.</p>
+      <p>Made with love by <a href="https://developmentseed.org" title="Visit Development Seed website">Development Seed</a> and <a href="http://hot.openstreetmap.org/" title="Visit the Humanitarian OpenStreetMap Team website">HOT</a>.</p>
     );
   },
 

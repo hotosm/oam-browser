@@ -16,9 +16,10 @@ var Header = React.createClass({
         <nav id="site-prime-nav" role="navigation">
           <div className="nav-block-prime">
             <form className="form-search">
-              <input type="search" placeholder="Search location" className="input-search" />
-              <button type="submit" className="bttn-search"><span>Search</span></button>
-              <button type="button" className="bttn-mylocation"><span>My location</span></button>
+              <div className="input-group">
+                <input className="form-control input-m input search" type="search" placeholder="Search location" />
+                <span className="input-group-bttn"><button type="submit" className="bttn-search"><span>Search</span></button></span>
+              </div>
             </form>
             <ul className="app-menu">
               <li className="drop dropdown center">

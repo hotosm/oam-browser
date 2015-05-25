@@ -52,7 +52,7 @@ var ResultsPane = React.createClass({
 
       return (
         <div id="results-pane" className="pane">
-          <a href="" onClick={this.closeResults} className="pane-dismiss"><span>Close</span></a>
+          <a href="" onClick={this.closeResults} className="pane-dismiss" title="Exit selection"><span>Close</span></a>
           {resultsPane}
         </div>
       );

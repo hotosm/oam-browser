@@ -43,14 +43,10 @@ var ResultsItem = React.createClass({
           </dl>
         </div>
         <footer className="pane-footer">
-          <ul>
-            <li><a href=""><span>thing 1</span></a></li>
-            <li><a href=""><span>thing 2</span></a></li>
-          </ul>
-          <ul>
-            <li><a href="#" onClick={this.prevResult} className={isFirst ? 'disabled' : ''}><span>Prev</span></a></li>
-            <li><a href="#" onClick={this.viewAllResults}><span>All</span></a></li>
-            <li><a href="#" onClick={this.nextResult} className={isLast ? 'disabled' : ''}><span>Next</span></a></li>
+          <ul className="single-pager">
+            <li className="view-all"><a href="#" onClick={this.viewAllResults} title="View all results"><span>All</span></a></li>
+            <li className="view-prev"><a href="#" onClick={this.prevResult} className={isFirst ? 'disabled' : ''} title="View previous result"><span>Prev</span></a></li>
+            <li className="view-next"><a href="#" onClick={this.nextResult} className={isLast ? 'disabled' : ''} title="View next result"><span>Next</span></a></li>
           </ul>
         </footer>
       </article>

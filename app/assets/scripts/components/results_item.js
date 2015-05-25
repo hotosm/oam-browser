@@ -1,6 +1,7 @@
 'use strict';
 var React = require('react');
 var actions = require('../actions/actions');
+var ZcInput = require('./shared/zc_input');
 
 var ResultsItem = React.createClass({
   prevResult: function(e) {
@@ -24,16 +25,11 @@ var ResultsItem = React.createClass({
     var isLast = pagination.current == pagination.total;
 
     var useImage = null;
-    if (true) {
-      useImage = (<a title="Download image" className="bttn-download"><span>Download</span></a>);
+    if (d.properties.tms) {
+      useImage = (<ZcInput value={d.properties.tms} />);
     }
     else {
-      useImage = (
-        <div className="input-group">
-          <input className="form-control input-m" type="text" value="http://openaerialmap.org/" readOnly />
-          <span className="input-group-bttn"><button type="button" title="Copy URL to clipboard" className="bttn-clipboard"><span>Copy to clipboard</span></button></span>
-        </div>
-      );
+      useImage = (<a title="Download image" className="bttn-download"><span>Download</span></a>);
     }
 
     return (
@@ -45,14 +41,14 @@ var ResultsItem = React.createClass({
         <div className="pane-body">
           <div className="pane-body-inner">
             <div className="single-media">
-              <img alt="Result thumbnail" src="/assets/graphics/layout/img-placeholder.svg" />
+              <img alt="Result thumbnail" src={d.properties.thumbnail || "/assets/graphics/layout/img-placeholder.svg" } />
             </div>
             <div className="single-actions">
               {useImage}
             </div>
             <dl className="single-details">
               <dt>Type</dt>
-              <dd>Multiscene TMS</dd>
+              <dd>{d.properties.tms ? 'Multiscene TMS' : 'Single Scene'}</dd>
               <dt>Date</dt>
               <dd>2015-05-18</dd>
               <dt>Res</dt>

@@ -31,6 +31,7 @@
     "react-router": "^0.13.3",
     "reflux": "^0.2.7",
     "turf": "^2.0.2",
-    "turf-overlaps": "^1.0.3"
+    "turf-overlaps": "^1.0.3",
+    "zeroclipboard": "^2.2.0"
   }
 }

@@ -181,7 +181,8 @@
 }
 
 *[data-title-rel]:hover,
-*[data-title]:hover {
+*[data-title]:hover,
+*[data-title].zc-hover {
   &:after {
     content: attr(data-title);
     position: absolute;
@@ -204,5 +205,15 @@
     font-family: $base-font-family;
     font-weight: $base-font-regular;
     font-style: $base-font-style;
+  }
+}
+
+.single-actions {
+  *[data-title].zc-hover {
+    &:after {
+      left: auto;
+      right: 0;
+      @include transform(translate(0, 0));
+    }
   }
 }

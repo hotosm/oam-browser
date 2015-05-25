@@ -1,5 +1,5 @@
 'use strict';
-var React = require('react');
+var React = require('react/addons');
 
 var About = React.createClass({
   render: function() {

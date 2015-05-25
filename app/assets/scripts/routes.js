@@ -1,5 +1,5 @@
 'use strict';
-var React = require('react');
+var React = require('react/addons');
 var Router = require('react-router');
 var NotFoundRoute = Router.NotFoundRoute;
 var Navigation = Router.Navigation;
@@ -16,7 +16,6 @@ var Home = require('./components/home');
 
 var routes = (
   <Route path="/" handler={App}>
-    <Route path="about" name="about" handler={About} />
     <DefaultRoute name="home" handler={Home} />
   </Route>
 );

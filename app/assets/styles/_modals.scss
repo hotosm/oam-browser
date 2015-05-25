@@ -1,0 +1,252 @@
+// MODALS
+
+// <section class="modal">
+//   <div class="modal-inner">
+//     <a class="close" title="Close"><span>Close</span></a>
+//     <header class="modal-header">
+//       <h1 class="modal-title">Modal title</h1>
+//     </header>
+//     <div class="modal-body">
+//     </div>
+//     <footer class="modal-footer">
+//     </footer>
+//   </div>
+// </section>
+
+$modal-padding: 1rem;
+
+// This parent can be any width and height
+// http://css-tricks.com/centering-in-the-unknown/
+.modal {
+  text-align: center;
+  background: none repeat scroll 0 0 rgba($base-color, 0.8);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9998;
+  overflow-y: auto;
+  padding: 0 1rem;
+  
+  // The ghost, nudged to maintain perfect centering
+  // Only medium-up queries
+  //@media #{$large-up} {
+    &:before {
+      content: '';
+      display: inline-block;
+      height: 100%;
+      vertical-align: middle;
+      width: 1px;
+      margin-right: -6px; // Adjusts for spacing
+    }
+  //}
+}
+
+// The element to be centered, can also be of any width and height
+.modal-inner {
+  @extend %base-box-skin;
+  position: relative;
+  width: 100%;
+  max-width: 46rem;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 4rem 0;
+  padding: $modal-padding;
+  text-align: left;
+  //@media #{$large-up} {
+    padding: ($modal-padding*2);
+  //}
+}
+
+// Modal sizes
+.modal {
+  &.modal-s .modal-inner{
+    max-width: 22rem;
+  }
+  &.modal-m .modal-inner{
+    max-width: 34rem;
+  }
+  &.modal-l .modal-inner{
+    max-width: 46rem;
+  }
+}
+
+// For the animation.
+.modal-enter {
+  @include transform(translate3d(0, 0, 0));
+  @include transition-property(opacity, visibility);
+  @include transition-duration(0.1s, 0.1s);
+  @include transition-timing-function(ease, linear);
+  @include transition-delay(0s, 0s);
+
+  @include opacity(0);
+  visibility: hidden;
+
+  .modal-inner {
+    @include transform(translate3d(0, 0, 0));
+    @include transition-property(opacity, margin, visibility);
+    @include transition-duration(0.1s, 0.1s, 0.1s);
+    @include transition-timing-function(ease, ease, linear);
+    @include transition-delay(0.2s, 0.2s, 0.2s);
+    
+    @include opacity(0);
+    margin-top: -4rem;
+    visibility: hidden;
+  }
+  
+  &.modal-enter-active {
+    @include opacity(1);
+    visibility: visible;
+    
+    .modal-inner {
+      @include opacity(1);
+      margin-top: 4rem;
+      visibility: visible;
+    }
+  }
+}
+
+.modal-leave {
+  @include transform(translate3d(0, 0, 0));
+  @include transition-property(opacity, visibility);
+  @include transition-duration(0.1s, 0.1s);
+  @include transition-timing-function(ease, linear);
+  @include transition-delay(0.2s, 0.2s);
+
+  @include opacity(1);
+  visibility: visible;
+
+  .modal-inner {
+    @include transform(translate3d(0, 0, 0));
+    @include transition-property(opacity, margin, visibility);
+    @include transition-duration(0.1s, 0.1s, 0.1s);
+    @include transition-timing-function(ease, ease, linear);
+    @include transition-delay(0s, 0s, 0s);
+    
+    @include opacity(1);
+    margin-top: 4rem;
+    visibility: visible;
+  }
+  
+  &.modal-leave-active {
+    @include opacity(0);
+    visibility: hidden;
+    
+    .modal-inner {
+      @include opacity(0);
+      margin-top: -4rem;
+      visibility: hidden;
+    }
+  }
+}
+
+
+// Content styles
+.modal {
+  &-header {
+    border-bottom: 1px solid tint($base-color, 86%);
+    padding: $modal-padding ($modal-padding*2) $modal-padding $modal-padding;
+    margin: (-$modal-padding) (-$modal-padding) 0 (-$modal-padding);
+    > :last-child {
+      margin-bottom: 0;
+    }
+  }
+  &-title {
+    //@extend .hd-xxxs;
+    .alt {
+      display: block;
+    }
+  }
+  .close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 10;
+    display: block;
+    font-size: 1rem;
+    line-height: 1;
+    color: rgba($base-color,0.4);
+    span {
+      @extend .visually-hidden;
+    }
+    &:before {
+      @extend .icon-s-cancel;
+    }
+  }
+  h2 {
+    @extend .hd-xs;
+  }
+  .form-control-block {
+    margin-bottom: 1rem;
+    text-align: center;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  &-prose {
+    > :last-child {
+      margin-bottom: 0;
+    }
+  }
+  &-body {
+    background: tint($base-color, 94%);
+    margin: 0 (-$modal-padding);
+    padding: $modal-padding;
+    > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+  &-footer {
+    border-top: 1px solid tint($base-color, 86%);
+    margin: 0 (-$modal-padding) (-$modal-padding) (-$modal-padding);
+    padding: $modal-padding;
+    text-align: center;
+    word-spacing: -0.26rem;
+    .bttn {
+      margin: 0 0.25rem;
+    }
+  }
+  &-toolbar {
+    position: relative;
+    z-index: 100;
+    margin: (-$modal-padding) (-$modal-padding) 0 (-$modal-padding);
+    padding: $modal-padding;
+    border-bottom: 1px solid tint($base-color, 86%);
+    @extend .clearfix;
+    .form-control-inline {
+      float: left;
+      margin-right: 1rem;
+    }
+    .form-control-select {
+      width: 12rem;
+    }
+    > :last-child {
+      margin: 0;
+    }
+  }
+  //@media #{$large-up} {
+    &-header {
+      padding: $modal-padding ($modal-padding*2);
+      margin: (-($modal-padding*2)) (-($modal-padding*2)) 0 (-($modal-padding*2));
+    }
+    &-body {
+      margin: 0 (-($modal-padding*2));
+      padding: ($modal-padding*2);
+    }
+    &-footer {
+      padding: $modal-padding ($modal-padding*2);
+      margin: 0 (-($modal-padding*2)) (-($modal-padding*2)) (-($modal-padding*2));
+    }
+    &-toolbar {
+      padding: $modal-padding ($modal-padding*2);
+      margin: (-($modal-padding*2)) (-($modal-padding*2)) 0 (-($modal-padding*2));
+    }
+  //}
+}
+
+.modal-s {
+  .modal-body {
+    text-align: center;
+  }
+}

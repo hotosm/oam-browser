@@ -1,6 +1,6 @@
 'use strict';
 require('mapbox.js');
-var React = require('react');
+var React = require('react/addons');
 var Reflux = require('reflux');
 var overlaps = require('turf-overlaps');
 // Not working. Using cdn. (turf.intersect was throwing a weird error)

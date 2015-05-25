@@ -158,10 +158,24 @@
 }
 
 .single-actions {
+  @extend .clearfix;
   text-align: center;
   margin-bottom: 1rem;
   .bttn-download {
     min-width: 48%;
+  }
+}
+
+.has-tms {
+  .single-actions {
+    .input-group {
+      float: left;
+      width: 60%;
+    }
+    .bttn-download {
+      float: right;
+      min-width: initial;
+    }
   }
 }
 

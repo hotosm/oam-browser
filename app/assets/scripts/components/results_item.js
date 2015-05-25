@@ -38,7 +38,7 @@ var ResultsItem = React.createClass({
               {/* <a title="Download image" className="bttn-download"><span>Download</span></a> */}
               <div className="input-group">
                 <input className="form-control input-m" type="text" value="http://openaerialmap.org/" readOnly />
-                <a href="#" title="Copy URL to clipboard" className="bttn-clipboard"><span>Copy to clipboard</span></a>
+                <span className="input-group-bttn"><button type="button" title="Copy URL to clipboard" className="bttn-clipboard"><span>Copy to clipboard</span></button></span>
               </div>
             </div>
             <dl className="single-details">

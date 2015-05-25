@@ -116,6 +116,7 @@ input[type=submit] {
     margin-right: 0.25rem;
     @extend .icon-s-arr-left;
   }
+  &.search:before { @extend .icon-search-right; }
   &.go-twitter:after { @extend .icon-twitter; }
   &.share:before { @extend .icon-share; }
   &.all:before { @extend .icon-grid-3x3; }
@@ -212,6 +213,10 @@ input[type=submit] {
 
 
 // EXTENDS
+
+.bttn-search {
+  @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .search;
+}
 
 .bttn-settings {
   @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .settings;

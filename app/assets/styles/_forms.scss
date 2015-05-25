@@ -75,21 +75,49 @@ input[type="search"] {
   display: table;
   border-collapse: separate;
   width: 100%;
-  > * {
-    display: table-cell;
-    vertical-align: top;
+}
+
+.input-group .form-control:first-child,
+.input-group-addon:first-child,
+.input-group-bttn:first-child > .bttn,
+.input-group-bttn:first-child > .bttn-group > .bttn,
+.input-group-bttn:first-child > .dropdown-toggle,
+.input-group-bttn:last-child > .bttn-group:not(:last-child) > .bttn {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.input-group .form-control:last-child,
+.input-group-addon:last-child,
+.input-group-bttn:first-child > .bttn-group:not(:first-child) > .bttn,
+.input-group-bttn:first-child > .bttn:not(:first-child),
+.input-group-bttn:last-child > .bttn,
+.input-group-bttn:last-child > .bttn-group > .bttn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.input-group .form-control {
+  position: relative;
+  float: left;
+  width: 100%;
+  margin-bottom: 0;
+  &:focus {
+    z-index: 2;
   }
-  > *:first-child:not(:last-child) {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  > *:last-child:not(:first-child) {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-  > *:not(:first-child):not(:last-child) {
-    border-radius: 0;
-  }
+}
+
+.input-group-bttn {
+  position: relative;
+  font-size: 0;
+  width: 1%;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.input-group .form-control,
+.input-group-bttn {
+  display: table-cell;
 }
 
 legend,

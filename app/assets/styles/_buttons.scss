@@ -60,9 +60,9 @@ input[type=submit] {
 // COLORS
 
 // Base Light
-.bttn-base,
-.bttn-base:visited,
-.bttn-base:hover {
+.bttn-base-light,
+.bttn-base-light:visited,
+.bttn-base-light:hover {
   @include bttn-variation(#fff);
   color: $base-font-color;
 }
@@ -122,6 +122,7 @@ input[type=submit] {
   &.info:before { @extend .icon-circle-info; }
   &.plus:before { @extend .icon-s-add; }
   &.minus:before { @extend .icon-s-subtract; }
+  &.download:before { @extend .icon-download; }
 }
 
 .bttn-notxt {
@@ -211,11 +212,11 @@ input[type=submit] {
 // EXTENDS
 
 .bttn-settings {
-  @extend .bttn, .bttn-base, .bttn-m, .bttn-notxt, .settings;
+  @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .settings;
 }
 
 .bttn-info {
-  @extend .bttn, .bttn-base, .bttn-m, .bttn-notxt, .info;
+  @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .info;
 }
 
 .zoom-controls {
@@ -223,9 +224,13 @@ input[type=submit] {
 }
 
 .bttn-zoomin {
-  @extend .bttn, .bttn-base, .bttn-m, .bttn-notxt, .plus;
+  @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .plus;
 }
 
 .bttn-zoomout {
-  @extend .bttn, .bttn-base, .bttn-m, .bttn-notxt, .minus;
+  @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .minus;
+}
+
+.bttn-download {
+  @extend .bttn, .bttn-base-light, .bttn-m, .download;
 }

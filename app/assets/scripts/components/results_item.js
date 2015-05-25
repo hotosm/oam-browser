@@ -34,6 +34,9 @@ var ResultsItem = React.createClass({
             <div className="single-media">
               <img alt="Result thumbnail" src="/assets/graphics/layout/img-placeholder.svg" />
             </div>
+            <div className="single-actions">
+              <button type="button" className="bttn-download"><span>Download</span></button>
+            </div>
             <dl className="single-details">
               <dt>Type</dt>
               <dd>Multiscene TMS</dd>

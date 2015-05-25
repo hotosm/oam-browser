@@ -175,9 +175,13 @@
 
 
 // TITLED
-
-*[data-title]:hover {
+  
+*[data-title-rel]:hover {
   position: relative;
+}
+
+*[data-title-rel]:hover,
+*[data-title]:hover {
   &:after {
     content: attr(data-title);
     position: absolute;

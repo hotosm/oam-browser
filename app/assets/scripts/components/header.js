@@ -12,9 +12,9 @@ var Header = React.createClass({
   render: function() {
     return (
       <header id="site-header" role="banner">
-        <h1 id="site-title"><img src="/assets/graphics/layout/oam-logo-h-pos.svg" width="167" height="32" alt="OpenAerialMap logo" /><span>OpenAerialMap</span></h1>
+      <h1 id="site-title"><img src="/assets/graphics/layout/oam-logo-h-pos.svg" width="167" height="32" alt="OpenAerialMap logo" /><span>OpenAerialMap</span> <small>Beta</small></h1>
         <nav id="site-prime-nav" role="navigation">
-          <div className="nav-block-prime">
+          <div className="nav-block-prime" data-title="Coming soon!">
             <form className="form-search">
               <div className="input-group disabled">
                 <input className="form-control input-m input search" type="search" placeholder="Search location" />

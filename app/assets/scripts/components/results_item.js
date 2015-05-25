@@ -23,6 +23,19 @@ var ResultsItem = React.createClass({
     var isFirst = pagination.current == 1;
     var isLast = pagination.current == pagination.total;
 
+    var useImage = null;
+    if (true) {
+      useImage = (<a title="Download image" className="bttn-download"><span>Download</span></a>);
+    }
+    else {
+      useImage = (
+        <div className="input-group">
+          <input className="form-control input-m" type="text" value="http://openaerialmap.org/" readOnly />
+          <span className="input-group-bttn"><button type="button" title="Copy URL to clipboard" className="bttn-clipboard"><span>Copy to clipboard</span></button></span>
+        </div>
+      );
+    }
+
     return (
       <article className="results-single">
         <header className="pane-header">
@@ -35,11 +48,7 @@ var ResultsItem = React.createClass({
               <img alt="Result thumbnail" src="/assets/graphics/layout/img-placeholder.svg" />
             </div>
             <div className="single-actions">
-              {/* <a title="Download image" className="bttn-download"><span>Download</span></a> */}
-              <div className="input-group">
-                <input className="form-control input-m" type="text" value="http://openaerialmap.org/" readOnly />
-                <span className="input-group-bttn"><button type="button" title="Copy URL to clipboard" className="bttn-clipboard"><span>Copy to clipboard</span></button></span>
-              </div>
+              {useImage}
             </div>
             <dl className="single-details">
               <dt>Type</dt>

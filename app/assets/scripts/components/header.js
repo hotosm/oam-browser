@@ -12,18 +12,18 @@ var Header = React.createClass({
   render: function() {
     return (
       <header id="site-header" role="banner">
-        <h1 id="site-title"><img src="/assets/graphics/layout/oam-logo-h-pos.svg" width="167" height="32" alt="OpenAerialMap logo" /><span>OpenAerialMap</span></h1>
+      <h1 id="site-title"><img src="/assets/graphics/layout/oam-logo-h-pos.svg" width="167" height="32" alt="OpenAerialMap logo" /><span>OpenAerialMap</span> <small>Beta</small></h1>
         <nav id="site-prime-nav" role="navigation">
-          <div className="nav-block-prime">
+          <div className="nav-block-prime" data-title="Coming soon!">
             <form className="form-search">
-              <div className="input-group">
+              <div className="input-group disabled">
                 <input className="form-control input-m input search" type="search" placeholder="Search location" />
                 <span className="input-group-bttn"><button type="submit" className="bttn-search"><span>Search</span></button></span>
               </div>
             </form>
             <ul className="app-menu">
               <li className="drop dropdown center">
-                <a href="#" title="Settings" className="bttn-settings" data-toggle="drop"><span>Settings</span></a>
+                <a href="#" title="Settings" className="bttn-settings disabled" data-toggle="drop"><span>Settings</span></a>
                 <div className="drop-content">
                   <p>Settings go here.</p>
                 </div>

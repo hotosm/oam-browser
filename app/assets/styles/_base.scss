@@ -78,6 +78,21 @@ a:active{
   span {
     @extend .visually-hidden;
   }
+  small {
+    @extend .antialiased;
+    display: block;
+    position: absolute;
+    top: 0.45rem;
+    right: -0.25rem;
+    @include transform(translate(100%, 0));
+    background: rgba($base-color, 0.48);
+    color: #fff;
+    border-radius: $global-radius;
+    padding: 0 0.25rem;
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+    text-transform: uppercase;
+  }
 }
 
 .nav-block-prime,

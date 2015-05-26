@@ -25,6 +25,9 @@ var Map = React.createClass({
     Reflux.listenTo(actions.resultOver, "onResultOver"),
     Reflux.listenTo(actions.resultOut, "onResultOut"),
     Reflux.listenTo(actions.resultItemView, "onResultItemView"),
+
+    Reflux.listenTo(actions.goToLatest, "onGoToLatest"),
+    Reflux.listenTo(actions.geocoderResult, "onGeocoderResult"),
   ],
 
   map: null,
@@ -35,6 +38,13 @@ var Map = React.createClass({
   fauxLineGridLayer: null,
   // Layer to store the footprint when hovering a result. 
   overFootprintLayer: null,
+
+  // When the user clicks browse latest imagery we move the map to the correct
+  // locations. Then, when the query is finished and the map rendered we
+  // need to select the correct square.
+  // Here we store the bbox of the latest imagery and use it to select the
+  // square that contains it. Check updateGrid()
+  selectIntersecting: null,
 
   // Store listener.
   onMapData: function(data) {
@@ -79,6 +89,28 @@ var Map = React.createClass({
   // Actions listener.
   onResultOut: function(feature) {
     this.overFootprintLayer.clearLayers();
+  },
+
+  // Actions listener.
+  onGoToLatest: function() {
+    var latest = mapStore.getLatestImagery();
+    if (latest) {
+      // Get feature center and since we're at it store it in the properties.
+      var latestCenter = turf.centroid(latest);
+      latest.properties = latest.properties || {};
+      latest.properties.centroid = latestCenter;
+      this.selectIntersecting = latest;
+      // Move the map
+      this.map.setView([latestCenter.geometry.coordinates[1], latestCenter.geometry.coordinates[0]], 8);
+    }
+  },
+
+  // Actions listener.
+  onGeocoderResult: function(bounds) {
+    if (bounds) {
+      // Move the map
+      this.map.fitBounds(bounds);
+    }
   },
 
   // Redraws the line grid.
@@ -213,12 +245,27 @@ var Map = React.createClass({
     this.gridLayer.addData(squareGrid);
     this.gridLayer.eachLayer(function(l) {
       L.DomUtil.addClass(l._path, 'gs');
+      var featureCenter = null;
+
+      // Select the square that intersects the stored image.
+      if (_this.selectIntersecting) {
+        featureCenter = turf.centroid(l.feature);
+
+        var latestFeature = utils.getPolygonFeature(_this.selectIntersecting.coordinates);
+        if (turf.inside(featureCenter, latestFeature) || turf.inside(_this.selectIntersecting.properties.centroid, l.feature) || overlaps(latestFeature, l.feature)) {
+          // Done with selecting.
+          _this.selectIntersecting = null;
+          // Trigger action.
+          actions.mapSquareSelected(l.feature);
+          return;
+        }
+      }
 
       // If there's a square selected.
       if (mapStore.isSelectedSquare()) {
         var selSqrCenter = mapStore.getSelectedSquareCenter();
 
-        var featureCenter = turf.centroid(l.feature);
+        featureCenter = turf.centroid(l.feature);
 
         // Color the selected square.
         if (selSqrCenter[0] == featureCenter.geometry.coordinates[0] &&

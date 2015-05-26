@@ -9,7 +9,8 @@ module.exports = Reflux.createStore({
 
   storage: {
     results: [],
-    sqrSelected: null
+    sqrSelected: null,
+    latestImagery: null
   },
 
   // Called on creation.
@@ -18,6 +19,18 @@ module.exports = Reflux.createStore({
     this.listenTo(actions.mapMove, this.onMapMove);
     this.listenTo(actions.mapSquareSelected, this.onMapSquareSelected);
     this.listenTo(actions.mapSquareUnselected, this.onMapSquareUnselected);
+
+    this.queryLatestImagery();
+  },
+
+  queryLatestImagery: function() {
+    var _this = this;
+
+    $.get('http://oam-catalog.herokuapp.com/meta?limit=1')
+      .success(function(data) {
+        _this.storage.latestImagery = data.results[0].geojson;
+        actions.latestImageryLoaded();
+      });
   },
 
   // Actions listener.
@@ -75,6 +88,14 @@ module.exports = Reflux.createStore({
    */
   getSelectedSquareCenter: function() {
     return this.storage.sqrSelected !== null ? this.storage.sqrSelected.properties.centroid : null;
+  },
+
+  /**
+   * Returns the latest imagery's coordinates.
+   * @return Feature or null
+   */
+  getLatestImagery: function() {
+    return this.storage.latestImagery;
   },
 
   /**

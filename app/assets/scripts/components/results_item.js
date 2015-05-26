@@ -45,7 +45,7 @@ var ResultsItem = React.createClass({
           <div className="pane-body-inner">
             <div className="single-media">
               <div className="blur-media" style={blurImage}></div>
-              <img alt="Result thumbnail" src={d.properties.thumbnail || "/assets/graphics/layout/img-placeholder.svg" } />
+              <img alt="Result thumbnail" src={d.properties.thumbnail || "assets/graphics/layout/img-placeholder.svg" } />
             </div>
             <div className="single-actions">
               {tmsOptions}

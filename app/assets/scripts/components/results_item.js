@@ -48,11 +48,13 @@ var ResultsItem = React.createClass({
             </div>
             <dl className="single-details">
               <dt>Type</dt>
-              <dd>{d.platform}</dd>
+              <dd>{d.properties.tms ? 'Multiscene TMS' : 'Single Scene'}</dd>
               <dt>Date</dt>
               <dd>{d.acquisition_start.slice(0,10)}</dd>
               <dt>Resolution</dt>
               <dd>{utils.gsdToUnit(d.gsd)}</dd>
+              <dt>Platform</dt>
+              <dd className="cap">{d.platform}</dd>
             </dl>
           </div>
         </div>

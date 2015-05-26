@@ -1,0 +1,15 @@
+language: node_js
+env:
+  global:
+  - GH_REF=github.com/hotosm/oam-browser.git
+  - DEPLOY_BRANCH=master
+  - secure: "WrRx8thvjJ/cnS2hETwi+bwzx38bEBrvGst699AD6+aEDeUg0Yqv45nxkeExbMwOcavtFTS/CAygkxdrduNWsLo9S984WORA37p6nvZ61y8Ed3iCRtAsHqlCWgAyrCjqEZJbty9+/V76D9cvY76LprKTaGSLDYKj9kJZiXQjppo="
+
+before_install:
+- chmod +x ./.build_scripts/deploy.sh
+
+script:
+- gulp prod
+
+after_success:
+- ./.build_scripts/deploy.sh

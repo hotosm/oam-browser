@@ -27,6 +27,7 @@ var Map = React.createClass({
     Reflux.listenTo(actions.resultItemView, "onResultItemView"),
 
     Reflux.listenTo(actions.goToLatest, "onGoToLatest"),
+    Reflux.listenTo(actions.geocoderResult, "onGeocoderResult"),
   ],
 
   map: null,
@@ -101,6 +102,14 @@ var Map = React.createClass({
       this.selectIntersecting = latest;
       // Move the map
       this.map.setView([latestCenter.geometry.coordinates[1], latestCenter.geometry.coordinates[0]], 8);
+    }
+  },
+
+  // Actions listener.
+  onGeocoderResult: function(bounds) {
+    if (bounds) {
+      // Move the map
+      this.map.fitBounds(bounds);
     }
   },
 

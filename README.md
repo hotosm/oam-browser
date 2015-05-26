@@ -2,6 +2,12 @@
 
 [![Build Status](https://travis-ci.org/hotosm/oam-browser.svg?branch=master)](https://travis-ci.org/hotosm/oam-browser)
 
+The OAM-Browser is a part of the [OpenAerialMap](https://github.com/hotosm/OpenAerialMap) project. See the [OpenAerialMap](https://github.com/hotosm/OpenAerialMap) repository for more information about the project and contribute to the development. 
+
+Submit any issues and feedback regarding the imagery browser in the [issue tracker](https://github.com/hotosm/oam-browser/issues). 
+
+Access the site at http://hotosm.github.io/oam-browser/. 
+
 ## Development environment
 To set up the development environment for this website, you'll need to install the following on your system:
 

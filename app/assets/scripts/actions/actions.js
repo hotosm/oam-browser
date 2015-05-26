@@ -7,6 +7,8 @@ module.exports = Reflux.createActions({
   'mapSquareSelected': {},
   'mapSquareUnselected': {},
 
+  'latestImageryLoaded': {},
+
   'resultsChange': {},
 
   // Results pane related actions.
@@ -17,6 +19,11 @@ module.exports = Reflux.createActions({
   'resultOver': {},
   'resultOut': {},
   
-  
+  // openModal(which)
   'openModal': {},
+
+  // Go to the latest imagery.
+  // Its coordinates are stored in the mapStore and can be got with
+  // getLatestImagery().
+  'goToLatest': {},
 });

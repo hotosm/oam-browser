@@ -65,6 +65,20 @@ input[type="search"] {
   height: 2rem;
 }
 
+.input-l {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  height: 2.5rem;
+}
+
+.input-xl {
+  padding: 0.5rem 1rem;
+  font-size: 1.25rem;
+  line-height: 2rem;
+  height: 3rem;
+}
+
 .form-group {
   margin-bottom: 1rem;
   @extend .clearfix;

@@ -30,6 +30,7 @@ a {
   color: $primary-color;
   text-decoration: none;
   @include transition(opacity 0.2s ease 0s);
+  @include transform(translateZ(0));
 }
 
 a:visited {
@@ -121,7 +122,111 @@ a:active{
   width: 16rem;
 }
 
-// .bttn-search,
-.bttn-mylocation {
-  display: none; /* temporary */
+// WELCOME MODAL
+
+#modal-welcome {
+  .modal-header {
+    @include transform(translateZ(0));
+    @include background(linear-gradient(rgba($base-color, 0.64), rgba($base-color, 0.80), rgba($base-color, 0.92)), url("../graphics/layout/oam-logo-symbol.svg") center center no-repeat);
+    color: #fff;
+    text-align: center;
+    padding: $modal-padding*2;
+    background-size: 800% 800%;
+    @include animation(splash-bg 4s ease 0s 1);
+    p {
+      font-size: 1.25rem;
+      line-height: 1.75rem;
+      opacity: 0.64;
+    }
+  }
+  .close {
+    color: #fff;
+  }
+  #modal-title {
+    img {
+      height: 3rem;
+      width: auto;
+    }
+    span {
+      @extend .visually-hidden;
+    }
+  }
+  .bttn-latest-welcome {
+    width: 64%;
+    max-width: 20rem;
+  }
+  .mod-block {
+    text-align: center;
+  }
+  .mod-sep {
+    position: relative;
+    text-align: center;
+    color: tint($base-color, 64%);
+    text-transform: uppercase;
+    margin: 1rem (-$modal-padding*2);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    span {
+      position: relative;
+      z-index: 2;
+      display: inline-block;
+      background: tint($base-color, 92%);
+      padding: 0 0.5rem;
+    }
+    &:before {
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      left: 0;
+      height: 1px;
+      width: 100%;
+      content: "";
+      background: tint($base-color, 80%);
+    }
+  }
 }
+
+// INFO MODAL
+
+#modal-info {
+  @include media(medium-up) {
+    .prose {
+      @include columns(3);
+      @include column-gap(2rem);
+      h2 {
+        margin-top: 0;
+        -webkit-column-break-inside: avoid; /* Chrome, Safari, Opera */
+          page-break-inside: avoid; /* Firefox */
+               break-inside: avoid; /* IE 10+ */
+      }
+    }
+  }
+}
+
+// ANIMATION
+
+@include keyframes(pane-reveal) {
+  0% {
+    opacity: 0;
+    top: 50%;
+    right: 50%;
+    bottom: auto;
+    @include transform(translate(50%, -50%), scale(0));
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    @include transform(translate(0, 0), scale(1));
+  }
+}
+
+@include keyframes(splash-bg) {
+  from {
+    background-size: 400% 400%;
+  }
+  to {
+    background-size: 800% 800%;
+  }
+}
+

@@ -11,7 +11,7 @@ var resultsStore = require('../stores/results_store');
 var utils = require('../utils/utils');
 var dsZoom = require('../utils/ds_zoom');
 
-L.mapbox.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6IlhHVkZmaW8ifQ.hAMX5hSW-QnTeRCMAy9A8Q';
+L.mapbox.accessToken = 'pk.eyJ1IjoiZGV2c2VlZCIsImEiOiJnUi1mbkVvIn0.018aLhX0Mb0tdtaT2QNe2Q';
 
 var Map = React.createClass({
   // Connect to the store "mapStore". Whenever the store calls "this.trigger()"
@@ -294,7 +294,7 @@ var Map = React.createClass({
     var _this = this;
     var view = [60.177, 25.148];
 
-    this.map = L.mapbox.map(this.getDOMNode(), 'mapbox.light', {
+    this.map = L.mapbox.map(this.getDOMNode(), 'devseed.m9i692do', {
       zoomControl: false,
       minZoom : 4,
       maxZoom : 18,

@@ -27,7 +27,7 @@ var ResultsListItem = React.createClass({
             <header className="card-header">
               <h1 className="card-title">{d.title}</h1>
               <div className="card-media">
-                <img alt="Result thumbnail" width="768" height="432" src={d.properties.thumbnail || "/assets/graphics/layout/img-placeholder.svg" } />
+                <img alt="Result thumbnail" width="768" height="432" src={d.properties.thumbnail || "assets/graphics/layout/img-placeholder.svg" } />
               </div>
             </header>
             <div className="card-body">

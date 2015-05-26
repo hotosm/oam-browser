@@ -36,7 +36,7 @@ var ResultsListItem = React.createClass({
                 <dt>Date</dt>
                 <dd>{d.acquisition_start.slice(0,10)}</dd>
                 <dt>Res</dt>
-                <dd>{Number(Math.round((d.gsd * 100)+'e2')+'e-2')}</dd>
+                <dd>{Math.round(d.gsd * 100)}</dd>
               </dl>
             </div>
           </a>

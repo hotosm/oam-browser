@@ -203,6 +203,7 @@
     width: 68%;
     text-align: right;
     padding-left: 0.5rem;
+    text-transform: capitalize;
   }
 }
 
@@ -297,6 +298,7 @@ $card-padding: 0.5rem;
     }
     dd {
       width: 70%;
+      text-transform: capitalize;
     }
   }
 }

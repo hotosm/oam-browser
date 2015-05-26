@@ -14,11 +14,10 @@ input[type=submit] {
 .bttn {
   display: inline-block;
   font-family: $base-font-family;
-  font-weight: $base-font-regular;
+  font-weight: $base-font-bold;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
-  text-transform: uppercase;
   border-radius: $global-radius;
   border: 0;
   background-image: none;
@@ -96,7 +95,7 @@ input[type=submit] {
 .bttn-l,
 .bttn-group-l .bttn {
   line-height: 1.5rem;
-  font-size: 0.875rem;
+  font-size: 1rem;
   padding: 0.5rem 1rem;
   min-width: 2.5rem;
 }
@@ -129,6 +128,7 @@ input[type=submit] {
   &.minus:before { @extend .icon-s-subtract; }
   &.download:before { @extend .icon-download; }
   &.clipboard:before { @extend .icon-clipboard; }
+  &.history:before { @extend .icon-history; }
 }
 
 .bttn-notxt {
@@ -219,6 +219,14 @@ input[type=submit] {
 
 .bttn-search {
   @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .search;
+}
+
+.bttn-search-welcome {
+  @extend .bttn, .bttn-base-light, .bttn-l, .bttn-notxt, .search;
+}
+
+.bttn-latest-welcome {
+  @extend .bttn, .bttn-base-light, .bttn-l, .history;
 }
 
 .bttn-settings {

@@ -67,20 +67,37 @@ var BModal = React.createClass({
 
   render: function () {
     var modal = null;
+    var header = null;
+    var footer = null;
+
+    if (this.props.header !== false) {
+      header = (
+        <header className="modal-header">
+          {this.props.header}
+        </header>
+      );
+    }
+
+    if (this.props.footer !== false) {
+      footer = (
+        <footer className="modal-footer">
+          {this.props.footer}
+        </footer>
+      );
+    }
+
     if (this.state.revealed) {
       modal = (
-        <section className="modal" key={"modal-" + this.props.type} onClick={this.onOverlayClick} >
+        <section className="modal" key={"modal-" + this.props.type} onClick={this.onOverlayClick} id={"modal-" + this.props.type}>
           <div className="modal-inner">
-            <a className="close" title="Close" onClick={this.onCloseClick}><span>Close</span></a>
-            <header className="modal-header">
-              {this.props.header}
-            </header>
+            <span className="dismiss-modal">
+              <a className="close" title="Close" onClick={this.onCloseClick}><span>Close</span></a>
+            </span>
+            {header}
             <div className="modal-body">
               {this.props.body}
             </div>
-            <footer className="modal-footer">
-              {this.props.footer}
-            </footer>
+            {footer}
           </div>
         </section>
       );

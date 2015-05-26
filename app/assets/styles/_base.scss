@@ -121,7 +121,67 @@ a:active{
   width: 16rem;
 }
 
-// .bttn-search,
-.bttn-mylocation {
-  display: none; /* temporary */
+// WELCOME MODAL
+
+#modal-welcome {
+  .modal-header {
+    @include background(linear-gradient(rgba($base-color, 0.64), rgba($base-color, 0.80), rgba($base-color, 0.92)), url("../graphics/layout/oam-logo-symbol.svg") center center no-repeat);
+    background-size: 400%;
+    color: #fff;
+    text-align: center;
+    padding: $modal-padding*2;
+    p {
+      font-size: 1.25rem;
+      line-height: 1.75rem;
+      opacity: 0.64;
+    }
+  }
+  .close {
+    color: #fff;
+  }
+  #modal-title {
+    img {
+      height: 3rem;
+      width: auto;
+    }
+    span {
+      @extend .visually-hidden;
+    }
+  }
+  .bttn-latest-welcome {
+    width: 64%;
+    max-width: 20rem;
+  }
+  .mod-block {
+    // max-width: 32rem;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .mod-sep {
+    position: relative;
+    text-align: center;
+    color: tint($base-color, 64%);
+    text-transform: uppercase;
+    margin: 1rem (-$modal-padding*2);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    span {
+      position: relative;
+      z-index: 2;
+      display: inline-block;
+      background: tint($base-color, 92%);
+      padding: 0 0.5rem;
+    }
+    &:before {
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      left: 0;
+      height: 1px;
+      width: 100%;
+      content: "";
+      background: tint($base-color, 80%);
+    }
+  }
 }
+

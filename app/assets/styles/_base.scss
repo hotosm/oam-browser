@@ -30,6 +30,7 @@ a {
   color: $primary-color;
   text-decoration: none;
   @include transition(opacity 0.2s ease 0s);
+  @include transform(translateZ(0));
 }
 
 a:visited {

@@ -9,6 +9,7 @@
   width: 24rem;
   padding: 1rem;
   @extend %press-box-skin;
+  @include animation(pane-reveal 0.24s ease 0s 1);
 }
 
 .results-hub,
@@ -299,5 +300,23 @@ $card-padding: 0.5rem;
     dd {
       width: 70%;
     }
+  }
+}
+
+// ANIMATION
+
+@include keyframes(pane-reveal) {
+  0% {
+    opacity: 0;
+    top: 50%;
+    right: 50%;
+    bottom: auto;
+    @include transform(translate(50%, -50%), scale(0));
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    @include transform(translate(0, 0), scale(1));
   }
 }

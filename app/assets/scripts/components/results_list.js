@@ -1,6 +1,7 @@
 'use strict';
 var React = require('react/addons');
 var actions = require('../actions/actions');
+var utils = require('../utils/utils');
 
 var ResultsListItem = React.createClass({
   onClick: function(e) {
@@ -36,7 +37,7 @@ var ResultsListItem = React.createClass({
                 <dt>Date</dt>
                 <dd>{d.acquisition_start.slice(0,10)}</dd>
                 <dt>Res</dt>
-                <dd>{Math.round(d.gsd * 100)}</dd>
+                <dd>{utils.gsdToUnit(d.gsd)}</dd>
               </dl>
             </div>
           </a>

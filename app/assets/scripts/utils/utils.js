@@ -35,3 +35,14 @@ module.exports.getPolygonFeature = function(coords) {
     }
   };
 };
+
+/**
+ * Coverts the given gsb to meters or centimeters
+ * @param  float gsd
+ * @return string
+ */
+module.exports.gsdToUnit = function(gsd) {
+  var cm = gsd * 100 * 100;
+  var unit = cm >= 100 ? 'm' : 'cm';
+  return Math.round(cm) + ' ' + unit;
+};

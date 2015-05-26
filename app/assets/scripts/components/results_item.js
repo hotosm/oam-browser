@@ -2,6 +2,8 @@
 var React = require('react/addons');
 var actions = require('../actions/actions');
 var ZcInput = require('./shared/zc_input');
+var utils = require('../utils/utils');
+
 
 var ResultsItem = React.createClass({
   prevResult: function(e) {
@@ -50,7 +52,7 @@ var ResultsItem = React.createClass({
               <dt>Date</dt>
               <dd>{d.acquisition_start.slice(0,10)}</dd>
               <dt>Resolution</dt>
-              <dd>{Math.round(d.gsd * 100)}</dd>
+              <dd>{utils.gsdToUnit(d.gsd)}</dd>
             </dl>
           </div>
         </div>

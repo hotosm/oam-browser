@@ -1,6 +1,7 @@
 'use strict';
 var React = require('react/addons');
 var actions = require('../actions/actions');
+var utils = require('../utils/utils');
 
 var ResultsListItem = React.createClass({
   onClick: function(e) {
@@ -32,11 +33,11 @@ var ResultsListItem = React.createClass({
             <div className="card-body">
               <dl className="card-details">
                 <dt>Type</dt>
-                <dd>{d.properties.tms ? 'Multiscene TMS' : 'Single Scene'}</dd>
+                <dd>{d.platform}</dd>
                 <dt>Date</dt>
-                <dd>2015-05-18</dd>
+                <dd>{d.acquisition_start.slice(0,10)}</dd>
                 <dt>Res</dt>
-                <dd>50 cm</dd>
+                <dd>{utils.gsdToUnit(d.gsd)}</dd>
               </dl>
             </div>
           </a>

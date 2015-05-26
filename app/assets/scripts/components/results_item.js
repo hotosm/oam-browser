@@ -2,6 +2,8 @@
 var React = require('react/addons');
 var actions = require('../actions/actions');
 var ZcInput = require('./shared/zc_input');
+var utils = require('../utils/utils');
+
 
 var ResultsItem = React.createClass({
   prevResult: function(e) {
@@ -42,15 +44,15 @@ var ResultsItem = React.createClass({
             </div>
             <div className="single-actions">
               {tmsOptions}
-              <a title="Download image" className="bttn-download" target="_blank"><span>Download</span></a>
+              <a title="Download image" className="bttn-download" target="_blank" href={d.uuid}><span>Download</span></a>
             </div>
             <dl className="single-details">
               <dt>Type</dt>
-              <dd>{d.properties.tms ? 'Multiscene TMS' : 'Single Scene'}</dd>
+              <dd>{d.platform}</dd>
               <dt>Date</dt>
-              <dd>2015-05-18</dd>
-              <dt>Res</dt>
-              <dd>50 cm</dd>
+              <dd>{d.acquisition_start.slice(0,10)}</dd>
+              <dt>Resolution</dt>
+              <dd>{utils.gsdToUnit(d.gsd)}</dd>
             </dl>
           </div>
         </div>

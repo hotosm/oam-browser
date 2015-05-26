@@ -33,7 +33,7 @@ var ResultsListItem = React.createClass({
             <div className="card-body">
               <dl className="card-details">
                 <dt>Type</dt>
-                <dd>{d.platform}</dd>
+                <dd>{d.properties.tms ? 'Multiscene TMS' : 'Single Scene'}</dd>
                 <dt>Date</dt>
                 <dd>{d.acquisition_start.slice(0,10)}</dd>
                 <dt>Res</dt>

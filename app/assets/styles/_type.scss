@@ -40,6 +40,10 @@ h6, .hd-xxs {
   @include heading(1rem, xlarge-up);      // 16, 20, 24, 28
 }
 
+.cap {
+  text-transform: capitalize;
+}
+
 .prose {
 
   code, kbd, pre, samp {

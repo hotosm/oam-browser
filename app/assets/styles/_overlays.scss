@@ -92,7 +92,7 @@
 
 .drop-menu {
   list-style: none;
-  margin: 0 -1rem;
+  margin: -0.5rem -1rem;
   padding: 0;
   @extend .clearfix;
   white-space: nowrap;
@@ -100,7 +100,6 @@
   font-weight: $base-font-regular;
   font-size: 0.875rem;
   line-height: 1.25rem;
-  text-transform: uppercase;
   .sep:not(:first-child) {
     box-shadow: inset 0 1px 0 0 $brdr-rgba;
     padding-top: 0.25rem;
@@ -150,6 +149,7 @@
   &.twitter a:before { @extend .icon-twitter; }
   &.facebook a:before { @extend .icon-facebook; }
   &.google-plus a:before { @extend .icon-google-plus; }
+  &.clipboard a:before { @extend .icon-clipboard; }
 }
 
 .drop-menu > .active > a,

@@ -73,9 +73,9 @@ a:active{
 #site-title {
   position: absolute;
   top: 1rem;
+  right: 6.5rem;
   z-index: 10;
-  left: 50%;
-  @include transform(translate(-50%, 0));
+  @include transition(all 0.64s ease 0s);
   span {
     @extend .visually-hidden;
   }
@@ -93,6 +93,10 @@ a:active{
     font-size: 0.75rem;
     line-height: 1.25rem;
     text-transform: uppercase;
+  }
+  @include media(large-up) {
+    right: 50%;
+    @include transform(translate(50%, 0));
   }
 }
 
@@ -193,8 +197,10 @@ a:active{
     .prose {
       @include columns(3);
       @include column-gap(2rem);
+      margin-bottom: -0.75rem;
       h2 {
-        margin-top: 0;
+        @include heading(1.25rem);   // 20
+        margin: 0 0 1rem 0;
         -webkit-column-break-inside: avoid; /* Chrome, Safari, Opera */
           page-break-inside: avoid; /* Firefox */
                break-inside: avoid; /* IE 10+ */

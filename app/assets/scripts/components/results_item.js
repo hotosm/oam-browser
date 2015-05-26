@@ -31,6 +31,10 @@ var ResultsItem = React.createClass({
       tmsOptions = (<ZcInput value={d.properties.tms} />);
     }
 
+    var blurImage = {
+      backgroundImage: 'url(' + d.properties.thumbnail + ')'
+    };
+
     return (
       <article className={(d.properties.tms ? 'has-tms ' : '') + 'results-single'}>
         <header className="pane-header">
@@ -40,6 +44,7 @@ var ResultsItem = React.createClass({
         <div className="pane-body">
           <div className="pane-body-inner">
             <div className="single-media">
+              <div className="blur-media" style={blurImage}></div>
               <img alt="Result thumbnail" src={d.properties.thumbnail || "assets/graphics/layout/img-placeholder.svg" } />
             </div>
             <div className="single-actions">
@@ -47,13 +52,13 @@ var ResultsItem = React.createClass({
               <a title="Download image" className="bttn-download" target="_blank" href={d.uuid}><span>Download</span></a>
             </div>
             <dl className="single-details">
-              <dt>Type</dt>
+              <dt><span>Type</span></dt>
               <dd>{d.properties.tms ? 'Multiscene TMS' : 'Single Scene'}</dd>
-              <dt>Date</dt>
+              <dt><span>Date</span></dt>
               <dd>{d.acquisition_start.slice(0,10)}</dd>
-              <dt>Resolution</dt>
+              <dt><span>Resolution</span></dt>
               <dd>{utils.gsdToUnit(d.gsd)}</dd>
-              <dt>Platform</dt>
+              <dt><span>Platform</span></dt>
               <dd className="cap">{d.platform}</dd>
             </dl>
           </div>

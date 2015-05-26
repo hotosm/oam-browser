@@ -129,6 +129,7 @@ input[type=submit] {
   &.download:before { @extend .icon-download; }
   &.clipboard:before { @extend .icon-clipboard; }
   &.history:before { @extend .icon-history; }
+  &.uoptions:before { @extend .icon-s-arr-down; }
 }
 
 .bttn-notxt {
@@ -255,4 +256,8 @@ input[type=submit] {
 
 .bttn-clipboard {
   @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .clipboard;
+}
+
+.bttn-uoptions {
+  @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .uoptions;
 }

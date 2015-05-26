@@ -26,4 +26,6 @@ module.exports = Reflux.createActions({
   // Its coordinates are stored in the mapStore and can be got with
   // getLatestImagery().
   'goToLatest': {},
+
+  'geocoderResult': {},
 });

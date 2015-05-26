@@ -27,6 +27,20 @@ var WelcomeModal = React.createClass({
     this.getDOMNode().querySelector('.dismiss-modal .close').click();
   },
 
+  onGeocoderSearch: function(e) {
+    e.preventDefault();
+    var _this = this;
+
+    var geocoder = L.mapbox.geocoder('mapbox.places');
+
+    var queryString = this.getDOMNode().querySelector('[data-hook="geocoder"]').value;
+    geocoder.query(queryString, function(err, data) {
+      actions.geocoderResult(data.lbounds ? data.lbounds : false);
+      // Simulate close click.
+      _this.getDOMNode().querySelector('.dismiss-modal .close').click();
+    });
+  },
+
   getHeader: function() {
     return (
       <div>
@@ -39,9 +53,9 @@ var WelcomeModal = React.createClass({
   getBody: function() {
     return (
       <div>
-        <form className="form-search-welcome mod-block">
+        <form className="form-search-welcome mod-block" onSubmit={this.onGeocoderSearch}>
           <div className="input-group">
-            <input className="form-control input-l input search" type="search" placeholder="Search location" />
+            <input className="form-control input-l input search" type="search" placeholder="Search location" data-hook="geocoder"/>
             <span className="input-group-bttn"><button type="submit" className="bttn-search-welcome"><span>Search</span></button></span>
           </div>
         </form>

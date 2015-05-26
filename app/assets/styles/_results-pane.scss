@@ -137,11 +137,12 @@
   text-align: center;
   background: tint($base-color, 80%);
   margin: -1rem -1rem 1rem -1rem;
-  padding: 1rem;
   height: 16rem;
   line-height: 16rem;
   font-size: 0;
   vertical-align: middle;
+  overflow: hidden;
+  padding: 1rem;
   &:after {
     position: absolute;
     bottom: 0;
@@ -150,11 +151,28 @@
     height: 1px;
     background: $brdr-rgba;
     content: "";
+    z-index: 3;
   }
   img {
+    position: relative;
+    z-index: 2;
     max-width: 100%;
     height: 100%;
     display: inline-block;
+    box-shadow: 0 2px 12px 2px $spread-shadow-rgba;
+    border-radius: $semi-radius;
+  }
+  .blur-media {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-size: cover;
+    display: block;
+    @include filter(blur(0.5rem));
+    opacity: 0.24;
   }
 }
 
@@ -171,10 +189,11 @@
   .single-actions {
     .input-group {
       float: left;
-      width: 60%;
+      width: calc(64% - 0.5rem);
     }
     .bttn-download {
       float: right;
+      width: 36%;
       min-width: initial;
     }
   }
@@ -184,6 +203,8 @@
   margin: 0 -1rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
+  box-shadow: inset 0 1px 0 0 $brdr-rgba;
+  @extend .clearfix;
   dt, dd {
     float: left;
     margin: 0;
@@ -198,7 +219,10 @@
     text-transform: uppercase;
     clear: left;
     padding-right: 0.5rem;
-    opacity: 0.64;
+    font-size: 0.775rem;
+    span {
+      opacity: 0.64;
+    }
   }
   dd {
     width: 68%;

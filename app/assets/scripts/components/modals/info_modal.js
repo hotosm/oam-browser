@@ -13,11 +13,14 @@ var InfoModal = React.createClass({
     return (
       <div className="prose">
         <h2>OpenAerialMap</h2>
-        <p>OpenAerialMap (OAM) is a set of tools for searching, sharing, and using openly licensed satellite and unmanned aerial vehicle (UAV) imagery. Built on top of the <a href="https://github.com/openimagerynetwork">Open Imagery Network (OIN)</a>, OAM is an open service that will provide search and access to this imagery.</p>
+        <p>OpenAerialMap (OAM) is a set of tools for searching, sharing, and using openly licensed satellite and unmanned aerial vehicle (UAV) imagery.</p>
+        <p>Built on top of the <a href="https://github.com/openimagerynetwork" title="Visit the GitHub repository">Open Imagery Network (OIN)</a>, OAM is an open service that will provide search and access to this imagery.</p>
         <h2>How to use?</h2>
-        <p>Use the map to pan and zoom to search available imagery. Available imagery can be previewed by selecting a tile and browsing the imagery in the sidebar. All imagery is publicly licensed and made available through the Humanitarian OpenStreetMap Team&#39;s Beta OIN Node.</p>
+        <p>Use the map to pan and zoom to search available imagery. Available imagery can be previewed by selecting a tile and browsing the imagery in the sidebar.</p>
+        <p>All imagery is publicly licensed and made available through the Humanitarian OpenStreetMap Team&#39;s Beta OIN Node.</p>
         <h2>Join in the Development</h2>
-        <p>OAM is releasing a beta version to preview and test functionality. There are plenty of ways to get involved in OpenAerialMap. Check out the <a href="https://github.com/hotosm/OpenAerialMap" title="Visit the GitHub repository">GitHub repository</a> to learn more about the design and how to get involved in the project.</p>
+        <p>OAM is releasing a beta version to preview and test functionality. There are plenty of ways to get involved in OpenAerialMap.</p>
+        <p>Check out the <a href="https://github.com/hotosm/OpenAerialMap" title="Visit the GitHub repository">GitHub repository</a> to learn more about the design and how to get involved in the project.</p>
       </div>
     );
   },

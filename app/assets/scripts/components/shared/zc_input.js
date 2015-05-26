@@ -37,6 +37,18 @@ var ZcInput = React.createClass({
       <div className="input-group">
         <input className="form-control input-m" type="text" value={this.props.value} readOnly  data-hook="copy:data" />
         <span className="input-group-bttn"><button data-title="" type="button" className="bttn-clipboard disabled" data-hook="copy:trigger"><span>Copy to clipboard</span></button></span>
+        {/* 
+        <span className="input-group-bttn drop dropdown open center">
+          <a href="#" title="Show options" className="bttn-uoptions" data-toggle="drop"><span>Options</span></a>
+          <div className="drop-content">
+            <ul className="drop-menu tms-options-menu" role="menu">
+              <li className="has-icon-bef clipboard disabled"><a href="" target="_blank" title="Open with iD editor">Open with iD editor</a></li>
+              <li className="has-icon-bef clipboard disabled"><a href="" target="_blank" title="Open with JOSM">Open with JOSM</a></li>
+              <li className="has-icon-bef clipboard"><a href="" title="Copy to clipboard" data-hook="copy:trigger">Copy to clipboard</a></li>
+            </ul>
+          </div>
+        </span>
+        */}
       </div>
     );
   }

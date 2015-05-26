@@ -3,7 +3,7 @@ env:
   global:
   - GH_REF=github.com/hotosm/oam-browser.git
   - DEPLOY_BRANCH=master
-  - secure: "l2/pKIh0uT/pnEmPA36x4Pv4bhZVqooRBV+1NgBz/3mJ62koBxe6phK9LEcVGNXCoDpO7eHpHwKvmoNK+98GkTsEwlKD77DpiE5bpdKs35qoVEpEcRwcj6XPYWhlh1fBU4KwWRDGM7nAzxHmiWwBu3Lx0FW5SwacUHExLfejwIw="
+  - secure: "WrRx8thvjJ/cnS2hETwi+bwzx38bEBrvGst699AD6+aEDeUg0Yqv45nxkeExbMwOcavtFTS/CAygkxdrduNWsLo9S984WORA37p6nvZ61y8Ed3iCRtAsHqlCWgAyrCjqEZJbty9+/V76D9cvY76LprKTaGSLDYKj9kJZiXQjppo="
 
 before_install:
 - chmod +x ./.build_scripts/deploy.sh

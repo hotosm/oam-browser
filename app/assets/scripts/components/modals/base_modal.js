@@ -57,7 +57,6 @@ var BModal = React.createClass({
   },
 
   onOverlayClick: function(e) {
-    e.preventDefault();
     this.props.onOverlayClick.call(this, e);
   },
 

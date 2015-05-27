@@ -1,7 +1,8 @@
 'use strict';
 var React = require('react/addons');
 var actions = require('../actions/actions');
-var ZcInput = require('./shared/zc_input');
+var ZcButton = require('./shared/zc_button');
+var Dropdown = require('./shared/dropdown');
 var utils = require('../utils/utils');
 
 
@@ -19,6 +20,10 @@ var ResultsItem = React.createClass({
     actions.nextResult();
   },
 
+  onCopy: function(e) {
+    return this.getDOMNode().querySelector('[data-hook="copy:data"]').value;
+  },
+
   render: function() {
     var d = this.props.data;
     var pagination = this.props.pagination;
@@ -28,7 +33,20 @@ var ResultsItem = React.createClass({
 
     var tmsOptions = null;
     if (d.properties.tms) {
-      tmsOptions = (<ZcInput value={d.properties.tms} />);
+      tmsOptions = (
+        <div className="input-group">
+          <input className="form-control input-m" type="text" value={d.properties.tms} readOnly  data-hook="copy:data" />
+          <Dropdown element="span" className="input-group-bttn dropdown center" triggerTitle="Show options" triggerClassName="bttn-uoptions" triggerText="Options">
+            <ul className="drop-menu tms-options-menu" role="menu">
+              <li className="has-icon-bef clipboard disabled"><a href="" target="_blank" title="Open with iD editor">Open with iD editor</a></li>
+              <li className="has-icon-bef clipboard disabled"><a href="" target="_blank" title="Open with JOSM">Open with JOSM</a></li>
+              <li className="has-icon-bef clipboard">
+                <ZcButton onCopy={this.onCopy} title="Copy to clipboard" text="Copy to clipboard"/>
+              </li>
+            </ul>
+          </Dropdown>
+        </div>
+      );
     }
 
     var blurImage = {

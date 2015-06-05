@@ -38,7 +38,7 @@ var ResultsItem = React.createClass({
     return (
       <article className={(d.properties.tms ? 'has-tms ' : '') + 'results-single'}>
         <header className="pane-header">
-          <h1 className="pane-title" title="{d.title}">{d.title}</h1>
+          <h1 className="pane-title" title={d.title.replace(/\.[a-z]+$/, '')}>{d.title.replace(/\.[a-z]+$/, '')}</h1>
           <p className="pane-subtitle">{pagination.current} of {pagination.total} results</p>
         </header>
         <div className="pane-body">

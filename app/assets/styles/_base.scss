@@ -236,3 +236,46 @@ a:active{
   }
 }
 
+
+.loading {
+  @extend .antialiased;
+  position: absolute;
+  z-index: 9980;
+  top: 50%;
+  left: 50%;
+  width: 8rem;
+  height: 8rem;
+  margin: -4rem 0 0 -4rem;
+  background: rgba($base-color, 0.8);
+  padding: 2rem 1rem;
+  border-radius: $global-radius;
+  color: #fff;
+  text-align: center;
+
+  opacity: 0;
+  visibility: hidden;
+  @include transform(scale(0));
+  @include transition(all 0.24s ease 0s);
+
+  &.revealed {
+    opacity: 1;
+    visibility: visible;
+    @include transform(scale(1));
+  }
+
+  &:before {
+    display: block;
+    @extend .icon-spinner;
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+    line-height: 1;
+    margin: 0 auto 0.5rem auto;
+    @include animation(spin-c 1s linear 0s infinite);
+  }
+}
+
+@include keyframes(spin-c) {
+  from { @include transform(rotate(0deg)); }
+    to { @include transform(rotate(360deg)); }
+}

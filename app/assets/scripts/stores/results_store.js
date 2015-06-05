@@ -12,7 +12,7 @@ module.exports = Reflux.createStore({
 
   init: function() {
     this.listenTo(actions.resultsChange, this.onResultsChange);
-    this.listenTo(actions.resultItemView, this.onResultItemView);
+    this.listenTo(actions.resultItemSelect, this.onResultItemSelect);
     this.listenTo(actions.resultListView, this.onResultListView);
     this.listenTo(actions.nextResult, this.onNextResult);
     this.listenTo(actions.prevResult, this.onPrevResult);
@@ -28,8 +28,8 @@ module.exports = Reflux.createStore({
   },
 
   // Action listener.
-  onResultItemView: function(data) {
-    console.log('onImageSelect');
+  onResultItemSelect: function(data) {
+    console.log('onResultItemSelect');
     this.storage.selectedItem = data;
     // Find the object index.
     for (var i in this.storage.results) {
@@ -38,6 +38,7 @@ module.exports = Reflux.createStore({
         break;
       }
     }
+    actions.resultItemView(this.storage.selectedItem);
     this.trigger(this.storage);
   },
 
@@ -53,6 +54,7 @@ module.exports = Reflux.createStore({
     this.storage.selectedItemIndex++;
     var i = this.storage.selectedItemIndex;
     this.storage.selectedItem = this.storage.results[i];
+    actions.resultItemView(this.storage.selectedItem);
     this.trigger(this.storage);
   },
 
@@ -61,6 +63,7 @@ module.exports = Reflux.createStore({
     this.storage.selectedItemIndex--;
     var i = this.storage.selectedItemIndex;
     this.storage.selectedItem = this.storage.results[i];
+    actions.resultItemView(this.storage.selectedItem);
     this.trigger(this.storage);
   },
 

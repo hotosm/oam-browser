@@ -38,11 +38,16 @@ module.exports.getPolygonFeature = function(coords) {
 
 /**
  * Coverts the given gsb to meters or centimeters
- * @param  float gsd
+ * @param  float gsd in meters
  * @return string
  */
 module.exports.gsdToUnit = function(gsd) {
-  var cm = gsd * 100 * 100;
-  var unit = cm >= 100 ? 'm' : 'cm';
-  return Math.round(cm) + ' ' + unit;
+  var unit = 'm';
+  // If it's less than 1m, convert to cm so it displays more nicely
+  if (gsd < 1) {
+    unit = 'cm';
+    gsd *= 100;
+  }
+
+  return Math.round(gsd) + ' ' + unit;
 };

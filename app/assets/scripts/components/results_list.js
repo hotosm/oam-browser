@@ -6,7 +6,7 @@ var utils = require('../utils/utils');
 var ResultsListItem = React.createClass({
   onClick: function(e) {
     e.preventDefault();
-    actions.resultItemView(this.props.data);
+    actions.resultItemSelect(this.props.data);
   },
   onOver: function(e) {
     e.preventDefault();

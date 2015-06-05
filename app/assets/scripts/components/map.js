@@ -24,7 +24,9 @@ var Map = React.createClass({
     Reflux.listenTo(actions.mapSquareUnselected, "onMapSquareUnselected"),
     Reflux.listenTo(actions.resultOver, "onResultOver"),
     Reflux.listenTo(actions.resultOut, "onResultOut"),
+    Reflux.listenTo(actions.resultItemSelect, "onResultItemSelect"),
     Reflux.listenTo(actions.resultItemView, "onResultItemView"),
+    Reflux.listenTo(actions.resultListView, "onResultListView"),
 
     Reflux.listenTo(actions.goToLatest, "onGoToLatest"),
     Reflux.listenTo(actions.geocoderResult, "onGeocoderResult"),
@@ -38,6 +40,8 @@ var Map = React.createClass({
   fauxLineGridLayer: null,
   // Layer to store the footprint when hovering a result. 
   overFootprintLayer: null,
+  // Layer with the image of the selected result.
+  overImageLayer: null,
 
   // When the user clicks browse latest imagery we move the map to the correct
   // locations. Then, when the query is finished and the map rendered we
@@ -61,9 +65,28 @@ var Map = React.createClass({
   },
 
   // Actions listener.
-  onResultItemView: function(feature) {
+  onResultItemSelect: function() {
     // Remove footprint highlight.
     this.overFootprintLayer.clearLayers();
+  },
+
+  // Actions listener.
+  onResultItemView: function(item) {
+    if (this.map.hasLayer(this.overImageLayer)) {
+      this.map.removeLayer(this.overImageLayer);
+    }
+
+    var imageBounds = [[item.bbox[1], item.bbox[0]], [item.bbox[3], item.bbox[2]]];
+    this.overImageLayer = L.imageOverlay(item.properties.thumbnail, imageBounds);
+
+    this.map.addLayer(this.overImageLayer);
+  },
+
+  // Actions listener.
+  onResultListView: function() {
+    if (this.map.hasLayer(this.overImageLayer)) {
+      this.map.removeLayer(this.overImageLayer);
+    }
   },
 
   // Actions listener.
@@ -313,7 +336,7 @@ var Map = React.createClass({
     this.map = L.mapbox.map(this.getDOMNode().querySelector('#map'), 'devseed.m9i692do', {
       zoomControl: false,
       minZoom : 4,
-      maxZoom : 18,
+      //maxZoom : 18,
       maxBounds: L.latLngBounds([-90, -180], [90, 180])
     }).setView(view, 6);
 

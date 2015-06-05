@@ -103,6 +103,10 @@ var Map = React.createClass({
 
   // Actions listener.
   onMapSquareUnselected: function() {
+    if (this.map.hasLayer(this.overImageLayer)) {
+      this.map.removeLayer(this.overImageLayer);
+    }
+
     actions.resultsChange([]);
     this.updateGrid();
   },

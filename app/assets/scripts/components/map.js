@@ -46,10 +46,17 @@ var Map = React.createClass({
   // square that contains it. Check updateGrid()
   selectIntersecting: null,
 
+  getInitialState: function() {
+    return {
+      loading: true
+    };
+  },
+
   // Store listener.
   onMapData: function(data) {
     this.setState({
-      mapData: data
+      mapData: data,
+      loading: false
     });
   },
 
@@ -303,7 +310,7 @@ var Map = React.createClass({
     var _this = this;
     var view = [60.177, 25.148];
 
-    this.map = L.mapbox.map(this.getDOMNode(), 'devseed.m9i692do', {
+    this.map = L.mapbox.map(this.getDOMNode().querySelector('#map'), 'devseed.m9i692do', {
       zoomControl: false,
       minZoom : 4,
       maxZoom : 18,
@@ -355,6 +362,7 @@ var Map = React.createClass({
 
     // Map move listener.
     this.map.on('moveend', function() {
+      _this.setState({loading: true});
       actions.mapMove(_this.map);
       _this.updateFauxGrid();
     });
@@ -375,7 +383,10 @@ var Map = React.createClass({
 
   render: function() {
     return (
-      <div id="map"></div>
+      <div>
+        {this.state.loading ? <p className="loading revealed">Loading</p> : null}
+        <div id="map"></div>
+      </div>
     );
   },
 

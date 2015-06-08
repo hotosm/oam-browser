@@ -198,6 +198,7 @@ a:active{
       @include columns(3);
       @include column-gap(2rem);
       margin-bottom: -0.75rem;
+      -webkit-backface-visibility: hidden;
       h2 {
         @include heading(1.25rem);   // 20
         margin: 0 0 1rem 0;

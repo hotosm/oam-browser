@@ -15,8 +15,13 @@ var About = require('./components/about');
 var Home = require('./components/home');
 
 var routes = (
-  <Route path="/" handler={App}>
-    <DefaultRoute name="home" handler={Home} />
+  <Route handler={App}>
+    <Route name="map" path="/:map" handler={Home}>
+      <Route name="results" path=":square" handler={Home}>
+        <Route name="item" path=":item_id" handler={Home} />
+      </Route>
+    </Route>
+    <DefaultRoute handler={Home} />
   </Route>
 );
 

@@ -1,11 +1,25 @@
 'use strict';
 var React = require('react/addons');
+var Router = require('react-router');
 var actions = require('../actions/actions');
 var utils = require('../utils/utils');
+var mapStore = require('../stores/map_store');
 
 var ResultsListItem = React.createClass({
+
+  mixins: [
+    Router.Navigation,
+    Router.State
+  ],
+
   onClick: function(e) {
     e.preventDefault();
+
+    var params = this.getParams();
+    params.item_id = this.props.data._id
+    //this.replaceWith('item', params);
+    
+    console.log(this.props.data);
     actions.resultItemSelect(this.props.data);
   },
   onOver: function(e) {
@@ -49,6 +63,10 @@ var ResultsListItem = React.createClass({
 
 var ResultsList = React.createClass({
   render: function() {
+    var square = mapStore.getSelectedSquareCenter();
+    var north = Math.round(square[1] * 100000) / 100000;
+    var east = Math.round(square[0] * 100000) / 100000;
+
     var numRes = this.props.results.length;
     var results = this.props.results.map(function(o) {
       return (<ResultsListItem key={o._id} data={o} />);
@@ -56,7 +74,7 @@ var ResultsList = React.createClass({
     return (
       <section className="results-hub">
         <header className="pane-header">
-          <h1 className="pane-title">Selection</h1>
+          <h1 className="pane-title" title={'N ' + square[1] + ', E ' + square[0]}>{'N ' + north + ', E ' + east}</h1>
           <p className="pane-subtitle">{numRes} results</p>
         </header>
         <div className="pane-body">

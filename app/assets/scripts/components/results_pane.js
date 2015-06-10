@@ -1,6 +1,7 @@
 'use strict';
 var React = require('react/addons');
 var Reflux = require('reflux');
+var Router = require('react-router');
 var ResultsList = require('./results_list');
 var ResultsItem = require('./results_item');
 var resultsStore = require('../stores/results_store');
@@ -8,7 +9,16 @@ var mapStore = require('../stores/map_store');
 var actions = require('../actions/actions');
 
 var ResultsPane = React.createClass({
-  mixins: [Reflux.listenTo(resultsStore, "onResults")],
+  mixins: [
+    Reflux.listenTo(resultsStore, "onResults"),
+    Router.Navigation,
+    Router.State
+  ],
+
+  // We only want to load the item from the id in the path the first time the
+  // "page" is loaded.
+  // More on how the router works can be found in routes.js
+  loadFromRouter: true,
 
   onResults: function(data) {
     this.setState({
@@ -16,6 +26,14 @@ var ResultsPane = React.createClass({
       selectedItem: data.selectedItem,
       selectedItemIndex: data.selectedItemIndex
     });
+
+    var params = this.getParams();
+    var route = 'results';
+    if (data.selectedItem) {
+      route = 'item';
+      params.item_id = data.selectedItem._id
+    }
+    this.replaceWith(route, params);
   },
 
   getInitialState: function() {
@@ -29,6 +47,23 @@ var ResultsPane = React.createClass({
   closeResults: function(e) {
     e.preventDefault();
     actions.mapSquareUnselected();
+  },
+
+  componentWillUpdate: function(nextProps, nextState) {
+    var params = this.getParams();
+    // if:
+    //  - didn't load already
+    //  - there's an id in the url
+    //  - there are results
+    if (this.loadFromRouter && params.item_id && nextState.results.length) {
+      this.loadFromRouter = false;
+      // Search for the item to trigger the action.
+      for (var i in nextState.results) {
+        if (nextState.results[i]._id == params.item_id) {
+          actions.resultItemSelect(nextState.results[i]);
+        }
+      }
+    }
   },
 
   render: function() {

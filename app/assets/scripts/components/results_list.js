@@ -1,25 +1,13 @@
 'use strict';
 var React = require('react/addons');
-var Router = require('react-router');
 var actions = require('../actions/actions');
 var utils = require('../utils/utils');
 var mapStore = require('../stores/map_store');
 
 var ResultsListItem = React.createClass({
 
-  mixins: [
-    Router.Navigation,
-    Router.State
-  ],
-
   onClick: function(e) {
     e.preventDefault();
-
-    var params = this.getParams();
-    params.item_id = this.props.data._id
-    //this.replaceWith('item', params);
-    
-    console.log(this.props.data);
     actions.resultItemSelect(this.props.data);
   },
   onOver: function(e) {

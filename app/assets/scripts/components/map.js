@@ -107,9 +107,15 @@ var Map = React.createClass({
     this.map.panTo([sqrFeature.properties.centroid[1], sqrFeature.properties.centroid[0]]);
 
     // Set the correct path.
-    var mapLocation = this.mapViewToString();
-    var square = mapStore.getSelectedSquareCenter();
-    this.replaceWith('results', { map: mapLocation, square: (square[1] + ',' + square[0]) });
+    var params = this.getParams();
+    var route = params.item_id ? 'item' : 'results';
+
+    var selectedSquare = mapStore.getSelectedSquareCenter();
+
+    params.map = this.mapViewToString();
+    params.square = selectedSquare[1] + ',' + selectedSquare[0];
+
+    this.replaceWith(route, params);
 
     //this.updateGrid();
   },
@@ -439,14 +445,19 @@ var Map = React.createClass({
 
       // Compute new map location for the path 
       var mapLocation = _this.mapViewToString();
-      // Preserve selected square if any.
-      var routerSquare = _this.getParams().square;
-      if (routerSquare) {
-        _this.replaceWith('results', {map: mapLocation, square: routerSquare });
+      // Preserve other params if any.
+      var params = _this.getParams();
+      params.map = mapLocation;
+
+      // Check what's the route to use.
+      var route = 'map';
+      if (params.item_id) {
+        route = 'item';
       }
-      else {
-        _this.replaceWith('map', {map: mapLocation });
+      else if (params.square) {
+        route = 'results';
       }
+       _this.replaceWith(route, params);
 
       _this.setState({loading: true});
       actions.mapMove(_this.map);

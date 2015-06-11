@@ -2,6 +2,7 @@
 require('mapbox.js');
 var React = require('react/addons');
 var Reflux = require('reflux');
+var Router = require('react-router');
 var overlaps = require('turf-overlaps');
 // Not working. Using cdn. (turf.intersect was throwing a weird error)
 //var turf = require('turf');
@@ -30,6 +31,9 @@ var Map = React.createClass({
 
     Reflux.listenTo(actions.goToLatest, "onGoToLatest"),
     Reflux.listenTo(actions.geocoderResult, "onGeocoderResult"),
+
+    Router.Navigation,
+    Router.State
   ],
 
   map: null,
@@ -49,6 +53,10 @@ var Map = React.createClass({
   // Here we store the bbox of the latest imagery and use it to select the
   // square that contains it. Check updateGrid()
   selectIntersecting: null,
+
+  // If there's a selected square in the path, we store it and then select the
+  // correct one when the grid is updating.
+  routerSelectedSquare: null,
 
   getInitialState: function() {
     return {
@@ -98,7 +106,18 @@ var Map = React.createClass({
     // Coordinates must be inverted for panTo.
     this.map.panTo([sqrFeature.properties.centroid[1], sqrFeature.properties.centroid[0]]);
 
-    this.updateGrid();
+    // Set the correct path.
+    var params = this.getParams();
+    var route = params.item_id ? 'item' : 'results';
+
+    var selectedSquare = mapStore.getSelectedSquareCenter();
+
+    params.map = this.mapViewToString();
+    params.square = selectedSquare[1] + ',' + selectedSquare[0];
+
+    this.replaceWith(route, params);
+
+    //this.updateGrid();
   },
 
   // Actions listener.
@@ -106,6 +125,10 @@ var Map = React.createClass({
     if (this.map.hasLayer(this.overImageLayer)) {
       this.map.removeLayer(this.overImageLayer);
     }
+
+    // Set the correct path.
+    var mapLocation = this.mapViewToString();
+    this.replaceWith('map', { map: mapLocation });
 
     actions.resultsChange([]);
     this.updateGrid();
@@ -281,6 +304,19 @@ var Map = React.createClass({
       L.DomUtil.addClass(l._path, 'gs');
       var featureCenter = null;
 
+      // If there is a selected square in the path, select the correct one.
+      if (_this.routerSelectedSquare) {
+        featureCenter = turf.centroid(l.feature);
+        if (_this.routerSelectedSquare[0] == featureCenter.geometry.coordinates[1] &&
+          _this.routerSelectedSquare[1] == featureCenter.geometry.coordinates[0]) {
+          // Done with selecting.
+          _this.routerSelectedSquare = null;
+          // Trigger action.
+          actions.mapSquareSelected(l.feature);
+          return;
+        }
+      }
+
       // Select the square that intersects the stored image.
       if (_this.selectIntersecting) {
         featureCenter = turf.centroid(l.feature);
@@ -336,13 +372,29 @@ var Map = React.createClass({
     console.log('componentDidMount MapBoxMap');
     var _this = this;
     var view = [60.177, 25.148];
+    var zoom = 6;
+
+    // Map position from path.
+    var routerMap = this.getParams().map;
+    if (routerMap) {
+      routerMap = this.stringToMapView(routerMap);
+      view = [routerMap.lat, routerMap.lng];
+      zoom = routerMap.zoom;
+    }
+
+    // Check if there's a selected square in the path.
+    var routerSquare = this.getParams().square;
+    if (routerSquare) {
+      this.routerSelectedSquare = routerSquare.split(',');
+      view = [this.routerSelectedSquare[0], this.routerSelectedSquare[1]];
+    }
 
     this.map = L.mapbox.map(this.getDOMNode().querySelector('#map'), 'devseed.m9i692do', {
       zoomControl: false,
       minZoom : 4,
       //maxZoom : 18,
       maxBounds: L.latLngBounds([-90, -180], [90, 180])
-    }).setView(view, 6);
+    }).setView(view, zoom);
 
     // Custom zoom control.
     var zoom = new dsZoom({
@@ -387,8 +439,26 @@ var Map = React.createClass({
     // Footprint layer.
     this.overFootprintLayer = L.geoJson(null, { style: L.mapbox.simplestyle.style }).addTo(this.map);
 
+
     // Map move listener.
     this.map.on('moveend', function() {
+
+      // Compute new map location for the path 
+      var mapLocation = _this.mapViewToString();
+      // Preserve other params if any.
+      var params = _this.getParams();
+      params.map = mapLocation;
+
+      // Check what's the route to use.
+      var route = 'map';
+      if (params.item_id) {
+        route = 'item';
+      }
+      else if (params.square) {
+        route = 'results';
+      }
+       _this.replaceWith(route, params);
+
       _this.setState({loading: true});
       actions.mapMove(_this.map);
       _this.updateFauxGrid();
@@ -415,6 +485,34 @@ var Map = React.createClass({
         <div id="map"></div>
       </div>
     );
+  },
+
+  /**
+   * Converts the map view (coords + zoom) to use on the path.
+   * 
+   * @return string
+   */
+  mapViewToString: function() {
+    var center = this.map.getCenter();
+    var zoom = this.map.getZoom();
+    return center.lat + ',' + center.lng + ',' + zoom;
+  },
+
+  /**
+   * Converts a path string like 60.359564131824214,4.010009765624999,6
+   * to a readable object
+   * 
+   * @param  String
+   *   string to convert
+   * @return object
+   */
+  stringToMapView: function(string) {
+    var data = string.split(',');
+    return {
+      lat: data[0],
+      lng: data[1],
+      zoom: data[2],
+    }
   },
 
   /**

@@ -8,7 +8,7 @@ module.exports = {
     minZoom: 4,
     maxZoom: undefined,
 
-    intialView: [60.177, 25.148],
+    initialView: [60.177, 25.148],
 
     // Zoom below which the interactive grid ceases to exist.
     interactiveGridZoomLimit: 8,

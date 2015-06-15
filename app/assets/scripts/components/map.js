@@ -305,11 +305,11 @@ var Map = React.createClass({
     this.gridLayer.addData(squareGrid);
     this.gridLayer.eachLayer(function(l) {
       L.DomUtil.addClass(l._path, 'gs');
-      var featureCenter = null;
+      var featureCenter = turf.centroid(l.feature);
+      l.feature.properties.featureCenter = featureCenter;
 
       // If there is a selected square in the path, select the correct one.
       if (_this.routerSelectedSquare) {
-        featureCenter = turf.centroid(l.feature);
         if (_this.routerSelectedSquare[0] == featureCenter.geometry.coordinates[1] &&
           _this.routerSelectedSquare[1] == featureCenter.geometry.coordinates[0]) {
           // Done with selecting.
@@ -322,7 +322,6 @@ var Map = React.createClass({
 
       // Select the square that intersects the stored image.
       if (_this.selectIntersecting) {
-        featureCenter = turf.centroid(l.feature);
 
         var latestFeature = utils.getPolygonFeature(_this.selectIntersecting.coordinates);
         if (turf.inside(featureCenter, latestFeature) || turf.inside(_this.selectIntersecting.properties.centroid, l.feature) || overlaps(latestFeature, l.feature)) {
@@ -363,6 +362,15 @@ var Map = React.createClass({
       else if (intersectCount > 0) {
         L.DomUtil.addClass(l._path, 'gs-density-low');
       }
+
+      var p = L.popup({
+        autoPan: false,
+        closeButton: false,
+        offset: L.point(0, 10),
+        className: 'gs-tooltip-count'
+      }).setContent(intersectCount.toString());
+
+      l.bindPopup(p);
 
     });
     this.gridLayer.bringToBack();
@@ -432,11 +440,15 @@ var Map = React.createClass({
     this.gridLayer.on('mouseover', function(e) {
       if (!mapStore.isSelectedSquare() && e.layer.feature.properties.intersectCount > 0) {
         L.DomUtil.addClass(e.layer._path, 'gs-highlight');
+        // Open popup on square center.
+        var sqrCenter = e.layer.feature.properties.featureCenter.geometry.coordinates;
+        e.layer.openPopup([sqrCenter[1], sqrCenter[0]]);
       }
     });
     // On mouseout remove gs-highlight.
     this.gridLayer.on('mouseout', function(e) {
       L.DomUtil.removeClass(e.layer._path, 'gs-highlight');
+      e.layer.closePopup();
     });
 
     // Footprint layer.

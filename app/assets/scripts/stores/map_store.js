@@ -4,6 +4,7 @@ var $ = require('jquery');
 var actions = require('../actions/actions');
 var overlaps = require('turf-overlaps');
 var utils = require('../utils/utils');
+var config = require('../config.js');
 
 module.exports = Reflux.createStore({
 
@@ -37,7 +38,7 @@ module.exports = Reflux.createStore({
   onMapMove: function(map) {
     var _this = this;
 
-    if (map.getZoom() < 6) {
+    if (map.getZoom() < config.map.interactiveGridZoomLimit) {
       this.trigger([]);
       return;
     }

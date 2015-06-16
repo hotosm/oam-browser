@@ -431,6 +431,9 @@ var Map = React.createClass({
     this.gridLayer = L.geoJson(null, { style: L.mapbox.simplestyle.style }).addTo(this.map);
     // On click select the square.
     this.gridLayer.on('click', function(e) {
+      // Ensure that the popup doesn't open.
+      e.layer.closePopup();
+
       // No previous square selected.
       if (mapStore.isSelectedSquare()) {
         // Unselect.

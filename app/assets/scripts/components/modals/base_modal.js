@@ -3,6 +3,7 @@
 var React = require('react/addons');
 var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 var Reflux = require('reflux');
+var Keys = require('react-keybinding');
 var actions = require('../../actions/actions');
 
 /**
@@ -21,7 +22,14 @@ var actions = require('../../actions/actions');
 var BModal = React.createClass({
   mixins: [
     Reflux.listenTo(actions.openModal, 'onOpenModal'),
+    Keys
   ],
+
+  keybindings: {
+    'esc': function() {
+      this.setState({ revealed: false });
+    }
+  },
 
   onOpenModal: function(which) {
     if (which == this.props.type) {

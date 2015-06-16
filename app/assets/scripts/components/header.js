@@ -1,9 +1,26 @@
 'use strict';
 var React = require('react/addons');
-var actions = require('../actions/actions');
+var Keys = require('react-keybinding');
 var actions = require('../actions/actions');
 
 var Header = React.createClass({
+  mixins: [
+    Keys
+  ],
+
+  keybindings: {
+    'i': function() {
+      actions.openModal('info');
+    },
+    's': function() {
+      var geocoder = this.getDOMNode().querySelector('[data-hook="geocoder"]');
+      geocoder.focus();
+      // Prevent the 's' from being typed in the search box.
+      setTimeout(function() {
+        geocoder.value = '';
+      }, 1);
+    }
+  },
 
   aboutClickHandler: function(e) {
     e.preventDefault();

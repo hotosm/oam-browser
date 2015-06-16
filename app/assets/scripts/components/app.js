@@ -7,12 +7,6 @@ var WelcomeModal = require('./modals/welcome_modal');
 var Header = require('./header');
 
 var App = React.createClass({
-
-  aboutClickHandler: function(e) {
-    e.preventDefault();
-    actions.openModal('about');
-  },
-
   render: function() {
     return (
       <div>

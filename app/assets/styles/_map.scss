@@ -64,3 +64,25 @@
   stroke: rgba($base-color, 0.64);
   stroke-width: 1;
 }
+
+.gs-tooltip-count {
+
+  & > * {
+    pointer-events: none;
+  }
+  .leaflet-popup-content-wrapper {
+    padding: 0;
+    background: none;
+    box-shadow: none;
+  }
+  .leaflet-popup-content {
+    padding: 0;
+    text-align: center;
+    color: rgba($base-color, 0.64);
+    font-size: 0.825rem;
+    font-weight: $base-font-bold;
+  }
+  .leaflet-popup-tip-container {
+    display: none;
+  }
+}

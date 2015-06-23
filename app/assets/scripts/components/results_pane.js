@@ -27,6 +27,11 @@ var ResultsPane = React.createClass({
       selectedItemIndex: data.selectedItemIndex
     });
 
+    // No square selected. Do not update route.
+    if (!mapStore.isSelectedSquare()) {
+      return;
+    }
+
     var params = this.getParams();
     var route = 'results';
     if (data.selectedItem) {

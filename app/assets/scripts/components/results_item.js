@@ -1,5 +1,6 @@
 'use strict';
 var React = require('react/addons');
+var Keys = require('react-keybinding');
 var actions = require('../actions/actions');
 var ZcButton = require('./shared/zc_button');
 var Dropdown = require('./shared/dropdown');
@@ -7,6 +8,23 @@ var utils = require('../utils/utils');
 
 
 var ResultsItem = React.createClass({
+  mixins: [
+    Keys
+  ],
+
+  keybindings: {
+    'arrow-left': function() {
+      if (this.props.pagination.current > 1) {
+        actions.prevResult();
+      }
+    },
+    'arrow-right': function() {
+      if (this.props.pagination.current < this.props.pagination.total) {
+        actions.nextResult();
+      }
+    }
+  },
+
   prevResult: function(e) {
     e.preventDefault();
     actions.prevResult();

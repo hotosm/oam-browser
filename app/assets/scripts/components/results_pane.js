@@ -2,6 +2,7 @@
 var React = require('react/addons');
 var Reflux = require('reflux');
 var Router = require('react-router');
+var Keys = require('react-keybinding');
 var ResultsList = require('./results_list');
 var ResultsItem = require('./results_item');
 var resultsStore = require('../stores/results_store');
@@ -12,8 +13,18 @@ var ResultsPane = React.createClass({
   mixins: [
     Reflux.listenTo(resultsStore, "onResults"),
     Router.Navigation,
-    Router.State
+    Router.State,
+    Keys
   ],
+
+  keybindings: {
+    'esc': function() {
+      if (this.state.results.length === 0) {
+        return;
+      }
+      actions.mapSquareUnselected();
+    }
+  },
 
   // We only want to load the item from the id in the path the first time the
   // "page" is loaded.

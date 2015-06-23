@@ -30,6 +30,8 @@ var Map = React.createClass({
     Reflux.listenTo(actions.resultItemView, "onResultItemView"),
     Reflux.listenTo(actions.resultListView, "onResultListView"),
 
+    Reflux.listenTo(actions.miniMapClick, "onMiniMapClick"),
+
     Reflux.listenTo(actions.goToLatest, "onGoToLatest"),
     Reflux.listenTo(actions.geocoderResult, "onGeocoderResult"),
 
@@ -71,6 +73,12 @@ var Map = React.createClass({
       mapData: data,
       loading: false
     });
+  },
+
+  // Actions listener.
+  onMiniMapClick: function(latlng) {
+    // Remove footprint highlight.
+    this.map.setView(latlng);
   },
 
   // Actions listener.
@@ -423,6 +431,9 @@ var Map = React.createClass({
     this.gridLayer = L.geoJson(null, { style: L.mapbox.simplestyle.style }).addTo(this.map);
     // On click select the square.
     this.gridLayer.on('click', function(e) {
+      // Ensure that the popup doesn't open.
+      e.layer.closePopup();
+
       // No previous square selected.
       if (mapStore.isSelectedSquare()) {
         // Unselect.
@@ -457,9 +468,7 @@ var Map = React.createClass({
 
     // Map move listener.
     this.map.on('moveend', function() {
-      console.log(_this.map.getZoom());
-
-      // Compute new map location for the path 
+      // Compute new map location for the path .
       var mapLocation = _this.mapViewToString();
       // Preserve other params if any.
       var params = _this.getParams();

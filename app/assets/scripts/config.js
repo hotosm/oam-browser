@@ -5,7 +5,7 @@ module.exports = {
     baseLayer: 'devseed.m9i692do',
 
     initialZoom: 8,
-    minZoom: 4,
+    minZoom: 8,
     maxZoom: undefined,
 
     initialView: [60.177, 25.148],

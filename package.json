@@ -11,10 +11,6 @@
   "devDependencies": {
     "browser-sync": "^2.5.3",
     "browserify": "^6.2.0",
-    "eslint": "^0.23.0",
-    "eslint-config-semistandard": "^4.0.0",
-    "eslint-config-standard": "^3.3.0",
-    "eslint-config-standard-react": "^1.0.0",
     "eslint-plugin-react": "^2.5.2",
     "glob": "^4.0.6",
     "gulp": "^3.8.11",

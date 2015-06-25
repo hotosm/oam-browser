@@ -89,7 +89,7 @@ var ResultsItem = React.createClass({
             </div>
             <dl className="single-details">
               <dt><span>Type</span></dt>
-              <dd>{d.properties.tms ? 'Multiscene TMS' : 'Single Scene'}</dd>
+              <dd>{d.properties.tms ? 'Image + Tiled Map' : 'Image'}</dd>
               <dt><span>Date</span></dt>
               <dd>{d.acquisition_start.slice(0,10)}</dd>
               <dt><span>Resolution</span></dt>

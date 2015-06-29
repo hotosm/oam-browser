@@ -1,5 +1,7 @@
 'use strict';
+var qs = require('querystring');
 var Reflux = require('reflux');
+var _ = require('lodash');
 var $ = require('jquery');
 var actions = require('../actions/actions');
 var overlaps = require('turf-overlaps');
@@ -9,6 +11,7 @@ var config = require('../config.js');
 module.exports = Reflux.createStore({
 
   storage: {
+    searchParameters: { limit: 4000 },
     results: [],
     sqrSelected: null,
     latestImagery: null
@@ -20,6 +23,7 @@ module.exports = Reflux.createStore({
     this.listenTo(actions.mapMove, this.onMapMove);
     this.listenTo(actions.mapSquareSelected, this.onMapSquareSelected);
     this.listenTo(actions.mapSquareUnselected, this.onMapSquareUnselected);
+    this.listenTo(actions.setSearchParameter, this.onSetSearchParameter);
 
     this.queryLatestImagery();
   },
@@ -36,8 +40,6 @@ module.exports = Reflux.createStore({
 
   // Actions listener.
   onMapMove: function(map) {
-    var _this = this;
-
     if (map.getZoom() < config.map.interactiveGridZoomLimit) {
       this.trigger([]);
       return;
@@ -45,11 +47,37 @@ module.exports = Reflux.createStore({
 
     var bbox = map.getBounds().toBBoxString();
     // ?bbox=[lon_min],[lat_min],[lon_max],[lat_max]
-    $.get('http://oam-catalog.herokuapp.com/meta?limit=400&bbox=' + bbox)
-      .success(function(data) {
-        _this.storage.results = data.results;
-        _this.trigger(_this.storage.results);
-      });
+    this.onSetSearchParameter({bbox: bbox});
+  },
+
+  /**
+   * Update the current search parameters with the key-value pairs in the
+   * given `params` object. In keeping with React's setState style, this is
+   * an *additive* change, except that any existing search parameter whose
+   * value in `params` is `null` is removed.
+   *
+   * After the paramters are update, hit the API and broadcast results.
+   */
+  onSetSearchParameter: function(params) {
+    var _this = this;
+
+    // update stored search params
+    _.assign(this.storage.searchParameters, params);
+    for (key in this.storage.params) {
+      if (this.storage.params[key] === null) {
+        delete this.storage.params[key];
+      }
+    }
+
+    // hit API and broadcast result
+    if (this.storage.searchParameters.bbox) {
+      var params = qs.stringify(this.storage.searchParameters);
+      $.get('http://oam-catalog.herokuapp.com/meta?' + params)
+        .success(function(data) {
+          _this.storage.results = data.results;
+          _this.trigger(_this.storage.results);
+        });
+    }
   },
 
   // Actions listener.

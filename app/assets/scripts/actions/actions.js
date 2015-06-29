@@ -6,6 +6,7 @@ module.exports = Reflux.createActions({
   'mapMove': {},
   'mapSquareSelected': {},
   'mapSquareUnselected': {},
+  'setSearchParameter': {},
 
   'latestImageryLoaded': {},
 

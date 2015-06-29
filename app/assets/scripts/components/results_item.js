@@ -8,6 +8,7 @@ var actions = require('../actions/actions');
 var ZcButton = require('./shared/zc_button');
 var Dropdown = require('./shared/dropdown');
 var utils = require('../utils/utils');
+var actions = require('../actions/actions');
 
 
 var ResultsItem = React.createClass({
@@ -47,6 +48,7 @@ var ResultsItem = React.createClass({
   },
 
   onOpenJosm: function(d) {
+    var self = this;
     var source = 'OpenAerialMap - ' + d.provider + ' - ' + d.uuid;
     // Reference:
     // http://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl#load_and_zoom
@@ -67,11 +69,18 @@ var ResultsItem = React.createClass({
       }) + '&url=' + d.properties.tms)
       .success(function () {
         // all good!
-        // TODO: feedback to user.
+        actions.openModal('message', {
+          title: 'Success',
+          message: 'This scene has been loaded into JOSM.'
+        });
       });
     })
-    .fail(function () {
-      // TODO: message to user, indicating there was an error using JSOM RemoteControl
+    .fail(function (err) {
+      console.error(err);
+      actions.openModal('message', {
+        title: 'Error',
+        message: <p>Could not connect to JOSM via Remote Control.  Is JOSM configured to allow <a href='https://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl' target='_blank'>remote control</a>?</p>
+      });
     });
   },
 

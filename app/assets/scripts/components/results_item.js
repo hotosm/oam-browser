@@ -1,6 +1,9 @@
 'use strict';
+var qs = require('querystring');
+var $ = require('jquery');
 var React = require('react/addons');
 var Keys = require('react-keybinding');
+var Router = require('react-router');
 var actions = require('../actions/actions');
 var ZcButton = require('./shared/zc_button');
 var Dropdown = require('./shared/dropdown');
@@ -9,7 +12,8 @@ var utils = require('../utils/utils');
 
 var ResultsItem = React.createClass({
   mixins: [
-    Keys
+    Keys,
+    Router.State
   ],
 
   keybindings: {
@@ -42,6 +46,35 @@ var ResultsItem = React.createClass({
     return this.getDOMNode().querySelector('[data-hook="copy:data"]').value;
   },
 
+  onOpenJosm: function(d) {
+    var source = 'OpenAerialMap - ' + d.provider + ' - ' + d.uuid;
+    // Reference:
+    // http://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl#load_and_zoom
+    $.get('http://127.0.0.1:8111/load_and_zoom?' + qs.stringify({
+      left: d.bbox[0],
+      right: d.bbox[2],
+      bottom: d.bbox[1],
+      top: d.bbox[3],
+      source: source
+    }))
+    .success(function (data) {
+      // Reference:
+      // http://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl#imagery
+      // Note: `url` needs to be the last parameter.
+      $.get('http://127.0.0.1:8111/imagery?' + qs.stringify({
+        type: 'tms',
+        title: source
+      }) + '&url=' + d.properties.tms)
+      .success(function () {
+        // all good!
+        // TODO: feedback to user.
+      });
+    })
+    .fail(function () {
+      // TODO: message to user, indicating there was an error using JSOM RemoteControl
+    });
+  },
+
   render: function() {
     var d = this.props.data;
     var pagination = this.props.pagination;
@@ -51,13 +84,25 @@ var ResultsItem = React.createClass({
 
     var tmsOptions = null;
     if (d.properties.tms) {
+      // Generate the iD URL:
+      // grab centroid of the footprint
+      var centroid = turf.centroid(d.geojson).geometry.coordinates;
+      // cheat by using current zoom level
+      var zoom = this.getParams().map.split(',')[2]
+      var idUrl = 'http://www.openstreetmap.org/edit' +
+      '#map=' + [zoom, centroid[1], centroid[0]].join('/') +
+      '?' + qs.stringify({
+        editor: 'id',
+        background: 'custom:' + d.properties.tms
+      });
+
       tmsOptions = (
         <div className="input-group">
           <input className="form-control input-m" type="text" value={d.properties.tms} readOnly  data-hook="copy:data" />
           <Dropdown element="span" className="input-group-bttn dropdown center" triggerTitle="Show options" triggerClassName="bttn-uoptions" triggerText="Options">
             <ul className="drop-menu tms-options-menu" role="menu">
-              <li className="has-icon-bef id-editor disabled"><a href="" target="_blank" title="Open with iD editor">Open with iD editor</a></li>
-              <li className="has-icon-bef josm disabled"><a href="" target="_blank" title="Open with JOSM">Open with JOSM</a></li>
+              <li className="has-icon-bef id-editor"><a href={idUrl} target="_blank" title="Open with iD editor">Open with iD editor</a></li>
+              <li className="has-icon-bef josm"><a onClick={this.onOpenJosm.bind(this, d)} title="Open with JOSM">Open with JOSM</a></li>
               <li className="has-icon-bef clipboard">
                 <ZcButton onCopy={this.onCopy} title="Copy to clipboard" text="Copy to clipboard"/>
               </li>

@@ -51,3 +51,22 @@ module.exports.gsdToUnit = function(gsd) {
 
   return Math.round(gsd) + ' ' + unit;
 };
+
+/**
+ * Converts filesize into MB or GB
+ * @param float file_size in bytes
+ * @return string
+ */
+
+module.exports.file_sizeToUnit = function(file_size) {
+  var unit = 'GB';
+  // Check size to convert appropriate units to display more nicely
+  if (file_size < 1000000000) {
+    unit = 'MB';
+    file_size /= 1000000;
+  } else {
+    file_size /= 1000000000;
+  }
+
+  return Math.round(file_size * 10) / 10 + ' ' + unit;
+};

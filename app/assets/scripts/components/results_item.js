@@ -94,8 +94,14 @@ var ResultsItem = React.createClass({
               <dd>{d.acquisition_start.slice(0,10)}</dd>
               <dt><span>Resolution</span></dt>
               <dd>{utils.gsdToUnit(d.gsd)}</dd>
+              <dt><span>Image Size</span></dt>
+              <dd className="cap">{utils.file_sizeToUnit(d.file_size)}</dd>
               <dt><span>Platform</span></dt>
               <dd className="cap">{d.platform}</dd>
+              <dt><span>Sensor</span></dt>
+              <dd className="cap">{d.properties.sensor ? d.properties.sensor : 'not available'}</dd>
+              <dt><span>Provider</span></dt>
+              <dd className="cap">{d.provider}</dd>
             </dl>
           </div>
         </div>

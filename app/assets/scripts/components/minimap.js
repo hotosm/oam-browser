@@ -73,15 +73,15 @@ var MiniMap = React.createClass({
 
     this.viewfinder = L.polygon([], {
       clickable: false,
-      color: '#439ab4',
-      weight: 2
+      color: '#1f3b45',
+      weight: 0.5
     }).addTo(this.map);
 
 
     this.targetLines = L.multiPolyline([], {
       clickable: false,
-      color: '#439ab4',
-      weight: 2
+      color: '#1f3b45',
+      weight: 0.5
     }).addTo(this.map);
 
     console.log(this.targetLines);

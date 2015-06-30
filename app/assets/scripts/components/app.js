@@ -10,7 +10,7 @@ var actions = require('../actions/actions');
 var App = React.createClass({
   mixins: [ Router.State ],
 
-  componentDidMount () {
+  componentDidMount: function () {
     // Pull the search filter state from the URL.  Why is this here instead
     // of in the Filters component?  Because we want to ensure that we set
     // these filter parameters BEFORE the map component loads, since that is

@@ -8,10 +8,14 @@ var searchQuery = require('../stores/search_query_store');
 
 var Filters = module.exports = React.createClass({
   mixins: [
-    Reflux.connect(searchQuery), // calls this.setState() with results of searchQuery store
+    Reflux.listenTo(searchQuery, 'onSearchQuery'),
     Router.Navigation,
     Router.State
   ],
+
+  onSearchQuery: function (data) {
+    this.setState(data);
+  },
 
   setDate: function (d) {
     actions.setDateFilter(d.key);

@@ -75,6 +75,16 @@ var Map = React.createClass({
       mapData: data,
       loading: false
     });
+
+    var sqrFeature = mapStore.getSelectedSquare();
+    if (sqrFeature !== null) {
+      var intersected = mapStore.getResultsIntersect(sqrFeature);
+      if (intersected.length > 0) {
+        actions.resultsChange(intersected);
+      } else {
+        actions.mapSquareUnselected();
+      }
+    }
   },
 
   onSearchQueryChanged: function() {

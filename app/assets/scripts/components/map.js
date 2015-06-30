@@ -9,6 +9,7 @@ var overlaps = require('turf-overlaps');
 var actions = require('../actions/actions');
 var mapStore = require('../stores/map_store');
 var resultsStore = require('../stores/results_store');
+var searchQueryStore = require('../stores/search_query_store');
 var utils = require('../utils/utils');
 var dsZoom = require('../utils/ds_zoom');
 var config = require('../config.js');
@@ -22,6 +23,7 @@ var Map = React.createClass({
   // removing the listener when the component is unmounted. 
   mixins: [
     Reflux.listenTo(mapStore, "onMapData"),
+    Reflux.listenTo(searchQueryStore, "onSearchQueryChanged"),
     Reflux.listenTo(actions.mapSquareSelected, "onMapSquareSelected"),
     Reflux.listenTo(actions.mapSquareUnselected, "onMapSquareUnselected"),
     Reflux.listenTo(actions.resultOver, "onResultOver"),
@@ -73,6 +75,10 @@ var Map = React.createClass({
       mapData: data,
       loading: false
     });
+  },
+
+  onSearchQueryChanged: function() {
+    this.setState({ loading: true });
   },
 
   // Actions listener.
@@ -484,7 +490,6 @@ var Map = React.createClass({
       }
        _this.replaceWith(route, params, _this.getQuery());
 
-      _this.setState({loading: true});
       actions.mapMove(_this.map);
       _this.updateFauxGrid();
     });

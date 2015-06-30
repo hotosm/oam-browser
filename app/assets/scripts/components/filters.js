@@ -13,6 +13,13 @@ var Filters = module.exports = React.createClass({
     Router.State
   ],
 
+  getInitialState: function () {
+    return {
+      date: 'all',
+      resolution: 'all'
+    }
+  },
+
   onSearchQuery: function (data) {
     this.setState(data);
   },

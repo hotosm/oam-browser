@@ -4,9 +4,9 @@ var Reflux = require('reflux');
 var _ = require('lodash');
 var $ = require('jquery');
 var actions = require('../actions/actions');
+var searchQuery = require('./search_query_store')
 var overlaps = require('turf-overlaps');
 var utils = require('../utils/utils');
-var config = require('../config.js');
 
 module.exports = Reflux.createStore({
 
@@ -20,10 +20,9 @@ module.exports = Reflux.createStore({
   // Called on creation.
   // Setup listeners.
   init: function() {
-    this.listenTo(actions.mapMove, this.onMapMove);
     this.listenTo(actions.mapSquareSelected, this.onMapSquareSelected);
     this.listenTo(actions.mapSquareUnselected, this.onMapSquareUnselected);
-    this.listenTo(actions.setSearchParameter, this.onSetSearchParameter);
+    this.listenTo(searchQuery, this.onSearchQuery);
 
     this.queryLatestImagery();
   },
@@ -38,45 +37,53 @@ module.exports = Reflux.createStore({
       });
   },
 
-  // Actions listener.
-  onMapMove: function(map) {
-    if (map.getZoom() < config.map.interactiveGridZoomLimit) {
-      this.trigger([]);
-      return;
-    }
-
-    var bbox = map.getBounds().toBBoxString();
-    // ?bbox=[lon_min],[lat_min],[lon_max],[lat_max]
-    this.onSetSearchParameter({bbox: bbox});
-  },
-
   /**
-   * Update the current search parameters with the key-value pairs in the
-   * given `params` object. In keeping with React's setState style, this is
-   * an *additive* change, except that any existing search parameter whose
-   * value in `params` is `null` is removed.
-   *
-   * After the paramters are update, hit the API and broadcast results.
+   * Translate the application-based search parameters into terms that the
+   * API understands, then hit the API and broadcast the result.
    */
-  onSetSearchParameter: function(params) {
+  onSearchQuery: function (parameters) {
+    console.log('onSearchQuery', parameters);
     var _this = this;
-
-    // update stored search params
-    _.assign(this.storage.searchParameters, params);
-    for (key in this.storage.params) {
-      if (this.storage.params[key] === null) {
-        delete this.storage.params[key];
-      }
-    }
-
     // hit API and broadcast result
-    if (this.storage.searchParameters.bbox) {
-      var params = qs.stringify(this.storage.searchParameters);
-      $.get('http://oam-catalog.herokuapp.com/meta?' + params)
+    if (parameters.bbox) {
+      var resolutionFilter = {
+        'all': {},
+        'low': {gsd_from: 5}, // 5 +
+        'medium': {gsd_from: 1, gsd_to: 5}, // 1 - 5
+        'high': {gsd_to: 1} // 1
+      }[parameters.resolution];
+
+      var d = new Date();
+      if (parameters.date === 'week') {
+        d.setDate(d.getDate() - 7);
+      } else if (parameters.date === 'month') {
+        d.setMonth(d.getMonth() - 1);
+      } else if (parameters.date === 'year') {
+        d.setFullYear(d.getFullYear() - 1);
+      }
+
+      var dateFilter = parameters.date === 'all' ? {} : {
+        acquisition_from: [
+          d.getFullYear(),
+          d.getMonth() + 1,
+          d.getDate()
+        ].join('-')
+      }
+
+      var params = _.assign({
+        limit: 4000,
+        bbox: parameters.bbox,
+      }, resolutionFilter, dateFilter);
+
+      console.log('search:', params);
+
+      $.get('http://oam-catalog.herokuapp.com/meta?' + qs.stringify(params))
         .success(function(data) {
           _this.storage.results = data.results;
           _this.trigger(_this.storage.results);
         });
+    } else {
+      _this.trigger([]);
     }
   },
 

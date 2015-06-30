@@ -6,11 +6,22 @@ module.exports = Reflux.createActions({
   'mapMove': {},
   'mapSquareSelected': {},
   'mapSquareUnselected': {},
-  'setSearchParameter': {},
 
   'latestImageryLoaded': {},
 
   'resultsChange': {},
+
+  // Filter actios
+  'setDateFilter': {
+    shouldEmit: function (val) {
+      return [ 'all', 'week', 'month', 'year' ].indexOf(val) >= 0;
+    }
+  },
+  'setResolutionFilter': {
+    shouldEmit: function (val) {
+      return [ 'all', 'low', 'medium', 'high' ].indexOf(val) >= 0;
+    }
+  },
 
   // Results pane related actions.
   'resultItemSelect': {},

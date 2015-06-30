@@ -3,6 +3,7 @@ require('mapbox.js');
 var React = require('react/addons');
 var Reflux = require('reflux');
 var Router = require('react-router');
+var _ = require('lodash');
 var overlaps = require('turf-overlaps');
 // Not working. Using cdn. (turf.intersect was throwing a weird error)
 //var turf = require('turf');
@@ -483,7 +484,7 @@ var Map = React.createClass({
 
 
     // Map move listener.
-    this.map.on('moveend', function() {
+    var onMoveEnd = _.debounce(function() {
       // Compute new map location for the path .
       var mapLocation = _this.mapViewToString();
       // Preserve other params if any.
@@ -502,7 +503,9 @@ var Map = React.createClass({
 
       actions.mapMove(_this.map);
       _this.updateFauxGrid();
-    });
+    }, 300)
+    this.map.on('moveend', onMoveEnd);
+    this.map.on('movestart', onMoveEnd.cancel);
 
     // Create fauxGrid.
     this.updateFauxGrid();

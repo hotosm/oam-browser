@@ -66,7 +66,6 @@
 }
 
 .gs-tooltip-count {
-
   & > * {
     pointer-events: none;
   }
@@ -76,11 +75,17 @@
     box-shadow: none;
   }
   .leaflet-popup-content {
-    padding: 0;
+    @extend .antialiased;
     text-align: center;
-    color: rgba($base-color, 0.64);
-    font-size: 0.825rem;
     font-weight: $base-font-bold;
+    background: rgba($base-color, 0.48);
+    display: block;
+    color: #fff;
+    border-radius: $global-radius;
+    padding: 0 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    width: auto !important;
   }
   .leaflet-popup-tip-container {
     display: none;

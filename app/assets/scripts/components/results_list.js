@@ -35,7 +35,7 @@ var ResultsListItem = React.createClass({
             <div className="card-body">
               <dl className="card-details">
                 <dt>Type</dt>
-                <dd>{d.properties.tms ? 'Image + Tiled Map' : 'Image'}</dd>
+                <dd>{d.properties.tms ? 'Image + Map Layer' : 'Image'}</dd>
                 <dt>Date</dt>
                 <dd>{d.acquisition_start.slice(0,10)}</dd>
                 <dt>Res</dt>

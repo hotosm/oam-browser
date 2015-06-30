@@ -142,12 +142,12 @@ var ResultsItem = React.createClass({
               <a title="Download image" className="bttn-download" target="_blank" href={d.uuid}><span>Download</span></a>
             </div>
             <dl className="single-details">
-              <dt><span>Type</span></dt>
-              <dd>{d.properties.tms ? 'Image + Map Layer' : 'Image'}</dd>
               <dt><span>Date</span></dt>
               <dd>{d.acquisition_start.slice(0,10)}</dd>
               <dt><span>Resolution</span></dt>
               <dd>{utils.gsdToUnit(d.gsd)}</dd>
+              <dt><span>Type</span></dt>
+              <dd>{d.properties.tms ? 'Image + Map Layer' : 'Image'}</dd>
               <dt><span>Image Size</span></dt>
               <dd className="cap">{utils.file_sizeToUnit(d.file_size)}</dd>
               <dt><span>Platform</span></dt>

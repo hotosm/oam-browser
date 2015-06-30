@@ -9,6 +9,7 @@ var ZcButton = require('./shared/zc_button');
 var Dropdown = require('./shared/dropdown');
 var utils = require('../utils/utils');
 var actions = require('../actions/actions');
+var prettyBytes = require('pretty-bytes');
 
 
 var ResultsItem = React.createClass({
@@ -149,7 +150,7 @@ var ResultsItem = React.createClass({
               <dt><span>Type</span></dt>
               <dd>{d.properties.tms ? 'Image + Map Layer' : 'Image'}</dd>
               <dt><span>Image Size</span></dt>
-              <dd className="cap">{utils.file_sizeToUnit(d.file_size)}</dd>
+              <dd className="cap">{prettyBytes(d.file_size)}</dd>
               <dt><span>Platform</span></dt>
               <dd className="cap">{d.platform}</dd>
               <dt><span>Sensor</span></dt>

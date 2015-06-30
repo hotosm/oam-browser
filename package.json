@@ -30,6 +30,7 @@
     "jquery": "^2.1.4",
     "lodash": "^3.8.0",
     "mapbox.js": "^2.1.9",
+    "pretty-bytes": "^2.0.1",
     "react": "^0.13.3",
     "react-keybinding": "^2.0.0",
     "react-router": "^0.13.3",

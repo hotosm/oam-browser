@@ -11,6 +11,7 @@
   "devDependencies": {
     "browser-sync": "^2.5.3",
     "browserify": "^6.2.0",
+    "eslint-plugin-react": "^2.5.2",
     "glob": "^4.0.6",
     "gulp": "^3.8.11",
     "gulp-clean": "^0.3.1",
@@ -29,6 +30,7 @@
     "jquery": "^2.1.4",
     "lodash": "^3.8.0",
     "mapbox.js": "^2.1.9",
+    "pretty-bytes": "^2.0.1",
     "react": "^0.13.3",
     "react-keybinding": "^2.0.0",
     "react-router": "^0.13.3",

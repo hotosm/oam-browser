@@ -124,7 +124,7 @@ var Map = React.createClass({
     params.map = this.mapViewToString();
     params.square = selectedSquare[1] + ',' + selectedSquare[0];
 
-    this.replaceWith(route, params);
+    this.replaceWith(route, params, this.getQuery());
 
     //this.updateGrid();
   },
@@ -137,7 +137,7 @@ var Map = React.createClass({
 
     // Set the correct path.
     var mapLocation = this.mapViewToString();
-    this.replaceWith('map', { map: mapLocation });
+    this.replaceWith('map', { map: mapLocation }, this.getQuery());
 
     actions.resultsChange([]);
     this.updateGrid();
@@ -482,7 +482,7 @@ var Map = React.createClass({
       else if (params.square) {
         route = 'results';
       }
-       _this.replaceWith(route, params);
+       _this.replaceWith(route, params, _this.getQuery());
 
       _this.setState({loading: true});
       actions.mapMove(_this.map);

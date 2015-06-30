@@ -9,6 +9,7 @@ var overlaps = require('turf-overlaps');
 var actions = require('../actions/actions');
 var mapStore = require('../stores/map_store');
 var resultsStore = require('../stores/results_store');
+var searchQueryStore = require('../stores/search_query_store');
 var utils = require('../utils/utils');
 var dsZoom = require('../utils/ds_zoom');
 var config = require('../config.js');
@@ -22,6 +23,7 @@ var Map = React.createClass({
   // removing the listener when the component is unmounted. 
   mixins: [
     Reflux.listenTo(mapStore, "onMapData"),
+    Reflux.listenTo(searchQueryStore, "onSearchQueryChanged"),
     Reflux.listenTo(actions.mapSquareSelected, "onMapSquareSelected"),
     Reflux.listenTo(actions.mapSquareUnselected, "onMapSquareUnselected"),
     Reflux.listenTo(actions.resultOver, "onResultOver"),
@@ -73,6 +75,20 @@ var Map = React.createClass({
       mapData: data,
       loading: false
     });
+
+    var sqrFeature = mapStore.getSelectedSquare();
+    if (sqrFeature !== null) {
+      var intersected = mapStore.getResultsIntersect(sqrFeature);
+      if (intersected.length > 0) {
+        actions.resultsChange(intersected);
+      } else {
+        actions.mapSquareUnselected();
+      }
+    }
+  },
+
+  onSearchQueryChanged: function() {
+    this.setState({ loading: true });
   },
 
   // Actions listener.
@@ -124,7 +140,7 @@ var Map = React.createClass({
     params.map = this.mapViewToString();
     params.square = selectedSquare[1] + ',' + selectedSquare[0];
 
-    this.replaceWith(route, params);
+    this.replaceWith(route, params, this.getQuery());
 
     //this.updateGrid();
   },
@@ -137,7 +153,7 @@ var Map = React.createClass({
 
     // Set the correct path.
     var mapLocation = this.mapViewToString();
-    this.replaceWith('map', { map: mapLocation });
+    this.replaceWith('map', { map: mapLocation }, this.getQuery());
 
     actions.resultsChange([]);
     this.updateGrid();
@@ -482,9 +498,8 @@ var Map = React.createClass({
       else if (params.square) {
         route = 'results';
       }
-       _this.replaceWith(route, params);
+       _this.replaceWith(route, params, _this.getQuery());
 
-      _this.setState({loading: true});
       actions.mapMove(_this.map);
       _this.updateFauxGrid();
     });

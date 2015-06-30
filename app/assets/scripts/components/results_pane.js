@@ -49,7 +49,7 @@ var ResultsPane = React.createClass({
       route = 'item';
       params.item_id = data.selectedItem._id
     }
-    this.replaceWith(route, params);
+    this.replaceWith(route, params, this.getQuery());
   },
 
   getInitialState: function() {

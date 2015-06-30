@@ -150,6 +150,8 @@
   &.facebook a:before { @extend .icon-facebook; }
   &.google-plus a:before { @extend .icon-google-plus; }
   &.clipboard a:before { @extend .icon-clipboard; }
+  &.id-editor a:before { @extend .icon-id-editor; }
+  &.josm a:before { @extend .icon-josm; }
 }
 
 .drop-menu > .active > a,

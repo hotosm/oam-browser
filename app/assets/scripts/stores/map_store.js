@@ -70,10 +70,12 @@ module.exports = Reflux.createStore({
         ].join('-')
       }
 
+      var typeFilter = parameters.dataType === 'all' ? {} : { has_tiled: true };
+
       var params = _.assign({
         limit: 4000,
         bbox: parameters.bbox,
-      }, resolutionFilter, dateFilter);
+      }, resolutionFilter, dateFilter, typeFilter);
 
       console.log('search:', params);
 

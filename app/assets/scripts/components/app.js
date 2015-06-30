@@ -26,6 +26,9 @@ var App = React.createClass({
     if (params.resolution) {
       actions.setResolutionFilter(params.resolution);
     }
+    if (params.type) {
+      actions.setDataTypeFilter(params.type);
+    }
   },
 
   render: function() {

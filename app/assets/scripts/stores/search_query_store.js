@@ -18,6 +18,7 @@ module.exports = Reflux.createStore({
     this.listenTo(actions.mapMove, this.onMapMove);
     this.listenTo(actions.setDateFilter, this.onSetDateFilter);
     this.listenTo(actions.setResolutionFilter, this.onSetResolutionFilter);
+    this.listenTo(actions.setDataTypeFilter, this.onSetDataTypeFilter);
   },
 
   onMapMove: function(map) {
@@ -37,6 +38,10 @@ module.exports = Reflux.createStore({
 
   onSetResolutionFilter: function(resolutionLevel) {
     this._setParameter({resolution: resolutionLevel});
+  },
+
+  onSetDataTypeFilter: function(type) {
+    this._setParameter({dataType: type});
   },
 
   _setParameter: function(params) {

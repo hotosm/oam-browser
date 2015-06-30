@@ -22,6 +22,11 @@ module.exports = Reflux.createActions({
       return [ 'all', 'low', 'medium', 'high' ].indexOf(val) >= 0;
     }
   },
+  'setDataTypeFilter': {
+    shouldEmit: function (val) {
+      return [ 'all', 'service' ].indexOf(val) >= 0;
+    }
+  },
 
   // Results pane related actions.
   'resultItemSelect': {},

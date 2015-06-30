@@ -107,8 +107,23 @@
   }
 }
 
-.drop-menu > li > a,
-.drop-menu > li > a:visited {
+.drop-menu .drop-menu-sectitle {
+  display: block;
+  padding: 0.375rem 1rem;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: tint($base-font-color, 32%);
+}
+
+.drop-menu .drop-menu-sectitle:not(:first-child) {
+  box-shadow: inset 0 1px 0 0 $brdr-rgba;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+}
+
+.drop-menu > * > a,
+.drop-menu > * > a:visited {
   position: relative;
   display: block;
   padding: 0.375rem 1rem;
@@ -122,7 +137,7 @@
   }
 }
 
-.drop-menu > li {
+.drop-menu > * {
   &.has-icon-bef a,
   &.has-icon-aft a {
     &:before,

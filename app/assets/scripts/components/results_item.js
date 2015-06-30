@@ -56,8 +56,8 @@ var ResultsItem = React.createClass({
           <input className="form-control input-m" type="text" value={d.properties.tms} readOnly  data-hook="copy:data" />
           <Dropdown element="span" className="input-group-bttn dropdown center" triggerTitle="Show options" triggerClassName="bttn-uoptions" triggerText="Options">
             <ul className="drop-menu tms-options-menu" role="menu">
-              <li className="has-icon-bef clipboard disabled"><a href="" target="_blank" title="Open with iD editor">Open with iD editor</a></li>
-              <li className="has-icon-bef clipboard disabled"><a href="" target="_blank" title="Open with JOSM">Open with JOSM</a></li>
+              <li className="has-icon-bef id-editor disabled"><a href="" target="_blank" title="Open with iD editor">Open with iD editor</a></li>
+              <li className="has-icon-bef josm disabled"><a href="" target="_blank" title="Open with JOSM">Open with JOSM</a></li>
               <li className="has-icon-bef clipboard">
                 <ZcButton onCopy={this.onCopy} title="Copy to clipboard" text="Copy to clipboard"/>
               </li>

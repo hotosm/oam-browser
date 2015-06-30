@@ -9,6 +9,7 @@ var ZcButton = require('./shared/zc_button');
 var Dropdown = require('./shared/dropdown');
 var utils = require('../utils/utils');
 var actions = require('../actions/actions');
+var prettyBytes = require('pretty-bytes');
 
 
 var ResultsItem = React.createClass({
@@ -142,14 +143,20 @@ var ResultsItem = React.createClass({
               <a title="Download image" className="bttn-download" target="_blank" href={d.uuid}><span>Download</span></a>
             </div>
             <dl className="single-details">
-              <dt><span>Type</span></dt>
-              <dd>{d.properties.tms ? 'Image + Map Layer' : 'Image'}</dd>
               <dt><span>Date</span></dt>
               <dd>{d.acquisition_start.slice(0,10)}</dd>
               <dt><span>Resolution</span></dt>
               <dd>{utils.gsdToUnit(d.gsd)}</dd>
+              <dt><span>Type</span></dt>
+              <dd>{d.properties.tms ? 'Image + Map Layer' : 'Image'}</dd>
+              <dt><span>Image Size</span></dt>
+              <dd className="cap">{prettyBytes(d.file_size)}</dd>
               <dt><span>Platform</span></dt>
               <dd className="cap">{d.platform}</dd>
+              <dt><span>Sensor</span></dt>
+              <dd className="cap">{d.properties.sensor ? d.properties.sensor : 'not available'}</dd>
+              <dt><span>Provider</span></dt>
+              <dd className="cap">{d.provider}</dd>
             </dl>
           </div>
         </div>

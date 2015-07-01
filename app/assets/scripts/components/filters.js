@@ -16,7 +16,8 @@ var Filters = module.exports = React.createClass({
   getInitialState: function () {
     return {
       date: 'all',
-      resolution: 'all'
+      resolution: 'all',
+      dataType: 'all'
     }
   },
 

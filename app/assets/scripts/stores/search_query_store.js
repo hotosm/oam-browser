@@ -11,7 +11,8 @@ var _ = require('lodash');
 module.exports = Reflux.createStore({
   _parameters: {
     date: 'all',
-    resolution: 'all'
+    resolution: 'all',
+    dataType: 'all'
   },
 
   init: function () {

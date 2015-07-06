@@ -2,7 +2,7 @@
 
 module.exports = {
   map: {
-    baseLayer: 'devseed.m9i692do',
+    baseLayer: 'hot.ml5mgnm7',
 
     initialZoom: 8,
     minZoom: 8,

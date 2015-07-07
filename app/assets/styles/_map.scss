@@ -64,3 +64,41 @@
   stroke: rgba($base-color, 0.64);
   stroke-width: 1;
 }
+
+.gs-tooltip-count {
+  & > * {
+    pointer-events: none;
+  }
+  .leaflet-popup-content-wrapper {
+    padding: 0;
+    background: none;
+    box-shadow: none;
+  }
+  .leaflet-popup-content {
+    @extend .antialiased;
+    text-align: center;
+    font-weight: $base-font-bold;
+    background: rgba($base-color, 0.48);
+    display: block;
+    color: #fff;
+    border-radius: $global-radius;
+    padding: 0 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    width: auto !important;
+  }
+  .leaflet-popup-tip-container {
+    display: none;
+  }
+}
+
+#minimap {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  width: 16rem;
+  height: 10rem;
+  cursor: pointer;
+
+  @extend %press-box-skin;
+}

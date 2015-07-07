@@ -2,16 +2,20 @@
 require('mapbox.js');
 var React = require('react/addons');
 var Reflux = require('reflux');
+var Router = require('react-router');
+var _ = require('lodash');
 var overlaps = require('turf-overlaps');
 // Not working. Using cdn. (turf.intersect was throwing a weird error)
 //var turf = require('turf');
 var actions = require('../actions/actions');
 var mapStore = require('../stores/map_store');
 var resultsStore = require('../stores/results_store');
+var searchQueryStore = require('../stores/search_query_store');
 var utils = require('../utils/utils');
 var dsZoom = require('../utils/ds_zoom');
+var config = require('../config.js');
 
-L.mapbox.accessToken = 'pk.eyJ1IjoiZGV2c2VlZCIsImEiOiJnUi1mbkVvIn0.018aLhX0Mb0tdtaT2QNe2Q';
+L.mapbox.accessToken = 'pk.eyJ1IjoiaG90IiwiYSI6IjU3MjE1YTYxZGM2YmUwMDIxOTg2OGZmNWU0NzRlYTQ0In0.MhK7SIwO00rhs3yMudBfIw';
 
 var Map = React.createClass({
   // Connect to the store "mapStore". Whenever the store calls "this.trigger()"
@@ -20,6 +24,7 @@ var Map = React.createClass({
   // removing the listener when the component is unmounted. 
   mixins: [
     Reflux.listenTo(mapStore, "onMapData"),
+    Reflux.listenTo(searchQueryStore, "onSearchQueryChanged"),
     Reflux.listenTo(actions.mapSquareSelected, "onMapSquareSelected"),
     Reflux.listenTo(actions.mapSquareUnselected, "onMapSquareUnselected"),
     Reflux.listenTo(actions.resultOver, "onResultOver"),
@@ -28,8 +33,13 @@ var Map = React.createClass({
     Reflux.listenTo(actions.resultItemView, "onResultItemView"),
     Reflux.listenTo(actions.resultListView, "onResultListView"),
 
+    Reflux.listenTo(actions.miniMapClick, "onMiniMapClick"),
+
     Reflux.listenTo(actions.goToLatest, "onGoToLatest"),
     Reflux.listenTo(actions.geocoderResult, "onGeocoderResult"),
+
+    Router.Navigation,
+    Router.State
   ],
 
   map: null,
@@ -50,6 +60,10 @@ var Map = React.createClass({
   // square that contains it. Check updateGrid()
   selectIntersecting: null,
 
+  // If there's a selected square in the path, we store it and then select the
+  // correct one when the grid is updating.
+  routerSelectedSquare: null,
+
   getInitialState: function() {
     return {
       loading: true
@@ -62,6 +76,26 @@ var Map = React.createClass({
       mapData: data,
       loading: false
     });
+
+    var sqrFeature = mapStore.getSelectedSquare();
+    if (sqrFeature !== null) {
+      var intersected = mapStore.getResultsIntersect(sqrFeature);
+      if (intersected.length > 0) {
+        actions.resultsChange(intersected);
+      } else {
+        actions.mapSquareUnselected();
+      }
+    }
+  },
+
+  onSearchQueryChanged: function() {
+    this.setState({ loading: true });
+  },
+
+  // Actions listener.
+  onMiniMapClick: function(latlng) {
+    // Remove footprint highlight.
+    this.map.setView(latlng);
   },
 
   // Actions listener.
@@ -98,7 +132,18 @@ var Map = React.createClass({
     // Coordinates must be inverted for panTo.
     this.map.panTo([sqrFeature.properties.centroid[1], sqrFeature.properties.centroid[0]]);
 
-    this.updateGrid();
+    // Set the correct path.
+    var params = this.getParams();
+    var route = params.item_id ? 'item' : 'results';
+
+    var selectedSquare = mapStore.getSelectedSquareCenter();
+
+    params.map = this.mapViewToString();
+    params.square = selectedSquare[1] + ',' + selectedSquare[0];
+
+    this.replaceWith(route, params, this.getQuery());
+
+    //this.updateGrid();
   },
 
   // Actions listener.
@@ -106,6 +151,10 @@ var Map = React.createClass({
     if (this.map.hasLayer(this.overImageLayer)) {
       this.map.removeLayer(this.overImageLayer);
     }
+
+    // Set the correct path.
+    var mapLocation = this.mapViewToString();
+    this.replaceWith('map', { map: mapLocation }, this.getQuery());
 
     actions.resultsChange([]);
     this.updateGrid();
@@ -135,7 +184,7 @@ var Map = React.createClass({
       latest.properties.centroid = latestCenter;
       this.selectIntersecting = latest;
       // Move the map
-      this.map.setView([latestCenter.geometry.coordinates[1], latestCenter.geometry.coordinates[0]], 8);
+      this.map.setView([latestCenter.geometry.coordinates[1], latestCenter.geometry.coordinates[0]], config.map.initialZoom);
     }
   },
 
@@ -148,12 +197,13 @@ var Map = React.createClass({
   },
 
   // Redraws the line grid.
-  // This is a pixel grid with 200px squares at zoom level 8.
+  // This is a pixel grid with config.map.grid.pxSize squares
+  // at zoom level config.map.grid.atZoom.
   updateFauxGrid: function() {
     var bounds = this.map.getBounds();
     var extent = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
 
-    var grid = this.linePixelGrid(extent, 200, 8);
+    var grid = this.linePixelGrid(extent, config.map.grid.pxSize, config.map.grid.atZoom);
 
     this.fauxLineGridLayer.clearLayers().addData(grid);
     this.fauxLineGridLayer.eachLayer(function(l) {
@@ -184,20 +234,21 @@ var Map = React.createClass({
   },
 
   // Updates the colored grid.
-  // This is a pixel grid with 200px squares at zoom level 8.
+  // This is a pixel grid with config.map.grid.pxSize squares
+  // at zoom level config.map.grid.atZoom.
   // It is separated from the line grid to allow independent styling of 
   // the stroke/content.
   updateGrid: function() {
     var _this = this;
     this.gridLayer.clearLayers();
-    // Do not draw below zoom level 6
-    if (this.map.getZoom() < 6) { return; }
+    // Do not draw below zoom level config.map.interactiveGridZoomLimit
+    if (this.map.getZoom() < config.map.interactiveGridZoomLimit) { return; }
 
     var bounds = this.map.getBounds();
     var extent = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
 
     // Square grid to color.
-    var squareGrid = this.squarePixelGrid(extent, 200, 8);
+    var squareGrid = this.squarePixelGrid(extent, config.map.grid.pxSize, config.map.grid.atZoom);
 
     /*
     // How this works:
@@ -279,11 +330,23 @@ var Map = React.createClass({
     this.gridLayer.addData(squareGrid);
     this.gridLayer.eachLayer(function(l) {
       L.DomUtil.addClass(l._path, 'gs');
-      var featureCenter = null;
+      var featureCenter = turf.centroid(l.feature);
+      l.feature.properties.featureCenter = featureCenter;
+
+      // If there is a selected square in the path, select the correct one.
+      if (_this.routerSelectedSquare) {
+        if (_this.routerSelectedSquare[0] == featureCenter.geometry.coordinates[1] &&
+          _this.routerSelectedSquare[1] == featureCenter.geometry.coordinates[0]) {
+          // Done with selecting.
+          _this.routerSelectedSquare = null;
+          // Trigger action.
+          actions.mapSquareSelected(l.feature);
+          return;
+        }
+      }
 
       // Select the square that intersects the stored image.
       if (_this.selectIntersecting) {
-        featureCenter = turf.centroid(l.feature);
 
         var latestFeature = utils.getPolygonFeature(_this.selectIntersecting.coordinates);
         if (turf.inside(featureCenter, latestFeature) || turf.inside(_this.selectIntersecting.properties.centroid, l.feature) || overlaps(latestFeature, l.feature)) {
@@ -325,6 +388,15 @@ var Map = React.createClass({
         L.DomUtil.addClass(l._path, 'gs-density-low');
       }
 
+      var p = L.popup({
+        autoPan: false,
+        closeButton: false,
+        offset: L.point(0, 10),
+        className: 'gs-tooltip-count'
+      }).setContent(intersectCount.toString());
+
+      l.bindPopup(p);
+
     });
     this.gridLayer.bringToBack();
     return this;
@@ -335,14 +407,30 @@ var Map = React.createClass({
   componentDidMount: function() {
     console.log('componentDidMount MapBoxMap');
     var _this = this;
-    var view = [60.177, 25.148];
+    var view = config.map.initialView;
+    var zoom = config.map.initialZoom;
 
-    this.map = L.mapbox.map(this.getDOMNode().querySelector('#map'), 'devseed.m9i692do', {
+    // Map position from path.
+    var routerMap = this.getParams().map;
+    if (routerMap) {
+      routerMap = this.stringToMapView(routerMap);
+      view = [routerMap.lat, routerMap.lng];
+      zoom = routerMap.zoom;
+    }
+
+    // Check if there's a selected square in the path.
+    var routerSquare = this.getParams().square;
+    if (routerSquare) {
+      this.routerSelectedSquare = routerSquare.split(',');
+      view = [this.routerSelectedSquare[0], this.routerSelectedSquare[1]];
+    }
+
+    this.map = L.mapbox.map(this.getDOMNode().querySelector('#map'), config.map.baseLayer, {
       zoomControl: false,
-      minZoom : 4,
-      //maxZoom : 18,
+      minZoom : config.map.minZoom,
+      maxZoom : config.map.maxZoom,
       maxBounds: L.latLngBounds([-90, -180], [90, 180])
-    }).setView(view, 6);
+    }).setView(view, zoom);
 
     // Custom zoom control.
     var zoom = new dsZoom({
@@ -360,6 +448,9 @@ var Map = React.createClass({
     this.gridLayer = L.geoJson(null, { style: L.mapbox.simplestyle.style }).addTo(this.map);
     // On click select the square.
     this.gridLayer.on('click', function(e) {
+      // Ensure that the popup doesn't open.
+      e.layer.closePopup();
+
       // No previous square selected.
       if (mapStore.isSelectedSquare()) {
         // Unselect.
@@ -377,22 +468,44 @@ var Map = React.createClass({
     this.gridLayer.on('mouseover', function(e) {
       if (!mapStore.isSelectedSquare() && e.layer.feature.properties.intersectCount > 0) {
         L.DomUtil.addClass(e.layer._path, 'gs-highlight');
+        // Open popup on square center.
+        var sqrCenter = e.layer.feature.properties.featureCenter.geometry.coordinates;
+        e.layer.openPopup([sqrCenter[1], sqrCenter[0]]);
       }
     });
     // On mouseout remove gs-highlight.
     this.gridLayer.on('mouseout', function(e) {
       L.DomUtil.removeClass(e.layer._path, 'gs-highlight');
+      e.layer.closePopup();
     });
 
     // Footprint layer.
     this.overFootprintLayer = L.geoJson(null, { style: L.mapbox.simplestyle.style }).addTo(this.map);
 
+
     // Map move listener.
-    this.map.on('moveend', function() {
-      _this.setState({loading: true});
+    var onMoveEnd = _.debounce(function() {
+      // Compute new map location for the path .
+      var mapLocation = _this.mapViewToString();
+      // Preserve other params if any.
+      var params = _this.getParams();
+      params.map = mapLocation;
+
+      // Check what's the route to use.
+      var route = 'map';
+      if (params.item_id) {
+        route = 'item';
+      }
+      else if (params.square) {
+        route = 'results';
+      }
+       _this.replaceWith(route, params, _this.getQuery());
+
       actions.mapMove(_this.map);
       _this.updateFauxGrid();
-    });
+    }, 300)
+    this.map.on('moveend', onMoveEnd);
+    this.map.on('movestart', onMoveEnd.cancel);
 
     // Create fauxGrid.
     this.updateFauxGrid();
@@ -415,6 +528,34 @@ var Map = React.createClass({
         <div id="map"></div>
       </div>
     );
+  },
+
+  /**
+   * Converts the map view (coords + zoom) to use on the path.
+   * 
+   * @return string
+   */
+  mapViewToString: function() {
+    var center = this.map.getCenter();
+    var zoom = this.map.getZoom();
+    return center.lat + ',' + center.lng + ',' + zoom;
+  },
+
+  /**
+   * Converts a path string like 60.359564131824214,4.010009765624999,6
+   * to a readable object
+   * 
+   * @param  String
+   *   string to convert
+   * @return object
+   */
+  stringToMapView: function(string) {
+    var data = string.split(',');
+    return {
+      lat: data[0],
+      lng: data[1],
+      zoom: data[2],
+    }
   },
 
   /**

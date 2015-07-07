@@ -1,9 +1,27 @@
 'use strict';
 var React = require('react/addons');
+var Keys = require('react-keybinding');
 var actions = require('../actions/actions');
-var actions = require('../actions/actions');
+var Filters = require('./filters');
 
 var Header = React.createClass({
+  mixins: [
+    Keys
+  ],
+
+  keybindings: {
+    'i': function() {
+      actions.openModal('info');
+    },
+    's': function() {
+      var geocoder = this.getDOMNode().querySelector('[data-hook="geocoder"]');
+      geocoder.focus();
+      // Prevent the 's' from being typed in the search box.
+      setTimeout(function() {
+        geocoder.value = '';
+      }, 1);
+    }
+  },
 
   aboutClickHandler: function(e) {
     e.preventDefault();
@@ -35,12 +53,7 @@ var Header = React.createClass({
               </div>
             </form>
             <ul className="app-menu">
-              <li className="drop dropdown center" data-title="Coming soon!">
-                <a href="#" title="Settings" className="bttn-settings disabled" data-toggle="drop"><span>Settings</span></a>
-                <div className="drop-content">
-                  <p>Settings go here.</p>
-                </div>
-              </li>
+              <Filters />
             </ul>
           </div>
           <div className="nav-block-sec">

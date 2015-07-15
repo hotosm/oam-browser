@@ -56,7 +56,7 @@ module.exports = {
     // ...
   },
   catalog: {
-    url: '<catalog url (no trailing slasj)>'
+    url: '<catalog url (no trailing slash)>'
   }
 };
 ```

@@ -15,7 +15,7 @@ var utils = require('../utils/utils');
 var dsZoom = require('../utils/ds_zoom');
 var config = require('../config.js');
 
-L.mapbox.accessToken = 'pk.eyJ1IjoiaG90IiwiYSI6IjU3MjE1YTYxZGM2YmUwMDIxOTg2OGZmNWU0NzRlYTQ0In0.MhK7SIwO00rhs3yMudBfIw';
+L.mapbox.accessToken = config.map.mapbox.accessToken;
 
 var Map = React.createClass({
   // Connect to the store "mapStore". Whenever the store calls "this.trigger()"

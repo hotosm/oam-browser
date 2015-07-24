@@ -11,7 +11,6 @@ var Redirect = Router.Redirect;
 
 
 var App = require('./components/app');
-var About = require('./components/about');
 var Home = require('./components/home');
 
 // Brief explanation on how the router works:

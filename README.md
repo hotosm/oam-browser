@@ -42,3 +42,21 @@ The same as `gulp` but without livereloading the website.
 ```
 $ gulp no-reload
 ```
+
+## Configuration
+The configuration options are defined in `app/assets/scripts/config.js`.
+If you're using a custom [oam-catalog](https://github.com/hotosm/oam-catalog/) or a different map account, you need to update the respective values:
+
+```js
+module.exports = {
+  map: {
+    mapbox : {
+      accessToken: '<mapbox access token>'
+    },
+    // ...
+  },
+  catalog: {
+    url: '<catalog url (no trailing slash)>'
+  }
+};
+```

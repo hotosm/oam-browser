@@ -7,6 +7,7 @@ var actions = require('../actions/actions');
 var searchQuery = require('./search_query_store')
 var overlaps = require('turf-overlaps');
 var utils = require('../utils/utils');
+var config = require('../config');
 
 module.exports = Reflux.createStore({
 
@@ -30,7 +31,7 @@ module.exports = Reflux.createStore({
   queryLatestImagery: function() {
     var _this = this;
 
-    $.get('http://oam-catalog.herokuapp.com/meta?limit=1')
+    $.get(config.catalog.url + '/meta?limit=1')
       .success(function(data) {
         _this.storage.latestImagery = data.results[0].geojson;
         actions.latestImageryLoaded();
@@ -79,7 +80,7 @@ module.exports = Reflux.createStore({
 
       console.log('search:', params);
 
-      $.get('http://oam-catalog.herokuapp.com/meta?' + qs.stringify(params))
+      $.get(config.catalog.url + '/meta?' + qs.stringify(params))
         .success(function(data) {
           _this.storage.results = data.results;
           _this.trigger(_this.storage.results);

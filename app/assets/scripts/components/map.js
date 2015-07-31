@@ -15,7 +15,7 @@ var utils = require('../utils/utils');
 var dsZoom = require('../utils/ds_zoom');
 var config = require('../config.js');
 
-L.mapbox.accessToken = 'pk.eyJ1IjoiaG90IiwiYSI6IjU3MjE1YTYxZGM2YmUwMDIxOTg2OGZmNWU0NzRlYTQ0In0.MhK7SIwO00rhs3yMudBfIw';
+L.mapbox.accessToken = config.map.mapbox.accessToken;
 
 var Map = React.createClass({
   // Connect to the store "mapStore". Whenever the store calls "this.trigger()"
@@ -249,63 +249,6 @@ var Map = React.createClass({
 
     // Square grid to color.
     var squareGrid = this.squarePixelGrid(extent, config.map.grid.pxSize, config.map.grid.atZoom);
-
-    /*
-    // How this works:
-    // Covert each of the footprints to points.
-    // Count how many points intersect each grid square.
-    // Compute the density per million of square km.
-    // Color the grid.
-
-    // This was dropped in favor of a more performant solution.
-    // Leaving here for now. Will remove it when its time comes.
-
-    console.time('points');
-
-    var points = {
-      'type': 'FeatureCollection',
-      'features': []
-    };
-
-    // Covert footprint images to points.
-    this.state.mapData.forEach(function(o) {
-      points.features = points.features.concat(turf.pointGrid(o.bbox, 0.3, 'degrees').features);
-    });
-
-    var squareGrid = turf.count(squareGrid, points, 'pt_count');
-
-    squareGrid.features.forEach(function (feature) {
-      var pt_count = feature.properties.pt_count;
-
-      var area = Math.round(turf.area(feature) / 1000 / 1000000);
-      // Points per million of square kms. 
-      var ppmsk = pt_count / area;
-
-      feature.properties = {
-        ppmsk: ppmsk,
-        pt_count: pt_count,
-
-        // Style properties. 
-        'fill': 'black',
-        'fill-opacity': 0,
-        'stroke': false
-      };
-
-      if (ppmsk > 0) {
-        feature.properties['fill-opacity'] = 0.2;
-      }
-      if (ppmsk >= 5) {
-        feature.properties['fill-opacity'] = 0.35;
-      }
-      if (ppmsk >= 10) {
-        feature.properties['fill-opacity'] = 0.55;
-      }
-    });
-
-    console.timeEnd('points');
-    // First render clocked at 80ms
-    // Zooming out once clocks 500ms
-    */
 
     // How this approach works:
     // Count how many footprints intersect each square.

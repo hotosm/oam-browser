@@ -6,7 +6,7 @@ The OAM-Browser is a part of the [OpenAerialMap](https://github.com/hotosm/OpenA
 
 Submit any issues and feedback regarding the imagery browser in the [issue tracker](https://github.com/hotosm/oam-browser/issues). 
 
-Access the site at http://hotosm.github.io/oam-browser/. 
+Access the site at http://beta.openaerialmap.org. 
 
 ## Development environment
 To set up the development environment for this website, you'll need to install the following on your system:
@@ -41,4 +41,22 @@ $ gulp build
 The same as `gulp` but without livereloading the website.
 ```
 $ gulp no-reload
+```
+
+## Configuration
+The configuration options are defined in `app/assets/scripts/config.js`.
+If you're using a custom [oam-catalog](https://github.com/hotosm/oam-catalog/) or a different map account, you need to update the respective values:
+
+```js
+module.exports = {
+  map: {
+    mapbox : {
+      accessToken: '<mapbox access token>'
+    },
+    // ...
+  },
+  catalog: {
+    url: '<catalog url (no trailing slash)>'
+  }
+};
 ```

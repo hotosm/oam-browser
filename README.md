@@ -6,7 +6,7 @@ The OAM-Browser is a part of the [OpenAerialMap](https://github.com/hotosm/OpenA
 
 Submit any issues and feedback regarding the imagery browser in the [issue tracker](https://github.com/hotosm/oam-browser/issues). 
 
-Access the site at http://hotosm.github.io/oam-browser/. 
+Access the site at http://beta.openaerialmap.org. 
 
 ## Development environment
 To set up the development environment for this website, you'll need to install the following on your system:

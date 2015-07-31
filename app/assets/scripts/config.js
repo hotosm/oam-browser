@@ -23,6 +23,6 @@ module.exports = {
     }
   },
   catalog: {
-    url: 'http://oam-catalog.herokuapp.com'
+    url: 'http://api.openaerialmap.org'
   }
 };

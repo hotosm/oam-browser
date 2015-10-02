@@ -3,20 +3,20 @@ var React = require('react/addons');
 var actions = require('../actions/actions');
 var utils = require('../utils/utils');
 var mapStore = require('../stores/map_store');
+var Router = require('react-router');
 
 var ResultsListItem = React.createClass({
-
   onClick: function(e) {
     e.preventDefault();
-    actions.resultItemSelect(this.props.data);
+    // actions.resultItemSelect(this.props.data);
   },
   onOver: function(e) {
     e.preventDefault();
-    actions.resultOver(this.props.data);
+    // actions.resultOver(this.props.data);
   },
   onOut: function(e) {
     e.preventDefault();
-    actions.resultOut(this.props.data);
+    // actions.resultOut(this.props.data);
   },
 
   render: function() {
@@ -50,10 +50,13 @@ var ResultsListItem = React.createClass({
 })
 
 var ResultsList = React.createClass({
+
+  mixins: [
+    Router.State
+  ],
+
   render: function() {
-    var square = mapStore.getSelectedSquareCenter();
-    var north = Math.round(square[1] * 100000) / 100000;
-    var east = Math.round(square[0] * 100000) / 100000;
+    var square = this.getParams().square;
 
     var numRes = this.props.results.length;
     var results = this.props.results.map(function(o) {
@@ -62,7 +65,7 @@ var ResultsList = React.createClass({
     return (
       <section className="results-hub">
         <header className="pane-header">
-          <h1 className="pane-title" title={'N ' + square[1] + ', E ' + square[0]}>{'N ' + north + ', E ' + east}</h1>
+          <h1 className="pane-title" title={'Square quadKey ' + square}>{square}</h1>
           <p className="pane-subtitle">{numRes} results</p>
         </header>
         <div className="pane-body">

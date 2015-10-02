@@ -9,6 +9,8 @@ var overlaps = require('turf-overlaps');
 var utils = require('../utils/utils');
 var config = require('../config');
 
+var turf = require('turf');
+
 module.exports = Reflux.createStore({
 
   storage: {
@@ -43,7 +45,8 @@ module.exports = Reflux.createStore({
    * API understands, then hit the API and broadcast the result.
    */
   onSearchQuery: function (parameters) {
-    console.log('onSearchQuery', parameters);
+    console.log('mapstore onSearchQuery', parameters);
+
     var _this = this;
     // hit API and broadcast result
     if (parameters.bbox) {
@@ -82,7 +85,10 @@ module.exports = Reflux.createStore({
 
       $.get(config.catalog.url + '/meta?' + qs.stringify(params))
         .success(function(data) {
+          console.log('api catalog results:', data);
+          //return
           _this.storage.results = data.results;
+          //actions.resultsChange(_this.storage.results);
           _this.trigger(_this.storage.results);
         });
     } else {
@@ -92,12 +98,7 @@ module.exports = Reflux.createStore({
 
   // Actions listener.
   onMapSquareSelected: function(sqrFeature) {
-    console.log('onMapSquareSelected');
     this.storage.sqrSelected = sqrFeature;
-    if (!this.storage.sqrSelected.properties) {
-      this.storage.sqrSelected.properties = {};
-    }
-    this.storage.sqrSelected.properties.centroid = turf.centroid(sqrFeature).geometry.coordinates;
   },
 
   // Actions listener.

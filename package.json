@@ -27,14 +27,18 @@
     "watchify": "^2.1.1"
   },
   "dependencies": {
+    "chroma-js": "^1.1.1",
     "jquery": "^2.1.4",
     "lodash": "^3.8.0",
+    "mapbox-gl": "^0.11.1",
+    "mapbox-gl-style-spec": "^8.1.0",
     "mapbox.js": "^2.1.9",
     "pretty-bytes": "^2.0.1",
     "react": "^0.13.3",
     "react-keybinding": "^2.0.0",
     "react-router": "^0.13.3",
     "reflux": "^0.2.7",
+    "tilebelt": "^1.0.1",
     "turf": "^2.0.2",
     "turf-overlaps": "^1.0.3",
     "zeroclipboard": "^2.2.0"

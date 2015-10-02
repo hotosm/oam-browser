@@ -4,11 +4,11 @@ var Reflux = require('reflux');
 var Router = require('react-router');
 var Dropdown = require('./shared/dropdown');
 var actions = require('../actions/actions');
-var searchQuery = require('../stores/search_query_store');
+var searchQueryStore = require('../stores/search_query_store');
 
 var Filters = module.exports = React.createClass({
   mixins: [
-    Reflux.listenTo(searchQuery, 'onSearchQuery'),
+    Reflux.listenTo(searchQueryStore, 'onSearchQuery'),
     Router.Navigation,
     Router.State
   ],

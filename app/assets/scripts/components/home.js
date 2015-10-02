@@ -8,8 +8,8 @@ var Home = React.createClass({
   render: function() {
     return (
       <div>
-        <MapBoxMap />
-        <MiniMap />
+        <MapBoxMap {...this.props} />
+        {/*<MiniMap />*/}
         <ResultsPane />
       </div>
     );

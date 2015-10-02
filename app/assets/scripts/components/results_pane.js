@@ -37,19 +37,19 @@ var ResultsPane = React.createClass({
       selectedItem: data.selectedItem,
       selectedItemIndex: data.selectedItemIndex
     });
-
+console.log('resultsPane');
     // No square selected. Do not update route.
-    if (!mapStore.isSelectedSquare()) {
-      return;
-    }
+    // if (!mapStore.isSelectedSquare()) {
+    //   return;
+    // }
 
-    var params = this.getParams();
-    var route = 'results';
-    if (data.selectedItem) {
-      route = 'item';
-      params.item_id = data.selectedItem._id
-    }
-    this.replaceWith(route, params, this.getQuery());
+    // var params = this.getParams();
+    // var route = 'results';
+    // if (data.selectedItem) {
+    //   route = 'item';
+    //   params.item_id = data.selectedItem._id
+    // }
+    // this.replaceWith(route, params, this.getQuery());
   },
 
   getInitialState: function() {
@@ -66,20 +66,20 @@ var ResultsPane = React.createClass({
   },
 
   componentWillUpdate: function(nextProps, nextState) {
-    var params = this.getParams();
-    // if:
-    //  - didn't load already
-    //  - there's an id in the url
-    //  - there are results
-    if (this.loadFromRouter && params.item_id && nextState.results.length) {
-      this.loadFromRouter = false;
-      // Search for the item to trigger the action.
-      for (var i in nextState.results) {
-        if (nextState.results[i]._id == params.item_id) {
-          actions.resultItemSelect(nextState.results[i]);
-        }
-      }
-    }
+    // var params = this.getParams();
+    // // if:
+    // //  - didn't load already
+    // //  - there's an id in the url
+    // //  - there are results
+    // if (this.loadFromRouter && params.item_id && nextState.results.length) {
+    //   this.loadFromRouter = false;
+    //   // Search for the item to trigger the action.
+    //   for (var i in nextState.results) {
+    //     if (nextState.results[i]._id == params.item_id) {
+    //       actions.resultItemSelect(nextState.results[i]);
+    //     }
+    //   }
+    // }
   },
 
   render: function() {

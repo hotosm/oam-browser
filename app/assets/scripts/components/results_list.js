@@ -1,22 +1,33 @@
 'use strict';
 var React = require('react/addons');
+var Router = require('react-router');
+var _ =  require('lodash');
 var actions = require('../actions/actions');
 var utils = require('../utils/utils');
-var mapStore = require('../stores/map_store');
-var Router = require('react-router');
 
 var ResultsListItem = React.createClass({
+  mixins: [
+    Router.Navigation,
+    Router.State,
+  ],
+
   onClick: function(e) {
     e.preventDefault();
-    // actions.resultItemSelect(this.props.data);
+    actions.resultOut(this.props.data);
+    var params = _.clone(this.getParams());
+    params.item_id = this.props.data._id;
+    
+    this.transitionTo('item', params, this.getQuery());
   },
+
   onOver: function(e) {
     e.preventDefault();
-    // actions.resultOver(this.props.data);
+    actions.resultOver(this.props.data);
   },
+
   onOut: function(e) {
     e.preventDefault();
-    // actions.resultOut(this.props.data);
+    actions.resultOut(this.props.data);
   },
 
   render: function() {
@@ -50,18 +61,14 @@ var ResultsListItem = React.createClass({
 })
 
 var ResultsList = React.createClass({
-
-  mixins: [
-    Router.State
-  ],
-
   render: function() {
-    var square = this.getParams().square;
+    var square = this.props.selectedSquare;
 
     var numRes = this.props.results.length;
     var results = this.props.results.map(function(o) {
       return (<ResultsListItem key={o._id} data={o} />);
     });
+
     return (
       <section className="results-hub">
         <header className="pane-header">

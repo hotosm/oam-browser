@@ -5,11 +5,8 @@ module.exports = Reflux.createActions({
   // Map actions.
   'mapMove': {},
   'mapSquareSelected': {},
-  'mapSquareUnselected': {},
 
   'latestImageryLoaded': {},
-
-  'resultsChange': {},
 
   // Filter actios
   'setDateFilter': {
@@ -29,11 +26,6 @@ module.exports = Reflux.createActions({
   },
 
   // Results pane related actions.
-  'resultItemSelect': {},
-  'resultItemView': {},
-  'resultListView': {},
-  'prevResult' : {},
-  'nextResult' : {},
   'resultOver': {},
   'resultOut': {},
   
@@ -46,7 +38,6 @@ module.exports = Reflux.createActions({
   'goToLatest': {},
 
   'geocoderResult': {},
-
 
   'miniMapClick': {},
 });

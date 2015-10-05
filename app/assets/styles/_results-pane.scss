@@ -276,6 +276,9 @@ $card-padding: 0.5rem;
   > a, a:visited {
     color: inherit;
   }
+  > a > * {
+    pointer-events: none;
+  }
   .card-header,
   .card-body {
     padding: $card-padding;

@@ -28,6 +28,12 @@ module.exports = function (property, breaks, maxVal) {
         'type': 'geojson',
         'data': { 'type': 'FeatureCollection', 'features': [] }
       },
+      'result-footprint': {
+        'type': 'geojson',
+        'data': { 'type': 'FeatureCollection', 'features': [] }
+      },
+
+
       'grid-hover-num': {
         'type': 'geojson',
         'data': { 'type': 'FeatureCollection', 'features': [] }
@@ -99,15 +105,27 @@ module.exports = function (property, breaks, maxVal) {
     source: 'grid-hover',
     paint: {
       'fill-color': 'rgba(200, 50, 50, 0.5)'
-    }
-  })
+    },
+    filter: ['>', property, 0]
+  });
+
+  style.layers.push({
+    id: 'result-footprint-style',
+    type: 'line',
+    source: 'result-footprint',
+    paint: {
+      'line-color': 'rgba(0, 0, 255, 0.8)'
+    },
+  });
+
+
 
   style.layers.push({
     id: 'number-count',
     type: 'symbol',
     source: 'grid-hover-num',
     layout: {
-      "text-field": "{all_all_all_count}",
+      "text-field": "{" + property + "}",
       "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
       "text-size": 12,
 
@@ -116,7 +134,7 @@ module.exports = function (property, breaks, maxVal) {
     },
     paint: {
       }
-  })
+  });
 
   return style
 }

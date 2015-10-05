@@ -11,37 +11,59 @@ var utils = require('../utils/utils');
 var actions = require('../actions/actions');
 var prettyBytes = require('pretty-bytes');
 
-
 var ResultsItem = React.createClass({
   mixins: [
     Keys,
-    Router.State
+    Router.State,
+    Router.Navigation
   ],
 
   keybindings: {
     'arrow-left': function() {
-      if (this.props.pagination.current > 1) {
-        actions.prevResult();
+      if (this.props.pagination.prevId) {
+        this.prevResult(null);
       }
     },
     'arrow-right': function() {
-      if (this.props.pagination.current < this.props.pagination.total) {
-        actions.nextResult();
+      if (this.props.pagination.nextId) {
+        this.nextResult(null);
       }
     }
   },
 
   prevResult: function(e) {
-    e.preventDefault();
-    actions.prevResult();
+    if (e) {
+      e.preventDefault();
+    }
+    var p = this.getParams();
+    this.transitionTo('item', {
+      map: p.map,
+      square: p.square,
+      item_id: this.props.pagination.prevId
+    }, this.getQuery());
   },
+
   viewAllResults: function(e) {
-    e.preventDefault();
-    actions.resultListView();
+    if (e) {
+      e.preventDefault();
+    }
+    var p = this.getParams();
+    this.transitionTo('results', {
+      map: p.map,
+      square: p.square
+    }, this.getQuery());
   },
+
   nextResult: function(e) {
-    e.preventDefault();
-    actions.nextResult();
+    if (e) {
+      e.preventDefault();
+    }
+    var p = this.getParams();
+    this.transitionTo('item', {
+      map: p.map,
+      square: p.square,
+      item_id: this.props.pagination.nextId
+    }, this.getQuery());
   },
 
   onCopy: function(e) {
@@ -88,9 +110,6 @@ var ResultsItem = React.createClass({
   render: function() {
     var d = this.props.data;
     var pagination = this.props.pagination;
-
-    var isFirst = pagination.current == 1;
-    var isLast = pagination.current == pagination.total;
 
     var tmsOptions = null;
     if (d.properties.tms) {
@@ -163,8 +182,8 @@ var ResultsItem = React.createClass({
         <footer className="pane-footer">
           <ul className="single-pager">
             <li className="view-all"><a href="#" onClick={this.viewAllResults} title="View all results"><span>All</span></a></li>
-            <li className="view-prev"><a href="#" onClick={this.prevResult} className={isFirst ? 'disabled' : ''} title="View previous result"><span>Prev</span></a></li>
-            <li className="view-next"><a href="#" onClick={this.nextResult} className={isLast ? 'disabled' : ''} title="View next result"><span>Next</span></a></li>
+            <li className="view-prev"><a href="#" onClick={this.prevResult} className={this.props.pagination.prevId ? '' : 'disabled'} title="View previous result"><span>Prev</span></a></li>
+            <li className="view-next"><a href="#" onClick={this.nextResult} className={this.props.pagination.nextId ? '' : 'disabled'} title="View next result"><span>Next</span></a></li>
           </ul>
         </footer>
       </article>

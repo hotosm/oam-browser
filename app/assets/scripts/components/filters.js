@@ -48,7 +48,7 @@ var Filters = module.exports = React.createClass({
       query[prop] = value;
     }
     var routes = this.getRoutes();
-    this.replaceWith(routes[routes.length - 1].name, this.getParams(), query);
+    this.transitionTo('map', {map: this.getParams().map}, query);
   },
 
 

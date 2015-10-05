@@ -62,7 +62,7 @@ var Header = React.createClass({
               <Dropdown element="li" className="drop dropdown right" triggerTitle="Info" triggerClassName="bttn-info" triggerText="Info">
                 <ul className="drop-menu info-menu" role="menu">
                   <li><a href="#" title="Learn more" onClick={this.aboutClickHandler}><span>About</span></a></li>
-                  <li><a href="http://uploader.openaerialmap.org/" title="Go to OAM Uploader"><span>Uploader</span></a></li>
+                  <li><a href="http://upload.openaerialmap.org/" title="Go to OAM Uploader"><span>Uploader</span></a></li>
                 </ul>
               </Dropdown>
             </ul>

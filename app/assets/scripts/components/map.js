@@ -33,6 +33,10 @@ var Map = React.createClass({
   // Whether the square is following the cursor.
   follow: true,
 
+  // Quadkey of the tile we're currently hovering.
+  // Used to limit the calls to featureAt.
+  hoverTileQuadkey: null,
+
   // Lifecycle method.
   // Called once as soon as the component has a DOM representation.
   componentDidMount: function() {
@@ -130,6 +134,16 @@ var Map = React.createClass({
     if (!this.follow) {
       return;
     }
+
+    // A square at zoom Z is the same as a map tile at zoom Z+3
+    var z = Math.round(this.map.getZoom());
+    var tile = tilebelt.pointToTile(e.lngLat.lng, e.lngLat.lat, z + 3);
+    var quadKey = tilebelt.tileToQuadkey(tile);
+
+    if (this.hoverTileQuadkey == quadKey) {
+      return;
+    }
+    this.hoverTileQuadkey = quadKey;
 
     this.map.featuresAt(e.point, { includeGeometry: true }, function (err, features) {
       if (err) throw err;

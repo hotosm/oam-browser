@@ -1,9 +1,13 @@
 var chroma = require('chroma-js')
+var mapboxLight = require('./mapbox-light.json')
 
-var GRID_FILL = '#0ff'
-var GRID_STROKE = chroma(GRID_FILL).darken().desaturate().hex()
-var WATER_COLOR = '#899'
-var BACKGROUND = chroma(WATER_COLOR).darken().hex()
+var GRID_FILL = '#439ab4'
+var GRID_FILL_MAX_OPACITY = 0.6
+var GRID_STROKE = '#1f3b45'
+
+mapboxLight.layers.forEach(function (layer) {
+  layer.interactive = false;
+});
 
 /**
  * Generates a style sheet with a simple base layer, and a color-scaled grid
@@ -11,7 +15,6 @@ var BACKGROUND = chroma(WATER_COLOR).darken().hex()
  * `property`, which is expected to range between 0 and `maxVal`.
  */
 module.exports = function (property, breaks, maxVal) {
-
   var style = {
     'version': 8,
     'name': 'Basic',
@@ -19,6 +22,10 @@ module.exports = function (property, breaks, maxVal) {
       'mapbox': {
         'type': 'vector',
         'url': 'mapbox://mapbox.mapbox-streets-v6'
+      },
+      'mapbox://mapbox.mapbox-terrain-v2': {
+        'url': 'mapbox://mapbox.mapbox-terrain-v2',
+        'type': 'vector'
       },
       'grid': {
         'type': 'vector',
@@ -39,41 +46,19 @@ module.exports = function (property, breaks, maxVal) {
         'data': { 'type': 'FeatureCollection', 'features': [] }
       }
     },
-    'sprite': '',
-    'glyphs': 'mapbox://fonts/mapbox/{fontstack}/{range}.pbf',
-    'layers': [{
-      'id': 'background',
-      'type': 'background',
-      'paint': {
-        'background-color': BACKGROUND
-      }
-    }, {
-      'id': 'water',
-      'type': 'fill',
-      'source': 'mapbox',
-      'source-layer': 'water',
-      'paint': {
-        'fill-color': WATER_COLOR
-      }
-    }, {
-      'id': 'states',
-      'type': 'line',
-      'source': 'mapbox',
-      'source-layer': 'admin',
-      'paint': {
-        'line-color': chroma(BACKGROUND).darken().hex()
-      }
-    }, {
-      'id': 'pop',
+    'sprite': 'mapbox://sprites/devseed/cife4hfep6f88smlxfhgdmdkk',
+    'glyphs': 'mapbox://fonts/devseed/{fontstack}/{range}.pbf',
+    'layers': mapboxLight.layers.concat([{
+      'id': 'footprint-grid',
       'interactive': true,
       'type': 'line',
       'source': 'grid',
       'source-layer': 'footprints',
       'paint': {
-        'line-color': GRID_STROKE
+        'line-color': GRID_STROKE,
+        'line-opacity': 0.1
       }
-    }
-    ]
+    }])
   }
 
   // Dynamically generate a set of layers that mimic data-driven styling.
@@ -89,7 +74,7 @@ module.exports = function (property, breaks, maxVal) {
       'source-layer': 'footprints',
       'paint': {
         'fill-color': GRID_FILL,
-        'fill-opacity': i / breaks
+        'fill-opacity': GRID_FILL_MAX_OPACITY * i / breaks
       },
       'filter': [ 'all',
         [ '>', property, i / breaks * maxVal ],
@@ -104,10 +89,9 @@ module.exports = function (property, breaks, maxVal) {
     type: 'fill',
     source: 'grid-hover',
     paint: {
-      'fill-color': 'rgba(200, 50, 50, 0.5)'
-    },
-    filter: ['>', property, 0]
-  });
+      'fill-color': '#a3d'
+    }
+  })
 
   style.layers.push({
     id: 'result-footprint-style',
@@ -117,7 +101,6 @@ module.exports = function (property, breaks, maxVal) {
       'line-color': 'rgba(0, 0, 255, 0.8)'
     },
   });
-
 
 
   style.layers.push({

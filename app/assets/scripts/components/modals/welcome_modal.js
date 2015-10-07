@@ -2,11 +2,19 @@
 
 var React = require('react/addons');
 var Reflux = require('reflux');
+var Router = require('react-router');
+var turf = require('turf');
+var tilebelt = require('tilebelt');
 var BModal = require('./base_modal');
 var actions = require('../../actions/actions');
+var mapStore = require('../../stores/map_store');
 
 var WelcomeModal = React.createClass({
-  mixins: [Reflux.listenTo(actions.latestImageryLoaded, "onLatestImageryLoaded")],
+  mixins: [
+    Reflux.listenTo(actions.latestImageryLoaded, "onLatestImageryLoaded"),
+    Router.Navigation,
+    Router.State
+  ],
 
   getInitialState: function() {
     return {
@@ -22,9 +30,34 @@ var WelcomeModal = React.createClass({
 
   onBrowseLatestClick: function(e) {
     e.preventDefault();
-    actions.goToLatest();
-    // Simulate close click.
+    console.log('..+++++++++....+++++++++....+++++++++..')
+    var previewZoom = 10;
+    var latest = mapStore.getLatestImagery();
+    var f = {
+      type: 'Feature',
+      geometry: latest.geojson
+    };
+    var centroid = turf.centroid(f);
+    var coords = centroid.geometry.coordinates;
+    var tile = tilebelt.pointToTile(coords[0], coords[1], previewZoom + 3);
+    var quadKey = tilebelt.tileToQuadkey(tile);
+    var mapView = coords[0] + ',' + coords[1] + ',' + previewZoom;
+
+    console.log('Feature', f);
+    console.log('coords center', coords);
+    console.log('tile', tile);
+    console.log('quadKey', quadKey);
+    console.log('full url -- %s/%s/%s', mapView, quadKey, latest._id);
+
     this.getDOMNode().querySelector('.dismiss-modal .close').click();
+
+    this.transitionTo('item', {
+      map: mapView,
+      square: quadKey,
+      item_id: latest._id
+    });
+
+    console.log('..+++++++++....+++++++++....+++++++++..')
   },
 
   onGeocoderSearch: function(e) {

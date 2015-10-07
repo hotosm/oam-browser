@@ -20,7 +20,7 @@ module.exports = Reflux.createStore({
   // Setup listeners.
   init: function() {
     this.listenTo(actions.mapSquareSelected, this.onMapSquareSelected);
-    // this.queryLatestImagery();
+    this.queryLatestImagery();
   },
 
   queryLatestImagery: function() {
@@ -28,7 +28,7 @@ module.exports = Reflux.createStore({
 
     $.get(config.catalog.url + '/meta?limit=1')
       .success(function(data) {
-        _this.storage.latestImagery = data.results[0].geojson;
+        _this.storage.latestImagery = data.results[0];
         actions.latestImageryLoaded();
       });
   },

@@ -1,6 +1,8 @@
 'use strict';
 var turf = require('turf');
 var tilebelt = require('tilebelt');
+var config = require('../config');
+var $ = require('jquery');
 
 /**
  * Converts a string to a coordinates array.
@@ -76,4 +78,29 @@ module.exports.tileCenterFromQuadkey = function(quadKey) {
   var tile = tilebelt.quadkeyToTile(quadKey);
   var geoJSONTile = tilebelt.tileToGeoJSON(tile);
   return turf.centroid(geoJSONTile);
+};
+
+module.exports.queryGeocoder = function(query, successCb, errorCb) {
+  var uri = 'https://api.tiles.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(query) + '.json' +
+  '?access_token=' + config.map.mapbox.glAccessToken;
+  var req = $.get(uri);
+
+  if (successCb) {
+    req = req.success(function(data) {
+      var bounds = false;
+      if (data.features.length) {
+        bounds = [
+          [data.features[0].bbox[0], data.features[0].bbox[1]],
+          [data.features[0].bbox[2], data.features[0].bbox[3]]
+        ];
+      }
+      successCb(bounds, data);
+    });
+  }
+
+  if (errorCb) {
+    req = req.error(errorCb);
+  }
+
+  return req;
 };

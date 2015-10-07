@@ -61,13 +61,15 @@ var WelcomeModal = React.createClass({
     e.preventDefault();
     var _this = this;
 
-    var geocoder = L.mapbox.geocoder('mapbox.places');
-
     var queryString = this.getDOMNode().querySelector('[data-hook="geocoder"]').value;
-    geocoder.query(queryString, function(err, data) {
-      actions.geocoderResult(data.lbounds ? data.lbounds : false);
-      // Simulate close click.
+    
+    utils.queryGeocoder(queryString, function(bounds) {
+      if (!bounds) {
+        console.log('geocoder -- no result was found');
+        return;
+      }
       _this.getDOMNode().querySelector('.dismiss-modal .close').click();
+      actions.geocoderResult(bounds);
     });
   },
 

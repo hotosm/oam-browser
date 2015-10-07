@@ -25,6 +25,8 @@ var Map = React.createClass({
     Reflux.listenTo(actions.resultOver, "onResultOver"),
     Reflux.listenTo(actions.resultOut, "onResultOut"),
 
+    Reflux.listenTo(actions.geocoderResult, "onGeocoderResult"),
+
     Router.Navigation,
     Router.State
   ],
@@ -42,6 +44,9 @@ var Map = React.createClass({
   requireStyleUpdate: true,
   requireMapViewUpdate: true,
   requireSelectedItemUpdate: true,
+  // When the map location is updated by a geocoder search, if there's a
+  // selected square it must be unselected.
+  requireSquareUnselect: false,
 
   // Lifecycle method.
   // Called once as soon as the component has a DOM representation.
@@ -148,11 +153,17 @@ var Map = React.createClass({
   // Map event
   onMapMoveend: function(e) {
     console.log('event:', 'moveend');
-    
-    var routes = this.getRoutes();
-    var params = _.clone(this.getParams());
-    params.map = this.mapViewToString();
-    this.replaceWith(routes[routes.length - 1].name, params, this.getQuery());
+
+    if (this.requireSquareUnselect) {
+      this.requireSquareUnselect = false;
+      this.replaceWith('map', {map: this.mapViewToString()}, this.getQuery());
+    }
+    else {
+      var routes = this.getRoutes();
+      var params = _.clone(this.getParams());
+      params.map = this.mapViewToString();
+      this.replaceWith(routes[routes.length - 1].name, params, this.getQuery());
+    }
   },
 
   // Map event
@@ -208,6 +219,15 @@ var Map = React.createClass({
       console.log('transition /:map', {map: this.props.params.map });
       console.log('----------------------------------------------');
       this.transitionTo('map', {map: this.props.params.map}, this.getQuery());
+    }
+  },
+
+  // Actions listener.
+  onGeocoderResult: function(bounds) {
+    if (bounds) {
+      // Move the map.
+      this.requireSquareUnselect = true;
+      this.map.fitBounds(bounds);
     }
   },
 

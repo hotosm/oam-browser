@@ -3,6 +3,7 @@ var React = require('react/addons');
 var Keys = require('react-keybinding');
 var actions = require('../actions/actions');
 var Filters = require('./filters');
+var utils = require('../utils/utils');
 
 var Header = React.createClass({
   mixins: [
@@ -32,11 +33,13 @@ var Header = React.createClass({
     e.preventDefault();
     var _this = this;
 
-    var geocoder = L.mapbox.geocoder('mapbox.places');
-
     var queryString = this.getDOMNode().querySelector('[data-hook="geocoder"]').value;
-    geocoder.query(queryString, function(err, data) {
-      actions.geocoderResult(data.lbounds ? data.lbounds : false);
+    utils.queryGeocoder(queryString, function(bounds) {
+      if (!bounds) {
+        console.log('geocoder -- no result was found');
+        return;
+      }
+      actions.geocoderResult(bounds);
     });
   },
 

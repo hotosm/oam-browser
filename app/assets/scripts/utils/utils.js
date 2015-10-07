@@ -1,4 +1,6 @@
 'use strict';
+var turf = require('turf');
+var tilebelt = require('tilebelt');
 
 /**
  * Converts a string to a coordinates array.
@@ -50,4 +52,28 @@ module.exports.gsdToUnit = function(gsd) {
   }
 
   return Math.round(gsd) + ' ' + unit;
+};
+
+module.exports.quadkeyFromCoords = function(lng, lat, zoom) {
+  // A square at zoom Z is the same as a map tile at zoom Z+3
+  var tile = tilebelt.pointToTile(lng, lat, zoom + 3);
+  return tilebelt.tileToQuadkey(tile);
+};
+
+module.exports.tileCenterFromCoords = function(lng, lat, zoom) {
+  // A square at zoom Z is the same as a map tile at zoom Z+3
+  var tile = tilebelt.pointToTile(lng, lat, zoom + 3);
+  var geoJSONTile = tilebelt.tileToGeoJSON(tile);
+  var squareCenter = turf.centroid(geoJSONTile);
+  // In this way we ensure it's a copy.
+  return [
+    squareCenter.geometry.coordinates[0],
+    squareCenter.geometry.coordinates[1]
+  ];
+};
+
+module.exports.tileCenterFromQuadkey = function(quadKey) {
+  var tile = tilebelt.quadkeyToTile(quadKey);
+  var geoJSONTile = tilebelt.tileToGeoJSON(tile);
+  return turf.centroid(geoJSONTile);
 };

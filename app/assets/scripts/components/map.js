@@ -15,6 +15,7 @@ var _ = require('lodash');
 var actions = require('../actions/actions');
 // var dsZoom = require('../utils/ds_zoom');
 var config = require('../config.js');
+var utils = require('../utils/utils');
 
 // L.mapbox.accessToken = config.map.mapbox.accessToken;
 mapboxgl.accessToken = config.map.mapbox.glAccessToken;
@@ -163,8 +164,7 @@ var Map = React.createClass({
 
     // A square at zoom Z is the same as a map tile at zoom Z+3
     var z = Math.round(this.map.getZoom());
-    var tile = tilebelt.pointToTile(e.lngLat.lng, e.lngLat.lat, z + 3);
-    var quadKey = tilebelt.tileToQuadkey(tile);
+    var quadKey = utils.quadkeyFromCoords(e.lngLat.lng, e.lngLat.lat, z);
 
     if (this.hoverTileQuadkey == quadKey) {
       return;
@@ -186,21 +186,16 @@ var Map = React.createClass({
     console.log('clicked point', e.point);
 
     if (this.follow) {
-      // A square at zoom Z is the same as a map tile at zoom Z+3
       var z = Math.round(this.map.getZoom());
-      var tile = tilebelt.pointToTile(e.lngLat.lng, e.lngLat.lat, z + 3);
-      var geoJSONTile = tilebelt.tileToGeoJSON(tile);
-      var quadKey = tilebelt.tileToQuadkey(tile);
-      var squareCenter = turf.centroid(geoJSONTile);
-      var mapView = squareCenter.geometry.coordinates.concat(z).join(',');
+      var quadKey = utils.quadkeyFromCoords(e.lngLat.lng, e.lngLat.lat, z);
+      var squareCenter = utils.tileCenterFromCoords(e.lngLat.lng, e.lngLat.lat, z);
+      var mapView = squareCenter.concat(z).join(',');
 
       console.log('----------------------------------------------');
       console.log('SELECTED -- (was following)');
       console.log('current map zoom', z);
       console.log('a square at zoom', z, 'is the same as a map tile at zoom', z + 3);
-      console.log('tile at zoom', z + 3, tile);
-      console.log('tileToGeoJSON', geoJSONTile);
-      console.log('tileToQuadkey', quadKey);
+      console.log('quadKey', quadKey);
       console.log('squareCenter', squareCenter);
       console.log('mapView', mapView);
       console.log('transition /:map/:square', {map: mapView, square: quadKey});
@@ -247,13 +242,9 @@ var Map = React.createClass({
     }
 
     var _this = this;
-    var tile = tilebelt.quadkeyToTile(quadKey);
-    var geo = tilebelt.tileToGeoJSON(tile);
-    var point = turf.pointOnSurface(geo);
+    var point = utils.tileCenterFromQuadkey(quadKey)
     var pxcoords = _this.map.project(point.geometry.coordinates);
-    console.log('tile from a quadkey', tile);
-    console.log('geoJSON from tile', geo);
-    console.log('point from geoJSON', point);
+    console.log('tile center', point);
     console.log('pxcoords from point', pxcoords);
 
     _this.map.featuresAt(pxcoords, { includeGeometry: true }, function (err, features) {

@@ -4,10 +4,10 @@ var React = require('react/addons');
 var Reflux = require('reflux');
 var Router = require('react-router');
 var turf = require('turf');
-var tilebelt = require('tilebelt');
 var BModal = require('./base_modal');
 var actions = require('../../actions/actions');
 var mapStore = require('../../stores/map_store');
+var utils = require('../../utils/utils');
 
 var WelcomeModal = React.createClass({
   mixins: [
@@ -37,15 +37,12 @@ var WelcomeModal = React.createClass({
       type: 'Feature',
       geometry: latest.geojson
     };
-    var centroid = turf.centroid(f);
-    var coords = centroid.geometry.coordinates;
-    var tile = tilebelt.pointToTile(coords[0], coords[1], previewZoom + 3);
-    var quadKey = tilebelt.tileToQuadkey(tile);
-    var mapView = coords[0] + ',' + coords[1] + ',' + previewZoom;
+    var centroid = turf.centroid(f).geometry.coordinates;
+    var quadKey = utils.quadkeyFromCoords(centroid[0], centroid[1], previewZoom);
+    var mapView = centroid[0] + ',' + centroid[1] + ',' + previewZoom;
 
     console.log('Feature', f);
-    console.log('coords center', coords);
-    console.log('tile', tile);
+    console.log('coords center', centroid);
     console.log('quadKey', quadKey);
     console.log('full url -- %s/%s/%s', mapView, quadKey, latest._id);
 

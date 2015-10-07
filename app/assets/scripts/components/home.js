@@ -45,12 +45,24 @@ var Home = React.createClass({
     this.setState({map: mapState});
   },
 
+  componentWillReceiveProps: function(nextProps) {
+    // If the square was set and it's not anymore means that the results
+    // have been dismissed.
+    if (this.props.params.square && !nextProps.params.square) {
+      console.log('componentWillReceiveProps -- results pane was dismissed');
+      // Clean the results.
+      this.setState({results: []});
+    }
+  },
+
   render: function() {
+    var selectedItem = _.find(this.state.results, {_id: this.props.params.item_id});
+
     return (
       <div>
-        <MapBoxMap {...this.props} styleProperty={this.state.map.styleProperty  } />
+        <MapBoxMap {...this.props} styleProperty={this.state.map.styleProperty} selectedItem={selectedItem} />
         {/*<MiniMap />*/}
-        <ResultsPane results={this.state.results} selectedItem={this.props.params.item_id} selectedSquare={this.props.params.square}/>
+        <ResultsPane results={this.state.results} selectedItemId={this.props.params.item_id} selectedSquare={this.props.params.square}/>
       </div>
     );
   }

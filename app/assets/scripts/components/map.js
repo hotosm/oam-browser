@@ -37,6 +37,11 @@ var Map = React.createClass({
   // Used to limit the calls to featureAt.
   hoverTileQuadkey: null,
 
+  // Flags to control when to perform certain updates.
+  requireStyleUpdate: true,
+  requireMapViewUpdate: true,
+  requireSelectedItemUpdate: true,
+
   // Lifecycle method.
   // Called once as soon as the component has a DOM representation.
   componentDidMount: function() {
@@ -73,27 +78,44 @@ var Map = React.createClass({
     _this.map.on('moveend', this.onMapMoveend);
   },
 
+  componentWillReceiveProps: function(nextProps) {
+    console.log('**--**--**--**--**--**--**--**--**--**--');
+    console.log('componentWillReceiveProps');
+
+    console.log('previous style property --', this.props.styleProperty);
+    console.log('new style property --', nextProps.styleProperty);
+    this.requireStyleUpdate = this.props.styleProperty != nextProps.styleProperty;
+    console.log('require style update', this.requireStyleUpdate);
+
+    console.log('previous map view --', this.props.params.map);
+    console.log('new map view --', nextProps.params.map);
+    this.requireMapViewUpdate = this.props.params.map != nextProps.params.map;
+    console.log('require map view update', this.requireMapViewUpdate);
+
+    console.log('previous selectedItem --', _.get(this.props.selectedItem, '_id', null));
+    console.log('new selectedItem --', _.get(nextProps.selectedItem, '_id', null));
+    this.requireSelectedItemUpdate = _.get(this.props.selectedItem, '_id', null) != _.get(nextProps.selectedItem, '_id', null);
+    console.log('require selected item update', this.requireSelectedItemUpdate);
+
+    console.log('**--**--**--**--**--**--**--**--**--**--');
+  },
+
   // Lifecycle method.
   // Called when the component gets updated.
   componentDidUpdate: function(prevProps, prevState) {
     console.log('componentDidUpdate');
 
-    console.log('current style property --', this.props.styleProperty);
-    console.log('prevState style property --', prevProps.styleProperty);
-    if (this.props.styleProperty != prevProps.styleProperty) {
+    if (this.requireStyleUpdate) {
       var stylesheet = makeStyle(this.props.styleProperty, 16, 100);
       if (this.validateStyle(stylesheet)) {
         this.map.setStyle(stylesheet);
       }
     }
 
-    console.log('prevProps map view --', prevProps.params.map);
-    console.log('current map view --', this.mapViewToString());
-    console.log('newProps map view --', this.props.params.map);
     // Only recenter if the current view is different from the one
     // provided by the router.
     // This will trigger a map moveend event.
-    if (this.mapViewToString() != this.props.params.map) {
+    if (this.requireMapViewUpdate) {
       var routerMap = this.stringToMapView(this.props.params.map);
       this.map
         .setCenter([routerMap.lng, routerMap.lat])
@@ -102,6 +124,10 @@ var Map = React.createClass({
 
     // Select the square if there's one.
     this.selectSquare(this.props.params.square);
+
+    if (this.requireSelectedItemUpdate) {
+      //this.updateSelectedItemImageFootprint();
+    }
   },
 
   render: function() {
@@ -179,7 +205,6 @@ var Map = React.createClass({
       console.log('mapView', mapView);
       console.log('transition /:map/:square', {map: mapView, square: quadKey});
       console.log('----------------------------------------------');
-      //this.follow = false;
       this.transitionTo('results', {map: mapView, square: quadKey}, this.getQuery());
     }
     else {
@@ -187,17 +212,11 @@ var Map = React.createClass({
       console.log('UNSELECTED -- (was not following)');
       console.log('transition /:map', {map: this.props.params.map });
       console.log('----------------------------------------------');
-      //this.unselectSquare();
       this.transitionTo('map', {map: this.props.params.map}, this.getQuery());
     }
   },
 
   // Action listener
-  onSearchQueryChanged: function(params, changeTrigger) {
-    console.log('map onSearchQueryChanged');
-    this.unselectSquare();
-  },
-
   onResultOver: function(data) {
     console.log('map onResultsOver');
     var src = this.map.getSource('result-footprint');
@@ -207,18 +226,13 @@ var Map = React.createClass({
     }
   },
 
+  // Action listener
   onResultOut: function() {
     console.log('map onResultOut');
     var src = this.map.getSource('result-footprint');
     if (src) {
       src.setData(turf.featurecollection([]));
     }
-  },
-
-  unselectSquare: function() {
-    this.follow = true;
-    actions.mapSquareUnselected();
-    this.transitionTo('map', {map: this.props.params.map}, this.getQuery());
   },
 
   // Selects a square using the quadKey.
@@ -257,6 +271,38 @@ var Map = React.createClass({
       console.log('=/=/=/=/=/=/=/=/=/=/=/=/=/=');
     });
     console.log('=======================================');
+  },
+
+  updateSelectedItemImageFootprint: function() {
+    try  {
+      // Try to delete the source and layer if they exist.
+      this.map.removeSource('image-footprint-src');
+      this.map.removeLayer('image-footprint-layer');
+    }
+    catch (e) {}
+
+    if (this.props.selectedItem) {
+      console.log('There is a selected item');
+
+      var coords = _.clone(this.props.selectedItem.geojson.coordinates[0]);
+      coords.pop();
+
+      var sourceObj = new mapboxgl.ImageSource({
+        url: this.props.selectedItem.properties.thumbnail,
+        //url: '/assets/images/LC80150332015005LGN00.jpg',
+        coordinates: coords
+      });
+      console.log(this.props.selectedItem.properties.thumbnail);
+      this.map.addSource('image-footprint-src', sourceObj);
+      this.map.addLayer({
+        id: 'image-footprint-layer',
+        type: 'raster',
+        source: 'image-footprint-src',
+        paint: {
+          'raster-opacity': 0.5
+        },
+      });
+    }
   },
 
   /**

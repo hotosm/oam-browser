@@ -37,8 +37,8 @@ var ResultsPane = React.createClass({
     console.log('results pane render', this.props);
 
     var resultsPane = null;
-    if (this.props.results.length && this.props.selectedItem) {
-      var i = _.findIndex(this.props.results, {_id: this.props.selectedItem});
+    if (this.props.results.length && this.props.selectedItemId) {
+      var i = _.findIndex(this.props.results, {_id: this.props.selectedItemId});
       var pg = {
         total: this.props.results.length,
         current: i + 1,

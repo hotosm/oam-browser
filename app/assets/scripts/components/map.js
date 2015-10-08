@@ -73,10 +73,16 @@ var Map = React.createClass({
       container: this.getDOMNode().querySelector('#map'),
       style: stylesheet,
       center: view,
-      zoom: zoom
+      zoom: zoom,
+      minZoom: 2
       // center: [-74.50, 40],
       // zoom: 8
     });
+
+    this.map.dragRotate.disable();
+    this.map.addControl(new mapboxgl.Navigation({
+      position: 'top-left'
+    }));
 
     _this.map.on('load', this.onMapLoad);
     _this.map.on('click', this.onMapClick);

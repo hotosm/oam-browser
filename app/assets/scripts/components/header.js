@@ -1,6 +1,7 @@
 'use strict';
 var React = require('react/addons');
 var Keys = require('react-keybinding');
+var Dropdown = require('./shared/dropdown');
 var actions = require('../actions/actions');
 var Filters = require('./filters');
 
@@ -58,7 +59,12 @@ var Header = React.createClass({
           </div>
           <div className="nav-block-sec">
             <ul className="meta-menu">
-              <li><a href="#" title="About" className="bttn-info" onClick={this.aboutClickHandler} ><span>About</span></a></li>
+              <Dropdown element="li" className="drop dropdown right" triggerTitle="Info" triggerClassName="bttn-info" triggerText="Info">
+                <ul className="drop-menu info-menu" role="menu">
+                  <li><a href="#" title="Learn more" onClick={this.aboutClickHandler}><span>About</span></a></li>
+                  <li><a href="https://upload.openaerialmap.org/" title="Go to OAM Uploader"><span>Upload</span></a></li>
+                </ul>
+              </Dropdown>
             </ul>
           </div>
         </nav>

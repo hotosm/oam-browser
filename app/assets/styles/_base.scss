@@ -60,7 +60,6 @@ a:active{
   top: 0;
   left: 0;
   right: 0;
-  background: red;
   z-index: 100;
   pointer-events: none;
   height: 5rem;
@@ -124,6 +123,21 @@ a:active{
 
 .form-search {
   width: 16rem;
+}
+
+.meta-menu .drop-content {
+  right: -0.5rem;
+}
+
+// SITE HEADER
+
+#site-body {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 99;
 }
 
 // WELCOME MODAL

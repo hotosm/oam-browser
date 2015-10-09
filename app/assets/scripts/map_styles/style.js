@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var mapboxLight = _.clone(require('./mapbox-light.json'));
+var mapboxLight = _.cloneDeep(require('./mapbox-light.json'));
 
 var GRID_FILL = '#439ab4';
 var GRID_FILL_MAX_OPACITY = 0.6;

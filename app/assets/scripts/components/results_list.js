@@ -14,7 +14,7 @@ var ResultsListItem = React.createClass({
   onClick: function(e) {
     e.preventDefault();
     actions.resultOut(this.props.data);
-    var params = _.clone(this.getParams());
+    var params = _.cloneDeep(this.getParams());
     params.item_id = this.props.data._id;
     
     this.transitionTo('item', params, this.getQuery());

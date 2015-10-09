@@ -161,7 +161,7 @@ var Map = React.createClass({
     }
     else {
       var routes = this.getRoutes();
-      var params = _.clone(this.getParams());
+      var params = _.cloneDeep(this.getParams());
       params.map = this.mapViewToString();
       this.replaceWith(routes[routes.length - 1].name, params, this.getQuery());
     }
@@ -296,7 +296,7 @@ var Map = React.createClass({
     if (this.props.selectedItem) {
       console.log('There is a selected item');
 
-      var coords = _.clone(this.props.selectedItem.geojson.coordinates[0]);
+      var coords = _.cloneDeep(this.props.selectedItem.geojson.coordinates[0]);
       coords.pop();
 
       var sourceObj = new mapboxgl.ImageSource({

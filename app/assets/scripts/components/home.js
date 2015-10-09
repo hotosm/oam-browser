@@ -42,14 +42,14 @@ var Home = React.createClass({
   // Action listener
   onSearchQueryChanged: function(params) {
     console.log('home onSearchQueryChanged');
-    var mapState = _.clone(this.state.map);
+    var mapState = _.cloneDeep(this.state.map);
     mapState.styleProperty = params.date + '_' + params.resolution + '_' + params.dataType + '_count';
     console.log('changing map style', mapState.styleProperty);
     this.setState({map: mapState});
   },
 
   componentWillMount: function() {
-    var state = _.clone(this.state);
+    var state = _.cloneDeep(this.state);
     state.map.view = this.props.params.map;
     state.selectedSquareQuadkey = this.props.params.square;
     state.selectedItemId = this.props.params.item_id;
@@ -57,7 +57,7 @@ var Home = React.createClass({
   },
 
   componentWillReceiveProps: function(nextProps) {
-    var state = _.clone(this.state);
+    var state = _.cloneDeep(this.state);
     // Map view.
     if (this.props.params.map != nextProps.params.map) {
       state.map.view = nextProps.params.map;

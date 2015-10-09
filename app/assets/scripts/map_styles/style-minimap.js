@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var mapboxLight = _.clone(require('./mapbox-light.json'));
+var mapboxLight = _.cloneDeep(require('./mapbox-light.json'));
 
 var GRID_STROKE = '#1f3b45';
 

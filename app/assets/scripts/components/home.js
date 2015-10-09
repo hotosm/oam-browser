@@ -21,8 +21,11 @@ var Home = React.createClass({
     return {
       results: [],
       map: {
-        styleProperty: 'all_all_all_count'
-      }
+        styleProperty: 'all_all_all_count',
+        view: null
+      },
+      selectedSquareQuadkey: null,
+      selectedItemId: null
     }
   },
 
@@ -45,24 +48,64 @@ var Home = React.createClass({
     this.setState({map: mapState});
   },
 
+  componentWillMount: function() {
+    var state = _.clone(this.state);
+    state.map.view = this.props.params.map;
+    state.selectedSquareQuadkey = this.props.params.square;
+    state.selectedItemId = this.props.params.item_id;
+    this.setState(state);
+  },
+
   componentWillReceiveProps: function(nextProps) {
+    var state = _.clone(this.state);
+    // Map view.
+    if (this.props.params.map != nextProps.params.map) {
+      state.map.view = nextProps.params.map;
+    }
+
+    // Selected Square
+    if (this.props.params.square != nextProps.params.square) {
+      state.selectedSquareQuadkey = nextProps.params.square;
+    }
     // If the square was set and it's not anymore means that the results
     // have been dismissed.
     if (this.props.params.square && !nextProps.params.square) {
       console.log('componentWillReceiveProps -- results pane was dismissed');
       // Clean the results.
-      this.setState({results: []});
+      state.results = [];
     }
+
+    // Selected Square
+    if (this.props.params.item_id != nextProps.params.item_id) {
+      state.selectedItemId = nextProps.params.item_id;
+    }
+
+    // Set State
+    this.setState(state);
   },
 
   render: function() {
-    var selectedItem = _.find(this.state.results, {_id: this.props.params.item_id});
+    var selectedItem = _.find(this.state.results, {_id: this.state.selectedItemId});
+
+    var params = {
+      map: this.state.map.view,
+      square: this.state.selectedSquareQuadkey,
+      item_id: this.state.selectedItemId,
+    }
 
     return (
       <div>
-        <MapBoxMap {...this.props} styleProperty={this.state.map.styleProperty} selectedItem={selectedItem} />
-        <MiniMap selectedSquare={this.props.params.square}/>
-        <ResultsPane results={this.state.results} selectedItemId={this.props.params.item_id} selectedSquare={this.props.params.square}/>
+        <MapBoxMap
+          params={params}
+          styleProperty={this.state.map.styleProperty}
+          selectedItem={selectedItem} />
+
+        <MiniMap selectedSquare={this.props.params.square} />
+
+        <ResultsPane
+          results={this.state.results}
+          selectedItemId={this.state.selectedItemId}
+          selectedSquare={this.state.selectedSquareQuadkey} />
       </div>
     );
   }

@@ -30,7 +30,7 @@ var ZcButton = React.createClass({
     client.on( "ready", function( readyEvent ) {
       console.log( "ZeroClipboard SWF is ready!" );
 
-      L.DomUtil.removeClass(el, 'disabled');
+      el.classList.remove('disabled');
 
       client.on( 'copy', function(event) {
         var toCopy = _this.props.onCopy(event);

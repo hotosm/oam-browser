@@ -5,17 +5,14 @@ var makeStyle = require('../map_styles/style');
 var validate = require('mapbox-gl-style-spec').validate;
 
 var turf = require('turf');
-var tilebelt = require('tilebelt');
 var React = require('react/addons');
 var Reflux = require('reflux');
 var Router = require('react-router');
 var _ = require('lodash');
 var actions = require('../actions/actions');
-// var dsZoom = require('../utils/ds_zoom');
 var config = require('../config.js');
 var utils = require('../utils/utils');
 
-// L.mapbox.accessToken = config.map.mapbox.accessToken;
 mapboxgl.accessToken = config.map.mapbox.glAccessToken;
 
 var Map = React.createClass({

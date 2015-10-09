@@ -196,23 +196,32 @@ var Map = React.createClass({
   // Map event
   onMapClick: function(e) {
     console.log('clicked point', e.point);
+    var _this = this;
 
     if (this.follow) {
-      var z = Math.round(this.map.getZoom());
-      var quadKey = utils.quadkeyFromCoords(e.lngLat.lng, e.lngLat.lat, z);
-      var squareCenter = utils.tileCenterFromCoords(e.lngLat.lng, e.lngLat.lat, z);
-      var mapView = squareCenter.concat(z).join(',');
 
-      console.log('----------------------------------------------');
-      console.log('SELECTED -- (was following)');
-      console.log('current map zoom', z);
-      console.log('a square at zoom', z, 'is the same as a map tile at zoom', z + 3);
-      console.log('quadKey', quadKey);
-      console.log('squareCenter', squareCenter);
-      console.log('mapView', mapView);
-      console.log('transition /:map/:square', {map: mapView, square: quadKey});
-      console.log('----------------------------------------------');
-      this.transitionTo('results', {map: mapView, square: quadKey}, this.getQuery());
+      this.map.featuresAt(e.point, { includeGeometry: false }, function (err, features) {
+        if (err) throw err;
+        if (features[0].properties[_this.props.styleProperty] <= 0) {
+          return;
+        }
+
+        var z = Math.round(_this.map.getZoom());
+        var quadKey = utils.quadkeyFromCoords(e.lngLat.lng, e.lngLat.lat, z);
+        var squareCenter = utils.tileCenterFromCoords(e.lngLat.lng, e.lngLat.lat, z);
+        var mapView = squareCenter.concat(z).join(',');
+
+        console.log('----------------------------------------------');
+        console.log('SELECTED -- (was following)');
+        console.log('current map zoom', z);
+        console.log('a square at zoom', z, 'is the same as a map tile at zoom', z + 3);
+        console.log('quadKey', quadKey);
+        console.log('squareCenter', squareCenter);
+        console.log('mapView', mapView);
+        console.log('transition /:map/:square', {map: mapView, square: quadKey});
+        console.log('----------------------------------------------');
+        _this.transitionTo('results', {map: mapView, square: quadKey}, _this.getQuery());
+      });
     }
     else {
       console.log('----------------------------------------------');

@@ -1,54 +1,24 @@
 'use strict';
-require('mapbox.js');
+
 var React = require('react/addons');
 var Reflux = require('reflux');
-// Not working. Using cdn. (turf.intersect was throwing a weird error)
-//var turf = require('turf');
-var actions = require('../actions/actions');
-var mapStore = require('../stores/map_store');
-var config = require('../config.js');
+var Router = require('react-router');
+var mapboxgl = require('mapbox-gl');
+var _ = require('lodash');
+var makeStyle = require('../map_styles/style-minimap');
+var utils = require('../utils/utils');
 
 var MiniMap = React.createClass({
   mixins: [
-    Reflux.listenTo(actions.mapMove, "onMapMove"),
-    Reflux.listenTo(actions.mapSquareSelected, "onMapSquareSelected"),
-    Reflux.listenTo(actions.mapSquareUnselected, "onMapSquareUnselected")
+    Router.Navigation,
+    Router.State
   ],
 
   map: null,
 
-  viewfinder: null,
-  targetLines: null,
-
-  // Actions listener.
-  onMapMove: function(mainmap) {
-    var b = mainmap.getBounds();
-
-    this.viewfinder.setLatLngs([
-      b.getNorthEast(),
-      b.getNorthWest(),
-      b.getSouthWest(),
-      b.getSouthEast()
-    ]).addTo(this.map);
-  },
-
-  onMapSquareSelected: function(sqrFeature) {
-    var center = sqrFeature.properties.centroid;
-
-    this.targetLines.setLatLngs([
-      [
-        [-90, center[0]],
-        [90, center[0]]
-      ],
-      [
-        [center[1], -220],
-        [center[1], 220]
-      ]
-    ]);
-  },
-
-  onMapSquareUnselected: function() {
-    this.targetLines.clearLayers();
+  // Lifecycle method.
+  shouldComponentUpdate: function(nextProps, nextState) {
+   return nextProps.selectedSquare != this.props.selectedSquare;
   },
 
   // Lifecycle method.
@@ -57,49 +27,84 @@ var MiniMap = React.createClass({
     console.log('componentDidMount MiniMap');
     var _this = this;
 
-    this.map = L.mapbox.map(this.getDOMNode(), config.map.baseLayer, {
-      center: [0, 0],
+    this.map = new mapboxgl.Map({
+      container: this.getDOMNode(),
+      style: makeStyle(),
 
-      zoomControl: false,
       attributionControl: false,
-      dragging: false,
-      touchZoom: false,
-      scrollWheelZoom: false,
-      doubleClickZoom: false,
-      boxZoom: false,
-
-      maxBounds: L.latLngBounds([-90, -180], [90, 180])
-    }).fitBounds(L.latLngBounds([-90, -180], [90, 180]));
-
-    this.viewfinder = L.polygon([], {
-      clickable: false,
-      color: '#1f3b45',
-      weight: 0.5
-    }).addTo(this.map);
-
-
-    this.targetLines = L.multiPolyline([], {
-      clickable: false,
-      color: '#1f3b45',
-      weight: 0.5
-    }).addTo(this.map);
-
-    console.log(this.targetLines);
-    this.map.on('click', function(e) {
-      actions.miniMapClick(e.latlng);
+      //interactive: false,
+      minZoom: 0.1,
+      maxZoom: 0.1
     });
+
+    this.map.on('click', this.onMapClick);
+    this.map.on('load', this.onMapLoad);
   },
 
   // Lifecycle method.
   // Called when the component gets updated.
   componentDidUpdate: function(/*prevProps, prevState*/) {
-    console.log('componentDidUpdate');
+    this.setCrosshair();
   },
 
   render: function() {
     return (<div id="minimap"></div>);
   },
 
+  // Map event.
+  onMapClick: function(e) {
+    var routes = this.getRoutes();
+    var r = routes[routes.length - 1].name;
+    var params = _.clone(this.getParams());
+    var pieces = params.map.split(',');
+    params.map = e.lngLat.lng + ',' + e.lngLat.lat + ',' + pieces[2];
+    this.transitionTo(r, params, this.getQuery());
+  },
+
+  // Map event.
+  onMapLoad: function() {
+    this.setCrosshair();
+  },
+
+  setCrosshair: function() {
+    console.log('minimap -- setting crosshair');
+    var src = this.map.getSource('crosshair');
+
+    if (!this.props.selectedSquare) {
+      src.setData({
+        'type': 'FeatureCollection',
+        'features': []
+      });
+    }
+    else {
+      var c = utils.tileCenterFromQuadkey(this.props.selectedSquare).geometry.coordinates;
+      var lineFeature = function(coords) {
+        return {
+          'type': 'Feature',
+          'geometry': {
+            'type': 'LineString',
+            'coordinates': coords
+          }
+        }
+      };
+
+      src.setData({
+        'type': 'FeatureCollection',
+        'features': [
+          lineFeature([
+            [c[0], -90],
+            [c[0], 90]
+          ]),
+          lineFeature([
+            [-180, c[1]],
+            [180, c[1]]
+          ])
+        ]
+      });
+
+      this.map.setCenter(c);
+    }
+  }
 });
 
 module.exports = MiniMap;

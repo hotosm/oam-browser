@@ -61,7 +61,7 @@ var Home = React.createClass({
     return (
       <div>
         <MapBoxMap {...this.props} styleProperty={this.state.map.styleProperty} selectedItem={selectedItem} />
-        {/*<MiniMap />*/}
+        <MiniMap selectedSquare={this.props.params.square}/>
         <ResultsPane results={this.state.results} selectedItemId={this.props.params.item_id} selectedSquare={this.props.params.square}/>
       </div>
     );

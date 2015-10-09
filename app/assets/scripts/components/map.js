@@ -1,7 +1,5 @@
 'use strict';
 
-// require('mapbox.js');
-
 var mapboxgl = require('mapbox-gl');
 var makeStyle = require('../map_styles/style');
 var validate = require('mapbox-gl-style-spec').validate;

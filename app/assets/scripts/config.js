@@ -24,6 +24,6 @@ module.exports = {
     }
   },
   catalog: {
-    url: 'http://api.openaerialmap.org'
+    url: 'https://api.openaerialmap.org'
   }
 };

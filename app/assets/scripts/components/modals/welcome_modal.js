@@ -110,7 +110,7 @@ var WelcomeModal = React.createClass({
         header={this.getHeader()}
         body={this.getBody()}
         footer={this.getFooter()}
-        revealed={false} />
+        revealed={this.props.revealed} />
     );
   }
 });

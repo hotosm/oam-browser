@@ -57,7 +57,7 @@ var MiniMap = React.createClass({
     var r = routes[routes.length - 1].name;
     var params = _.cloneDeep(this.getParams());
     var pieces = params.map.split(',');
-    params.map = e.lngLat.lng + ',' + e.lngLat.lat + ',' + pieces[2];
+    params.map = utils.getMapViewString(e.lngLat.lng, e.lngLat.lat, pieces[2]);
     this.transitionTo(r, params, this.getQuery());
   },
 

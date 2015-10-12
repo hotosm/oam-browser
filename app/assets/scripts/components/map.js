@@ -209,7 +209,7 @@ var Map = React.createClass({
         var z = Math.round(_this.map.getZoom());
         var quadKey = utils.quadkeyFromCoords(e.lngLat.lng, e.lngLat.lat, z);
         var squareCenter = utils.tileCenterFromCoords(e.lngLat.lng, e.lngLat.lat, z);
-        var mapView = squareCenter.concat(z).join(',');
+        var mapView = utils.getMapViewString(squareCenter[0], squareCenter[1], z);
 
         console.log('----------------------------------------------');
         console.log('SELECTED -- (was following)');
@@ -334,7 +334,7 @@ var Map = React.createClass({
   mapViewToString: function() {
     var center = this.map.getCenter();
     var zoom = Math.round(this.map.getZoom());
-    return center.lng + ',' + center.lat + ',' + zoom;
+    return utils.getMapViewString(center.lng, center.lat, zoom);
   },
 
   /**

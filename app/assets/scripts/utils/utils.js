@@ -104,3 +104,9 @@ module.exports.queryGeocoder = function(query, successCb, errorCb) {
 
   return req;
 };
+
+module.exports.getMapViewString = function(lng, lat, zoom) {
+  lng = Math.round(lng * 1e5) / 1e5;
+  lat = Math.round(lat * 1e5) / 1e5;
+  return [lng, lat, zoom].join(',');
+}

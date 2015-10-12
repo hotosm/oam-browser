@@ -19,7 +19,7 @@ module.exports = Reflux.createStore({
   // Called on creation.
   // Setup listeners.
   init: function() {
-    this.listenTo(actions.mapSquareSelected, this.onMapSquareSelected);
+    this.listenTo(actions.selectedBbox, this.onSelectedBbox);
     this.queryLatestImagery();
   },
 
@@ -70,7 +70,7 @@ module.exports = Reflux.createStore({
     var typeFilter = parameters.dataType === 'all' ? {} : { has_tiled: true };
 
     // Calculate bbox;
-    var bbox = turf.extent(this.storage.sqrSelected).join(',');
+    var bbox = this.storage.selectedBbox.join(',');
     console.log('selected feature bbox', bbox);
 
     var params = _.assign({
@@ -82,7 +82,6 @@ module.exports = Reflux.createStore({
     var strParams = qs.stringify(params);
     if (strParams === this.storage.prevSearchParams) {
       console.log('search params did not change. Api call aborted.');
-      // this.trigger(this.storage.results);
       return;
     }
     else {
@@ -100,30 +99,9 @@ module.exports = Reflux.createStore({
   },
 
   // Actions listener.
-  onMapSquareSelected: function(sqrFeature) {
-    this.storage.sqrSelected = sqrFeature;
+  onSelectedBbox: function(bbox) {
+    this.storage.selectedBbox = bbox;
     this.queryData();
-  },
-
-  // Actions listener.
-  onMapSquareUnselected: function() {
-    this.storage.sqrSelected = null;
-  },
-
-  /**
-   * Returns whether there's a map square selected.
-   * @return {Boolean}
-   */
-  isSelectedSquare: function() {
-    return this.storage.sqrSelected !== null;
-  },
-
-  /**
-   * Returns the selected square feature.
-   * @return Feature or null
-   */
-  getSelectedSquare: function() {
-    return this.storage.sqrSelected;
   },
 
   /**

@@ -80,6 +80,12 @@ module.exports.tileCenterFromQuadkey = function(quadKey) {
   return turf.centroid(geoJSONTile);
 };
 
+module.exports.tileBboxFromQuadkey = function(quadKey) {
+  var tile = tilebelt.quadkeyToTile(quadKey);
+  var geoJSONTile = tilebelt.tileToGeoJSON(tile);
+  return turf.extent({ type: 'Feature', geometry: geoJSONTile });
+};
+
 module.exports.queryGeocoder = function(query, successCb, errorCb) {
   var uri = 'https://api.tiles.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(query) + '.json' +
   '?access_token=' + config.map.mapbox.glAccessToken;

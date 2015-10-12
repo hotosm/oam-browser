@@ -70,8 +70,6 @@ var Map = React.createClass({
       center: view,
       zoom: zoom,
       minZoom: 2
-      // center: [-74.50, 40],
-      // zoom: 8
     });
 
     this.map.dragRotate.disable();
@@ -288,7 +286,6 @@ var Map = React.createClass({
         console.log('stopping follow');
         _this.follow = false;
       }
-      actions.mapSquareSelected(features[0]);
 
       console.log('=/=/=/=/=/=/=/=/=/=/=/=/=/=');
     });
@@ -296,7 +293,7 @@ var Map = React.createClass({
   },
 
   updateSelectedItemImageFootprint: function() {
-    try  {
+    try {
       // Try to delete the source and layer if they exist.
       this.map.removeSource('image-footprint-src');
       this.map.removeLayer('image-footprint-layer');

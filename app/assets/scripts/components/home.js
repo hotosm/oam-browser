@@ -9,6 +9,8 @@ var ResultsPane = require('./results_pane');
 var mapStore = require('../stores/map_store');
 var searchQueryStore = require('../stores/search_query_store');
 var cookie = require('../utils/cookie');
+var utils = require('../utils/utils');
+var actions = require('../actions/actions');
 
 var Home = React.createClass({
   mixins: [
@@ -65,6 +67,8 @@ var Home = React.createClass({
     // Map view.
     if (this.props.params.map != nextProps.params.map) {
       state.map.view = nextProps.params.map;
+      // Map view changed. Store cookie.
+      cookie.create('oam-browser:map-view', state.map.view);
     }
 
     // Selected Square
@@ -78,6 +82,11 @@ var Home = React.createClass({
       // Clean the results.
       state.results = [];
     }
+    if (this.props.params.square != nextProps.params.square && nextProps.params.square) {
+      console.log('Home component quadkey changed', nextProps.params.square);
+      var bbox = utils.tileBboxFromQuadkey(nextProps.params.square);
+      actions.selectedBbox(bbox);
+    }
 
     // Selected Square
     if (this.props.params.item_id != nextProps.params.item_id) {
@@ -88,10 +97,11 @@ var Home = React.createClass({
     this.setState(state);
   },
 
-  componentDidUpdate: function(prevProps, prevState) {
-    if (this.state.map.view != prevState.map.view) {
-      // Map view changed. Store cookie.
-      cookie.create('oam-browser:map-view', this.state.map.view);
+  componentDidMount: function() {
+    if (this.state.selectedSquareQuadkey) {
+      console.log('Home component mounted with quadkey', this.state.selectedSquareQuadkey);
+      var bbox = utils.tileBboxFromQuadkey(this.state.selectedSquareQuadkey);
+      actions.selectedBbox(bbox);
     }
   },
 

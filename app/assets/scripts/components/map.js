@@ -163,7 +163,8 @@ var Map = React.createClass({
       var routes = this.getRoutes();
       var params = _.cloneDeep(this.getParams());
       params.map = this.mapViewToString();
-      this.replaceWith(routes[routes.length - 1].name, params, this.getQuery());
+      var routeName = routes[routes.length - 1].name || 'map';
+      this.replaceWith(routeName, params, this.getQuery());
     }
   },
 

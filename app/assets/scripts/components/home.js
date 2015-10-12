@@ -8,6 +8,7 @@ var MiniMap = require('./minimap');
 var ResultsPane = require('./results_pane');
 var mapStore = require('../stores/map_store');
 var searchQueryStore = require('../stores/search_query_store');
+var cookie = require('../utils/cookie');
 
 var Home = React.createClass({
   mixins: [
@@ -50,7 +51,10 @@ var Home = React.createClass({
 
   componentWillMount: function() {
     var state = _.cloneDeep(this.state);
-    state.map.view = this.props.params.map;
+    // The map parameters form the url take precedence over everything else
+    // if they're not present try the cookie. If there's no cookie the return
+    // value will be null.
+    state.map.view = this.props.params.map ? this.props.params.map : cookie.read('oam-browser:map-view');
     state.selectedSquareQuadkey = this.props.params.square;
     state.selectedItemId = this.props.params.item_id;
     this.setState(state);
@@ -82,6 +86,13 @@ var Home = React.createClass({
 
     // Set State
     this.setState(state);
+  },
+
+  componentDidUpdate: function(prevProps, prevState) {
+    if (this.state.map.view != prevState.map.view) {
+      // Map view changed. Store cookie.
+      cookie.create('oam-browser:map-view', this.state.map.view);
+    }
   },
 
   render: function() {

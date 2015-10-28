@@ -62,6 +62,12 @@ module.exports.quadkeyFromCoords = function(lng, lat, zoom) {
   return tilebelt.tileToQuadkey(tile);
 };
 
+module.exports.coordsFromQuadkey = function(quadkey) {
+  var tile = tilebelt.quadkeyToTile(quadkey);
+  var geoJSONTile = tilebelt.tileToGeoJSON(tile);
+  return geoJSONTile.coordinates;
+};
+
 module.exports.tileCenterFromCoords = function(lng, lat, zoom) {
   // A square at zoom Z is the same as a map tile at zoom Z+3
   var tile = tilebelt.pointToTile(lng, lat, zoom + 3);
@@ -112,7 +118,31 @@ module.exports.queryGeocoder = function(query, successCb, errorCb) {
 };
 
 module.exports.getMapViewString = function(lng, lat, zoom) {
-  lng = Math.round(lng * 1e5) / 1e5;
-  lat = Math.round(lat * 1e5) / 1e5;
+  // lng = Math.round(lng * 1e5) / 1e5;
+  // lat = Math.round(lat * 1e5) / 1e5;
   return [lng, lat, zoom].join(',');
+};
+
+module.exports.wrap = function (feature) {
+  return {
+    type: feature.type,
+    properties: feature.properties,
+    geometry: {
+      type: feature.geometry.type,
+      coordinates: [ feature.geometry.coordinates[0].map(wrapPoint) ]
+    }
+  };
+};
+
+function wrapPoint (pt) {
+  pt = [pt[0], pt[1]];
+  while (pt[0] < -180) {
+    pt[0] += 360;
+  }
+
+  while (pt[0] >= 180) {
+    pt[0] -= 360;
+  }
+
+  return pt;
 }

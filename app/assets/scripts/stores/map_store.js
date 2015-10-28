@@ -3,7 +3,8 @@ var qs = require('querystring');
 var Reflux = require('reflux');
 var _ = require('lodash');
 var $ = require('jquery');
-var turf = require('turf');
+var extent = require('turf-extent')
+var rbush = require('rbush');
 var actions = require('../actions/actions');
 var searchQueryStore = require('./search_query_store')
 var config = require('../config');
@@ -13,7 +14,8 @@ module.exports = Reflux.createStore({
     prevSearchParams: '',
     results: [],
     sqrSelected: null,
-    latestImagery: null
+    latestImagery: null,
+    footprintsTree: null
   },
 
   // Called on creation.
@@ -21,6 +23,7 @@ module.exports = Reflux.createStore({
   init: function() {
     this.listenTo(actions.selectedBbox, this.onSelectedBbox);
     this.queryLatestImagery();
+    this.queryFootprints();
   },
 
   queryLatestImagery: function() {
@@ -31,6 +34,65 @@ module.exports = Reflux.createStore({
         _this.storage.latestImagery = data.results[0];
         actions.latestImageryLoaded();
       });
+  },
+
+  queryFootprints: function() {
+    var _this = this;
+
+    console.time('fetch footprints');
+    $.get(config.catalog.url + '/meta?limit=99999')
+      .success(function(data) {
+        console.timeEnd('fetch footprints');
+        var footprintsFeature = _this.parseFootprints(data.results);
+
+        console.time('index footprints');
+        var tree = rbush(9);
+        tree.load(footprintsFeature.features.map(function (feat) {
+          var item = feat.geometry.bbox;
+          item.feature = feat;
+          return item;
+        }));
+        console.timeEnd('index footprints');
+        // Done.
+        _this.storage.footprintsTree = tree;
+        //actions.footprintsLoaded();
+        _this.trigger();
+      });
+  },
+
+  parseFootprints: function (results) {
+    var fc = {
+      type: 'FeatureCollection',
+      features: []
+    };
+    var id = 0;
+    _.each(results, function(foot) {
+      fc.features.push({
+        type: 'Feature',
+        properties: {
+          gsd: foot.gsd,
+          tms: !!foot.properties.tms,
+          acquisition_end: foot.acquisition_end,
+          FID: id++
+        },
+        geometry: foot.geojson
+      });
+    });
+    return fc;
+  },
+
+  getFootprintsInSquare: function (sqrFeature) {
+    if (!this.storage.footprintsTree) {
+      return [];
+    }
+    return this.storage.footprintsTree.search(extent(sqrFeature));
+  },
+
+  getFootprintsTreeJSON: function (sqrFeature) {
+    if (!this.storage.footprintsTree) {
+      return null;
+    }
+    return this.storage.footprintsTree.toJSON();
   },
 
   /**
@@ -94,7 +156,8 @@ module.exports = Reflux.createStore({
       .success(function(data) {
         console.log('api catalog results:', data);
         _this.storage.results = data.results;
-        _this.trigger(_this.storage.results);
+        //_this.trigger(_this.storage.results);
+        _this.trigger();
       });
   },
 
@@ -110,6 +173,14 @@ module.exports = Reflux.createStore({
    */
   getLatestImagery: function() {
     return this.storage.latestImagery;
+  },
+
+  /**
+   * Returns the stored results.
+   * @return Array or null
+   */
+  getResults: function() {
+    return this.storage.results;
   }
 
 });

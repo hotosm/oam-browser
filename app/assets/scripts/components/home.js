@@ -11,11 +11,15 @@ var searchQueryStore = require('../stores/search_query_store');
 var cookie = require('../utils/cookie');
 var utils = require('../utils/utils');
 var actions = require('../actions/actions');
+var config = require('../config.js');
 
 var Home = React.createClass({
   mixins: [
+    //Reflux.listenTo(actions.footprintsLoaded, 'onFootprintsLoaded'),
+
     Reflux.listenTo(searchQueryStore, 'onSearchQueryChanged'),
-    Reflux.listenTo(mapStore, "onResults"),
+    //Reflux.listenTo(mapStore, "onResults"),
+    Reflux.listenTo(mapStore, "onMapStoreData"),
     Router.Navigation,
     Router.State
   ],
@@ -24,7 +28,6 @@ var Home = React.createClass({
     return {
       results: [],
       map: {
-        styleProperty: 'all_all_all_count',
         view: null
       },
       selectedSquareQuadkey: null,
@@ -42,6 +45,13 @@ var Home = React.createClass({
     console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
   },
 
+  onMapStoreData: function() {
+    console.log('onMapStoreData', mapStore.storage);
+    this.setState({
+      results: mapStore.getResults()
+    });
+  },
+
   // Action listener
   onSearchQueryChanged: function(params) {
     console.log('home onSearchQueryChanged');
@@ -54,9 +64,15 @@ var Home = React.createClass({
   componentWillMount: function() {
     var state = _.cloneDeep(this.state);
     // The map parameters form the url take precedence over everything else
-    // if they're not present try the cookie. If there's no cookie the return
-    // value will be null.
+    // if they're not present try the cookie.
     state.map.view = this.props.params.map ? this.props.params.map : cookie.read('oam-browser:map-view');
+    // No router map and no cookie?
+    // Use initial from config.
+    if (state.map.view === null) {
+      state.map.view = config.map.initialView.concat(config.map.initialZoom).join(',');
+    }
+
+
     state.selectedSquareQuadkey = this.props.params.square;
     state.selectedItemId = this.props.params.item_id;
     this.setState(state);
@@ -68,7 +84,7 @@ var Home = React.createClass({
     if (this.props.params.map != nextProps.params.map) {
       state.map.view = nextProps.params.map;
       // Map view changed. Store cookie.
-      cookie.create('oam-browser:map-view', state.map.view);
+      // cookie.create('oam-browser:map-view', state.map.view);
     }
 
     // Selected Square
@@ -118,15 +134,16 @@ var Home = React.createClass({
       <div>
         <MapBoxMap
           params={params}
+          footprintsTree={this.state.footprintsTree}
           styleProperty={this.state.map.styleProperty}
           selectedItem={selectedItem} />
 
-        <MiniMap selectedSquare={this.props.params.square} />
+        {/*<MiniMap selectedSquare={this.props.params.square} />*/}
 
-        <ResultsPane
-          results={this.state.results}
-          selectedItemId={this.state.selectedItemId}
-          selectedSquare={this.state.selectedSquareQuadkey} />
+        {/*<ResultsPane
+                  results={this.state.results}
+                  selectedItemId={this.state.selectedItemId}
+                  selectedSquare={this.state.selectedSquareQuadkey} />*/}
       </div>
     );
   }

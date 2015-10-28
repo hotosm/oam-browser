@@ -8,6 +8,8 @@ module.exports = Reflux.createActions({
 
   'latestImageryLoaded': {},
 
+  'footprintsLoaded': {},
+
   // Filter actios
   'setDateFilter': {
     shouldEmit: function (val) {

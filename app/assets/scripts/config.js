@@ -10,7 +10,7 @@ module.exports = {
     baseLayer: 'hot.ml5mgnm7',
 
     initialZoom: 8,
-    minZoom: 8,
+    minZoom: 2,
     maxZoom: undefined,
 
     initialView: [60.177, 25.148],

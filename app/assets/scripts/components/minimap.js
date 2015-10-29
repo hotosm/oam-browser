@@ -65,10 +65,10 @@ var MiniMap = React.createClass({
   // Map event.
   onMapClick: function(e) {
     var routes = this.getRoutes();
-    var r = routes[routes.length - 1].name;
+    var r = routes[routes.length - 1].name || 'map';
     var params = _.cloneDeep(this.getParams());
-    var pieces = params.map.split(',');
-    params.map = utils.getMapViewString(e.latlng.lng, e.latlng.lat, pieces[2]);
+    var zoom = this.props.mapView.split(',')[2];
+    params.map = utils.getMapViewString(e.latlng.lng, e.latlng.lat, zoom);
     this.transitionTo(r, params, this.getQuery());
   },
 

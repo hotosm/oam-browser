@@ -12,30 +12,29 @@ var Header = React.createClass({
   ],
 
   keybindings: {
-    'i': function() {
+    'i': function () {
       actions.openModal('info');
     },
-    's': function() {
+    's': function () {
       var geocoder = this.getDOMNode().querySelector('[data-hook="geocoder"]');
       geocoder.focus();
       // Prevent the 's' from being typed in the search box.
-      setTimeout(function() {
+      setTimeout(function () {
         geocoder.value = '';
       }, 1);
     }
   },
 
-  aboutClickHandler: function(e) {
+  aboutClickHandler: function (e) {
     e.preventDefault();
     actions.openModal('info');
   },
 
-  onGeocoderSearch: function(e) {
+  onGeocoderSearch: function (e) {
     e.preventDefault();
-    var _this = this;
 
     var queryString = this.getDOMNode().querySelector('[data-hook="geocoder"]').value;
-    utils.queryGeocoder(queryString, function(bounds) {
+    utils.queryGeocoder(queryString, function (bounds) {
       if (!bounds) {
         console.log('geocoder -- no result was found');
         return;
@@ -44,28 +43,28 @@ var Header = React.createClass({
     });
   },
 
-  render: function() {
+  render: function () {
     return (
-      <header id="site-header" role="banner">
-      <h1 id="site-title"><img src="assets/graphics/layout/oam-logo-h-pos.svg" width="167" height="32" alt="OpenAerialMap logo" /><span>OpenAerialMap</span> <small>Beta</small></h1>
-        <nav id="site-prime-nav" role="navigation">
-          <div className="nav-block-prime">
-            <form className="form-search" onSubmit={this.onGeocoderSearch}>
-              <div className="input-group">
-                <input className="form-control input-m input search" type="search" placeholder="Search location" data-hook="geocoder" />
-                <span className="input-group-bttn"><button type="submit" className="bttn-search"><span>Search</span></button></span>
+      <header id='site-header' role='banner'>
+      <h1 id='site-title'><img src='assets/graphics/layout/oam-logo-h-pos.svg' width='167' height='32' alt='OpenAerialMap logo' /><span>OpenAerialMap</span> <small>Beta</small></h1>
+        <nav id='site-prime-nav' role='navigation'>
+          <div className='nav-block-prime'>
+            <form className='form-search' onSubmit={this.onGeocoderSearch}>
+              <div className='input-group'>
+                <input className='form-control input-m input search' type='search' placeholder='Search location' data-hook='geocoder' />
+                <span className='input-group-bttn'><button type='submit' className='bttn-search'><span>Search</span></button></span>
               </div>
             </form>
-            <ul className="app-menu">
+            <ul className='app-menu'>
               <Filters />
             </ul>
           </div>
-          <div className="nav-block-sec">
-            <ul className="meta-menu">
-              <Dropdown element="li" className="drop dropdown right" triggerTitle="Info" triggerClassName="bttn-info" triggerText="Info">
-                <ul className="drop-menu info-menu" role="menu">
-                  <li><a href="#" title="Learn more" onClick={this.aboutClickHandler}><span>About</span></a></li>
-                  <li><a href="https://upload.openaerialmap.org/" title="Go to OAM Uploader"><span>Upload</span></a></li>
+          <div className='nav-block-sec'>
+            <ul className='meta-menu'>
+              <Dropdown element='li' className='drop dropdown right' triggerTitle='Info' triggerClassName='bttn-info' triggerText='Info'>
+                <ul className='drop-menu info-menu' role='menu'>
+                  <li><a href='#' title='Learn more' onClick={this.aboutClickHandler}><span>About</span></a></li>
+                  <li><a href='https://upload.openaerialmap.org/' title='Go to OAM Uploader'><span>Upload</span></a></li>
                 </ul>
               </Dropdown>
             </ul>

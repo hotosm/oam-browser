@@ -1,13 +1,18 @@
 'use strict';
 var React = require('react/addons');
-var Reflux = require('reflux');
 var Router = require('react-router');
 var Keys = require('react-keybinding');
-var _= require('lodash');
+var _ = require('lodash');
 var ResultsList = require('./results_list');
 var ResultsItem = require('./results_item');
 
 var ResultsPane = React.createClass({
+  propTypes: {
+    results: React.PropTypes.array,
+    selectedItemId: React.PropTypes.string,
+    selectedSquare: React.PropTypes.string
+  },
+
   mixins: [
     Router.Navigation,
     Router.State,
@@ -15,7 +20,7 @@ var ResultsPane = React.createClass({
   ],
 
   keybindings: {
-    'esc': function() {
+    'esc': function () {
       if (this.props.results.length === 0) {
         return;
       }
@@ -23,7 +28,7 @@ var ResultsPane = React.createClass({
     }
   },
 
-  closeResults: function(e) {
+  closeResults: function (e) {
     if (e) {
       e.preventDefault();
     }
@@ -33,7 +38,7 @@ var ResultsPane = React.createClass({
     }, this.getQuery());
   },
 
-  render: function() {
+  render: function () {
     console.log('results pane render', this.props);
 
     var resultsPane = null;
@@ -43,25 +48,23 @@ var ResultsPane = React.createClass({
         total: this.props.results.length,
         current: i + 1,
         prevId: i > 0 ? this.props.results[i - 1]._id : null,
-        nextId: i < this.props.results.length - 1 ? this.props.results[i + 1]._id : null,
+        nextId: i < this.props.results.length - 1 ? this.props.results[i + 1]._id : null
       };
-      resultsPane = <ResultsItem data={this.props.results[i]} pagination={pg} />
-    }
-    else if (this.props.results.length && this.props.selectedSquare) {
-      resultsPane = <ResultsList results={this.props.results} selectedSquare={this.props.selectedSquare}/>
-    }
-    else {
+      resultsPane = <ResultsItem data={this.props.results[i]} pagination={pg} />;
+    } else if (this.props.results.length && this.props.selectedSquare) {
+      resultsPane = <ResultsList results={this.props.results} selectedSquare={this.props.selectedSquare}/>;
+    } else {
       // No results, no pane.
       return null;
     }
 
     return (
-      <div id="results-pane" className="pane">
-        <a href="" onClick={this.closeResults} className="pane-dismiss" title="Exit selection"><span>Close</span></a>
+      <div id='results-pane' className='pane'>
+        <a href='' onClick={this.closeResults} className='pane-dismiss' title='Exit selection'><span>Close</span></a>
         {resultsPane}
       </div>
     );
   }
-})
+});
 
 module.exports = ResultsPane;

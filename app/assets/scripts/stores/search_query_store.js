@@ -2,8 +2,6 @@ var Reflux = require('reflux');
 var actions = require('../actions/actions');
 var _ = require('lodash');
 
-var turf = require('turf');
-
 /**
  * Models the "search parameters" from the point of view of the application.
  * NOT responsible for undersatning the API -- that's done by map_store, which
@@ -22,19 +20,19 @@ module.exports = Reflux.createStore({
     this.listenTo(actions.setDataTypeFilter, this.onSetDataTypeFilter);
   },
 
-  onSetDateFilter: function(period) {
+  onSetDateFilter: function (period) {
     this._setParameter({date: period});
   },
 
-  onSetResolutionFilter: function(resolutionLevel) {
+  onSetResolutionFilter: function (resolutionLevel) {
     this._setParameter({resolution: resolutionLevel});
   },
 
-  onSetDataTypeFilter: function(type) {
+  onSetDataTypeFilter: function (type) {
     this._setParameter({dataType: type});
   },
 
-  _setParameter: function(params) {
+  _setParameter: function (params) {
     // update stored search params
     _.assign(this._parameters, params);
     for (var key in this._parameters) {
@@ -45,7 +43,7 @@ module.exports = Reflux.createStore({
     this.trigger(this._parameters, Object.keys(params)[0]);
   },
 
-  getParameters: function() {
+  getParameters: function () {
     return this._parameters;
-  },
-})
+  }
+});

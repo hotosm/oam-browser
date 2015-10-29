@@ -1,3 +1,4 @@
+'use strict';
 var React = require('react/addons');
 var Reflux = require('reflux');
 var BModal = require('./base_modal');
@@ -8,11 +9,11 @@ var MessageModal = React.createClass({
     Reflux.listenTo(actions.openModal, 'onOpenModal')
   ],
 
-  getInitialState: function() {
+  getInitialState: function () {
     return {
       title: 'Message',
       message: ''
-    }
+    };
   },
 
   onOpenModal: function (which, data) {
@@ -22,12 +23,12 @@ var MessageModal = React.createClass({
   },
 
   getHeader: function () {
-    return (<h1 className="modal-title">{this.state.title}</h1>);
+    return (<h1 className='modal-title'>{this.state.title}</h1>);
   },
 
-  getBody: function() {
+  getBody: function () {
     return (
-      <div className="message">
+      <div className='message'>
         {this.state.message}
       </div>
     );
@@ -40,7 +41,7 @@ var MessageModal = React.createClass({
   render: function () {
     return (
       <BModal
-        type="message"
+        type='message'
         header={this.getHeader()}
         body={this.getBody()}
         footer={this.getFooter()}

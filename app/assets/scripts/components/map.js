@@ -1,32 +1,41 @@
+/* global L */
 'use strict';
+
 require('mapbox.js');
 
-var centroid = require('turf-centroid')
-var inside = require('turf-inside')
-var overlaps = require('turf-overlaps')
 var React = require('react/addons');
 var Reflux = require('reflux');
 var Router = require('react-router');
 var _ = require('lodash');
 var tilebelt = require('tilebelt');
+var centroid = require('turf-centroid');
+var inside = require('turf-inside');
+var overlaps = require('turf-overlaps');
 var actions = require('../actions/actions');
 var config = require('../config.js');
 var utils = require('../utils/utils');
-var dsZoom = require('../utils/ds_zoom');
+var DSZoom = require('../utils/ds_zoom');
 var mapStore = require('../stores/map_store');
 
 L.mapbox.accessToken = config.map.mapbox.accessToken;
 
 var Map = React.createClass({
-  mixins: [
-    Reflux.listenTo(actions.resultOver, "onResultOver"),
-    Reflux.listenTo(actions.resultOut, "onResultOut"),
+  propTypes: {
+    mapView: React.PropTypes.string,
+    selectedSquareQuadkey: React.PropTypes.string,
+    selectedItemId: React.PropTypes.string,
+    selectedItem: React.PropTypes.object
+  },
 
-    Reflux.listenTo(actions.geocoderResult, "onGeocoderResult"),
+  mixins: [
+    Reflux.listenTo(actions.resultOver, 'onResultOver'),
+    Reflux.listenTo(actions.resultOut, 'onResultOut'),
+    Reflux.listenTo(actions.geocoderResult, 'onGeocoderResult'),
 
     Router.Navigation,
     Router.State
   ],
+
   map: null,
 
   mapGridLayer: null,
@@ -42,17 +51,17 @@ var Map = React.createClass({
   requireSelectedItemUpdate: true,
 
   // Lifecycle method.
-  componentWillReceiveProps: function(nextProps) {
+  componentWillReceiveProps: function (nextProps) {
     console.groupCollapsed('componentWillReceiveProps');
 
-    console.log('previous map view --', this.props.params.map);
-    console.log('new map view --', nextProps.params.map);
-    this.requireMapViewUpdate = this.props.params.map != nextProps.params.map;
+    console.log('previous map view --', this.props.mapView);
+    console.log('new map view --', nextProps.mapView);
+    this.requireMapViewUpdate = this.props.mapView !== nextProps.mapView;
     console.log('require map view update', this.requireMapViewUpdate);
 
     console.log('previous selectedItem --', _.get(this.props.selectedItem, '_id', null));
     console.log('new selectedItem --', _.get(nextProps.selectedItem, '_id', null));
-    this.requireSelectedItemUpdate = _.get(this.props.selectedItem, '_id', null) != _.get(nextProps.selectedItem, '_id', null);
+    this.requireSelectedItemUpdate = _.get(this.props.selectedItem, '_id', null) !== _.get(nextProps.selectedItem, '_id', null);
     console.log('require selected item update', this.requireSelectedItemUpdate);
 
     console.groupEnd('componentWillReceiveProps');
@@ -60,24 +69,24 @@ var Map = React.createClass({
 
   // Lifecycle method.
   // Called once as soon as the component has a DOM representation.
-  componentDidMount: function() {
+  componentDidMount: function () {
     console.log('componentDidMount MapBoxMap');
 
     this.map = L.mapbox.map(this.getDOMNode().querySelector('#map'), config.map.baseLayer, {
       zoomControl: false,
-      minZoom : config.map.minZoom,
-      maxZoom : config.map.maxZoom,
+      minZoom: config.map.minZoom,
+      maxZoom: config.map.maxZoom,
       maxBounds: L.latLngBounds([-90, -180], [90, 180])
     });
 
     // Custom zoom control.
-    var zoom = new dsZoom({
+    var zoomCtrl = new DSZoom({
       position: 'bottomleft',
       containerClasses: 'zoom-controls',
       zoomInClasses: 'bttn-zoomin',
-      zoomOutClasses: 'bttn-zoomout',
+      zoomOutClasses: 'bttn-zoomout'
     });
-    this.map.addControl(zoom);
+    this.map.addControl(zoomCtrl);
 
     this.mapGridLayer = L.geoJson(null, { style: L.mapbox.simplestyle.style }).addTo(this.map);
     // Footprint layer.
@@ -89,7 +98,7 @@ var Map = React.createClass({
     this.mapGridLayer.on('click', this.onGridSqrClick);
 
     // Map position from path.
-    var mapString = this.stringToMapView(this.props.params.map);
+    var mapString = this.stringToMapView(this.props.mapView);
     var view = [mapString.lat, mapString.lng];
     var zoom = mapString.zoom;
     this.map.setView(view, zoom);
@@ -102,12 +111,12 @@ var Map = React.createClass({
 
   // Lifecycle method.
   // Called when the component gets updated.
-  componentDidUpdate: function(prevProps, prevState) {
+  componentDidUpdate: function (prevProps, prevState) {
     console.log('componentDidUpdate');
 
     // Is there a need to update the map view.
     if (this.requireMapViewUpdate) {
-      var routerMap = this.stringToMapView(this.props.params.map);
+      var routerMap = this.stringToMapView(this.props.mapView);
       this.map.setView([routerMap.lat, routerMap.lng], routerMap.zoom);
       console.log('componentDidUpdate', 'map view updated');
     }
@@ -120,16 +129,16 @@ var Map = React.createClass({
   },
 
   // Lifecycle method.
-  render: function() {
+  render: function () {
     return (
       <div>
-        <div id="map"></div>
+        <div id='map'></div>
       </div>
     );
   },
 
   // Map event
-  onMapMoveend: function(e) {
+  onMapMoveend: function (e) {
     console.log('event:', 'moveend');
 
     var routes = this.getRoutes();
@@ -140,7 +149,7 @@ var Map = React.createClass({
   },
 
   // Map event
-  onGridSqrOver: function(e) {
+  onGridSqrOver: function (e) {
     // On mouseover add gs-highlight.
     if (!this.getSqrQuadKey() && e.layer.feature.properties.count > 0) {
       L.DomUtil.addClass(e.layer._path, 'gs-highlight');
@@ -151,24 +160,23 @@ var Map = React.createClass({
   },
 
   // Map event
-  onGridSqrOut: function(e) {
+  onGridSqrOut: function (e) {
     // On mouseover remove gs-highlight.
     L.DomUtil.removeClass(e.layer._path, 'gs-highlight');
     e.layer.closePopup();
   },
 
   // Map event
-  onGridSqrClick: function(e) {
+  onGridSqrClick: function (e) {
     console.log('onGridSqrClick', e);
     // Ensure that the popup doesn't open.
     e.layer.closePopup();
 
-    if (this.props.params.square) {
+    if (this.props.selectedSquareQuadkey) {
       console.log('onGridSqrClick', 'There was a square selected. UNSELECTING');
       // There is a square selected. Unselect.
-      this.transitionTo('map', {map: this.props.params.map}, this.getQuery());
-    }
-    else {
+      this.transitionTo('map', {map: this.props.mapView}, this.getQuery());
+    } else {
       console.log('onGridSqrClick', 'No square selected. SELECTING');
       var quadKey = e.layer.feature.properties._quadKey;
       var z = Math.round(this.map.getZoom());
@@ -180,7 +188,7 @@ var Map = React.createClass({
   },
 
   // Actions listener.
-  onGeocoderResult: function(bounds) {
+  onGeocoderResult: function (bounds) {
     if (bounds) {
       // Move the map.
       this.map.fitBounds(bounds);
@@ -189,16 +197,16 @@ var Map = React.createClass({
   },
 
   // Action listener
-  onResultOver: function(feature) {
+  onResultOver: function (feature) {
     var f = utils.getPolygonFeature(feature.geojson.coordinates);
     this.mapOverFootprintLayer.clearLayers().addData(f);
-    this.mapOverFootprintLayer.eachLayer(function(l) {
+    this.mapOverFootprintLayer.eachLayer(function (l) {
       L.DomUtil.addClass(l._path, 'g-footprint');
     });
   },
 
   // Action listener
-  onResultOut: function() {
+  onResultOut: function () {
     this.mapOverFootprintLayer.clearLayers();
   },
 
@@ -216,7 +224,7 @@ var Map = React.createClass({
     console.time('aggregate on grid');
     gridData.features.forEach(function (gridSquare) {
       gridSquare = utils.wrap(gridSquare);
-      var featureCenter = turf.centroid(gridSquare);
+      var featureCenter = centroid(gridSquare);
       // The footprints with bboxes that intersect with this grid square.
       // Get all the footprints inside the current square.
       var foots = mapStore.getFootprintsInSquare(gridSquare);
@@ -239,23 +247,20 @@ var Map = React.createClass({
 
     // Color the grid accordingly.
     this.mapGridLayer.addData(gridData);
-    this.mapGridLayer.eachLayer(function(l) {
+    this.mapGridLayer.eachLayer(function (l) {
       var elClasses = ['gs'];
 
       // Is there a square selected?
       // When there is a square selected, gs-inactive to everything.
       if (_this.getSqrQuadKey()) {
         elClasses.push('gs-inactive');
-      }
-      else {
+      } else {
         // Gradation.
         if (l.feature.properties.count >= 10) {
           elClasses.push('gs-density-high');
-        }
-        else if (l.feature.properties.count >= 5) {
+        } else if (l.feature.properties.count >= 5) {
           elClasses.push('gs-density-med');
-        }
-        else if (l.feature.properties.count > 0) {
+        } else if (l.feature.properties.count > 0) {
           elClasses.push('gs-density-low');
         }
       }
@@ -276,7 +281,7 @@ var Map = React.createClass({
     console.groupEnd('updateGrid');
   },
 
-  updateSelectedSquare: function() {
+  updateSelectedSquare: function () {
     // Clear the selected square layer.
     this.mapSelectedSquareLayer.clearLayers();
     // If there is a selected square add it to its own layer.
@@ -286,13 +291,13 @@ var Map = React.createClass({
       var coords = utils.coordsFromQuadkey(qk);
       var f = utils.getPolygonFeature(coords);
 
-      this.mapSelectedSquareLayer.addData(f).eachLayer(function(l) {
+      this.mapSelectedSquareLayer.addData(f).eachLayer(function (l) {
         L.DomUtil.addClass(l._path, 'gs-active gs');
       });
     }
   },
 
-  updateSelectedItemImageFootprint: function() {
+  updateSelectedItemImageFootprint: function () {
     if (this.map.hasLayer(this.mapOverImageLayer)) {
       this.map.removeLayer(this.mapOverImageLayer);
     }
@@ -308,7 +313,7 @@ var Map = React.createClass({
   // Helper functions
 
   getSqrQuadKey: function () {
-    return this.props.params.square;
+    return this.props.selectedSquareQuadkey;
   },
 
   /**
@@ -346,15 +351,15 @@ var Map = React.createClass({
     return {
       type: 'FeatureCollection',
       features: boxes
-    }
+    };
   },
 
   /**
    * Converts the map view (coords + zoom) to use on the path.
-   * 
+   *
    * @return string
    */
-  mapViewToString: function() {
+  mapViewToString: function () {
     var center = this.map.getCenter();
     var zoom = Math.round(this.map.getZoom());
     return utils.getMapViewString(center.lng, center.lat, zoom);
@@ -363,18 +368,18 @@ var Map = React.createClass({
   /**
    * Converts a path string like 60.359564131824214,4.010009765624999,6
    * to a readable object
-   * 
+   *
    * @param  String
    *   string to convert
    * @return object
    */
-  stringToMapView: function(string) {
+  stringToMapView: function (string) {
     var data = string.split(',');
     return {
       lng: data[0],
       lat: data[1],
-      zoom: data[2],
-    }
+      zoom: data[2]
+    };
   }
 });
 

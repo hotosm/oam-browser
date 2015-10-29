@@ -1,48 +1,51 @@
 'use strict';
-
 var React = require('react/addons');
 var Reflux = require('reflux');
 var Router = require('react-router');
-var turf = require('turf');
+var centroid = require('turf-centroid');
 var BModal = require('./base_modal');
 var actions = require('../../actions/actions');
 var mapStore = require('../../stores/map_store');
 var utils = require('../../utils/utils');
 
 var WelcomeModal = React.createClass({
+  propTypes: {
+    revealed: React.PropTypes.bool
+  },
+
   mixins: [
-    Reflux.listenTo(actions.latestImageryLoaded, "onLatestImageryLoaded"),
+    Reflux.listenTo(actions.latestImageryLoaded, 'onLatestImageryLoaded'),
     Router.Navigation,
     Router.State
   ],
 
-  getInitialState: function() {
+  getInitialState: function () {
     return {
       browseLatestEnabled: false
     };
   },
 
-  onLatestImageryLoaded: function() {
+  onLatestImageryLoaded: function () {
     this.setState({
-      browseLatestEnabled: true,
+      browseLatestEnabled: true
     });
   },
 
-  onBrowseLatestClick: function(e) {
+  onBrowseLatestClick: function (e) {
     e.preventDefault();
-    console.log('..+++++++++....+++++++++....+++++++++..')
+    console.groupCollapsed('onBrowseLatestClick');
     var previewZoom = 10;
     var latest = mapStore.getLatestImagery();
     var f = {
       type: 'Feature',
       geometry: latest.geojson
     };
-    var centroid = turf.centroid(f).geometry.coordinates;
-    var quadKey = utils.quadkeyFromCoords(centroid[0], centroid[1], previewZoom);
-    var mapView = centroid[0] + ',' + centroid[1] + ',' + previewZoom;
+    var center = centroid(f).geometry.coordinates;
+    var quadKey = utils.quadkeyFromCoords(center[0], center[1], previewZoom);
+    var mapView = center[0] + ',' + center[1] + ',' + previewZoom;
 
     console.log('Feature', f);
-    console.log('coords center', centroid);
+    console.log('coords center', center);
     console.log('quadKey', quadKey);
     console.log('full url -- %s/%s/%s', mapView, quadKey, latest._id);
 
@@ -54,16 +57,16 @@ var WelcomeModal = React.createClass({
       item_id: latest._id
     });
 
-    console.log('..+++++++++....+++++++++....+++++++++..')
+    console.groupEnd('onBrowseLatestClick');
   },
 
-  onGeocoderSearch: function(e) {
+  onGeocoderSearch: function (e) {
     e.preventDefault();
     var _this = this;
 
     var queryString = this.getDOMNode().querySelector('[data-hook="geocoder"]').value;
-    
-    utils.queryGeocoder(queryString, function(bounds) {
+
+    utils.queryGeocoder(queryString, function (bounds) {
       if (!bounds) {
         console.log('geocoder -- no result was found');
         return;
@@ -73,40 +76,40 @@ var WelcomeModal = React.createClass({
     });
   },
 
-  getHeader: function() {
+  getHeader: function () {
     return (
       <div>
-        <h1 id="modal-title"><img src="assets/graphics/layout/oam-logo-h-neg.svg" width="167" height="32" alt="OpenAerialMap logo" /><span>OpenAerialMap</span></h1>
+        <h1 id='modal-title'><img src='assets/graphics/layout/oam-logo-h-neg.svg' width='167' height='32' alt='OpenAerialMap logo' /><span>OpenAerialMap</span></h1>
         <p>Welcome to the open collection of aerial imagery.</p>
       </div>
     );
   },
 
-  getBody: function() {
+  getBody: function () {
     return (
       <div>
-        <form className="form-search-welcome mod-block" onSubmit={this.onGeocoderSearch}>
-          <div className="input-group">
-            <input className="form-control input-l input search" type="search" placeholder="Search location" data-hook="geocoder"/>
-            <span className="input-group-bttn"><button type="submit" className="bttn-search-welcome"><span>Search</span></button></span>
+        <form className='form-search-welcome mod-block' onSubmit={this.onGeocoderSearch}>
+          <div className='input-group'>
+            <input className='form-control input-l input search' type='search' placeholder='Search location' data-hook='geocoder'/>
+            <span className='input-group-bttn'><button type='submit' className='bttn-search-welcome'><span>Search</span></button></span>
           </div>
         </form>
-        <p className="mod-sep"><span>or</span></p>
-        <div className="mod-block">
-          <a href="#" className={(this.state.browseLatestEnabled ? '' : 'disabled ') + 'bttn-latest-welcome'} onClick={this.onBrowseLatestClick}><span>Browse latest imagery</span></a>
+        <p className='mod-sep'><span>or</span></p>
+        <div className='mod-block'>
+          <a href='#' className={(this.state.browseLatestEnabled ? '' : 'disabled ') + 'bttn-latest-welcome'} onClick={this.onBrowseLatestClick}><span>Browse latest imagery</span></a>
         </div>
       </div>
     );
   },
 
-  getFooter: function() {
+  getFooter: function () {
     return false;
   },
 
   render: function () {
     return (
       <BModal
-        type="welcome"
+        type='welcome'
         header={this.getHeader()}
         body={this.getBody()}
         footer={this.getFooter()}
@@ -115,4 +118,4 @@ var WelcomeModal = React.createClass({
   }
 });
 
-module.exports = WelcomeModal;  
+module.exports = WelcomeModal;

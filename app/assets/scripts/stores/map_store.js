@@ -3,10 +3,10 @@ var qs = require('querystring');
 var Reflux = require('reflux');
 var _ = require('lodash');
 var $ = require('jquery');
-var extent = require('turf-extent')
+var extent = require('turf-extent');
 var rbush = require('rbush');
 var actions = require('../actions/actions');
-var searchQueryStore = require('./search_query_store')
+var searchQueryStore = require('./search_query_store');
 var config = require('../config');
 
 module.exports = Reflux.createStore({
@@ -20,28 +20,28 @@ module.exports = Reflux.createStore({
 
   // Called on creation.
   // Setup listeners.
-  init: function() {
+  init: function () {
     this.listenTo(actions.selectedBbox, this.onSelectedBbox);
     this.queryLatestImagery();
     this.queryFootprints();
   },
 
-  queryLatestImagery: function() {
+  queryLatestImagery: function () {
     var _this = this;
 
     $.get(config.catalog.url + '/meta?limit=1')
-      .success(function(data) {
+      .success(function (data) {
         _this.storage.latestImagery = data.results[0];
         actions.latestImageryLoaded();
       });
   },
 
-  queryFootprints: function() {
+  queryFootprints: function () {
     var _this = this;
 
     console.time('fetch footprints');
     $.get(config.catalog.url + '/meta?limit=99999')
-      .success(function(data) {
+      .success(function (data) {
         console.timeEnd('fetch footprints');
         var footprintsFeature = _this.parseFootprints(data.results);
 
@@ -55,7 +55,6 @@ module.exports = Reflux.createStore({
         console.timeEnd('index footprints');
         // Done.
         _this.storage.footprintsTree = tree;
-        //actions.footprintsLoaded();
         _this.trigger();
       });
   },
@@ -66,7 +65,7 @@ module.exports = Reflux.createStore({
       features: []
     };
     var id = 0;
-    _.each(results, function(foot) {
+    _.each(results, function (foot) {
       fc.features.push({
         type: 'Feature',
         properties: {
@@ -127,7 +126,7 @@ module.exports = Reflux.createStore({
         d.getMonth() + 1,
         d.getDate()
       ].join('-')
-    }
+    };
 
     var typeFilter = parameters.dataType === 'all' ? {} : { has_tiled: true };
 
@@ -137,7 +136,7 @@ module.exports = Reflux.createStore({
 
     var params = _.assign({
       limit: 4000,
-      bbox: bbox,
+      bbox: bbox
     }, resolutionFilter, dateFilter, typeFilter);
 
     console.log('search:', params);
@@ -146,24 +145,22 @@ module.exports = Reflux.createStore({
       console.log('search params did not change. Api call aborted.');
       _this.trigger();
       return;
-    }
-    else {
+    } else {
       console.log('prev params', this.storage.prevSearchParams);
       console.log('curr params', strParams);
     }
     this.storage.prevSearchParams = strParams;
 
     $.get(config.catalog.url + '/meta?' + strParams)
-      .success(function(data) {
+      .success(function (data) {
         console.log('api catalog results:', data);
         _this.storage.results = data.results;
-        //_this.trigger(_this.storage.results);
         _this.trigger();
       });
   },
 
   // Actions listener.
-  onSelectedBbox: function(bbox) {
+  onSelectedBbox: function (bbox) {
     this.storage.selectedBbox = bbox;
     this.queryData();
   },
@@ -172,7 +169,7 @@ module.exports = Reflux.createStore({
    * Returns the latest imagery's coordinates.
    * @return Feature or null
    */
-  getLatestImagery: function() {
+  getLatestImagery: function () {
     return this.storage.latestImagery;
   },
 
@@ -180,7 +177,7 @@ module.exports = Reflux.createStore({
    * Returns the stored results.
    * @return Array or null
    */
-  getResults: function() {
+  getResults: function () {
     return this.storage.results;
   }
 

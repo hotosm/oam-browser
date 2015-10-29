@@ -2,8 +2,6 @@
 var Reflux = require('reflux');
 
 module.exports = Reflux.createActions({
-  // Map actions.
-  'mapMove': {},
   'selectedBbox': {},
 
   'latestImageryLoaded': {},
@@ -30,16 +28,9 @@ module.exports = Reflux.createActions({
   // Results pane related actions.
   'resultOver': {},
   'resultOut': {},
-  
+
   // openModal(which)
   'openModal': {},
 
-  // Go to the latest imagery.
-  // Its coordinates are stored in the mapStore and can be got with
-  // getLatestImagery().
-  'goToLatest': {},
-
-  'geocoderResult': {},
-
-  'miniMapClick': {},
+  'geocoderResult': {}
 });

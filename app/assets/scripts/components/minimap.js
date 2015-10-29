@@ -2,13 +2,17 @@
 
 require('mapbox.js');
 var React = require('react/addons');
-var Reflux = require('reflux');
 var Router = require('react-router');
 var _ = require('lodash');
 var utils = require('../utils/utils');
 var config = require('../config.js');
 
 var MiniMap = React.createClass({
+  propTypes: {
+    selectedSquare: React.PropTypes.string,
+    mapView: React.PropTypes.string
+  },
+
   mixins: [
     Router.Navigation,
     Router.State
@@ -19,15 +23,14 @@ var MiniMap = React.createClass({
   targetLines: null,
 
   // Lifecycle method.
-  shouldComponentUpdate: function(nextProps, nextState) {
-   return nextProps.selectedSquare != this.props.selectedSquare;
+  shouldComponentUpdate: function (nextProps, nextState) {
+    return nextProps.selectedSquare != this.props.selectedSquare;
   },
 
   // Lifecycle method.
   // Called once as soon as the component has a DOM representation.
-  componentDidMount: function() {
+  componentDidMount: function () {
     console.log('componentDidMount MiniMap');
-    var _this = this;
 
     this.map = L.mapbox.map(this.getDOMNode(), config.map.baseLayer, {
       center: [0, 0],
@@ -54,16 +57,16 @@ var MiniMap = React.createClass({
 
   // Lifecycle method.
   // Called when the component gets updated.
-  componentDidUpdate: function(/*prevProps, prevState*/) {
+  componentDidUpdate: function (/* prevProps, prevState */) {
     this.setCrosshair();
   },
 
-  render: function() {
-    return (<div id="minimap"></div>);
+  render: function () {
+    return (<div id='minimap'></div>);
   },
 
   // Map event.
-  onMapClick: function(e) {
+  onMapClick: function (e) {
     var routes = this.getRoutes();
     var r = routes[routes.length - 1].name || 'map';
     var params = _.cloneDeep(this.getParams());
@@ -72,7 +75,7 @@ var MiniMap = React.createClass({
     this.transitionTo(r, params, this.getQuery());
   },
 
-  setCrosshair: function() {
+  setCrosshair: function () {
     if (this.props.selectedSquare) {
       console.log('minimap -- setting crosshair');
       var center = utils.tileCenterFromQuadkey(this.props.selectedSquare).geometry.coordinates;
@@ -86,8 +89,7 @@ var MiniMap = React.createClass({
           [center[1], 220]
         ]
       ]);
-    }
-    else {
+    } else {
       console.log('minimap -- unsetting crosshair');
       this.targetLines.clearLayers();
     }

@@ -31,16 +31,16 @@ var App = React.createClass({
     }
   },
 
-  render: function() {
+  render: function () {
     // When there's a square selected avoid the modal entirely.
-    var showWelcomeModal = this.getParams().square ? false : true;
+    var showWelcomeModal = !this.getParams().square;
     // DEV TEMP
-    showWelcomeModal = false;
+    // showWelcomeModal = false;
 
     return (
       <div>
         <Header />
-        <main id="site-body" role="main">
+        <main id='site-body' role='main'>
           <RouteHandler />
         </main>
         <WelcomeModal revealed={showWelcomeModal} />

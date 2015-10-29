@@ -18,7 +18,7 @@ var Filters = module.exports = React.createClass({
       date: 'all',
       resolution: 'all',
       dataType: 'all'
-    }
+    };
   },
 
   onSearchQuery: function (data) {
@@ -32,7 +32,7 @@ var Filters = module.exports = React.createClass({
 
   setResolution: function (d) {
     actions.setResolutionFilter(d.key);
-    this._updateUrl('resolution', d.key)
+    this._updateUrl('resolution', d.key);
   },
 
   setDataType: function (d) {
@@ -43,16 +43,14 @@ var Filters = module.exports = React.createClass({
   _updateUrl: function (prop, value) {
     var query = this.getQuery();
     if (value === 'all') {
-      delete query[prop]
+      delete query[prop];
     } else {
       query[prop] = value;
     }
-    var routes = this.getRoutes();
     this.transitionTo('map', {map: this.getParams().map}, query);
   },
 
-
-  render: function() {
+  render: function () {
     function filterItem (property, clickHandler, d) {
       var klass = this.state[property] === d.key ? 'active' : '';
       var click = clickHandler.bind(this, d);
@@ -82,13 +80,13 @@ var Filters = module.exports = React.createClass({
     ].map(filterItem.bind(this, 'dataType', this.setDataType));
 
     return (
-      <Dropdown element="li" className="drop dropdown center" triggerTitle="Settings" triggerClassName="bttn-settings" triggerText="Settings">
-        <dl className="drop-menu filters-options-menu" role="menu">
-          <dt className="drop-menu-sectitle">Time</dt>
+      <Dropdown element='li' className='drop dropdown center' triggerTitle='Settings' triggerClassName='bttn-settings' triggerText='Settings'>
+        <dl className='drop-menu filters-options-menu' role='menu'>
+          <dt className='drop-menu-sectitle'>Time</dt>
           {dates}
-          <dt className="drop-menu-sectitle">Resolution</dt>
+          <dt className='drop-menu-sectitle'>Resolution</dt>
           {resolutions}
-          <dt className="drop-menu-sectitle">Data Type</dt>
+          <dt className='drop-menu-sectitle'>Data Type</dt>
           {dataTypes}
         </dl>
       </Dropdown>

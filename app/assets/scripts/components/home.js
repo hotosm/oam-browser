@@ -14,14 +14,18 @@ var actions = require('../actions/actions');
 var config = require('../config.js');
 
 var Home = React.createClass({
+  propTypes: {
+    params: React.PropTypes.object
+  },
+
   mixins: [
     Reflux.listenTo(searchQueryStore, 'onSearchQueryChanged'),
-    Reflux.listenTo(mapStore, "onMapStoreData"),
+    Reflux.listenTo(mapStore, 'onMapStoreData'),
     Router.Navigation,
     Router.State
   ],
 
-  getInitialState: function() {
+  getInitialState: function () {
     return {
       results: [],
       map: {
@@ -29,10 +33,10 @@ var Home = React.createClass({
       },
       selectedSquareQuadkey: null,
       selectedItemId: null
-    }
+    };
   },
 
-  onMapStoreData: function() {
+  onMapStoreData: function () {
     console.log('onMapStoreData', mapStore.storage);
     this.setState({
       results: mapStore.getResults()
@@ -40,7 +44,7 @@ var Home = React.createClass({
   },
 
   // Action listener
-  onSearchQueryChanged: function(params) {
+  onSearchQueryChanged: function (params) {
     console.log('home onSearchQueryChanged');
     var mapState = _.cloneDeep(this.state.map);
     mapState.styleProperty = params.date + '_' + params.resolution + '_' + params.dataType + '_count';
@@ -48,7 +52,7 @@ var Home = React.createClass({
     this.setState({map: mapState});
   },
 
-  componentWillMount: function() {
+  componentWillMount: function () {
     var state = _.cloneDeep(this.state);
     // The map parameters form the url take precedence over everything else
     // if they're not present try the cookie.
@@ -59,23 +63,22 @@ var Home = React.createClass({
       state.map.view = config.map.initialView.concat(config.map.initialZoom).join(',');
     }
 
-
     state.selectedSquareQuadkey = this.props.params.square;
     state.selectedItemId = this.props.params.item_id;
     this.setState(state);
   },
 
-  componentWillReceiveProps: function(nextProps) {
+  componentWillReceiveProps: function (nextProps) {
     var state = _.cloneDeep(this.state);
     // Map view.
-    if (this.props.params.map != nextProps.params.map) {
+    if (this.props.params.map !== nextProps.params.map) {
       state.map.view = nextProps.params.map;
       // Map view changed. Store cookie.
       cookie.create('oam-browser:map-view', state.map.view);
     }
 
     // Selected Square
-    if (this.props.params.square != nextProps.params.square) {
+    if (this.props.params.square !== nextProps.params.square) {
       state.selectedSquareQuadkey = nextProps.params.square;
     }
     // If the square was set and it's not anymore means that the results
@@ -85,14 +88,14 @@ var Home = React.createClass({
       // Clean the results.
       state.results = [];
     }
-    if (this.props.params.square != nextProps.params.square && nextProps.params.square) {
+    if (this.props.params.square !== nextProps.params.square && nextProps.params.square) {
       console.log('Home component quadkey changed', nextProps.params.square);
       var bbox = utils.tileBboxFromQuadkey(nextProps.params.square);
       actions.selectedBbox(bbox);
     }
 
     // Selected Square
-    if (this.props.params.item_id != nextProps.params.item_id) {
+    if (this.props.params.item_id !== nextProps.params.item_id) {
       state.selectedItemId = nextProps.params.item_id;
     }
 
@@ -100,35 +103,31 @@ var Home = React.createClass({
     this.setState(state);
   },
 
-  componentDidMount: function() {
-    if (this.state.selectedSquareQuadkey  ) {
+  componentDidMount: function () {
+    if (this.state.selectedSquareQuadkey) {
       console.log('Home component mounted with quadkey', this.state.selectedSquareQuadkey);
       var bbox = utils.tileBboxFromQuadkey(this.state.selectedSquareQuadkey);
       actions.selectedBbox(bbox);
     }
   },
 
-  render: function() {
+  render: function () {
     var selectedItem = _.find(this.state.results, {_id: this.state.selectedItemId});
-
-    var params = {
-      map: this.state.map.view,
-      square: this.state.selectedSquareQuadkey,
-      item_id: this.state.selectedItemId,
-    }
 
     return (
       <div>
         <MapBoxMap
-          params={params}
+          mapView={this.state.map.view}
+          selectedSquareQuadkey={this.state.selectedSquareQuadkey}
+          selectedItemId={this.state.selectedItemId}
           selectedItem={selectedItem} />
 
         <MiniMap selectedSquare={this.props.params.square} mapView={this.state.map.view}/>
 
         <ResultsPane
-                  results={this.state.results}
-                  selectedItemId={this.state.selectedItemId}
-                  selectedSquare={this.state.selectedSquareQuadkey} />
+          results={this.state.results}
+          selectedItemId={this.state.selectedItemId}
+          selectedSquare={this.state.selectedSquareQuadkey} />
       </div>
     );
   }

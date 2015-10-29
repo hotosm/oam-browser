@@ -1,6 +1,7 @@
 'use strict';
 var qs = require('querystring');
 var $ = require('jquery');
+var centroid = require('turf-centroid');
 var React = require('react/addons');
 var Keys = require('react-keybinding');
 var Router = require('react-router');
@@ -8,10 +9,14 @@ var actions = require('../actions/actions');
 var ZcButton = require('./shared/zc_button');
 var Dropdown = require('./shared/dropdown');
 var utils = require('../utils/utils');
-var actions = require('../actions/actions');
 var prettyBytes = require('pretty-bytes');
 
 var ResultsItem = React.createClass({
+  propTypes: {
+    pagination: React.PropTypes.object,
+    data: React.PropTypes.object
+  },
+
   mixins: [
     Keys,
     Router.State,
@@ -19,19 +24,19 @@ var ResultsItem = React.createClass({
   ],
 
   keybindings: {
-    'arrow-left': function() {
+    'arrow-left': function () {
       if (this.props.pagination.prevId) {
         this.prevResult(null);
       }
     },
-    'arrow-right': function() {
+    'arrow-right': function () {
       if (this.props.pagination.nextId) {
         this.nextResult(null);
       }
     }
   },
 
-  prevResult: function(e) {
+  prevResult: function (e) {
     if (e) {
       e.preventDefault();
     }
@@ -43,7 +48,7 @@ var ResultsItem = React.createClass({
     }, this.getQuery());
   },
 
-  viewAllResults: function(e) {
+  viewAllResults: function (e) {
     if (e) {
       e.preventDefault();
     }
@@ -54,7 +59,7 @@ var ResultsItem = React.createClass({
     }, this.getQuery());
   },
 
-  nextResult: function(e) {
+  nextResult: function (e) {
     if (e) {
       e.preventDefault();
     }
@@ -66,12 +71,11 @@ var ResultsItem = React.createClass({
     }, this.getQuery());
   },
 
-  onCopy: function(e) {
+  onCopy: function (e) {
     return this.getDOMNode().querySelector('[data-hook="copy:data"]').value;
   },
 
-  onOpenJosm: function(d) {
-    var self = this;
+  onOpenJosm: function (d) {
     var source = 'OpenAerialMap - ' + d.provider + ' - ' + d.uuid;
     // Reference:
     // http://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl#load_and_zoom
@@ -107,7 +111,7 @@ var ResultsItem = React.createClass({
     });
   },
 
-  render: function() {
+  render: function () {
     var d = this.props.data;
     var pagination = this.props.pagination;
 
@@ -115,25 +119,25 @@ var ResultsItem = React.createClass({
     if (d.properties.tms) {
       // Generate the iD URL:
       // grab centroid of the footprint
-      var centroid = turf.centroid(d.geojson).geometry.coordinates;
+      var center = centroid(d.geojson).geometry.coordinates;
       // cheat by using current zoom level
-      var zoom = this.getParams().map.split(',')[2]
+      var zoom = this.getParams().map.split(',')[2];
       var idUrl = 'http://www.openstreetmap.org/edit' +
-      '#map=' + [zoom, centroid[1], centroid[0]].join('/') +
+      '#map=' + [zoom, center[1], center[0]].join('/') +
       '?' + qs.stringify({
         editor: 'id',
         background: 'custom:' + d.properties.tms
       });
 
       tmsOptions = (
-        <div className="input-group">
-          <input className="form-control input-m" type="text" value={d.properties.tms} readOnly  data-hook="copy:data" />
-          <Dropdown element="span" className="input-group-bttn dropdown center" triggerTitle="Show options" triggerClassName="bttn-uoptions" triggerText="Options">
-            <ul className="drop-menu tms-options-menu" role="menu">
-              <li className="has-icon-bef id-editor"><a href={idUrl} target="_blank" title="Open with iD editor">Open with iD editor</a></li>
-              <li className="has-icon-bef josm"><a onClick={this.onOpenJosm.bind(this, d)} title="Open with JOSM">Open with JOSM</a></li>
-              <li className="has-icon-bef clipboard">
-                <ZcButton onCopy={this.onCopy} title="Copy to clipboard" text="Copy to clipboard"/>
+        <div className='input-group'>
+          <input className='form-control input-m' type='text' value={d.properties.tms} readOnly data-hook='copy:data' />
+          <Dropdown element='span' className='input-group-bttn dropdown center' triggerTitle='Show options' triggerClassName='bttn-uoptions' triggerText='Options'>
+            <ul className='drop-menu tms-options-menu' role='menu'>
+              <li className='has-icon-bef id-editor'><a href={idUrl} target='_blank' title='Open with iD editor'>Open with iD editor</a></li>
+              <li className='has-icon-bef josm'><a onClick={this.onOpenJosm.bind(this, d)} title='Open with JOSM'>Open with JOSM</a></li>
+              <li className='has-icon-bef clipboard'>
+                <ZcButton onCopy={this.onCopy} title='Copy to clipboard' text='Copy to clipboard'/>
               </li>
             </ul>
           </Dropdown>
@@ -147,48 +151,48 @@ var ResultsItem = React.createClass({
 
     return (
       <article className={(d.properties.tms ? 'has-tms ' : '') + 'results-single'}>
-        <header className="pane-header">
-          <h1 className="pane-title" title={d.title.replace(/\.[a-z]+$/, '')}>{d.title.replace(/\.[a-z]+$/, '')}</h1>
-          <p className="pane-subtitle">{pagination.current} of {pagination.total} results</p>
+        <header className='pane-header'>
+          <h1 className='pane-title' title={d.title.replace(/\.[a-z]+$/, '')}>{d.title.replace(/\.[a-z]+$/, '')}</h1>
+          <p className='pane-subtitle'>{pagination.current} of {pagination.total} results</p>
         </header>
-        <div className="pane-body">
-          <div className="pane-body-inner">
-            <div className="single-media">
-              <div className="blur-media" style={blurImage}></div>
-              <img alt="Result thumbnail" src={d.properties.thumbnail || "assets/graphics/layout/img-placeholder.svg" } />
+        <div className='pane-body'>
+          <div className='pane-body-inner'>
+            <div className='single-media'>
+              <div className='blur-media' style={blurImage}></div>
+              <img alt='Result thumbnail' src={d.properties.thumbnail || 'assets/graphics/layout/img-placeholder.svg' } />
             </div>
-            <div className="single-actions">
+            <div className='single-actions'>
               {tmsOptions}
-              <a title="Download image" className="bttn-download" target="_blank" href={d.uuid}><span>Download</span></a>
+              <a title='Download image' className='bttn-download' target='_blank' href={d.uuid}><span>Download</span></a>
             </div>
-            <dl className="single-details">
+            <dl className='single-details'>
               <dt><span>Date</span></dt>
-              <dd>{d.acquisition_start.slice(0,10)}</dd>
+              <dd>{d.acquisition_start.slice(0, 10)}</dd>
               <dt><span>Resolution</span></dt>
               <dd>{utils.gsdToUnit(d.gsd)}</dd>
               <dt><span>Type</span></dt>
               <dd>{d.properties.tms ? 'Image + Map Layer' : 'Image'}</dd>
               <dt><span>Image Size</span></dt>
-              <dd className="cap">{prettyBytes(d.file_size)}</dd>
+              <dd className='cap'>{prettyBytes(d.file_size)}</dd>
               <dt><span>Platform</span></dt>
-              <dd className="cap">{d.platform}</dd>
+              <dd className='cap'>{d.platform}</dd>
               <dt><span>Sensor</span></dt>
-              <dd className="cap">{d.properties.sensor ? d.properties.sensor : 'not available'}</dd>
+              <dd className='cap'>{d.properties.sensor ? d.properties.sensor : 'not available'}</dd>
               <dt><span>Provider</span></dt>
-              <dd className="cap">{d.provider}</dd>
+              <dd className='cap'>{d.provider}</dd>
             </dl>
           </div>
         </div>
-        <footer className="pane-footer">
-          <ul className="single-pager">
-            <li className="view-all"><a href="#" onClick={this.viewAllResults} title="View all results"><span>All</span></a></li>
-            <li className="view-prev"><a href="#" onClick={this.prevResult} className={this.props.pagination.prevId ? '' : 'disabled'} title="View previous result"><span>Prev</span></a></li>
-            <li className="view-next"><a href="#" onClick={this.nextResult} className={this.props.pagination.nextId ? '' : 'disabled'} title="View next result"><span>Next</span></a></li>
+        <footer className='pane-footer'>
+          <ul className='single-pager'>
+            <li className='view-all'><a href='#' onClick={this.viewAllResults} title='View all results'><span>All</span></a></li>
+            <li className='view-prev'><a href='#' onClick={this.prevResult} className={this.props.pagination.prevId ? '' : 'disabled'} title='View previous result'><span>Prev</span></a></li>
+            <li className='view-next'><a href='#' onClick={this.nextResult} className={this.props.pagination.nextId ? '' : 'disabled'} title='View next result'><span>Next</span></a></li>
           </ul>
         </footer>
       </article>
     );
   }
-})
+});
 
 module.exports = ResultsItem;

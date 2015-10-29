@@ -85,11 +85,11 @@ var Home = React.createClass({
       // Clean the results.
       state.results = [];
     }
-    // if (this.props.params.square != nextProps.params.square && nextProps.params.square) {
-    //   console.log('Home component quadkey changed', nextProps.params.square);
-    //   var bbox = utils.tileBboxFromQuadkey(nextProps.params.square);
-    //   actions.selectedBbox(bbox);
-    // }
+    if (this.props.params.square != nextProps.params.square && nextProps.params.square) {
+      console.log('Home component quadkey changed', nextProps.params.square);
+      var bbox = utils.tileBboxFromQuadkey(nextProps.params.square);
+      actions.selectedBbox(bbox);
+    }
 
     // Selected Square
     if (this.props.params.item_id != nextProps.params.item_id) {
@@ -101,11 +101,11 @@ var Home = React.createClass({
   },
 
   componentDidMount: function() {
-    // if (this.state.selectedSquareQuadkey) {
-    //   console.log('Home component mounted with quadkey', this.state.selectedSquareQuadkey);
-    //   var bbox = utils.tileBboxFromQuadkey(this.state.selectedSquareQuadkey);
-    //   actions.selectedBbox(bbox);
-    // }
+    if (this.state.selectedSquareQuadkey  ) {
+      console.log('Home component mounted with quadkey', this.state.selectedSquareQuadkey);
+      var bbox = utils.tileBboxFromQuadkey(this.state.selectedSquareQuadkey);
+      actions.selectedBbox(bbox);
+    }
   },
 
   render: function() {

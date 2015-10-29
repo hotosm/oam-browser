@@ -144,6 +144,7 @@ module.exports = Reflux.createStore({
     var strParams = qs.stringify(params);
     if (strParams === this.storage.prevSearchParams) {
       console.log('search params did not change. Api call aborted.');
+      _this.trigger();
       return;
     }
     else {

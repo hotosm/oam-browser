@@ -15,10 +15,7 @@ var config = require('../config.js');
 
 var Home = React.createClass({
   mixins: [
-    //Reflux.listenTo(actions.footprintsLoaded, 'onFootprintsLoaded'),
-
     Reflux.listenTo(searchQueryStore, 'onSearchQueryChanged'),
-    //Reflux.listenTo(mapStore, "onResults"),
     Reflux.listenTo(mapStore, "onMapStoreData"),
     Router.Navigation,
     Router.State
@@ -33,16 +30,6 @@ var Home = React.createClass({
       selectedSquareQuadkey: null,
       selectedItemId: null
     }
-  },
-
-  onResults: function(results) {
-    console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
-    console.log('Home controller', 'onResults', results);
-    console.log('onResults router', this.getParams());
-    this.setState({
-      results: results,
-    });
-    console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
   },
 
   onMapStoreData: function() {
@@ -98,11 +85,11 @@ var Home = React.createClass({
       // Clean the results.
       state.results = [];
     }
-    if (this.props.params.square != nextProps.params.square && nextProps.params.square) {
-      console.log('Home component quadkey changed', nextProps.params.square);
-      var bbox = utils.tileBboxFromQuadkey(nextProps.params.square);
-      actions.selectedBbox(bbox);
-    }
+    // if (this.props.params.square != nextProps.params.square && nextProps.params.square) {
+    //   console.log('Home component quadkey changed', nextProps.params.square);
+    //   var bbox = utils.tileBboxFromQuadkey(nextProps.params.square);
+    //   actions.selectedBbox(bbox);
+    // }
 
     // Selected Square
     if (this.props.params.item_id != nextProps.params.item_id) {
@@ -114,11 +101,11 @@ var Home = React.createClass({
   },
 
   componentDidMount: function() {
-    if (this.state.selectedSquareQuadkey) {
-      console.log('Home component mounted with quadkey', this.state.selectedSquareQuadkey);
-      var bbox = utils.tileBboxFromQuadkey(this.state.selectedSquareQuadkey);
-      actions.selectedBbox(bbox);
-    }
+    // if (this.state.selectedSquareQuadkey) {
+    //   console.log('Home component mounted with quadkey', this.state.selectedSquareQuadkey);
+    //   var bbox = utils.tileBboxFromQuadkey(this.state.selectedSquareQuadkey);
+    //   actions.selectedBbox(bbox);
+    // }
   },
 
   render: function() {
@@ -138,7 +125,7 @@ var Home = React.createClass({
           styleProperty={this.state.map.styleProperty}
           selectedItem={selectedItem} />
 
-        {/*<MiniMap selectedSquare={this.props.params.square} />*/}
+        <MiniMap selectedSquare={this.props.params.square} />
 
         <ResultsPane
                   results={this.state.results}

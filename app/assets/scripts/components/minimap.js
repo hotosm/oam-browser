@@ -1,12 +1,12 @@
 'use strict';
 
+require('mapbox.js');
 var React = require('react/addons');
 var Reflux = require('reflux');
 var Router = require('react-router');
-var mapboxgl = require('mapbox-gl');
 var _ = require('lodash');
-var makeStyle = require('../map_styles/style-minimap');
 var utils = require('../utils/utils');
+var config = require('../config.js');
 
 var MiniMap = React.createClass({
   mixins: [
@@ -15,6 +15,8 @@ var MiniMap = React.createClass({
   ],
 
   map: null,
+
+  targetLines: null,
 
   // Lifecycle method.
   shouldComponentUpdate: function(nextProps, nextState) {
@@ -27,18 +29,27 @@ var MiniMap = React.createClass({
     console.log('componentDidMount MiniMap');
     var _this = this;
 
-    this.map = new mapboxgl.Map({
-      container: this.getDOMNode(),
-      style: makeStyle(),
-
+    this.map = L.mapbox.map(this.getDOMNode(), config.map.baseLayer, {
+      center: [0, 0],
+      zoomControl: false,
       attributionControl: false,
-      //interactive: false,
-      minZoom: 0.1,
-      maxZoom: 0.1
-    });
+      dragging: false,
+      touchZoom: false,
+      scrollWheelZoom: false,
+      doubleClickZoom: false,
+      boxZoom: false,
+      maxBounds: L.latLngBounds([-90, -180], [90, 180])
+    }).fitBounds(L.latLngBounds([-90, -180], [90, 180]));
+
+    this.targetLines = L.multiPolyline([], {
+      clickable: false,
+      color: '#1f3b45',
+      weight: 0.5
+    }).addTo(this.map);
 
     this.map.on('click', this.onMapClick);
-    this.map.on('load', this.onMapLoad);
+
+    this.setCrosshair();
   },
 
   // Lifecycle method.
@@ -57,52 +68,28 @@ var MiniMap = React.createClass({
     var r = routes[routes.length - 1].name;
     var params = _.cloneDeep(this.getParams());
     var pieces = params.map.split(',');
-    params.map = utils.getMapViewString(e.lngLat.lng, e.lngLat.lat, pieces[2]);
+    params.map = utils.getMapViewString(e.latlng.lng, e.latlng.lat, pieces[2]);
     this.transitionTo(r, params, this.getQuery());
   },
 
-  // Map event.
-  onMapLoad: function() {
-    this.setCrosshair();
-  },
-
   setCrosshair: function() {
-    console.log('minimap -- setting crosshair');
-    var src = this.map.getSource('crosshair');
-
-    if (!this.props.selectedSquare) {
-      src.setData({
-        'type': 'FeatureCollection',
-        'features': []
-      });
+    if (this.props.selectedSquare) {
+      console.log('minimap -- setting crosshair');
+      var center = utils.tileCenterFromQuadkey(this.props.selectedSquare).geometry.coordinates;
+      this.targetLines.setLatLngs([
+        [
+          [-90, center[0]],
+          [90, center[0]]
+        ],
+        [
+          [center[1], -220],
+          [center[1], 220]
+        ]
+      ]);
     }
     else {
-      var c = utils.tileCenterFromQuadkey(this.props.selectedSquare).geometry.coordinates;
-      var lineFeature = function(coords) {
-        return {
-          'type': 'Feature',
-          'geometry': {
-            'type': 'LineString',
-            'coordinates': coords
-          }
-        }
-      };
-
-      src.setData({
-        'type': 'FeatureCollection',
-        'features': [
-          lineFeature([
-            [c[0], -90],
-            [c[0], 90]
-          ]),
-          lineFeature([
-            [-180, c[1]],
-            [180, c[1]]
-          ])
-        ]
-      });
-
-      this.map.setCenter(c);
+      console.log('minimap -- unsetting crosshair');
+      this.targetLines.clearLayers();
     }
   }
 });

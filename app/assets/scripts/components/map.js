@@ -29,12 +29,33 @@ var Map = React.createClass({
   map: null,
 
   mapGridLayer: null,
-  mapSelectedSquareLayer:null,
+  mapSelectedSquareLayer: null,
+  mapOverFootprintLayer: null,
+  mapOverImageLayer: null,
 
-  // Checked when the component gets updates allows us to know if the map
+  // Checked when the component gets updated allows us to know if the map
   // view changed. With that information we know when to perform certain actions
   // like updating the grid.
   requireMapViewUpdate: true,
+  // Allow us to know if the image has changed and needs to be updated.
+  requireSelectedItemUpdate: true,
+
+  // Lifecycle method.
+  componentWillReceiveProps: function(nextProps) {
+    console.groupCollapsed('componentWillReceiveProps');
+
+    console.log('previous map view --', this.props.params.map);
+    console.log('new map view --', nextProps.params.map);
+    this.requireMapViewUpdate = this.props.params.map != nextProps.params.map;
+    console.log('require map view update', this.requireMapViewUpdate);
+
+    console.log('previous selectedItem --', _.get(this.props.selectedItem, '_id', null));
+    console.log('new selectedItem --', _.get(nextProps.selectedItem, '_id', null));
+    this.requireSelectedItemUpdate = _.get(this.props.selectedItem, '_id', null) != _.get(nextProps.selectedItem, '_id', null);
+    console.log('require selected item update', this.requireSelectedItemUpdate);
+
+    console.groupEnd('componentWillReceiveProps');
+  },
 
   // Lifecycle method.
   // Called once as soon as the component has a DOM representation.
@@ -49,6 +70,8 @@ var Map = React.createClass({
     });
 
     this.mapGridLayer = L.geoJson(null, { style: L.mapbox.simplestyle.style }).addTo(this.map);
+    // Footprint layer.
+    this.mapOverFootprintLayer = L.geoJson(null, { style: L.mapbox.simplestyle.style }).addTo(this.map);
     this.mapSelectedSquareLayer = L.geoJson(null).addTo(this.map);
 
     this.mapGridLayer.on('mouseover', this.onGridSqrOver);
@@ -67,22 +90,6 @@ var Map = React.createClass({
     this.updateSelectedSquare();
   },
 
-  componentWillReceiveProps: function(nextProps) {
-    console.groupCollapsed('componentWillReceiveProps');
-
-    console.log('previous map view --', this.props.params.map);
-    console.log('new map view --', nextProps.params.map);
-    this.requireMapViewUpdate = this.props.params.map != nextProps.params.map;
-    console.log('require map view update', this.requireMapViewUpdate);
-
-    console.log('previous selectedItem --', _.get(this.props.selectedItem, '_id', null));
-    console.log('new selectedItem --', _.get(nextProps.selectedItem, '_id', null));
-    this.requireSelectedItemUpdate = _.get(this.props.selectedItem, '_id', null) != _.get(nextProps.selectedItem, '_id', null);
-    console.log('require selected item update', this.requireSelectedItemUpdate);
-
-    console.groupEnd('componentWillReceiveProps');
-  },
-
   // Lifecycle method.
   // Called when the component gets updated.
   componentDidUpdate: function(prevProps, prevState) {
@@ -96,15 +103,13 @@ var Map = React.createClass({
     }
     this.updateGrid();
     this.updateSelectedSquare();
-return
-    // Select the square if there's one.
-    this.selectSquare(this.props.params.square);
 
     if (this.requireSelectedItemUpdate) {
-      //this.updateSelectedItemImageFootprint();
+      this.updateSelectedItemImageFootprint();
     }
   },
 
+  // Lifecycle method.
   render: function() {
     return (
       <div>
@@ -117,17 +122,11 @@ return
   onMapMoveend: function(e) {
     console.log('event:', 'moveend');
 
-    // if (this.requireSquareUnselect) {
-    //   this.requireSquareUnselect = false;
-    //   this.replaceWith('map', {map: this.mapViewToString()}, this.getQuery());
-    // }
-    // else {
-      var routes = this.getRoutes();
-      var params = _.cloneDeep(this.getParams());
-      params.map = this.mapViewToString();
-      var routeName = routes[routes.length - 1].name || 'map';
-      this.replaceWith(routeName, params, this.getQuery());
-    // }
+    var routes = this.getRoutes();
+    var params = _.cloneDeep(this.getParams());
+    params.map = this.mapViewToString();
+    var routeName = routes[routes.length - 1].name || 'map';
+    this.replaceWith(routeName, params, this.getQuery());
   },
 
   // Map event
@@ -174,28 +173,23 @@ return
   onGeocoderResult: function(bounds) {
     if (bounds) {
       // Move the map.
-      this.requireSquareUnselect = true;
       this.map.fitBounds(bounds);
+      this.transitionTo('map', {map: this.mapViewToString()}, this.getQuery());
     }
   },
 
   // Action listener
-  onResultOver: function(data) {
-    console.log('map onResultsOver');
-    var src = this.map.getSource('result-footprint');
-    var f = turf.polygon(data.geojson.coordinates);
-    if (src) {
-      src.setData(turf.featurecollection([f]));
-    }
+  onResultOver: function(feature) {
+    var f = utils.getPolygonFeature(feature.geojson.coordinates);
+    this.mapOverFootprintLayer.clearLayers().addData(f);
+    this.mapOverFootprintLayer.eachLayer(function(l) {
+      L.DomUtil.addClass(l._path, 'g-footprint');
+    });
   },
 
   // Action listener
   onResultOut: function() {
-    console.log('map onResultOut');
-    var src = this.map.getSource('result-footprint');
-    if (src) {
-      src.setData(turf.featurecollection([]));
-    }
+    this.mapOverFootprintLayer.clearLayers();
   },
 
   updateGrid: function () {
@@ -272,6 +266,37 @@ return
     console.groupEnd('updateGrid');
   },
 
+  updateSelectedSquare: function() {
+    // Clear the selected square layer.
+    this.mapSelectedSquareLayer.clearLayers();
+    // If there is a selected square add it to its own layer.
+    // In this way we can scale the grid without touching the selected square.
+    if (this.getSqrQuadKey()) {
+      var qk = this.getSqrQuadKey();
+      var coords = utils.coordsFromQuadkey(qk);
+      var f = utils.getPolygonFeature(coords);
+
+      this.mapSelectedSquareLayer.addData(f).eachLayer(function(l) {
+        L.DomUtil.addClass(l._path, 'gs-active gs');
+      });
+    }
+  },
+
+  updateSelectedItemImageFootprint: function() {
+    if (this.map.hasLayer(this.mapOverImageLayer)) {
+      this.map.removeLayer(this.mapOverImageLayer);
+    }
+    if (this.props.selectedItem) {
+      var item = this.props.selectedItem;
+      var imageBounds = [[item.bbox[1], item.bbox[0]], [item.bbox[3], item.bbox[2]]];
+      this.mapOverImageLayer = L.imageOverlay(item.properties.thumbnail, imageBounds);
+
+      this.map.addLayer(this.mapOverImageLayer);
+    }
+  },
+
+  // Helper functions
+
   getSqrQuadKey: function () {
     return this.props.params.square;
   },
@@ -311,54 +336,6 @@ return
     return {
       type: 'FeatureCollection',
       features: boxes
-    }
-  },
-
-  updateSelectedSquare: function() {
-    // Clear the selected square layer.
-    this.mapSelectedSquareLayer.clearLayers();
-    // If there is a selected square add it to its own layer.
-    // In this way we can scale the grid without touching the selected square.
-    if (this.getSqrQuadKey()) {
-      var qk = this.getSqrQuadKey();
-      var coords = utils.coordsFromQuadkey(qk);
-      var f = utils.getPolygonFeature(coords);
-
-      this.mapSelectedSquareLayer.addData(f).eachLayer(function(l) {
-        L.DomUtil.addClass(l._path, 'gs-active gs');
-      });
-    }
-  },
-
-  updateSelectedItemImageFootprint: function() {
-    try {
-      // Try to delete the source and layer if they exist.
-      this.map.removeSource('image-footprint-src');
-      this.map.removeLayer('image-footprint-layer');
-    }
-    catch (e) {}
-
-    if (this.props.selectedItem) {
-      console.log('There is a selected item');
-
-      var coords = _.cloneDeep(this.props.selectedItem.geojson.coordinates[0]);
-      coords.pop();
-
-      var sourceObj = new mapboxgl.ImageSource({
-        url: this.props.selectedItem.properties.thumbnail,
-        //url: '/assets/images/LC80150332015005LGN00.jpg',
-        coordinates: coords
-      });
-      console.log(this.props.selectedItem.properties.thumbnail);
-      this.map.addSource('image-footprint-src', sourceObj);
-      this.map.addLayer({
-        id: 'image-footprint-layer',
-        type: 'raster',
-        source: 'image-footprint-src',
-        paint: {
-          'raster-opacity': 0.5
-        },
-      });
     }
   },
 

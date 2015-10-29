@@ -140,10 +140,10 @@ var Home = React.createClass({
 
         {/*<MiniMap selectedSquare={this.props.params.square} />*/}
 
-        {/*<ResultsPane
+        <ResultsPane
                   results={this.state.results}
                   selectedItemId={this.state.selectedItemId}
-                  selectedSquare={this.state.selectedSquareQuadkey} />*/}
+                  selectedSquare={this.state.selectedSquareQuadkey} />
       </div>
     );
   }

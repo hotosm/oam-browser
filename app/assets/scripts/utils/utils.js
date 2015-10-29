@@ -102,8 +102,8 @@ module.exports.queryGeocoder = function(query, successCb, errorCb) {
       var bounds = false;
       if (data.features.length) {
         bounds = [
-          [data.features[0].bbox[0], data.features[0].bbox[1]],
-          [data.features[0].bbox[2], data.features[0].bbox[3]]
+          [data.features[0].bbox[1], data.features[0].bbox[0]],
+          [data.features[0].bbox[3], data.features[0].bbox[2]]
         ];
       }
       successCb(bounds, data);

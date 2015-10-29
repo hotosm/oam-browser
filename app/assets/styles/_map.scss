@@ -8,11 +8,10 @@
   right: 0;
 }
 
-.mapboxgl-ctrl-top-left {
+.leaflet-bottom.leaflet-left {
   top: auto;
   bottom: 50%;
   left: 1rem;
-  position: absolute;
   @include transform(translate(0, 50%));
 }
 

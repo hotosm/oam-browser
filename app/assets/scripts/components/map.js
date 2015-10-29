@@ -12,6 +12,7 @@ var tilebelt = require('tilebelt');
 var actions = require('../actions/actions');
 var config = require('../config.js');
 var utils = require('../utils/utils');
+var dsZoom = require('../utils/ds_zoom');
 var mapStore = require('../stores/map_store');
 
 L.mapbox.accessToken = config.map.mapbox.accessToken;
@@ -68,6 +69,15 @@ var Map = React.createClass({
       maxZoom : config.map.maxZoom,
       maxBounds: L.latLngBounds([-90, -180], [90, 180])
     });
+
+    // Custom zoom control.
+    var zoom = new dsZoom({
+      position: 'bottomleft',
+      containerClasses: 'zoom-controls',
+      zoomInClasses: 'bttn-zoomin',
+      zoomOutClasses: 'bttn-zoomout',
+    });
+    this.map.addControl(zoom);
 
     this.mapGridLayer = L.geoJson(null, { style: L.mapbox.simplestyle.style }).addTo(this.map);
     // Footprint layer.

@@ -238,29 +238,15 @@ input[type=submit] {
   @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .info;
 }
 
-.mapboxgl-ctrl-group.mapboxgl-ctrl {
-  button {
-    float: left;
-    clear: both;
-  }
-  .mapboxgl-ctrl-zoom-in {
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-  .mapboxgl-ctrl-zoom-out {
-    border-top-right-radius: 0;
-    border-top-left-radius: 0;
-  }
-  .mapboxgl-ctrl-compass {
-    display: none;
-  }
+.zoom-controls {
+  @extend .bttn-group-vertical;
 }
 
-.mapboxgl-ctrl-zoom-in {
+.bttn-zoomin {
   @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .plus;
 }
 
-.mapboxgl-ctrl-zoom-out {
+.bttn-zoomout {
   @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .minus;
 }
 

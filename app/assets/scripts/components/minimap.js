@@ -1,3 +1,4 @@
+/* global L */
 'use strict';
 
 require('mapbox.js');
@@ -24,7 +25,7 @@ var MiniMap = React.createClass({
 
   // Lifecycle method.
   shouldComponentUpdate: function (nextProps, nextState) {
-    return nextProps.selectedSquare != this.props.selectedSquare;
+    return nextProps.selectedSquare !== this.props.selectedSquare;
   },
 
   // Lifecycle method.

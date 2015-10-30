@@ -24,7 +24,8 @@ var Map = React.createClass({
     mapView: React.PropTypes.string,
     selectedSquareQuadkey: React.PropTypes.string,
     selectedItemId: React.PropTypes.string,
-    selectedItem: React.PropTypes.object
+    selectedItem: React.PropTypes.object,
+    filterParams: React.PropTypes.object
   },
 
   mixins: [
@@ -176,7 +177,7 @@ var Map = React.createClass({
       console.log('onGridSqrClick', 'There was a square selected. UNSELECTING');
       // There is a square selected. Unselect.
       this.transitionTo('map', {map: this.props.mapView}, this.getQuery());
-    } else {
+    } else if (e.layer.feature.properties.count) {
       console.log('onGridSqrClick', 'No square selected. SELECTING');
       var quadKey = e.layer.feature.properties._quadKey;
       var z = Math.round(this.map.getZoom());
@@ -213,6 +214,7 @@ var Map = React.createClass({
   updateGrid: function () {
     var _this = this;
     console.groupCollapsed('updateGrid');
+    console.log('filterparams', this.props.filterParams);
     this.mapGridLayer.clearLayers();
 
     // Recompute grid based on current map view (bounds + zoom).
@@ -230,8 +232,52 @@ var Map = React.createClass({
       var foots = mapStore.getFootprintsInSquare(gridSquare);
       // Filter with whatever filters are set.
       foots = foots.filter(function (foot) {
-        // In the real browser we can filter these footprints based on whatever
-        // filter the user has currently selected.
+        var filter = _this.props.filterParams;
+        var prop = foot.feature.properties;
+
+        // Resolution.
+        if (filter.dataType !== 'all' && !prop.tms) {
+          return false;
+        }
+
+        // Resolution.
+        switch (filter.resolution) {
+          // >=5
+          case 'low':
+            if (prop.gsd < 5) {
+              return false;
+            }
+            break;
+          // <5 && >=1
+          case 'medium':
+            if (prop.gsd >= 5 || prop.gsd < 1) {
+              return false;
+            }
+            break;
+          // < 1
+          case 'high':
+            if (prop.gsd >= 1) {
+              return false;
+            }
+            break;
+        }
+
+        // Date.
+        if (filter.date !== 'all') {
+          var d = new Date();
+          if (filter.date === 'week') {
+            d.setDate(d.getDate() - 7);
+          } else if (filter.date === 'month') {
+            d.setMonth(d.getMonth() - 1);
+          } else if (filter.date === 'year') {
+            d.setFullYear(d.getFullYear() - 1);
+          }
+
+          if ((new Date(prop.acquisition_end)).getTime() < d.getTime()) {
+            return false;
+          }
+        }
+
         return true;
       })
       // Filter to ensure that the footprint is really inside the square

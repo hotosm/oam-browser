@@ -5,8 +5,10 @@ var Router = require('react-router');
 var Dropdown = require('./shared/dropdown');
 var actions = require('../actions/actions');
 var searchQueryStore = require('../stores/search_query_store');
+var cookie = require('../utils/cookie');
+var config = require('../config.js');
 
-var Filters = module.exports = React.createClass({
+var Filters = React.createClass({
   mixins: [
     Reflux.listenTo(searchQueryStore, 'onSearchQuery'),
     Router.Navigation,
@@ -47,7 +49,18 @@ var Filters = module.exports = React.createClass({
     } else {
       query[prop] = value;
     }
-    this.transitionTo('map', {map: this.getParams().map}, query);
+
+    var mapView = this.getParams().map;
+    if (!mapView) {
+      var cookieView = cookie.read('oam-browser:map-view');
+      if (cookieView !== 'undefined') {
+        mapView = cookie.read('oam-browser:map-view');
+      } else {
+        mapView = config.map.initialView.concat(config.map.initialZoom).join(',');
+      }
+    }
+
+    this.transitionTo('map', {map: mapView}, query);
   },
 
   render: function () {
@@ -93,3 +106,5 @@ var Filters = module.exports = React.createClass({
     );
   }
 });
+
+module.exports = Filters;

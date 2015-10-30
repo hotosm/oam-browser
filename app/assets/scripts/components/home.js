@@ -32,7 +32,8 @@ var Home = React.createClass({
         view: null
       },
       selectedSquareQuadkey: null,
-      selectedItemId: null
+      selectedItemId: null,
+      filterParams: searchQueryStore.getParameters()
     };
   },
 
@@ -46,10 +47,7 @@ var Home = React.createClass({
   // Action listener
   onSearchQueryChanged: function (params) {
     console.log('home onSearchQueryChanged');
-    var mapState = _.cloneDeep(this.state.map);
-    mapState.styleProperty = params.date + '_' + params.resolution + '_' + params.dataType + '_count';
-    console.log('changing map style', mapState.styleProperty);
-    this.setState({map: mapState});
+    this.setState({filterParams: params});
   },
 
   componentWillMount: function () {
@@ -116,7 +114,8 @@ var Home = React.createClass({
           mapView={this.state.map.view}
           selectedSquareQuadkey={this.state.selectedSquareQuadkey}
           selectedItemId={this.state.selectedItemId}
-          selectedItem={selectedItem} />
+          selectedItem={selectedItem}
+          filterParams={this.state.filterParams} />
 
         <MiniMap selectedSquare={this.props.params.square} mapView={this.state.map.view}/>
 

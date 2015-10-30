@@ -56,12 +56,7 @@ var Home = React.createClass({
     var state = _.cloneDeep(this.state);
     // The map parameters form the url take precedence over everything else
     // if they're not present try the cookie.
-    state.map.view = this.props.params.map ? this.props.params.map : cookie.read('oam-browser:map-view');
-    // No router map and no cookie?
-    // Use initial from config.
-    if (state.map.view === null) {
-      state.map.view = config.map.initialView.concat(config.map.initialZoom).join(',');
-    }
+    state.map.view = this.getMapViewOrDefault(this.props.params.map);
 
     state.selectedSquareQuadkey = this.props.params.square;
     state.selectedItemId = this.props.params.item_id;
@@ -71,8 +66,9 @@ var Home = React.createClass({
   componentWillReceiveProps: function (nextProps) {
     var state = _.cloneDeep(this.state);
     // Map view.
-    if (this.props.params.map !== nextProps.params.map) {
-      state.map.view = nextProps.params.map;
+    var nextMapView = this.getMapViewOrDefault(nextProps.params.map);
+    if (this.getMapViewOrDefault(this.props.params.map) !== nextMapView) {
+      state.map.view = nextMapView;
       // Map view changed. Store cookie.
       cookie.create('oam-browser:map-view', state.map.view);
     }
@@ -130,6 +126,26 @@ var Home = React.createClass({
           selectedSquare={this.state.selectedSquareQuadkey} />
       </div>
     );
+  },
+
+  /**
+   * Returns the mapView if valid or the default one.
+   * @param  mapView
+   *
+   * @return mapView
+   */
+  getMapViewOrDefault: function (mapView) {
+    if (!mapView) {
+      var cookieView = cookie.read('oam-browser:map-view');
+      if (cookieView !== 'undefined') {
+        mapView = cookie.read('oam-browser:map-view');
+      } else {
+        mapView = config.map.initialView.concat(config.map.initialZoom).join(',');
+        // Let's correct the cookie value.
+        cookie.create('oam-browser:map-view', mapView);
+      }
+    }
+    return mapView;
   }
 });
 

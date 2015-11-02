@@ -28,6 +28,7 @@ var Home = React.createClass({
   getInitialState: function () {
     return {
       results: [],
+      loading: true,
       map: {
         view: null
       },
@@ -39,9 +40,10 @@ var Home = React.createClass({
 
   onMapStoreData: function () {
     console.log('onMapStoreData', mapStore.storage);
-    this.setState({
-      results: mapStore.getResults()
-    });
+    var state = _.cloneDeep(this.state);
+    state.results = mapStore.getResults();
+    state.loading = mapStore.footprintsWereFecthed();
+    this.setState(state);
   },
 
   // Action listener
@@ -110,6 +112,8 @@ var Home = React.createClass({
 
     return (
       <div>
+        {this.state.loading ? <p className="loading revealed">Loading</p> : null}
+
         <MapBoxMap
           mapView={this.state.map.view}
           selectedSquareQuadkey={this.state.selectedSquareQuadkey}

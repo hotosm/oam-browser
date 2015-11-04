@@ -94,7 +94,7 @@ module.exports.tileBboxFromQuadkey = function (quadKey) {
 
 module.exports.queryGeocoder = function (query, successCb, errorCb) {
   var uri = 'https://api.tiles.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(query) + '.json' +
-  '?access_token=' + config.map.mapbox.glAccessToken;
+  '?access_token=' + config.map.mapbox.accessToken;
   var req = $.get(uri);
 
   if (successCb) {

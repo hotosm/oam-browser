@@ -225,7 +225,6 @@ var Map = React.createClass({
     // footprints that intersect with the square.
     console.time('aggregate on grid');
     gridData.features.forEach(function (gridSquare) {
-      gridSquare = utils.wrap(gridSquare);
       var featureCenter = centroid(gridSquare);
       // The footprints with bboxes that intersect with this grid square.
       // Get all the footprints inside the current square.

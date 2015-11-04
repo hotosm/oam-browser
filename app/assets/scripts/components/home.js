@@ -140,7 +140,7 @@ var Home = React.createClass({
   getMapViewOrDefault: function (mapView) {
     if (!mapView) {
       var cookieView = cookie.read('oam-browser:map-view');
-      if (cookieView !== 'undefined') {
+      if (cookieView !== 'undefined' && cookieView !== null) {
         mapView = cookie.read('oam-browser:map-view');
       } else {
         mapView = config.map.initialView.concat(config.map.initialZoom).join(',');

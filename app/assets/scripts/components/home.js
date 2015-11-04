@@ -38,11 +38,11 @@ var Home = React.createClass({
     };
   },
 
-  onMapStoreData: function () {
+  onMapStoreData: function (what) {
     console.log('onMapStoreData', mapStore.storage);
     var state = _.cloneDeep(this.state);
     state.results = mapStore.getResults();
-    state.loading = mapStore.footprintsWereFecthed();
+    state.loading = what === 'squareData' ? false : mapStore.footprintsWereFecthed();
     this.setState(state);
   },
 
@@ -87,6 +87,7 @@ var Home = React.createClass({
     if (this.props.params.square !== nextProps.params.square && nextProps.params.square) {
       console.log('Home component quadkey changed', nextProps.params.square);
       var bbox = utils.tileBboxFromQuadkey(nextProps.params.square);
+      state.loading = true;
       actions.selectedBbox(bbox);
     }
 

@@ -55,7 +55,7 @@ module.exports = Reflux.createStore({
         console.timeEnd('index footprints');
         // Done.
         _this.storage.footprintsTree = tree;
-        _this.trigger();
+        _this.trigger('footprints');
       });
   },
 
@@ -140,7 +140,7 @@ module.exports = Reflux.createStore({
     var strParams = qs.stringify(params);
     if (strParams === this.storage.prevSearchParams) {
       console.log('search params did not change. Api call aborted.');
-      _this.trigger();
+      _this.trigger('squareData');
       return;
     } else {
       console.log('prev params', this.storage.prevSearchParams);
@@ -152,7 +152,7 @@ module.exports = Reflux.createStore({
       .success(function (data) {
         console.log('api catalog results:', data);
         _this.storage.results = data.results;
-        _this.trigger();
+        _this.trigger('squareData');
       });
   },
 

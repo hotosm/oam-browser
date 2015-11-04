@@ -77,6 +77,7 @@ var ResultsItem = React.createClass({
 
   onOpenJosm: function (d) {
     var source = 'OpenAerialMap - ' + d.provider + ' - ' + d.uuid;
+    var tmsURL = d.custom_tms || d.properties.tms;
     // Reference:
     // http://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl#load_and_zoom
     $.get('http://127.0.0.1:8111/load_and_zoom?' + qs.stringify({
@@ -93,7 +94,7 @@ var ResultsItem = React.createClass({
       $.get('http://127.0.0.1:8111/imagery?' + qs.stringify({
         type: 'tms',
         title: source
-      }) + '&url=' + d.properties.tms)
+      }) + '&url=' + tmsURL)
       .success(function () {
         // all good!
         actions.openModal('message', {
@@ -114,9 +115,10 @@ var ResultsItem = React.createClass({
   render: function () {
     var d = this.props.data;
     var pagination = this.props.pagination;
+    var tmsURL = d.custom_tms || d.properties.tms;
 
     var tmsOptions = null;
-    if (d.properties.tms) {
+    if (tmsURL) {
       // Generate the iD URL:
       // grab centroid of the footprint
       var center = centroid(d.geojson).geometry.coordinates;
@@ -126,12 +128,12 @@ var ResultsItem = React.createClass({
       '#map=' + [zoom, center[1], center[0]].join('/') +
       '?' + qs.stringify({
         editor: 'id',
-        background: 'custom:' + d.properties.tms
+        background: 'custom:' + tmsURL
       });
 
       tmsOptions = (
         <div className='input-group'>
-          <input className='form-control input-m' type='text' value={d.properties.tms} readOnly data-hook='copy:data' />
+          <input className='form-control input-m' type='text' value={tmsURL} readOnly data-hook='copy:data' />
           <Dropdown element='span' className='input-group-bttn dropdown center' triggerTitle='Show options' triggerClassName='bttn-uoptions' triggerText='Options'>
             <ul className='drop-menu tms-options-menu' role='menu'>
               <li className='has-icon-bef id-editor'><a href={idUrl} target='_blank' title='Open with iD editor'>Open with iD editor</a></li>
@@ -150,7 +152,7 @@ var ResultsItem = React.createClass({
     };
 
     return (
-      <article className={(d.properties.tms ? 'has-tms ' : '') + 'results-single'}>
+      <article className={(tmsURL ? 'has-tms ' : '') + 'results-single'}>
         <header className='pane-header'>
           <h1 className='pane-title' title={d.title.replace(/\.[a-z]+$/, '')}>{d.title.replace(/\.[a-z]+$/, '')}</h1>
           <p className='pane-subtitle'>{pagination.current} of {pagination.total} results</p>
@@ -171,7 +173,7 @@ var ResultsItem = React.createClass({
               <dt><span>Resolution</span></dt>
               <dd>{utils.gsdToUnit(d.gsd)}</dd>
               <dt><span>Type</span></dt>
-              <dd>{d.properties.tms ? 'Image + Map Layer' : 'Image'}</dd>
+              <dd>{tmsURL ? 'Image + Map Layer' : 'Image'}</dd>
               <dt><span>Image Size</span></dt>
               <dd className='cap'>{prettyBytes(d.file_size)}</dd>
               <dt><span>Platform</span></dt>

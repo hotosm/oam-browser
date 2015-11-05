@@ -81,7 +81,7 @@ var ResultsList = React.createClass({
     return (
       <section className='results-hub'>
         <header className='pane-header'>
-          <h1 className='pane-title' title={'Square quadKey ' + square}>{square}</h1>
+          <h1 className='pane-title' title={'Available imagery for square with quadKey ' + square}>Available Imagery</h1>
           <p className='pane-subtitle'>{numRes} results</p>
         </header>
         <div className='pane-body'>

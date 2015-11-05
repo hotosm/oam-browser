@@ -372,7 +372,7 @@ var Map = React.createClass({
     // We'll use tilebelt to make pseudo-tiles at a zoom three levels higher
     // than the given zoom.  This means that for each actual map tile, there will
     // be 4^3 = 64 grid squares.
-    zoom += 3;
+    zoom += 2;
     var ll = tilebelt.pointToTile(bounds[0], bounds[1], zoom);
     var ur = tilebelt.pointToTile(bounds[2], bounds[3], zoom);
 

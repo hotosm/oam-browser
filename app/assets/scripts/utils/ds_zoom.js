@@ -12,14 +12,14 @@ var DSZoom = L.Control.extend({
     zoomInClasses: '',
     zoomOutClasses: '',
     zoomInText: '<span>Zoom in</span>',
-    zoomOutText: '<span>Zoom out</span>',
+    zoomOutText: '<span>Zoom out</span>'
   },
 
   onAdd: function (map) {
     var options = this.options;
     var container = L.DomUtil.create('div', options.containerClasses);
 
-    this._zoomInButton = this._createButton(options.zoomInText, options.zoomInClasses,  container, this._zoomIn);
+    this._zoomInButton = this._createButton(options.zoomInText, options.zoomInClasses, container, this._zoomIn);
     this._zoomOutButton = this._createButton(options.zoomOutText, options.zoomOutClasses, container, this._zoomOut);
 
     this._updateDisabled();
@@ -85,6 +85,5 @@ var DSZoom = L.Control.extend({
     }
   }
 });
-
 
 module.exports = DSZoom;

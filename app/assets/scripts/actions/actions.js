@@ -2,14 +2,11 @@
 var Reflux = require('reflux');
 
 module.exports = Reflux.createActions({
-  // Map actions.
-  'mapMove': {},
-  'mapSquareSelected': {},
-  'mapSquareUnselected': {},
+  'selectedBbox': {},
 
   'latestImageryLoaded': {},
 
-  'resultsChange': {},
+  'footprintsLoaded': {},
 
   // Filter actios
   'setDateFilter': {
@@ -29,24 +26,11 @@ module.exports = Reflux.createActions({
   },
 
   // Results pane related actions.
-  'resultItemSelect': {},
-  'resultItemView': {},
-  'resultListView': {},
-  'prevResult' : {},
-  'nextResult' : {},
   'resultOver': {},
   'resultOut': {},
-  
+
   // openModal(which)
   'openModal': {},
 
-  // Go to the latest imagery.
-  // Its coordinates are stored in the mapStore and can be got with
-  // getLatestImagery().
-  'goToLatest': {},
-
-  'geocoderResult': {},
-
-
-  'miniMapClick': {},
+  'geocoderResult': {}
 });

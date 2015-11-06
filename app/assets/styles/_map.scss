@@ -30,13 +30,14 @@
 .gs {
   fill-opacity: 0;
   fill: $primary-color;
-  stroke: rgba($base-color, 0);
-  stroke-width: 4;
+  stroke: rgba($base-color, 0.08);
+  stroke-width: 1;
   @include transition(all 0.2s ease 0s);
 }
 .gs-active {
   fill-opacity: 0.64;
   fill: $secondary-color;
+  pointer-events: none;
 }
 
 .gs-density-high {
@@ -61,8 +62,8 @@
   stroke-width: 1;
 }
 .gs-highlight {
-  stroke: rgba($base-color, 0.64);
-  stroke-width: 1;
+  stroke: rgba($base-color, 0.64) !important;
+  stroke-width: 1 !important;
 }
 
 .gs-tooltip-count {

@@ -1,42 +1,37 @@
+/* global L */
 'use strict';
+
 require('mapbox.js');
+
 var React = require('react/addons');
 var Reflux = require('reflux');
 var Router = require('react-router');
 var _ = require('lodash');
+var tilebelt = require('tilebelt');
+var centroid = require('turf-centroid');
+var inside = require('turf-inside');
 var overlaps = require('turf-overlaps');
-// Not working. Using cdn. (turf.intersect was throwing a weird error)
-//var turf = require('turf');
 var actions = require('../actions/actions');
-var mapStore = require('../stores/map_store');
-var resultsStore = require('../stores/results_store');
-var searchQueryStore = require('../stores/search_query_store');
-var utils = require('../utils/utils');
-var dsZoom = require('../utils/ds_zoom');
 var config = require('../config.js');
+var utils = require('../utils/utils');
+var DSZoom = require('../utils/ds_zoom');
+var mapStore = require('../stores/map_store');
 
 L.mapbox.accessToken = config.map.mapbox.accessToken;
 
 var Map = React.createClass({
-  // Connect to the store "mapStore". Whenever the store calls "this.trigger()"
-  // the "onMapData" function will be notified.
-  // The listener could be setup manually but in this way Reflux takes care of
-  // removing the listener when the component is unmounted. 
+  propTypes: {
+    mapView: React.PropTypes.string,
+    selectedSquareQuadkey: React.PropTypes.string,
+    selectedItemId: React.PropTypes.string,
+    selectedItem: React.PropTypes.object,
+    filterParams: React.PropTypes.object
+  },
+
   mixins: [
-    Reflux.listenTo(mapStore, "onMapData"),
-    Reflux.listenTo(searchQueryStore, "onSearchQueryChanged"),
-    Reflux.listenTo(actions.mapSquareSelected, "onMapSquareSelected"),
-    Reflux.listenTo(actions.mapSquareUnselected, "onMapSquareUnselected"),
-    Reflux.listenTo(actions.resultOver, "onResultOver"),
-    Reflux.listenTo(actions.resultOut, "onResultOut"),
-    Reflux.listenTo(actions.resultItemSelect, "onResultItemSelect"),
-    Reflux.listenTo(actions.resultItemView, "onResultItemView"),
-    Reflux.listenTo(actions.resultListView, "onResultListView"),
-
-    Reflux.listenTo(actions.miniMapClick, "onMiniMapClick"),
-
-    Reflux.listenTo(actions.goToLatest, "onGoToLatest"),
-    Reflux.listenTo(actions.geocoderResult, "onGeocoderResult"),
+    Reflux.listenTo(actions.resultOver, 'onResultOver'),
+    Reflux.listenTo(actions.resultOut, 'onResultOut'),
+    Reflux.listenTo(actions.geocoderResult, 'onGeocoderResult'),
 
     Router.Navigation,
     Router.State
@@ -44,582 +39,393 @@ var Map = React.createClass({
 
   map: null,
 
-  // Layers.
-  polysLayer: null, // debug
-  gridLayer: null,
-  fauxLineGridLayer: null,
-  // Layer to store the footprint when hovering a result. 
-  overFootprintLayer: null,
-  // Layer with the image of the selected result.
-  overImageLayer: null,
+  mapGridLayer: null,
+  mapSelectedSquareLayer: null,
+  mapOverFootprintLayer: null,
+  mapOverImageLayer: null,
 
-  // When the user clicks browse latest imagery we move the map to the correct
-  // locations. Then, when the query is finished and the map rendered we
-  // need to select the correct square.
-  // Here we store the bbox of the latest imagery and use it to select the
-  // square that contains it. Check updateGrid()
-  selectIntersecting: null,
+  // Checked when the component gets updated allows us to know if the map
+  // view changed. With that information we know when to perform certain actions
+  // like updating the grid.
+  requireMapViewUpdate: true,
+  // Allow us to know if the image has changed and needs to be updated.
+  requireSelectedItemUpdate: true,
 
-  // If there's a selected square in the path, we store it and then select the
-  // correct one when the grid is updating.
-  routerSelectedSquare: null,
+  // Lifecycle method.
+  componentWillReceiveProps: function (nextProps) {
+    console.groupCollapsed('componentWillReceiveProps');
 
-  getInitialState: function() {
-    return {
-      loading: true
-    };
+    console.log('previous map view --', this.props.mapView);
+    console.log('new map view --', nextProps.mapView);
+    this.requireMapViewUpdate = this.props.mapView !== nextProps.mapView;
+    console.log('require map view update', this.requireMapViewUpdate);
+
+    console.log('previous selectedItem --', _.get(this.props.selectedItem, '_id', null));
+    console.log('new selectedItem --', _.get(nextProps.selectedItem, '_id', null));
+    this.requireSelectedItemUpdate = _.get(this.props.selectedItem, '_id', null) !== _.get(nextProps.selectedItem, '_id', null);
+    console.log('require selected item update', this.requireSelectedItemUpdate);
+
+    console.groupEnd('componentWillReceiveProps');
   },
 
-  // Store listener.
-  onMapData: function(data) {
-    this.setState({
-      mapData: data,
-      loading: false
+  // Lifecycle method.
+  // Called once as soon as the component has a DOM representation.
+  componentDidMount: function () {
+    console.log('componentDidMount MapBoxMap');
+
+    this.map = L.mapbox.map(this.getDOMNode().querySelector('#map'), config.map.baseLayer, {
+      zoomControl: false,
+      minZoom: config.map.minZoom,
+      maxZoom: config.map.maxZoom,
+      maxBounds: L.latLngBounds([-90, -180], [90, 180])
     });
 
-    var sqrFeature = mapStore.getSelectedSquare();
-    if (sqrFeature !== null) {
-      var intersected = mapStore.getResultsIntersect(sqrFeature);
-      if (intersected.length > 0) {
-        actions.resultsChange(intersected);
-      } else {
-        actions.mapSquareUnselected();
-      }
-    }
-  },
+    // Custom zoom control.
+    var zoomCtrl = new DSZoom({
+      position: 'bottomleft',
+      containerClasses: 'zoom-controls',
+      zoomInClasses: 'bttn-zoomin',
+      zoomOutClasses: 'bttn-zoomout'
+    });
+    this.map.addControl(zoomCtrl);
 
-  onSearchQueryChanged: function() {
-    this.setState({ loading: true });
-  },
+    this.mapGridLayer = L.geoJson(null, { style: L.mapbox.simplestyle.style }).addTo(this.map);
+    // Footprint layer.
+    this.mapOverFootprintLayer = L.geoJson(null, { style: L.mapbox.simplestyle.style }).addTo(this.map);
+    this.mapSelectedSquareLayer = L.geoJson(null).addTo(this.map);
 
-  // Actions listener.
-  onMiniMapClick: function(latlng) {
-    // Remove footprint highlight.
-    this.map.setView(latlng);
-  },
+    this.mapGridLayer.on('mouseover', this.onGridSqrOver);
+    this.mapGridLayer.on('mouseout', this.onGridSqrOut);
+    this.mapGridLayer.on('click', this.onGridSqrClick);
 
-  // Actions listener.
-  onResultItemSelect: function() {
-    // Remove footprint highlight.
-    this.overFootprintLayer.clearLayers();
-  },
+    // Map position from path.
+    var mapString = this.stringToMapView(this.props.mapView);
+    var view = [mapString.lat, mapString.lng];
+    var zoom = mapString.zoom;
+    this.map.setView(view, zoom);
 
-  // Actions listener.
-  onResultItemView: function(item) {
-    if (this.map.hasLayer(this.overImageLayer)) {
-      this.map.removeLayer(this.overImageLayer);
-    }
+    this.map.on('moveend', this.onMapMoveend);
 
-    var imageBounds = [[item.bbox[1], item.bbox[0]], [item.bbox[3], item.bbox[2]]];
-    this.overImageLayer = L.imageOverlay(item.properties.thumbnail, imageBounds);
-
-    this.map.addLayer(this.overImageLayer);
-  },
-
-  // Actions listener.
-  onResultListView: function() {
-    if (this.map.hasLayer(this.overImageLayer)) {
-      this.map.removeLayer(this.overImageLayer);
-    }
-  },
-
-  // Actions listener.
-  onMapSquareSelected: function(sqrFeature) {
-    var intersected = mapStore.getResultsIntersect(sqrFeature);
-    actions.resultsChange(intersected);
-
-    // On click, center the square.
-    // Coordinates must be inverted for panTo.
-    this.map.panTo([sqrFeature.properties.centroid[1], sqrFeature.properties.centroid[0]]);
-
-    // Set the correct path.
-    var params = this.getParams();
-    var route = params.item_id ? 'item' : 'results';
-
-    var selectedSquare = mapStore.getSelectedSquareCenter();
-
-    params.map = this.mapViewToString();
-    params.square = selectedSquare[1] + ',' + selectedSquare[0];
-
-    this.replaceWith(route, params, this.getQuery());
-
-    //this.updateGrid();
-  },
-
-  // Actions listener.
-  onMapSquareUnselected: function() {
-    if (this.map.hasLayer(this.overImageLayer)) {
-      this.map.removeLayer(this.overImageLayer);
-    }
-
-    // Set the correct path.
-    var mapLocation = this.mapViewToString();
-    this.replaceWith('map', { map: mapLocation }, this.getQuery());
-
-    actions.resultsChange([]);
     this.updateGrid();
+    this.updateSelectedSquare();
+  },
+
+  // Lifecycle method.
+  // Called when the component gets updated.
+  componentDidUpdate: function (prevProps, prevState) {
+    console.log('componentDidUpdate');
+
+    // Is there a need to update the map view.
+    if (this.requireMapViewUpdate) {
+      var routerMap = this.stringToMapView(this.props.mapView);
+      this.map.setView([routerMap.lat, routerMap.lng], routerMap.zoom);
+      console.log('componentDidUpdate', 'map view updated');
+    }
+    this.updateGrid();
+    this.updateSelectedSquare();
+
+    if (this.requireSelectedItemUpdate) {
+      this.updateSelectedItemImageFootprint();
+    }
+  },
+
+  // Lifecycle method.
+  render: function () {
+    return (
+      <div>
+        <div id='map'></div>
+      </div>
+    );
+  },
+
+  // Map event
+  onMapMoveend: function (e) {
+    console.log('event:', 'moveend');
+
+    var routes = this.getRoutes();
+    var params = _.cloneDeep(this.getParams());
+    params.map = this.mapViewToString();
+    var routeName = routes[routes.length - 1].name || 'map';
+    this.replaceWith(routeName, params, this.getQuery());
+  },
+
+  // Map event
+  onGridSqrOver: function (e) {
+    // On mouseover add gs-highlight.
+    if (!this.getSqrQuadKey() && e.layer.feature.properties.count > 0) {
+      L.DomUtil.addClass(e.layer._path, 'gs-highlight');
+      // Open popup on square center.
+      var sqrCenter = centroid(e.layer.feature).geometry.coordinates;
+      e.layer.openPopup([sqrCenter[1], sqrCenter[0]]);
+    }
+  },
+
+  // Map event
+  onGridSqrOut: function (e) {
+    // On mouseover remove gs-highlight.
+    L.DomUtil.removeClass(e.layer._path, 'gs-highlight');
+    e.layer.closePopup();
+  },
+
+  // Map event
+  onGridSqrClick: function (e) {
+    console.log('onGridSqrClick', e);
+    // Ensure that the popup doesn't open.
+    e.layer.closePopup();
+
+    if (this.props.selectedSquareQuadkey) {
+      console.log('onGridSqrClick', 'There was a square selected. UNSELECTING');
+      // There is a square selected. Unselect.
+      this.transitionTo('map', {map: this.props.mapView}, this.getQuery());
+    } else if (e.layer.feature.properties.count) {
+      console.log('onGridSqrClick', 'No square selected. SELECTING');
+      var quadKey = e.layer.feature.properties._quadKey;
+      var z = Math.round(this.map.getZoom());
+      var squareCenter = centroid(e.layer.feature).geometry.coordinates;
+      var mapView = utils.getMapViewString(squareCenter[0], squareCenter[1], z);
+      console.log('transition /:map/:square', {map: mapView, square: quadKey});
+      this.transitionTo('results', {map: mapView, square: quadKey}, this.getQuery());
+    }
   },
 
   // Actions listener.
-  onResultOver: function(feature) {
+  onGeocoderResult: function (bounds) {
+    if (bounds) {
+      // Move the map.
+      this.map.fitBounds(bounds);
+      this.transitionTo('map', {map: this.mapViewToString()}, this.getQuery());
+    }
+  },
+
+  // Action listener
+  onResultOver: function (feature) {
     var f = utils.getPolygonFeature(feature.geojson.coordinates);
-    this.overFootprintLayer.clearLayers().addData(f);
-    this.overFootprintLayer.eachLayer(function(l) {
+    this.mapOverFootprintLayer.clearLayers().addData(f);
+    this.mapOverFootprintLayer.eachLayer(function (l) {
       L.DomUtil.addClass(l._path, 'g-footprint');
     });
   },
 
-  // Actions listener.
-  onResultOut: function(feature) {
-    this.overFootprintLayer.clearLayers();
+  // Action listener
+  onResultOut: function () {
+    this.mapOverFootprintLayer.clearLayers();
   },
 
-  // Actions listener.
-  onGoToLatest: function() {
-    var latest = mapStore.getLatestImagery();
-    if (latest) {
-      // Get feature center and since we're at it store it in the properties.
-      var latestCenter = turf.centroid(latest);
-      latest.properties = latest.properties || {};
-      latest.properties.centroid = latestCenter;
-      this.selectIntersecting = latest;
-      // Move the map
-      this.map.setView([latestCenter.geometry.coordinates[1], latestCenter.geometry.coordinates[0]], config.map.initialZoom);
-    }
-  },
-
-  // Actions listener.
-  onGeocoderResult: function(bounds) {
-    if (bounds) {
-      // Move the map
-      this.map.fitBounds(bounds);
-    }
-  },
-
-  // Redraws the line grid.
-  // This is a pixel grid with config.map.grid.pxSize squares
-  // at zoom level config.map.grid.atZoom.
-  updateFauxGrid: function() {
-    var bounds = this.map.getBounds();
-    var extent = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
-
-    var grid = this.linePixelGrid(extent, config.map.grid.pxSize, config.map.grid.atZoom);
-
-    this.fauxLineGridLayer.clearLayers().addData(grid);
-    this.fauxLineGridLayer.eachLayer(function(l) {
-      L.DomUtil.addClass(l._path, 'gl');
-    });
-    return this;
-  },
-
-  // Draws the image footprint.
-  // Used for development.
-  updatePolys: function() {
-    if (this.map.hasLayer(this.polysLayer)) {
-      this.map.removeLayer(this.polysLayer);
-    }
-
-    var polys = {
-      'type': 'FeatureCollection',
-      'features': []
-    };
-
-    this.state.mapData.forEach(function(o) {
-      var f = utils.getPolygonFeature(o.geojson.coordinates);
-      polys.features.push(f);
-    });
-
-    this.polysLayer = L.geoJson(polys)
-    this.map.addLayer(this.polysLayer);
-  },
-
-  // Updates the colored grid.
-  // This is a pixel grid with config.map.grid.pxSize squares
-  // at zoom level config.map.grid.atZoom.
-  // It is separated from the line grid to allow independent styling of 
-  // the stroke/content.
-  updateGrid: function() {
+  updateGrid: function () {
     var _this = this;
-    this.gridLayer.clearLayers();
-    // Do not draw below zoom level config.map.interactiveGridZoomLimit
-    if (this.map.getZoom() < config.map.interactiveGridZoomLimit) { return; }
+    console.groupCollapsed('updateGrid');
+    console.log('filterparams', this.props.filterParams);
+    this.mapGridLayer.clearLayers();
 
-    var bounds = this.map.getBounds();
-    var extent = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
+    // Recompute grid based on current map view (bounds + zoom).
+    var bounds = this.map.getBounds().toBBoxString().split(',').map(Number);
+    var gridData = this.computeGrid(this.map.getZoom(), bounds);
 
-    // Square grid to color.
-    var squareGrid = this.squarePixelGrid(extent, config.map.grid.pxSize, config.map.grid.atZoom);
+    // Stick a 'count' property onto each grid square, based on the number of
+    // footprints that intersect with the square.
+    console.time('aggregate on grid');
+    gridData.features.forEach(function (gridSquare) {
+      var featureCenter = centroid(gridSquare);
+      // The footprints with bboxes that intersect with this grid square.
+      // Get all the footprints inside the current square.
+      var foots = mapStore.getFootprintsInSquare(gridSquare);
+      // Filter with whatever filters are set.
+      foots = foots.filter(function (foot) {
+        var filter = _this.props.filterParams;
+        var prop = foot.feature.properties;
 
-    // How this approach works:
-    // Count how many footprints intersect each square.
-    // Color the grid based on that.
-    //console.time('intersect');
-    squareGrid.features.forEach(function (feature) {
-      var intersectCount = 0;
+        // Resolution.
+        if (filter.dataType !== 'all' && !prop.tms) {
+          return false;
+        }
 
-      mapStore.forEachResultIntersecting(feature, function(result) {
-        intersectCount++;
+        // Resolution.
+        switch (filter.resolution) {
+          // >=5
+          case 'low':
+            if (prop.gsd < 5) {
+              return false;
+            }
+            break;
+          // <5 && >=1
+          case 'medium':
+            if (prop.gsd >= 5 || prop.gsd < 1) {
+              return false;
+            }
+            break;
+          // < 1
+          case 'high':
+            if (prop.gsd >= 1) {
+              return false;
+            }
+            break;
+        }
+
+        // Date.
+        if (filter.date !== 'all') {
+          var d = new Date();
+          if (filter.date === 'week') {
+            d.setDate(d.getDate() - 7);
+          } else if (filter.date === 'month') {
+            d.setMonth(d.getMonth() - 1);
+          } else if (filter.date === 'year') {
+            d.setFullYear(d.getFullYear() - 1);
+          }
+
+          if ((new Date(prop.acquisition_end)).getTime() < d.getTime()) {
+            return false;
+          }
+        }
+
+        return true;
+      })
+      // Filter to ensure that the footprint is really inside the square
+      // an not just its bounding box.
+      .filter(function (foot) {
+        var footprint = foot.feature;
+        var footprintCenter = centroid(footprint);
+        return inside(featureCenter, footprint) || inside(footprintCenter, gridSquare) || overlaps(footprint, gridSquare);
       });
-
-      feature.properties = {
-        intersectCount: intersectCount,
-      }
+      gridSquare.properties.count = foots.length;
     });
-    //console.timeEnd('intersect');
-    // First render clocked at 50ms
-    // Zooming out once clocks 240ms
-    
-    // Layer from geojson.
-    this.gridLayer.addData(squareGrid);
-    this.gridLayer.eachLayer(function(l) {
-      L.DomUtil.addClass(l._path, 'gs');
-      var featureCenter = turf.centroid(l.feature);
-      l.feature.properties.featureCenter = featureCenter;
+    console.timeEnd('aggregate on grid');
 
-      // If there is a selected square in the path, select the correct one.
-      if (_this.routerSelectedSquare) {
-        if (_this.routerSelectedSquare[0] == featureCenter.geometry.coordinates[1] &&
-          _this.routerSelectedSquare[1] == featureCenter.geometry.coordinates[0]) {
-          // Done with selecting.
-          _this.routerSelectedSquare = null;
-          // Trigger action.
-          actions.mapSquareSelected(l.feature);
-          return;
+    // Color the grid accordingly.
+    this.mapGridLayer.addData(gridData);
+    this.mapGridLayer.eachLayer(function (l) {
+      var elClasses = ['gs'];
+
+      // Is there a square selected?
+      // When there is a square selected, gs-inactive to everything.
+      if (_this.getSqrQuadKey()) {
+        elClasses.push('gs-inactive');
+      } else {
+        // Gradation.
+        if (l.feature.properties.count >= 10) {
+          elClasses.push('gs-density-high');
+        } else if (l.feature.properties.count >= 5) {
+          elClasses.push('gs-density-med');
+        } else if (l.feature.properties.count > 0) {
+          elClasses.push('gs-density-low');
         }
       }
 
-      // Select the square that intersects the stored image.
-      if (_this.selectIntersecting) {
-
-        var latestFeature = utils.getPolygonFeature(_this.selectIntersecting.coordinates);
-        if (turf.inside(featureCenter, latestFeature) || turf.inside(_this.selectIntersecting.properties.centroid, l.feature) || overlaps(latestFeature, l.feature)) {
-          // Done with selecting.
-          _this.selectIntersecting = null;
-          // Trigger action.
-          actions.mapSquareSelected(l.feature);
-          return;
-        }
-      }
-
-      // If there's a square selected.
-      if (mapStore.isSelectedSquare()) {
-        var selSqrCenter = mapStore.getSelectedSquareCenter();
-
-        featureCenter = turf.centroid(l.feature);
-
-        // Color the selected square.
-        if (selSqrCenter[0] == featureCenter.geometry.coordinates[0] &&
-          selSqrCenter[1] == featureCenter.geometry.coordinates[1]) {
-          L.DomUtil.addClass(l._path, 'gs-active');
-          // No gradation for active square.
-          return;
-        }
-        else {
-           L.DomUtil.addClass(l._path, 'gs-inactive');
-        }
-      }
-
-      var intersectCount = l.feature.properties.intersectCount;
-      // Gradation.
-      if (intersectCount >= 10) {
-        L.DomUtil.addClass(l._path, 'gs-density-high');
-      }
-      else if (intersectCount >= 5) {
-        L.DomUtil.addClass(l._path, 'gs-density-med');
-      }
-      else if (intersectCount > 0) {
-        L.DomUtil.addClass(l._path, 'gs-density-low');
-      }
+      // Add all classes.
+      L.DomUtil.addClass(l._path, elClasses.join(' '));
 
       var p = L.popup({
         autoPan: false,
         closeButton: false,
         offset: L.point(0, 10),
         className: 'gs-tooltip-count'
-      }).setContent(intersectCount.toString());
+      }).setContent(l.feature.properties.count.toString());
 
       l.bindPopup(p);
-
     });
-    this.gridLayer.bringToBack();
-    return this;
+
+    console.groupEnd('updateGrid');
   },
 
-  // Lifecycle method.
-  // Called once as soon as the component has a DOM representation.
-  componentDidMount: function() {
-    console.log('componentDidMount MapBoxMap');
-    var _this = this;
-    var view = config.map.initialView;
-    var zoom = config.map.initialZoom;
+  updateSelectedSquare: function () {
+    // Clear the selected square layer.
+    this.mapSelectedSquareLayer.clearLayers();
+    // If there is a selected square add it to its own layer.
+    // In this way we can scale the grid without touching the selected square.
+    if (this.getSqrQuadKey()) {
+      var qk = this.getSqrQuadKey();
+      var coords = utils.coordsFromQuadkey(qk);
+      var f = utils.getPolygonFeature(coords);
 
-    // Map position from path.
-    var routerMap = this.getParams().map;
-    if (routerMap) {
-      routerMap = this.stringToMapView(routerMap);
-      view = [routerMap.lat, routerMap.lng];
-      zoom = routerMap.zoom;
+      this.mapSelectedSquareLayer.addData(f).eachLayer(function (l) {
+        L.DomUtil.addClass(l._path, 'gs-active gs');
+      });
     }
+  },
 
-    // Check if there's a selected square in the path.
-    var routerSquare = this.getParams().square;
-    if (routerSquare) {
-      this.routerSelectedSquare = routerSquare.split(',');
-      view = [this.routerSelectedSquare[0], this.routerSelectedSquare[1]];
+  updateSelectedItemImageFootprint: function () {
+    if (this.map.hasLayer(this.mapOverImageLayer)) {
+      this.map.removeLayer(this.mapOverImageLayer);
     }
+    if (this.props.selectedItem) {
+      var item = this.props.selectedItem;
+      var imageBounds = [[item.bbox[1], item.bbox[0]], [item.bbox[3], item.bbox[2]]];
+      this.mapOverImageLayer = L.imageOverlay(item.properties.thumbnail, imageBounds);
 
-    this.map = L.mapbox.map(this.getDOMNode().querySelector('#map'), config.map.baseLayer, {
-      zoomControl: false,
-      minZoom : config.map.minZoom,
-      maxZoom : config.map.maxZoom,
-      maxBounds: L.latLngBounds([-90, -180], [90, 180])
-    }).setView(view, zoom);
-
-    // Custom zoom control.
-    var zoom = new dsZoom({
-      position: 'bottomleft',
-      containerClasses: 'zoom-controls',
-      zoomInClasses: 'bttn-zoomin',
-      zoomOutClasses: 'bttn-zoomout',
-    });
-    this.map.addControl(zoom);
-
-    // Prepare layers. Their data will be updated when needed.
-    this.fauxLineGridLayer = L.geoJson(null, { style: L.mapbox.simplestyle.style }).addTo(this.map);
-
-    // Grid layer colorized.
-    this.gridLayer = L.geoJson(null, { style: L.mapbox.simplestyle.style }).addTo(this.map);
-    // On click select the square.
-    this.gridLayer.on('click', function(e) {
-      // Ensure that the popup doesn't open.
-      e.layer.closePopup();
-
-      // No previous square selected.
-      if (mapStore.isSelectedSquare()) {
-        // Unselect.
-        actions.mapSquareUnselected();
-      }
-      else {
-        // Can only select if there's data.
-        if (e.layer.feature.properties.intersectCount > 0) {
-          // Select.
-          actions.mapSquareSelected(e.layer.feature);
-        }
-      }
-    });
-    // On mouseover add gs-highlight.
-    this.gridLayer.on('mouseover', function(e) {
-      if (!mapStore.isSelectedSquare() && e.layer.feature.properties.intersectCount > 0) {
-        L.DomUtil.addClass(e.layer._path, 'gs-highlight');
-        // Open popup on square center.
-        var sqrCenter = e.layer.feature.properties.featureCenter.geometry.coordinates;
-        e.layer.openPopup([sqrCenter[1], sqrCenter[0]]);
-      }
-    });
-    // On mouseout remove gs-highlight.
-    this.gridLayer.on('mouseout', function(e) {
-      L.DomUtil.removeClass(e.layer._path, 'gs-highlight');
-      e.layer.closePopup();
-    });
-
-    // Footprint layer.
-    this.overFootprintLayer = L.geoJson(null, { style: L.mapbox.simplestyle.style }).addTo(this.map);
-
-
-    // Map move listener.
-    var onMoveEnd = _.debounce(function() {
-      // Compute new map location for the path .
-      var mapLocation = _this.mapViewToString();
-      // Preserve other params if any.
-      var params = _this.getParams();
-      params.map = mapLocation;
-
-      // Check what's the route to use.
-      var route = 'map';
-      if (params.item_id) {
-        route = 'item';
-      }
-      else if (params.square) {
-        route = 'results';
-      }
-       _this.replaceWith(route, params, _this.getQuery());
-
-      actions.mapMove(_this.map);
-      _this.updateFauxGrid();
-    }, 300)
-    this.map.on('moveend', onMoveEnd);
-    this.map.on('movestart', onMoveEnd.cancel);
-
-    // Create fauxGrid.
-    this.updateFauxGrid();
-    // Manually trigger mapMove to force first load.
-    actions.mapMove(this.map);
+      this.map.addLayer(this.mapOverImageLayer);
+    }
   },
 
-  // Lifecycle method.
-  // Called when the component gets updated.
-  componentDidUpdate: function(/*prevProps, prevState*/) {
-    console.log('componentDidUpdate');
-    //this.updatePolys();
-    this.updateGrid();
+  // Helper functions
+
+  getSqrQuadKey: function () {
+    return this.props.selectedSquareQuadkey;
   },
 
-  render: function() {
-    return (
-      <div>
-        {this.state.loading ? <p className="loading revealed">Loading</p> : null}
-        <div id="map"></div>
-      </div>
-    );
+  /**
+   * Build a grid for the given zoom level, within the given bbox
+   *
+   * @param {number} zoom
+   * @param {Array} bounds [minx, miny, maxx, maxy]
+   */
+  computeGrid: function (zoom, bounds) {
+    console.time('grid');
+    // We'll use tilebelt to make pseudo-tiles at a zoom three levels higher
+    // than the given zoom.  This means that for each actual map tile, there will
+    // be 4^3 = 64 grid squares.
+    zoom += 2;
+    var ll = tilebelt.pointToTile(bounds[0], bounds[1], zoom);
+    var ur = tilebelt.pointToTile(bounds[2], bounds[3], zoom);
+
+    var boxes = [];
+    for (var x = ll[0]; x <= ur[0]; x++) {
+      for (var y = ll[1]; y >= ur[1]; y--) {
+        var tile = [x, y, zoom];
+        var feature = {
+          type: 'Feature',
+          properties: {
+            _quadKey: tilebelt.tileToQuadkey(tile),
+            id: boxes.length,
+            tile: tile.join('/')
+          },
+          geometry: tilebelt.tileToGeoJSON(tile)
+        };
+        boxes.push(feature);
+      }
+    }
+    console.timeEnd('grid');
+    return {
+      type: 'FeatureCollection',
+      features: boxes
+    };
   },
 
   /**
    * Converts the map view (coords + zoom) to use on the path.
-   * 
+   *
    * @return string
    */
-  mapViewToString: function() {
+  mapViewToString: function () {
     var center = this.map.getCenter();
-    var zoom = this.map.getZoom();
-    return center.lat + ',' + center.lng + ',' + zoom;
+    var zoom = Math.round(this.map.getZoom());
+    return utils.getMapViewString(center.lng, center.lat, zoom);
   },
 
   /**
    * Converts a path string like 60.359564131824214,4.010009765624999,6
    * to a readable object
-   * 
+   *
    * @param  String
    *   string to convert
    * @return object
    */
-  stringToMapView: function(string) {
+  stringToMapView: function (string) {
     var data = string.split(',');
     return {
-      lat: data[0],
-      lng: data[1],
-      zoom: data[2],
-    }
-  },
-
-  /**
-   * Creates a equidistant pixel line grid for the given bbox.
-   * The grid drawing will start form the closest cellSize multiple thus
-   * ensuring that a square always ends up in the same position.
-   * 
-   * Utility function.
-   * 
-   * @param  bbox
-   *   Bounding box for which to draw the grid.
-   * @param   cellSize
-   *   The size of the cell.
-   * @param   atZoom
-   *   The zoom level at which the cellSize is real. When zoomed out or in the
-   *   size will be adapted.
-   * 
-   * @return FeatureCollection
-   */
-  linePixelGrid: function (bbox, cellSize, atZoom) {
-    var fc = turf.featurecollection([]);
-    // We want all the squares to be visually equal.
-    // They won't have the same physical size but their apparent
-    // size in pixels will be the same.
-    // To accomplish this we project to pixels and then unproject back
-    // to coordinates so they can be drawn on the map.
-    var sw = this.map.project(L.latLng(bbox[1], bbox[0]), atZoom);
-    var ne = this.map.project(L.latLng(bbox[3], bbox[2]), atZoom);
-
-    // To ensure that the square doesn't move when panning/zooming
-    // we start drawing the grid form the closest cellSize multiple.
-    var startX = Math.floor(sw.x / cellSize) * cellSize;
-    var startY = Math.floor(ne.y / cellSize) * cellSize;
-
-    var currentX = startX;
-    while (currentX <= ne.x) {
-      var p1 = this.map.unproject(L.point(currentX, sw.y), atZoom);
-      var p2 = this.map.unproject(L.point(currentX, ne.y), atZoom);
-
-      var line = turf.linestring([
-        [p1.lng, p1.lat],
-        [p2.lng, p2.lat]
-      ]);
-      fc.features.push(line);
-
-      currentX += cellSize;
-    }
-
-    var currentY = startY;
-    while (currentY <= sw.y) {
-      var p1 = this.map.unproject(L.point(sw.x, currentY), atZoom);
-      var p2 = this.map.unproject(L.point(ne.x, currentY), atZoom);
-
-      var line = turf.linestring([
-        [p1.lng, p1.lat],
-        [p2.lng, p2.lat]
-      ]);
-      fc.features.push(line);
-
-      currentY += cellSize;
-    }
-    return fc;
-  },
-
-  /**
-   * Creates a equidistant pixel square grid for the given bbox.
-   * The grid drawing will start form the closest cellSize multiple thus
-   * ensuring that a square always ends up in the same position.
-   * 
-   * Utility function.
-   * 
-   * @param  bbox
-   *   Bounding box for which to draw the grid.
-   * @param   cellSize
-   *   The size of the cell.
-   * @param   atZoom
-   *   The zoom level at which the cellSize is real. When zoomed out or in the
-   *   size will be adapted.
-   * 
-   * @return FeatureCollection
-   */
-  squarePixelGrid: function (bbox, cellSize, atZoom) {
-    var fc = turf.featurecollection([]);
-    // We want all the squares to be visually equal.
-    // They won't have the same physical size but their apparent
-    // size in pixels will be the same.
-    // To accomplish this we project to pixels and then unproject back
-    // to coordinates so they can be drawn on the map.
-    var sw = this.map.project(L.latLng(bbox[1], bbox[0]), atZoom);
-    var ne = this.map.project(L.latLng(bbox[3], bbox[2]), atZoom);
-
-    // To ensure that the square doesn't move when panning/zooming
-    // we start drawing the grid form the closest cellSize multiple.
-    var startX = Math.floor(sw.x / cellSize) * cellSize;
-    var startY = Math.floor(ne.y / cellSize) * cellSize;
-
-    var currentX = startX;
-    while (currentX <= ne.x) {
-      var currentY = startY;
-      while (currentY <= sw.y) {
-        var p1 = this.map.unproject(L.point(currentX, currentY), atZoom);
-        var p2 = this.map.unproject(L.point(currentX, currentY+cellSize), atZoom);
-        var p3 = this.map.unproject(L.point(currentX+cellSize, currentY+cellSize), atZoom);
-        var p4 = this.map.unproject(L.point(currentX+cellSize, currentY), atZoom);
-
-        var cellPoly = turf.polygon([[
-            [p1.lng, p1.lat],
-            [p2.lng, p2.lat],
-            [p3.lng, p3.lat],
-            [p4.lng, p4.lat],
-            [p1.lng, p1.lat]
-          ]]);
-        fc.features.push(cellPoly);
-
-        currentY += cellSize;
-      }
-      currentX += cellSize;
-    }
-    return fc;
+      lng: data[0],
+      lat: data[1],
+      zoom: data[2]
+    };
   }
-
 });
 
 module.exports = Map;

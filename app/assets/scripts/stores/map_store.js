@@ -3,184 +3,179 @@ var qs = require('querystring');
 var Reflux = require('reflux');
 var _ = require('lodash');
 var $ = require('jquery');
+var extent = require('turf-extent');
+var rbush = require('rbush');
 var actions = require('../actions/actions');
-var searchQuery = require('./search_query_store')
-var overlaps = require('turf-overlaps');
-var utils = require('../utils/utils');
+var searchQueryStore = require('./search_query_store');
 var config = require('../config');
 
 module.exports = Reflux.createStore({
-
   storage: {
-    searchParameters: { limit: 4000 },
+    prevSearchParams: '',
     results: [],
     sqrSelected: null,
-    latestImagery: null
+    latestImagery: null,
+    footprintsTree: null
   },
 
   // Called on creation.
   // Setup listeners.
-  init: function() {
-    this.listenTo(actions.mapSquareSelected, this.onMapSquareSelected);
-    this.listenTo(actions.mapSquareUnselected, this.onMapSquareUnselected);
-    this.listenTo(searchQuery, this.onSearchQuery);
-
+  init: function () {
+    this.listenTo(actions.selectedBbox, this.onSelectedBbox);
     this.queryLatestImagery();
+    this.queryFootprints();
   },
 
-  queryLatestImagery: function() {
+  queryLatestImagery: function () {
     var _this = this;
 
     $.get(config.catalog.url + '/meta?limit=1')
-      .success(function(data) {
-        _this.storage.latestImagery = data.results[0].geojson;
+      .success(function (data) {
+        _this.storage.latestImagery = data.results[0];
         actions.latestImageryLoaded();
       });
+  },
+
+  queryFootprints: function () {
+    var _this = this;
+
+    console.time('fetch footprints');
+    $.get(config.catalog.url + '/meta?limit=99999')
+      .success(function (data) {
+        console.timeEnd('fetch footprints');
+        var footprintsFeature = _this.parseFootprints(data.results);
+
+        console.time('index footprints');
+        var tree = rbush(9);
+        tree.load(footprintsFeature.features.map(function (feat) {
+          var item = feat.geometry.bbox;
+          item.feature = feat;
+          return item;
+        }));
+        console.timeEnd('index footprints');
+        // Done.
+        _this.storage.footprintsTree = tree;
+        _this.trigger('footprints');
+      });
+  },
+
+  parseFootprints: function (results) {
+    var fc = {
+      type: 'FeatureCollection',
+      features: []
+    };
+    var id = 0;
+    _.each(results, function (foot) {
+      fc.features.push({
+        type: 'Feature',
+        properties: {
+          gsd: foot.gsd,
+          tms: !!foot.properties.tms,
+          acquisition_end: foot.acquisition_end,
+          FID: id++
+        },
+        geometry: foot.geojson
+      });
+    });
+    return fc;
+  },
+
+  getFootprintsInSquare: function (sqrFeature) {
+    if (!this.storage.footprintsTree) {
+      return [];
+    }
+    return this.storage.footprintsTree.search(extent(sqrFeature));
+  },
+
+  footprintsWereFecthed: function() {
+    return this.storage.footprintsTree === null;
   },
 
   /**
    * Translate the application-based search parameters into terms that the
    * API understands, then hit the API and broadcast the result.
    */
-  onSearchQuery: function (parameters) {
-    console.log('onSearchQuery', parameters);
+  queryData: function () {
+    var parameters = searchQueryStore.getParameters();
     var _this = this;
+    console.log('mapstore queryData', parameters);
+
     // hit API and broadcast result
-    if (parameters.bbox) {
-      var resolutionFilter = {
-        'all': {},
-        'low': {gsd_from: 5}, // 5 +
-        'medium': {gsd_from: 1, gsd_to: 5}, // 1 - 5
-        'high': {gsd_to: 1} // 1
-      }[parameters.resolution];
+    var resolutionFilter = {
+      'all': {},
+      'low': {gsd_from: 5}, // 5 +
+      'medium': {gsd_from: 1, gsd_to: 5}, // 1 - 5
+      'high': {gsd_to: 1} // 1
+    }[parameters.resolution];
 
-      var d = new Date();
-      if (parameters.date === 'week') {
-        d.setDate(d.getDate() - 7);
-      } else if (parameters.date === 'month') {
-        d.setMonth(d.getMonth() - 1);
-      } else if (parameters.date === 'year') {
-        d.setFullYear(d.getFullYear() - 1);
-      }
+    var d = new Date();
+    if (parameters.date === 'week') {
+      d.setDate(d.getDate() - 7);
+    } else if (parameters.date === 'month') {
+      d.setMonth(d.getMonth() - 1);
+    } else if (parameters.date === 'year') {
+      d.setFullYear(d.getFullYear() - 1);
+    }
 
-      var dateFilter = parameters.date === 'all' ? {} : {
-        acquisition_from: [
-          d.getFullYear(),
-          d.getMonth() + 1,
-          d.getDate()
-        ].join('-')
-      }
+    var dateFilter = parameters.date === 'all' ? {} : {
+      acquisition_from: [
+        d.getFullYear(),
+        d.getMonth() + 1,
+        d.getDate()
+      ].join('-')
+    };
 
-      var typeFilter = parameters.dataType === 'all' ? {} : { has_tiled: true };
+    var typeFilter = parameters.dataType === 'all' ? {} : { has_tiled: true };
 
-      var params = _.assign({
-        limit: 4000,
-        bbox: parameters.bbox,
-      }, resolutionFilter, dateFilter, typeFilter);
+    // Calculate bbox;
+    var bbox = this.storage.selectedBbox.join(',');
+    console.log('selected feature bbox', bbox);
 
-      console.log('search:', params);
+    var params = _.assign({
+      limit: 4000,
+      bbox: bbox
+    }, resolutionFilter, dateFilter, typeFilter);
 
-      $.get(config.catalog.url + '/meta?' + qs.stringify(params))
-        .success(function(data) {
-          _this.storage.results = data.results;
-          _this.trigger(_this.storage.results);
-        });
+    console.log('search:', params);
+    var strParams = qs.stringify(params);
+    if (strParams === this.storage.prevSearchParams) {
+      console.log('search params did not change. Api call aborted.');
+      _this.trigger('squareData');
+      return;
     } else {
-      _this.trigger([]);
+      console.log('prev params', this.storage.prevSearchParams);
+      console.log('curr params', strParams);
     }
+    this.storage.prevSearchParams = strParams;
+
+    $.get(config.catalog.url + '/meta?' + strParams)
+      .success(function (data) {
+        console.log('api catalog results:', data);
+        _this.storage.results = data.results;
+        _this.trigger('squareData');
+      });
   },
 
   // Actions listener.
-  onMapSquareSelected: function(sqrFeature) {
-    console.log('onMapSquareSelected');
-    this.storage.sqrSelected = sqrFeature;
-    if (!this.storage.sqrSelected.properties) {
-      this.storage.sqrSelected.properties = {};
-    }
-    this.storage.sqrSelected.properties.centroid = turf.centroid(sqrFeature).geometry.coordinates;
-  },
-
-  // Actions listener.
-  onMapSquareUnselected: function() {
-    this.storage.sqrSelected = null;
-  },
-
-  /**
-   * Returns whether there's a map square selected.
-   * @return {Boolean}
-   */
-  isSelectedSquare: function() {
-    return this.storage.sqrSelected !== null;
-  },
-
-  /**
-   * Returns the selected square feature.
-   * @return Feature or null
-   */
-  getSelectedSquare: function() {
-    return this.storage.sqrSelected;
-  },
-
-  /**
-   * Returns the selected square centroid.
-   * @return Array or null
-   */
-  getSelectedSquareCenter: function() {
-    return this.storage.sqrSelected !== null ? this.storage.sqrSelected.properties.centroid : null;
+  onSelectedBbox: function (bbox) {
+    this.storage.selectedBbox = bbox;
+    this.queryData();
   },
 
   /**
    * Returns the latest imagery's coordinates.
    * @return Feature or null
    */
-  getLatestImagery: function() {
+  getLatestImagery: function () {
     return this.storage.latestImagery;
   },
 
   /**
-   * Calls iterator(result) for each result that intersects the given feature.
-   * 
-   * @param  feature
-   *   The feature with which to check the intersection.
-   * @param  iterator function(result)
-   *   The function called for each result that intersects the feature
+   * Returns the stored results.
+   * @return Array or null
    */
-  forEachResultIntersecting: function(feature, iterator) {
-    // Centroid of the feature.
-    // Why this is needed:
-    // To check whether a footprint intersects a square, turf-overlap is
-    // being used. (turf intersect computes the intersection and is too slow)
-    // However turf-overlap returns false if the square is fully inside
-    // the footprint. Don't know if this is the desired behavior?
-    // To solve this we check if the square's centroid is inside the footprint.
-    var featureCenter = turf.centroid(feature);
-
-    this.storage.results.forEach(function(o) {
-      var footprint = utils.getPolygonFeature(o.geojson.coordinates);
-      var footprintCenter = turf.centroid(footprint);
-      if (turf.inside(featureCenter, footprint) || turf.inside(footprintCenter, feature) || overlaps(footprint, feature)) {
-        iterator(o);
-      }
-    });
-  },
-
-  /**
-   * Returns the results that intersect with the given feature.
-   * 
-   * @param  feature
-   *  The feature with which to check the intersection.
-   *  
-   * @return Array
-   *   Intersecting results
-   */
-  getResultsIntersect: function(feature) {
-    var intersected = [];
-
-    this.forEachResultIntersecting(feature, function(result) {
-      intersected.push(result);
-    });
-    
-    return intersected;
-  },
+  getResults: function () {
+    return this.storage.results;
+  }
 
 });

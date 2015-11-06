@@ -17,8 +17,7 @@ var App = React.createClass({
     // these filter parameters BEFORE the map component loads, since that is
     // where the map move action will get fired, triggering the first API load.
     //
-    // TODO: this is really a stopgap until we integrate the router more
-    // fully.  (See routes.js for more.)
+    // TODO: this should be reviewed at some point.
     var params = this.getQuery();
     if (params.date) {
       actions.setDateFilter(params.date);
@@ -31,14 +30,19 @@ var App = React.createClass({
     }
   },
 
-  render: function() {
+  render: function () {
+    // When there's a square selected avoid the modal entirely.
+    var showWelcomeModal = !this.getParams().square;
+    // DEV TEMP
+    // showWelcomeModal = false;
+
     return (
       <div>
         <Header />
-        <main id="site-body" role="main">
+        <main id='site-body' role='main'>
           <RouteHandler />
         </main>
-        <WelcomeModal />
+        <WelcomeModal revealed={showWelcomeModal} />
         <InfoModal />
         <MessageModal />
       </div>

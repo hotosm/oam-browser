@@ -1,65 +1,40 @@
+/* global L */
 'use strict';
+
 require('mapbox.js');
 var React = require('react/addons');
-var Reflux = require('reflux');
-// Not working. Using cdn. (turf.intersect was throwing a weird error)
-//var turf = require('turf');
-var actions = require('../actions/actions');
-var mapStore = require('../stores/map_store');
+var Router = require('react-router');
+var _ = require('lodash');
+var utils = require('../utils/utils');
 var config = require('../config.js');
 
 var MiniMap = React.createClass({
+  propTypes: {
+    selectedSquare: React.PropTypes.string,
+    mapView: React.PropTypes.string
+  },
+
   mixins: [
-    Reflux.listenTo(actions.mapMove, "onMapMove"),
-    Reflux.listenTo(actions.mapSquareSelected, "onMapSquareSelected"),
-    Reflux.listenTo(actions.mapSquareUnselected, "onMapSquareUnselected")
+    Router.Navigation,
+    Router.State
   ],
 
   map: null,
 
-  viewfinder: null,
   targetLines: null,
 
-  // Actions listener.
-  onMapMove: function(mainmap) {
-    var b = mainmap.getBounds();
-
-    this.viewfinder.setLatLngs([
-      b.getNorthEast(),
-      b.getNorthWest(),
-      b.getSouthWest(),
-      b.getSouthEast()
-    ]).addTo(this.map);
-  },
-
-  onMapSquareSelected: function(sqrFeature) {
-    var center = sqrFeature.properties.centroid;
-
-    this.targetLines.setLatLngs([
-      [
-        [-90, center[0]],
-        [90, center[0]]
-      ],
-      [
-        [center[1], -220],
-        [center[1], 220]
-      ]
-    ]);
-  },
-
-  onMapSquareUnselected: function() {
-    this.targetLines.clearLayers();
+  // Lifecycle method.
+  shouldComponentUpdate: function (nextProps, nextState) {
+    return nextProps.selectedSquare !== this.props.selectedSquare;
   },
 
   // Lifecycle method.
   // Called once as soon as the component has a DOM representation.
-  componentDidMount: function() {
+  componentDidMount: function () {
     console.log('componentDidMount MiniMap');
-    var _this = this;
 
     this.map = L.mapbox.map(this.getDOMNode(), config.map.baseLayer, {
       center: [0, 0],
-
       zoomControl: false,
       attributionControl: false,
       dragging: false,
@@ -67,16 +42,8 @@ var MiniMap = React.createClass({
       scrollWheelZoom: false,
       doubleClickZoom: false,
       boxZoom: false,
-
       maxBounds: L.latLngBounds([-90, -180], [90, 180])
     }).fitBounds(L.latLngBounds([-90, -180], [90, 180]));
-
-    this.viewfinder = L.polygon([], {
-      clickable: false,
-      color: '#1f3b45',
-      weight: 0.5
-    }).addTo(this.map);
-
 
     this.targetLines = L.multiPolyline([], {
       clickable: false,
@@ -84,22 +51,50 @@ var MiniMap = React.createClass({
       weight: 0.5
     }).addTo(this.map);
 
-    console.log(this.targetLines);
-    this.map.on('click', function(e) {
-      actions.miniMapClick(e.latlng);
-    });
+    this.map.on('click', this.onMapClick);
+
+    this.setCrosshair();
   },
 
   // Lifecycle method.
   // Called when the component gets updated.
-  componentDidUpdate: function(/*prevProps, prevState*/) {
-    console.log('componentDidUpdate');
+  componentDidUpdate: function (/* prevProps, prevState */) {
+    this.setCrosshair();
   },
 
-  render: function() {
-    return (<div id="minimap"></div>);
+  render: function () {
+    return (<div id='minimap'></div>);
   },
 
+  // Map event.
+  onMapClick: function (e) {
+    var routes = this.getRoutes();
+    var r = routes[routes.length - 1].name || 'map';
+    var params = _.cloneDeep(this.getParams());
+    var zoom = this.props.mapView.split(',')[2];
+    params.map = utils.getMapViewString(e.latlng.lng, e.latlng.lat, zoom);
+    this.transitionTo(r, params, this.getQuery());
+  },
+
+  setCrosshair: function () {
+    if (this.props.selectedSquare) {
+      console.log('minimap -- setting crosshair');
+      var center = utils.tileCenterFromQuadkey(this.props.selectedSquare).geometry.coordinates;
+      this.targetLines.setLatLngs([
+        [
+          [-90, center[0]],
+          [90, center[0]]
+        ],
+        [
+          [center[1], -220],
+          [center[1], 220]
+        ]
+      ]);
+    } else {
+      console.log('minimap -- unsetting crosshair');
+      this.targetLines.clearLayers();
+    }
+  }
 });
 
 module.exports = MiniMap;

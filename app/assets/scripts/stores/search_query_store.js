@@ -1,6 +1,5 @@
 var Reflux = require('reflux');
 var actions = require('../actions/actions');
-var config = require('../config.js');
 var _ = require('lodash');
 
 /**
@@ -16,36 +15,24 @@ module.exports = Reflux.createStore({
   },
 
   init: function () {
-    this.listenTo(actions.mapMove, this.onMapMove);
     this.listenTo(actions.setDateFilter, this.onSetDateFilter);
     this.listenTo(actions.setResolutionFilter, this.onSetResolutionFilter);
     this.listenTo(actions.setDataTypeFilter, this.onSetDataTypeFilter);
   },
 
-  onMapMove: function(map) {
-    if (map.getZoom() < config.map.interactiveGridZoomLimit) {
-      this._setParameter({bbox: null});
-      return;
-    }
-
-    var bbox = map.getBounds().toBBoxString();
-    // ?bbox=[lon_min],[lat_min],[lon_max],[lat_max]
-    this._setParameter({bbox: bbox});
-  },
-
-  onSetDateFilter: function(period) {
+  onSetDateFilter: function (period) {
     this._setParameter({date: period});
   },
 
-  onSetResolutionFilter: function(resolutionLevel) {
+  onSetResolutionFilter: function (resolutionLevel) {
     this._setParameter({resolution: resolutionLevel});
   },
 
-  onSetDataTypeFilter: function(type) {
+  onSetDataTypeFilter: function (type) {
     this._setParameter({dataType: type});
   },
 
-  _setParameter: function(params) {
+  _setParameter: function (params) {
     // update stored search params
     _.assign(this._parameters, params);
     for (var key in this._parameters) {
@@ -53,7 +40,10 @@ module.exports = Reflux.createStore({
         delete this._parameters[key];
       }
     }
+    this.trigger(this._parameters, Object.keys(params)[0]);
+  },
 
-    this.trigger(this._parameters)
+  getParameters: function () {
+    return this._parameters;
   }
-})
+});

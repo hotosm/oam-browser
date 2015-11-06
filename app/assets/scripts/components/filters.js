@@ -4,11 +4,13 @@ var Reflux = require('reflux');
 var Router = require('react-router');
 var Dropdown = require('./shared/dropdown');
 var actions = require('../actions/actions');
-var searchQuery = require('../stores/search_query_store');
+var searchQueryStore = require('../stores/search_query_store');
+var cookie = require('../utils/cookie');
+var config = require('../config.js');
 
-var Filters = module.exports = React.createClass({
+var Filters = React.createClass({
   mixins: [
-    Reflux.listenTo(searchQuery, 'onSearchQuery'),
+    Reflux.listenTo(searchQueryStore, 'onSearchQuery'),
     Router.Navigation,
     Router.State
   ],
@@ -18,7 +20,7 @@ var Filters = module.exports = React.createClass({
       date: 'all',
       resolution: 'all',
       dataType: 'all'
-    }
+    };
   },
 
   onSearchQuery: function (data) {
@@ -32,7 +34,7 @@ var Filters = module.exports = React.createClass({
 
   setResolution: function (d) {
     actions.setResolutionFilter(d.key);
-    this._updateUrl('resolution', d.key)
+    this._updateUrl('resolution', d.key);
   },
 
   setDataType: function (d) {
@@ -43,16 +45,25 @@ var Filters = module.exports = React.createClass({
   _updateUrl: function (prop, value) {
     var query = this.getQuery();
     if (value === 'all') {
-      delete query[prop]
+      delete query[prop];
     } else {
       query[prop] = value;
     }
-    var routes = this.getRoutes();
-    this.replaceWith(routes[routes.length - 1].name, this.getParams(), query);
+
+    var mapView = this.getParams().map;
+    if (!mapView) {
+      var cookieView = cookie.read('oam-browser:map-view');
+      if (cookieView !== 'undefined') {
+        mapView = cookie.read('oam-browser:map-view');
+      } else {
+        mapView = config.map.initialView.concat(config.map.initialZoom).join(',');
+      }
+    }
+
+    this.transitionTo('map', {map: mapView}, query);
   },
 
-
-  render: function() {
+  render: function () {
     function filterItem (property, clickHandler, d) {
       var klass = this.state[property] === d.key ? 'active' : '';
       var click = clickHandler.bind(this, d);
@@ -82,16 +93,18 @@ var Filters = module.exports = React.createClass({
     ].map(filterItem.bind(this, 'dataType', this.setDataType));
 
     return (
-      <Dropdown element="li" className="drop dropdown center" triggerTitle="Settings" triggerClassName="bttn-settings" triggerText="Settings">
-        <dl className="drop-menu filters-options-menu" role="menu">
-          <dt className="drop-menu-sectitle">Time</dt>
+      <Dropdown element='li' className='drop dropdown center' triggerTitle='Settings' triggerClassName='bttn-settings' triggerText='Settings'>
+        <dl className='drop-menu filters-options-menu' role='menu'>
+          <dt className='drop-menu-sectitle'>Time</dt>
           {dates}
-          <dt className="drop-menu-sectitle">Resolution</dt>
+          <dt className='drop-menu-sectitle'>Resolution</dt>
           {resolutions}
-          <dt className="drop-menu-sectitle">Data Type</dt>
+          <dt className='drop-menu-sectitle'>Data Type</dt>
           {dataTypes}
         </dl>
       </Dropdown>
     );
   }
 });
+
+module.exports = Filters;

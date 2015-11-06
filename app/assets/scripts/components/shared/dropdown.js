@@ -2,7 +2,6 @@
 var React = require('react');
 var Reflux = require('reflux');
 var $ = require('jquery');
-var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 var dropdownActions = Reflux.createActions({
   'closeOthers': {}
@@ -11,39 +10,48 @@ var dropdownActions = Reflux.createActions({
 var activeDropdowns = 0;
 
 var Dropdown = React.createClass({
-  mixins: [Reflux.listenTo(dropdownActions.closeOthers, "onCloseOthers")],
+  propTypes: {
+    className: React.PropTypes.string,
+    triggerTitle: React.PropTypes.string,
+    triggerClassName: React.PropTypes.string,
+    triggerText: React.PropTypes.string,
+    closeDropdown: React.PropTypes.func,
+    children: React.PropTypes.node
+  },
 
-  onCloseOthers: function($exception) {
+  mixins: [Reflux.listenTo(dropdownActions.closeOthers, 'onCloseOthers')],
+
+  onCloseOthers: function ($exception) {
     if (this.getDOMNode() != $exception) {
       this.setState({ open: false });
     }
   },
 
-  bodyListener: function(e) {
+  bodyListener: function (e) {
     var $clickedDropdown = $(e.target).parents('[data-hook="dropdown"]');
     dropdownActions.closeOthers($clickedDropdown[0]);
   },
 
-  getDefaultProps: function() {
+  getDefaultProps: function () {
     return {
       element: 'div',
       className: '',
 
       triggerTitle: '',
       triggerClassName: '',
-      triggerText: '',
-    }
+      triggerText: ''
+    };
   },
 
-  getInitialState: function() {
+  getInitialState: function () {
     return {
-      open: false,
-    }
+      open: false
+    };
   },
 
   // Lifecycle method.
   // Called once as soon as the component has a DOM representation.
-  componentDidMount: function() {
+  componentDidMount: function () {
     // With a cross Dropdown variable we ensure that only one event is setup.
     if (++activeDropdowns === 1) {
       // Namespace the event so it's easy to remove.
@@ -53,18 +61,18 @@ var Dropdown = React.createClass({
 
   // Lifecycle method.
   // Called once as soon as the component has a DOM representation.
-  componentWillUnmount: function() {
+  componentWillUnmount: function () {
     if (--activeDropdowns === 0) {
       $(document).unbind('click.dropdown');
     }
   },
 
-  closeDropdown: function(e) {
+  closeDropdown: function (e) {
     e.preventDefault();
     this.setState({ open: !this.state.open });
   },
 
-  render: function() {
+  render: function () {
     var klasses = ['drop'];
     if (this.state.open) {
       klasses.push('open');
@@ -74,9 +82,9 @@ var Dropdown = React.createClass({
     }
 
     return (
-      <this.props.element className={klasses.join(' ')} data-hook="dropdown">
-        <a href="#" title={this.props.triggerTitle} className={this.props.triggerClassName} onClick={this.closeDropdown}><span>{this.props.triggerText}</span></a>
-        <div className="drop-content">
+      <this.props.element className={klasses.join(' ')} data-hook='dropdown'>
+        <a href='#' title={this.props.triggerTitle} className={this.props.triggerClassName} onClick={this.closeDropdown}><span>{this.props.triggerText}</span></a>
+        <div className='drop-content'>
           {this.props.children}
         </div>
       </this.props.element>

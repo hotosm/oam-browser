@@ -52,7 +52,7 @@ var ResultsListItem = React.createClass({
                 <dt>Type</dt>
                 <dd>{d.properties.tms ? 'Image + Map Layer' : 'Image'}</dd>
                 <dt>Date</dt>
-                <dd>{d.acquisition_start.slice(0, 10)}</dd>
+                <dd>{d.acquisition_start ? d.acquisition_start.slice(0, 10) : 'N/A'}</dd>
                 <dt>Res</dt>
                 <dd>{utils.gsdToUnit(d.gsd)}</dd>
               </dl>

@@ -46,7 +46,7 @@ var Header = React.createClass({
   render: function () {
     return (
       <header id='site-header' role='banner'>
-      <h1 id='site-title'><img src='assets/graphics/layout/oam-logo-h-pos.svg' width='167' height='32' alt='OpenAerialMap logo' /><span>OpenAerialMap</span> <small>Beta</small></h1>
+      <h1 id='site-title'><img src='assets/graphics/layout/oam-logo-h-pos.svg' width='167' height='32' alt='OpenAerialMap logo' /><span>OpenAerialMap</span> <small>Browser</small></h1>
         <nav id='site-prime-nav' role='navigation'>
           <div className='nav-block-prime'>
             <form className='form-search' onSubmit={this.onGeocoderSearch}>

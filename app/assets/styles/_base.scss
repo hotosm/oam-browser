@@ -129,6 +129,17 @@ a:active{
   right: -0.5rem;
 }
 
+.app-menu,
+.meta-menu {
+  > * {
+    float: left;
+    margin-right: 0.5rem;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
 // SITE HEADER
 
 #site-body {

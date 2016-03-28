@@ -238,6 +238,14 @@ input[type=submit] {
   @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .info;
 }
 
+.bttn-upload {
+  @extend .bttn, .bttn-base-light, .bttn-m, .download;
+  &:before {
+    transform: scaleY(-1);
+    display: inline-block;
+  }
+}
+
 .zoom-controls {
   @extend .bttn-group-vertical;
 }

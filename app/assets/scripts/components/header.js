@@ -61,10 +61,11 @@ var Header = React.createClass({
           </div>
           <div className='nav-block-sec'>
             <ul className='meta-menu'>
+              <li><a href='https://upload.openaerialmap.org/' className='bttn-upload' title='Go to OAM Upload'><span>Upload</span></a></li>
               <Dropdown element='li' className='drop dropdown right' triggerTitle='Info' triggerClassName='bttn-info' triggerText='Info'>
                 <ul className='drop-menu info-menu' role='menu'>
                   <li><a href='#' title='Learn more' onClick={this.aboutClickHandler}><span>About</span></a></li>
-                  <li><a href='https://upload.openaerialmap.org/' title='Go to OAM Uploader'><span>Upload</span></a></li>
+                  <li><a href='https://status.openaerialmap.org/' title='Go to OAM Status'><span>Status</span></a></li>
                 </ul>
               </Dropdown>
             </ul>

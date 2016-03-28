@@ -141,7 +141,27 @@ a:active{
   }
 }
 
-// SITE HEADER
+.status-item {
+  padding-right: 2rem !important;
+  &:after {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    height: 1rem;
+    width: 0.5rem;
+    content: "";
+    transform: translate(0, -50%);
+    border-radius: $global-rounded;
+    background: $base-font-color;
+  }
+}
+
+.status-item.status-up:after { background: $success-color; }
+.status-item.status-down:after { background: $alert-color; }
+.status-item.status-meh:after { background: $warning-color; }
+.status-item.status-unknown:after { background: $base-font-color; }
+
+// SITE BODY
 
 #site-body {
   position: absolute;

@@ -72,9 +72,10 @@ a:active{
 #site-title {
   position: absolute;
   top: 1rem;
-  right: 6.5rem;
+  left: 21rem;
   z-index: 10;
   @include transition(all 0.64s ease 0s);
+  margin: 0;
   span {
     @extend .visually-hidden;
   }
@@ -94,8 +95,8 @@ a:active{
     text-transform: uppercase;
   }
   @include media(large-up) {
-    right: 50%;
-    @include transform(translate(50%, 0));
+    left: 50%;
+    @include transform(translate(-50%, 0));
   }
 }
 

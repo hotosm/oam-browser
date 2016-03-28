@@ -141,6 +141,12 @@ a:active{
   }
 }
 
+.info-menu small {
+  display: block;
+  opacity: 0.64;
+  font-size: 0.75rem;
+}
+
 .status-item {
   padding-right: 2rem !important;
   &:after {
@@ -154,12 +160,11 @@ a:active{
     border-radius: $global-rounded;
     background: $base-font-color;
   }
+  &.status-up:after { background: $success-color; }
+  &.status-down:after { background: $alert-color; }
+  &.status-meh:after { background: $warning-color; }
+  &.status-unknown:after { background: $base-font-color; }
 }
-
-.status-item.status-up:after { background: $success-color; }
-.status-item.status-down:after { background: $alert-color; }
-.status-item.status-meh:after { background: $warning-color; }
-.status-item.status-unknown:after { background: $base-font-color; }
 
 // SITE BODY
 

@@ -66,7 +66,8 @@ var Header = React.createClass({
                 <ul className='drop-menu info-menu' role='menu'>
                   <li><a href='#modal-info' title='Learn more' onClick={this.aboutClickHandler}><span>About</span></a></li>
                   <li><a href='https://github.com/hotosm/oam-browser/blob/develop/docs/user-guide.md' title='Go to User Guide'><span>Help</span></a></li>
-                  <li><a href='https://status.openaerialmap.org/' className='status-item' title='Go to OAM Status'><span>Status</span></a></li>
+                  <li><a href='mailto:info@openaerialmap.org' title='Get in touch'><span>Contact</span> <small>info@openaerialmap.org</small></a></li>
+                  <li className='sep'><a href='https://status.openaerialmap.org/' className='status-item' title='Go to OAM Status'><span>Status</span></a></li>
                 </ul>
               </Dropdown>
             </ul>

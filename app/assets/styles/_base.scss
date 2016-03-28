@@ -248,16 +248,20 @@ a:active{
     .prose {
       @include columns(3);
       @include column-gap(2rem);
-      margin-bottom: -0.75rem;
       p, a {
-        -webkit-backface-visibility:hidden;
+        -webkit-backface-visibility: hidden;
       }
       h2 {
         @include heading(1.25rem);   // 20
         margin: 0 0 1rem 0;
+      }
+      .prose-block {
         -webkit-column-break-inside: avoid; /* Chrome, Safari, Opera */
           page-break-inside: avoid; /* Firefox */
                break-inside: avoid; /* IE 10+ */
+        > *:last-child {
+          margin-bottom: 0;
+        }
       }
     }
   }

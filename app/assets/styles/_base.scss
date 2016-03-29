@@ -20,7 +20,7 @@ body {
   font-family: $base-font-family;
   font-weight: $base-font-weight;
   font-style: $base-font-style;
-  // min-width: $row-min-width;
+  min-width: $row-min-width;
 }
 
 // Links
@@ -244,17 +244,20 @@ a:active{
 // INFO MODAL
 
 #modal-info {
+  .prose {
+    a {
+      position: relative;
+    }
+    h2 {
+      @include heading(1.25rem);   // 20
+      margin: 0 0 1rem 0;
+    }
+  }
+
   @include media(medium-up) {
     .prose {
       @include columns(3);
       @include column-gap(2rem);
-      p, a {
-        -webkit-backface-visibility: hidden;
-      }
-      h2 {
-        @include heading(1.25rem);   // 20
-        margin: 0 0 1rem 0;
-      }
       .prose-block {
         -webkit-column-break-inside: avoid; /* Chrome, Safari, Opera */
           page-break-inside: avoid; /* Firefox */

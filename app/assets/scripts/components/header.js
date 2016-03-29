@@ -1,10 +1,12 @@
 'use strict';
 var React = require('react/addons');
 var Keys = require('react-keybinding');
+var $ = require('jquery');
 var Dropdown = require('./shared/dropdown');
 var actions = require('../actions/actions');
 var Filters = require('./filters');
 var utils = require('../utils/utils');
+var config = require('../config');
 
 var Header = React.createClass({
   mixins: [
@@ -25,6 +27,23 @@ var Header = React.createClass({
     }
   },
 
+  getInitialState: function () {
+    return {
+      'oamHealth': null
+    };
+  },
+
+  fetchOAMHealth: function () {
+    var _this = this;
+    $.get(config.oamStatus)
+      .success(function (data) {
+        console.log('me', data);
+        _this.setState({
+          'oamHealth': data.health
+        });
+      });
+  },
+
   aboutClickHandler: function (e) {
     e.preventDefault();
     actions.openModal('info');
@@ -43,7 +62,26 @@ var Header = React.createClass({
     });
   },
 
+  componentDidMount: function () {
+    this.fetchOAMHealth();
+  },
+
   render: function () {
+    let oamHealthClass = 'status-item ';
+    switch(this.state.oamHealth) {
+      case 'green':
+        oamHealthClass += 'status-up';
+        break;
+      case 'yellow':
+        oamHealthClass += 'status-meh';
+        break;
+      case 'red':
+        oamHealthClass += 'status-down';
+        break;
+      default:
+        oamHealthClass += 'status-unknown';
+    }
+
     return (
       <header id='site-header' role='banner'>
       <h1 id='site-title'><img src='assets/graphics/layout/oam-logo-h-pos.svg' width='167' height='32' alt='OpenAerialMap logo' /><span>OpenAerialMap</span> <small>Browser</small></h1>
@@ -67,7 +105,7 @@ var Header = React.createClass({
                   <li><a href='#modal-info' title='Learn more' onClick={this.aboutClickHandler}><span>About</span></a></li>
                   <li><a href='https://github.com/hotosm/oam-browser/blob/develop/docs/user-guide.md' title='Go to User Guide'><span>Help</span></a></li>
                   <li><a href='mailto:info@openaerialmap.org' title='Get in touch'><span>Contact</span> <small>info@openaerialmap.org</small></a></li>
-                  <li className='sep'><a href='https://status.openaerialmap.org/' className='status-item' title='Go to OAM Status'><span>Status</span></a></li>
+                  <li className='sep'><a href='https://status.openaerialmap.org/' className={oamHealthClass} title='Go to OAM Status'><span>Status</span></a></li>
                 </ul>
               </Dropdown>
             </ul>

@@ -80,7 +80,7 @@ var WelcomeModal = React.createClass({
     return (
       <div>
         <h1 id='modal-title'><img src='assets/graphics/layout/oam-logo-h-neg.svg' width='167' height='32' alt='OpenAerialMap logo' /><span>OpenAerialMap</span></h1>
-        <p>Welcome to the open collection of aerial imagery.</p>
+        <p>Browse the open collection of aerial imagery.</p>
       </div>
     );
   },
@@ -96,7 +96,7 @@ var WelcomeModal = React.createClass({
         </form>
         <p className='mod-sep'><span>or</span></p>
         <div className='mod-block'>
-          <a href='#' className={(this.state.browseLatestEnabled ? '' : 'disabled ') + 'bttn-latest-welcome'} onClick={this.onBrowseLatestClick}><span>Browse latest imagery</span></a>
+          <a href='#' className={(this.state.browseLatestEnabled ? '' : 'disabled ') + 'bttn-latest-welcome'} onClick={this.onBrowseLatestClick}><span>View latest imagery</span></a>
         </div>
       </div>
     );

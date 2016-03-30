@@ -16,5 +16,6 @@ module.exports = {
   },
   catalog: {
     url: 'https://api.openaerialmap.org'
-  }
+  },
+  oamStatus: 'https://status.openaerialmap.org/healthcheck'
 };

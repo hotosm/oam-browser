@@ -37,7 +37,6 @@ var Header = React.createClass({
     var _this = this;
     $.get(config.oamStatus)
       .success(function (data) {
-        console.log('me', data);
         _this.setState({
           'oamHealth': data.health
         });
@@ -67,7 +66,7 @@ var Header = React.createClass({
   },
 
   render: function () {
-    let oamHealthClass = 'status-item ';
+    var oamHealthClass = 'status-item ';
     switch(this.state.oamHealth) {
       case 'green':
         oamHealthClass += 'status-up';

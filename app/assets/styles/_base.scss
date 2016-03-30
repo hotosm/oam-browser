@@ -20,7 +20,7 @@ body {
   font-family: $base-font-family;
   font-weight: $base-font-weight;
   font-style: $base-font-style;
-  // min-width: $row-min-width;
+  min-width: $row-min-width;
 }
 
 // Links
@@ -72,9 +72,10 @@ a:active{
 #site-title {
   position: absolute;
   top: 1rem;
-  right: 6.5rem;
+  left: 21rem;
   z-index: 10;
   @include transition(all 0.64s ease 0s);
+  margin: 0;
   span {
     @extend .visually-hidden;
   }
@@ -94,8 +95,8 @@ a:active{
     text-transform: uppercase;
   }
   @include media(large-up) {
-    right: 50%;
-    @include transform(translate(50%, 0));
+    left: 50%;
+    @include transform(translate(-50%, 0));
   }
 }
 
@@ -129,7 +130,43 @@ a:active{
   right: -0.5rem;
 }
 
-// SITE HEADER
+.app-menu,
+.meta-menu {
+  > * {
+    float: left;
+    margin-right: 0.5rem;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.info-menu small {
+  display: block;
+  opacity: 0.64;
+  font-size: 0.75rem;
+}
+
+.status-item {
+  padding-right: 2rem !important;
+  &:after {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    height: 1rem;
+    width: 0.5rem;
+    content: "";
+    transform: translate(0, -50%);
+    border-radius: $global-rounded;
+    background: $base-font-color;
+  }
+  &.status-up:after { background: $success-color; }
+  &.status-down:after { background: $alert-color; }
+  &.status-meh:after { background: $warning-color; }
+  &.status-unknown:after { background: $base-font-color; }
+}
+
+// SITE BODY
 
 #site-body {
   position: absolute;
@@ -207,20 +244,27 @@ a:active{
 // INFO MODAL
 
 #modal-info {
+  .prose {
+    a {
+      position: relative;
+    }
+    h2 {
+      @include heading(1.25rem);   // 20
+      margin: 0 0 1rem 0;
+    }
+  }
+
   @include media(medium-up) {
     .prose {
       @include columns(3);
       @include column-gap(2rem);
-      margin-bottom: -0.75rem;
-      p, a {
-        -webkit-backface-visibility:hidden;
-      }
-      h2 {
-        @include heading(1.25rem);   // 20
-        margin: 0 0 1rem 0;
+      .prose-block {
         -webkit-column-break-inside: avoid; /* Chrome, Safari, Opera */
           page-break-inside: avoid; /* Firefox */
                break-inside: avoid; /* IE 10+ */
+        > *:last-child {
+          margin-bottom: 0;
+        }
       }
     }
   }

@@ -199,7 +199,7 @@ var ResultsItem = React.createClass({
                 }.bind(this))}
               </ul>
             </section>
-            ): null}
+            ) : null}
 
           </div>
         </div>

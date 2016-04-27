@@ -72,10 +72,11 @@ var ResultsItem = React.createClass({
   },
 
   onCopy: function (e) {
-    return this.getDOMNode().querySelector('[data-hook="copy:data"]').value;
+    return $(e.target).parents('.input-group').find('[data-hook="copy:data"]').val();
   },
 
-  onOpenJosm: function (d) {
+  onOpenJosm: function (tmsUrl) {
+    var d = this.props.data;
     var source = 'OpenAerialMap - ' + d.provider + ' - ' + d.uuid;
     // Reference:
     // http://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl#load_and_zoom
@@ -93,7 +94,7 @@ var ResultsItem = React.createClass({
       $.get('http://127.0.0.1:8111/imagery?' + qs.stringify({
         type: 'tms',
         title: source
-      }) + '&url=' + d.properties.tms)
+      }) + '&url=' + tmsUrl)
       .success(function () {
         // all good!
         actions.openModal('message', {
@@ -111,39 +112,41 @@ var ResultsItem = React.createClass({
     });
   },
 
+  renderTmsOptions: function (tmsUrl, dropClass) {
+    var d = this.props.data;
+    // Generate the iD URL:
+    // grab centroid of the footprint
+    var center = centroid(d.geojson).geometry.coordinates;
+    // cheat by using current zoom level
+    var zoom = this.getParams().map.split(',')[2];
+    var idUrl = 'http://www.openstreetmap.org/edit' +
+    '#map=' + [zoom, center[1], center[0]].join('/') +
+    '?' + qs.stringify({
+      editor: 'id',
+      background: 'custom:' + tmsUrl
+    });
+
+    return (
+      <div className='input-group'>
+        <input className='form-control input-m' type='text' value={tmsUrl} readOnly data-hook='copy:data' />
+        <Dropdown element='span' className={'input-group-bttn ' + dropClass} triggerTitle='Show options' triggerClassName='bttn-uoptions' triggerText='Options'>
+          <ul className='drop-menu tms-options-menu' role='menu'>
+            <li className='has-icon-bef id-editor'><a href={idUrl} target='_blank' title='Open with iD editor'>Open with iD editor</a></li>
+            <li className='has-icon-bef josm'><a onClick={this.onOpenJosm.bind(null, tmsUrl)} title='Open with JOSM'>Open with JOSM</a></li>
+            <li className='has-icon-bef clipboard'>
+              <ZcButton onCopy={this.onCopy} title='Copy to clipboard' text='Copy to clipboard'/>
+            </li>
+          </ul>
+        </Dropdown>
+      </div>
+    );
+  },
+
   render: function () {
     var d = this.props.data;
     var pagination = this.props.pagination;
 
-    var tmsOptions = null;
-    if (d.properties.tms) {
-      // Generate the iD URL:
-      // grab centroid of the footprint
-      var center = centroid(d.geojson).geometry.coordinates;
-      // cheat by using current zoom level
-      var zoom = this.getParams().map.split(',')[2];
-      var idUrl = 'http://www.openstreetmap.org/edit' +
-      '#map=' + [zoom, center[1], center[0]].join('/') +
-      '?' + qs.stringify({
-        editor: 'id',
-        background: 'custom:' + d.properties.tms
-      });
-
-      tmsOptions = (
-        <div className='input-group'>
-          <input className='form-control input-m' type='text' value={d.properties.tms} readOnly data-hook='copy:data' />
-          <Dropdown element='span' className='input-group-bttn dropdown center' triggerTitle='Show options' triggerClassName='bttn-uoptions' triggerText='Options'>
-            <ul className='drop-menu tms-options-menu' role='menu'>
-              <li className='has-icon-bef id-editor'><a href={idUrl} target='_blank' title='Open with iD editor'>Open with iD editor</a></li>
-              <li className='has-icon-bef josm'><a onClick={this.onOpenJosm.bind(this, d)} title='Open with JOSM'>Open with JOSM</a></li>
-              <li className='has-icon-bef clipboard'>
-                <ZcButton onCopy={this.onCopy} title='Copy to clipboard' text='Copy to clipboard'/>
-              </li>
-            </ul>
-          </Dropdown>
-        </div>
-      );
-    }
+    var tmsOptions = d.properties.tms ? this.renderTmsOptions(d.properties.tms, 'dropdown center') : null;
 
     var blurImage = {
       backgroundImage: 'url(' + d.properties.thumbnail + ')'
@@ -181,6 +184,21 @@ var ResultsItem = React.createClass({
               <dt><span>Provider</span></dt>
               <dd className='cap'>{d.provider}</dd>
             </dl>
+
+            {d.custom_tms ? (
+            <section className='single-related-tms'>
+              <header>
+                <h1>Available map layers</h1>
+                <p>This image is part of the folowing map layers:</p>
+              </header>
+              <ul>
+                {d.custom_tms.map(function (o, i) {
+                  return <li key={i}>{this.renderTmsOptions(o, 'dropup right')}</li>;
+                }.bind(this))}
+              </ul>
+            </section>
+            ): null}
+
           </div>
         </div>
         <footer className='pane-footer'>

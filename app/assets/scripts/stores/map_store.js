@@ -29,7 +29,7 @@ module.exports = Reflux.createStore({
   queryLatestImagery: function () {
     var _this = this;
 
-    $.get(config.catalog.url + '/meta?limit=1')
+    $.get(config.catalog.url + '/meta?order_by=acquisition_end&sort=desc&limit=1')
       .success(function (data) {
         _this.storage.latestImagery = data.results[0];
         actions.latestImageryLoaded();

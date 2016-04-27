@@ -231,6 +231,32 @@
   }
 }
 
+.single-related-tms {
+  margin: 1rem -1rem -1rem;
+  padding: 1rem;
+  background: tint($base-color, 88%);
+  box-shadow: inset 0 1px 0 0 $brdr-rgba;
+
+  > header {
+    margin-bottom: 1rem;
+    > *:last-child {
+      margin-bottom: 0;
+    }
+
+    h1, p {
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  ul > li {
+    margin-bottom: 0.5rem;
+  }
+
+  .dropup .drop-content {
+    right: -0.5rem;
+  }
+}
+
 .single-pager {
   list-style: none;
   margin: -0.5rem 0;

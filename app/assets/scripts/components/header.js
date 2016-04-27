@@ -9,6 +9,8 @@ var utils = require('../utils/utils');
 var config = require('../config');
 
 var Header = React.createClass({
+  displayName: 'Header',
+
   mixins: [
     Keys
   ],
@@ -67,7 +69,7 @@ var Header = React.createClass({
 
   render: function () {
     var oamHealthClass = 'status-item ';
-    switch(this.state.oamHealth) {
+    switch (this.state.oamHealth) {
       case 'green':
         oamHealthClass += 'status-up';
         break;

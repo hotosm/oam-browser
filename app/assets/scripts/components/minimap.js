@@ -9,6 +9,8 @@ var utils = require('../utils/utils');
 var config = require('../config.js');
 
 var MiniMap = React.createClass({
+  displayName: 'MiniMap',
+
   propTypes: {
     selectedSquare: React.PropTypes.string,
     mapView: React.PropTypes.string

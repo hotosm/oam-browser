@@ -1,11 +1,11 @@
 // GLOBAL
 
 html {
-  @include box-sizing(border-box);
+  box-sizing: border-box;
 }
 
 *, *:before, *:after, input[type="search"] {
-  @include box-sizing(inherit);
+  box-sizing: inherit;
 }
 
 html, body {
@@ -278,13 +278,13 @@ a:active{
     top: 50%;
     right: 50%;
     bottom: auto;
-    @include transform(translate(50%, -50%), scale(0));
+    @include transform(translate(50%, -50%) scale(0));
   }
   50% {
     opacity: 1;
   }
   100% {
-    @include transform(translate(0, 0), scale(1));
+    @include transform(translate(0, 0) scale(1));
   }
 }
 

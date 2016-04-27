@@ -6,6 +6,8 @@ var actions = require('../actions/actions');
 var utils = require('../utils/utils');
 
 var ResultsListItem = React.createClass({
+  displayName: 'ResultsListItem',
+
   propTypes: {
     data: React.PropTypes.object
   },
@@ -65,6 +67,8 @@ var ResultsListItem = React.createClass({
 });
 
 var ResultsList = React.createClass({
+  displayName: 'ResultsList',
+
   propTypes: {
     selectedSquare: React.PropTypes.string,
     results: React.PropTypes.array

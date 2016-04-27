@@ -18,7 +18,7 @@ module.exports.strToCoods = function (str) {
   if (!str) {
     return null;
   }
-  var regExp = new RegExp('^(-?[0-9]{1,2}\.[0-9]+),(-?[0-9]{1,2}\.[0-9]+)$');
+  var regExp = new RegExp('^(-?[0-9]{1,2}.[0-9]+),(-?[0-9]{1,2}.[0-9]+)$');
   var res = str.match(regExp);
 
   if (!res ||

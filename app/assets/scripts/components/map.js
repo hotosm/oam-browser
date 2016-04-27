@@ -20,6 +20,8 @@ var mapStore = require('../stores/map_store');
 L.mapbox.accessToken = config.map.mapbox.accessToken;
 
 var Map = React.createClass({
+  displayName: 'Map',
+
   propTypes: {
     mapView: React.PropTypes.string,
     selectedSquareQuadkey: React.PropTypes.string,

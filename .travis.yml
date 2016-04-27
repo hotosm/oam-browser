@@ -1,15 +1,32 @@
 language: node_js
+node_js:
+- '4'
 env:
   global:
-  - GH_REF=github.com/hotosm/oam-browser.git
+  - CXX=g++-4.8
   - DEPLOY_BRANCH=master
   - secure: "WrRx8thvjJ/cnS2hETwi+bwzx38bEBrvGst699AD6+aEDeUg0Yqv45nxkeExbMwOcavtFTS/CAygkxdrduNWsLo9S984WORA37p6nvZ61y8Ed3iCRtAsHqlCWgAyrCjqEZJbty9+/V76D9cvY76LprKTaGSLDYKj9kJZiXQjppo="
-
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.8
+cache:
+  apt: true
+  directories:
+  - node_modules
 before_install:
 - chmod +x ./.build_scripts/deploy.sh
-
+- chmod +x ./.build_scripts/lint.sh
+before_script:
+- "./.build_scripts/lint.sh"
+- npm test
 script:
-- gulp prod
-
-after_success:
-- ./.build_scripts/deploy.sh
+- npm run build
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: ".build_scripts/deploy.sh"
+  on:
+    branch: "${DEPLOY_BRANCH}"

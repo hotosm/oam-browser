@@ -10,6 +10,8 @@ var dropdownActions = Reflux.createActions({
 var activeDropdowns = 0;
 
 var Dropdown = React.createClass({
+  displayName: 'Dropdown',
+
   propTypes: {
     className: React.PropTypes.string,
     triggerTitle: React.PropTypes.string,
@@ -22,7 +24,7 @@ var Dropdown = React.createClass({
   mixins: [Reflux.listenTo(dropdownActions.closeOthers, 'onCloseOthers')],
 
   onCloseOthers: function ($exception) {
-    if (this.getDOMNode() != $exception) {
+    if (this.getDOMNode() !== $exception) {
       this.setState({ open: false });
     }
   },

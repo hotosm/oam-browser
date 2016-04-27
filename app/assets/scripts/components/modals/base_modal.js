@@ -19,6 +19,8 @@ var actions = require('../../actions/actions');
  *  footer={this.getFooter()} />
  */
 var BModal = React.createClass({
+  displayName: 'BaseModal',
+
   propTypes: {
     type: React.PropTypes.string,
     revealed: React.PropTypes.bool,

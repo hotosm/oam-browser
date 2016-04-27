@@ -9,6 +9,8 @@ var Header = require('./header');
 var actions = require('../actions/actions');
 
 var App = React.createClass({
+  displayName: 'App',
+
   mixins: [ Router.State ],
 
   componentDidMount: function () {

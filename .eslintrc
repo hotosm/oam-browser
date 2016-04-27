@@ -7,8 +7,10 @@
   "plugins": [
     "react"
   ],
-  "ecmaFeatures": {
-    "jsx": true
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
   "rules": {
     "semi": [2, "always"],

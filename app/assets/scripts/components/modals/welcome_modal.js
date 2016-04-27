@@ -9,6 +9,8 @@ var mapStore = require('../../stores/map_store');
 var utils = require('../../utils/utils');
 
 var WelcomeModal = React.createClass({
+  displayName: 'WelcomeModal',
+
   propTypes: {
     revealed: React.PropTypes.bool
   },

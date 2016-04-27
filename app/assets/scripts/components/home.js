@@ -14,6 +14,8 @@ var actions = require('../actions/actions');
 var config = require('../config.js');
 
 var Home = React.createClass({
+  displayName: 'Home',
+
   propTypes: {
     params: React.PropTypes.object
   },
@@ -113,7 +115,7 @@ var Home = React.createClass({
 
     return (
       <div>
-        {this.state.loading ? <p className="loading revealed">Loading</p> : null}
+        {this.state.loading ? <p className='loading revealed'>Loading</p> : null}
 
         <MapBoxMap
           mapView={this.state.map.view}

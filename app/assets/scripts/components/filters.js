@@ -9,6 +9,8 @@ var cookie = require('../utils/cookie');
 var config = require('../config.js');
 
 var Filters = React.createClass({
+  displayName: 'Filters',
+
   mixins: [
     Reflux.listenTo(searchQueryStore, 'onSearchQuery'),
     Router.Navigation,

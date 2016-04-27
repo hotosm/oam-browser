@@ -3,6 +3,8 @@ var React = require('react/addons');
 var BModal = require('./base_modal');
 
 var InfoModal = React.createClass({
+  displayName: 'InfoModal',
+
   getHeader: function () {
     return (<h1 className='modal-title'>About</h1>);
   },

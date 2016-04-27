@@ -87,7 +87,7 @@ module.exports = Reflux.createStore({
     return this.storage.footprintsTree.search(extent(sqrFeature));
   },
 
-  footprintsWereFecthed: function() {
+  footprintsWereFecthed: function () {
     return this.storage.footprintsTree === null;
   },
 

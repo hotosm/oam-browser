@@ -1,8 +1,10 @@
 'use strict';
-var React = require('react');
+var React = require('react/addons');
 var ZeroClipboard = require('zeroclipboard');
 
 var ZcButton = React.createClass({
+  displayName: 'ZcButton',
+
   propTypes: {
     onCopy: React.PropTypes.func.isRequired,
     className: React.PropTypes.string,

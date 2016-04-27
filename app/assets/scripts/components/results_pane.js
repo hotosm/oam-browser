@@ -7,6 +7,8 @@ var ResultsList = require('./results_list');
 var ResultsItem = require('./results_item');
 
 var ResultsPane = React.createClass({
+  displayName: 'ResultsPane',
+
   propTypes: {
     results: React.PropTypes.array,
     selectedItemId: React.PropTypes.string,

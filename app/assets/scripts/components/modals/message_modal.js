@@ -5,6 +5,8 @@ var BModal = require('./base_modal');
 var actions = require('../../actions/actions');
 
 var MessageModal = React.createClass({
+  displayName: 'MessageModal',
+
   mixins: [
     Reflux.listenTo(actions.openModal, 'onOpenModal')
   ],

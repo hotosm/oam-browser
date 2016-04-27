@@ -12,6 +12,8 @@ var utils = require('../utils/utils');
 var prettyBytes = require('pretty-bytes');
 
 var ResultsItem = React.createClass({
+  displayName: 'ResultsItem',
+
   propTypes: {
     pagination: React.PropTypes.object,
     data: React.PropTypes.object

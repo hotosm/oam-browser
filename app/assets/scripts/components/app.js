@@ -33,10 +33,9 @@ var App = React.createClass({
   },
 
   render: function () {
-    // When there's a square selected avoid the modal entirely.
-    var showWelcomeModal = !this.getParams().square;
-    // DEV TEMP
-    // showWelcomeModal = false;
+    // Only show the modal if there are no url params.
+    // There can't be any other without map
+    var showWelcomeModal = !this.getParams().map;
 
     return (
       <div>

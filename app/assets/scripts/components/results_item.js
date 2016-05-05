@@ -191,7 +191,7 @@ var ResultsItem = React.createClass({
             <section className='single-related-tms'>
               <header>
                 <h1>Available map layers</h1>
-                <p>This image is part of the folowing map layers:</p>
+                <p>This image is part of the following map layers:</p>
               </header>
               <ul>
                 {d.custom_tms.map(function (o, i) {

@@ -34,7 +34,7 @@ var App = React.createClass({
 
   render: function () {
     // When there's a square selected avoid the modal entirely.
-    var showWelcomeModal = !this.getParams().square;
+    var showWelcomeModal = !this.getParams().map;
     // DEV TEMP
     // showWelcomeModal = false;
 

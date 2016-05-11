@@ -236,7 +236,7 @@ var Map = React.createClass({
         var filter = _this.props.filterParams;
         var prop = foot.feature.properties;
 
-        // Resolution.
+        // Data type.
         if (filter.dataType !== 'all' && !prop.tms) {
           return false;
         }

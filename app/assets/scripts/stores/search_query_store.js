@@ -4,7 +4,7 @@ var _ = require('lodash');
 
 /**
  * Models the "search parameters" from the point of view of the application.
- * NOT responsible for undersatning the API -- that's done by map_store, which
+ * NOT responsible for understanding the API -- that's done by map_store, which
  * consumes this one.
  */
 module.exports = Reflux.createStore({

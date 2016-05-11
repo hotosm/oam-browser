@@ -20,12 +20,9 @@ var Header = React.createClass({
       actions.openModal('info');
     },
     's': function () {
-      var geocoder = this.refs.geocoder.getDOMNode();
-      geocoder.focus();
-      // Prevent the 's' from being typed in the search box.
-      setTimeout(function () {
-        geocoder.value = '';
-      }, 1);
+      // By delaying the focus some millis we prevent the 's' from being
+      // typed in the search box.
+      setTimeout(() => this.refs.geocoder.getDOMNode().focus(), 10);
     }
   },
 

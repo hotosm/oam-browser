@@ -15,6 +15,7 @@
   },
   "homepage": "http://openaerialmap.org/",
   "scripts": {
+    "postinstall": "[ -f app/assets/scripts/config/local.js ] || echo 'module.exports = {};' > app/assets/scripts/config/local.js",
     "serve": "gulp serve",
     "build": "NODE_ENV=production gulp",
     "lint": "eslint app/assets/scripts/ --ext .js",

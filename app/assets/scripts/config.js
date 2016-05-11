@@ -1,22 +1,30 @@
 'use strict';
+var defaultsDeep = require('lodash').defaultsDeep;
+/*
+ * App configuration.
+ *
+ * Uses settings in config/production.js, with any properties set by
+ * config/staging.js or config/local.js overriding them depending upon the
+ * environment.
+ *
+ * This file should not be modified.  Instead, modify one of:
+ *
+ *  - config/production.js
+ *      Production settings (base).
+ *  - config/staging.js
+ *      Overrides to production if ENV is staging.
+ *  - config/local.js
+ *      Overrides if local.js exists.
+ *      This last file is gitignored, so you can safely change it without
+ *      polluting the repo.
+ */
 
-module.exports = {
-  map: {
-    mapbox: {
-      accessToken: 'pk.eyJ1IjoiaG90IiwiYSI6IjU3MjE1YTYxZGM2YmUwMDIxOTg2OGZmNWU0NzRlYTQ0In0.MhK7SIwO00rhs3yMudBfIw'
-    },
+var configurations = require('./config/*.js', {mode: 'hash'});
+var config = configurations.local || {};
 
-    baseLayer: 'hot.ml5mgnm7',
+if (process.env.DS_ENV === 'staging') {
+  defaultsDeep(config, configurations.staging);
+}
+defaultsDeep(config, configurations.production);
 
-    initialZoom: 8,
-    minZoom: 2,
-    maxZoom: undefined,
-
-    initialView: [60.177, 25.148]
-  },
-  catalog: {
-    // url: 'https://api.openaerialmap.org'
-    url: 'http://localhost:4000'
-  },
-  oamStatus: 'https://status.openaerialmap.org/healthcheck'
-};
+module.exports = config;

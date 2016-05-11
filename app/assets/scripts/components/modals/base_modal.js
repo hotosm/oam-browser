@@ -39,13 +39,21 @@ var BModal = React.createClass({
 
   keybindings: {
     'esc': function () {
-      this.setState({ revealed: false });
+      this.closeModal();
     }
+  },
+
+  closeModal: function () {
+    this.setState({ revealed: false });
+  },
+
+  openModal: function () {
+    this.setState({ revealed: true });
   },
 
   onOpenModal: function (which) {
     if (which === this.props.type) {
-      this.setState({ revealed: true });
+      this.openModal();
     }
   },
 
@@ -66,12 +74,12 @@ var BModal = React.createClass({
       onOverlayClick: function (e) {
         // Prevent children from triggering this.
         if (e.target === e.currentTarget) {
-          this.setState({ revealed: false });
+          this.closeModal();
         }
       },
 
       onCloseClick: function (e) {
-        this.setState({ revealed: false });
+        this.closeModal();
       }
     };
   },

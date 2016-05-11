@@ -15,7 +15,8 @@ module.exports = {
     initialView: [60.177, 25.148]
   },
   catalog: {
-    url: 'https://api.openaerialmap.org'
+    // url: 'https://api.openaerialmap.org'
+    url: 'http://localhost:4000'
   },
   oamStatus: 'https://status.openaerialmap.org/healthcheck'
 };

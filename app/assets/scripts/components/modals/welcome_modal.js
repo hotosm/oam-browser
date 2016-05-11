@@ -51,7 +51,7 @@ var WelcomeModal = React.createClass({
     console.log('quadKey', quadKey);
     console.log('full url -- %s/%s/%s', mapView, quadKey, latest._id);
 
-    this.getDOMNode().querySelector('.dismiss-modal .close').click();
+    this.refs.base.closeModal();
 
     this.transitionTo('item', {
       map: mapView,
@@ -64,18 +64,23 @@ var WelcomeModal = React.createClass({
 
   onGeocoderSearch: function (e) {
     e.preventDefault();
-    var _this = this;
 
-    var queryString = this.getDOMNode().querySelector('[data-hook="geocoder"]').value;
+    var queryString = this.refs.geocoder.getDOMNode().value;
 
-    utils.queryGeocoder(queryString, function (bounds) {
+    utils.queryGeocoder(queryString, bounds => {
       if (!bounds) {
         console.log('geocoder -- no result was found');
         return;
       }
-      _this.getDOMNode().querySelector('.dismiss-modal .close').click();
+      this.refs.base.closeModal();
       actions.geocoderResult(bounds);
     });
+  },
+
+  onMyLocationClick: function (e) {
+    e.preventDefault();
+    this.refs.base.closeModal();
+    actions.requestMyLocation();
   },
 
   getHeader: function () {
@@ -92,7 +97,8 @@ var WelcomeModal = React.createClass({
       <div>
         <form className='form-search-welcome mod-block' onSubmit={this.onGeocoderSearch}>
           <div className='input-group'>
-            <input className='form-control input-l input search' type='search' placeholder='Search location' data-hook='geocoder'/>
+            <input className='form-control input-l input search' type='search' placeholder='Search location' ref='geocoder'/>
+            {navigator.geolocation ? <a href='#' title='Take me to my location' className='bttn-my-location' onClick={this.onMyLocationClick}><span>My location</span></a> : null}
             <span className='input-group-bttn'><button type='submit' className='bttn-search-welcome'><span>Search</span></button></span>
           </div>
         </form>
@@ -111,6 +117,7 @@ var WelcomeModal = React.createClass({
   render: function () {
     return (
       <BModal
+        ref='base'
         type='welcome'
         header={this.getHeader()}
         body={this.getBody()}

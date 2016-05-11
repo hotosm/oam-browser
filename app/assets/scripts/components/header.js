@@ -20,12 +20,9 @@ var Header = React.createClass({
       actions.openModal('info');
     },
     's': function () {
-      var geocoder = this.getDOMNode().querySelector('[data-hook="geocoder"]');
-      geocoder.focus();
-      // Prevent the 's' from being typed in the search box.
-      setTimeout(function () {
-        geocoder.value = '';
-      }, 1);
+      // By delaying the focus some millis we prevent the 's' from being
+      // typed in the search box.
+      setTimeout(() => this.refs.geocoder.getDOMNode().focus(), 10);
     }
   },
 
@@ -53,14 +50,19 @@ var Header = React.createClass({
   onGeocoderSearch: function (e) {
     e.preventDefault();
 
-    var queryString = this.getDOMNode().querySelector('[data-hook="geocoder"]').value;
-    utils.queryGeocoder(queryString, function (bounds) {
+    var queryString = this.refs.geocoder.getDOMNode().value;
+    utils.queryGeocoder(queryString, bounds => {
       if (!bounds) {
         console.log('geocoder -- no result was found');
         return;
       }
       actions.geocoderResult(bounds);
     });
+  },
+
+  onMyLocationClick: function (e) {
+    e.preventDefault();
+    actions.requestMyLocation();
   },
 
   componentDidMount: function () {
@@ -90,7 +92,8 @@ var Header = React.createClass({
           <div className='nav-block-prime'>
             <form className='form-search' onSubmit={this.onGeocoderSearch}>
               <div className='input-group'>
-                <input className='form-control input-m input search' type='search' placeholder='Search location' data-hook='geocoder' />
+                <input className='form-control input-m input search' type='search' placeholder='Search location' ref='geocoder' />
+                {navigator.geolocation ? <a href='#' title='Take me to my location' className='bttn-my-location' onClick={this.onMyLocationClick}><span>My location</span></a> : null}
                 <span className='input-group-bttn'><button type='submit' className='bttn-search'><span>Search</span></button></span>
               </div>
             </form>

@@ -70,7 +70,7 @@ module.exports = Reflux.createStore({
         type: 'Feature',
         properties: {
           gsd: foot.gsd,
-          tms: !!foot.properties.tms,
+          tms: !!foot.properties.tms || !!foot.custom_tms,
           acquisition_end: foot.acquisition_end,
           FID: id++
         },

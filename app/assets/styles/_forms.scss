@@ -200,3 +200,16 @@ input[type=radio] {
   margin-top: 0.5rem;
   margin-left: -1.25rem;
 }
+
+.form-search .input.search {
+  padding-right: 1.25rem;
+}
+
+.form-search-welcome {
+  .bttn-my-location {
+    right: 3rem;
+  }
+  .input.search {
+    padding-right: 2rem;
+  }
+}

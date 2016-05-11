@@ -269,3 +269,30 @@ input[type=submit] {
 .bttn-uoptions {
   @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .uoptions;
 }
+
+.bttn-my-location {
+  position: absolute;
+  right: 2.25rem;
+  top: 50%;
+  z-index: 99;
+
+  &, &:active {
+    transform: translate(0, -50%);
+  }
+  &, &:visited {
+    color: inherit;
+  }
+
+  span {
+    @extend .visually-hidden;
+  }
+
+  &:before {
+    width: 1.5rem;
+    height: 1.5rem;
+    line-height: 1.5rem;
+    font-size: 1rem;
+    text-align: center;
+    @extend .icon-my-location;
+  }
+}

@@ -34,6 +34,7 @@ var Map = React.createClass({
     Reflux.listenTo(actions.resultOver, 'onResultOver'),
     Reflux.listenTo(actions.resultOut, 'onResultOut'),
     Reflux.listenTo(actions.geocoderResult, 'onGeocoderResult'),
+    Reflux.listenTo(actions.requestMyLocation, 'onRequestMyLocation'),
 
     Router.Navigation,
     Router.State
@@ -197,6 +198,16 @@ var Map = React.createClass({
       this.map.fitBounds(bounds);
       this.transitionTo('map', {map: this.mapViewToString()}, this.getQuery());
     }
+  },
+
+  // Actions listener.
+  onRequestMyLocation: function () {
+    navigator.geolocation.getCurrentPosition(position => {
+      let {longitude, latitude} = position.coords;
+      this.transitionTo('map', {map: utils.getMapViewString(longitude, latitude, 15)}, this.getQuery());
+    }, err => {
+      console.log('my location error', err);
+    });
   },
 
   // Action listener

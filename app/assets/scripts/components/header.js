@@ -47,6 +47,11 @@ var Header = React.createClass({
     actions.openModal('info');
   },
 
+  contactClickHandler: function (e) {
+    e.preventDefault();
+    actions.openModal('feedback');
+  },
+
   onGeocoderSearch: function (e) {
     e.preventDefault();
 
@@ -108,7 +113,7 @@ var Header = React.createClass({
                 <ul className='drop-menu info-menu' role='menu'>
                   <li><a href='#modal-info' title='Learn more' onClick={this.aboutClickHandler}><span>About</span></a></li>
                   <li><a href='https://github.com/hotosm/oam-browser/blob/develop/docs/user-guide.md' title='Go to User Guide'><span>Help</span></a></li>
-                  <li><a href='mailto:info@openaerialmap.org' title='Get in touch'><span>Contact</span> <small>info@openaerialmap.org</small></a></li>
+                  <li><a href='mailto:info@openaerialmap.org' title='Get in touch' onClick={this.contactClickHandler}><span>Contact</span> <small>info@openaerialmap.org</small></a></li>
                   <li className='sep'><a href='https://status.openaerialmap.org/' className={oamHealthClass} title='Go to OAM Status'><span>Status</span></a></li>
                 </ul>
               </Dropdown>

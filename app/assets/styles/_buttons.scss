@@ -296,3 +296,19 @@ input[type=submit] {
     @extend .icon-my-location;
   }
 }
+
+.bttn-submit {
+  @extend .bttn, .bttn-l;
+  min-width: 12rem;
+  color: #fff;
+
+  background-color: tint($base-color, 16%);
+  &:hover {
+    background-color: $base-color;
+  }
+  &.active,
+  &.active:hover,
+  &:active {
+    background-color: shade($base-color, 16%);
+  }
+}

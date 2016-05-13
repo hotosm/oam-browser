@@ -74,6 +74,7 @@
     "watchify": "^3.7.0"
   },
   "dependencies": {
+    "form-serialize": "^0.7.1",
     "jquery": "^2.1.4",
     "lodash": "^3.8.0",
     "mapbox.js": "^2.1.9",

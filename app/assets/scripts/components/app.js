@@ -5,6 +5,7 @@ var RouteHandler = Router.RouteHandler;
 var InfoModal = require('./modals/info_modal');
 var WelcomeModal = require('./modals/welcome_modal');
 var MessageModal = require('./modals/message_modal');
+var FeedbackModal = require('./modals/feedback_modal');
 var Header = require('./header');
 var actions = require('../actions/actions');
 
@@ -46,6 +47,7 @@ var App = React.createClass({
         <WelcomeModal revealed={showWelcomeModal} />
         <InfoModal />
         <MessageModal />
+        <FeedbackModal />
       </div>
     );
   }

@@ -15,6 +15,7 @@ var gutil = require('gulp-util');
 var exit = require('gulp-exit');
 var rev = require('gulp-rev');
 var revReplace = require('gulp-rev-replace');
+var SassString = require('node-sass').types.String;
 var notifier = require('node-notifier');
 
 // /////////////////////////////////////////////////////////////////////////////
@@ -27,14 +28,18 @@ var pkg;
 // Environment
 // Set the correct environment, which controls what happens in config.js
 if (!process.env.DS_ENV) {
-  if (!process.env.TRAVIS_BRANCH || process.env.TRAVIS_BRANCH !== process.env.PRODUCTION_BRANCH) {
+  if (process.env.TRAVIS_BRANCH && process.env.TRAVIS_BRANCH !== process.env.DEPLOY_BRANCH) {
     process.env.DS_ENV = 'staging';
-  } else {
+  } else if (process.env.TRAVIS_BRANCH && process.env.TRAVIS_BRANCH === process.env.DEPLOY_BRANCH) {
     process.env.DS_ENV = 'production';
+  } else {
+    process.env.DS_ENV = 'development';
   }
 }
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
+var prodBuild = false;
 
 // /////////////////////////////////////////////////////////////////////////////
 // ------------------------- Helper functions --------------------------------//
@@ -59,6 +64,7 @@ readPackage();
 // ---------------------------------------------------------------------------//
 
 gulp.task('default', ['clean'], function () {
+  prodBuild = true;
   gulp.start('build');
 });
 
@@ -128,6 +134,9 @@ gulp.task('javascript', function () {
           message: e.message
         });
         console.log('Javascript error:', e);
+        if (prodBuild) {
+          process.exit(1);
+        }
         // Allows the watch to continue.
         this.emit('end');
       })
@@ -178,6 +187,9 @@ gulp.task('styles', function () {
         message: e.message
       });
       console.log('Sass error:', e.toString());
+      if (prodBuild) {
+        process.exit(1);
+      }
       // Allows the watch to continue.
       this.emit('end');
     }))
@@ -185,6 +197,13 @@ gulp.task('styles', function () {
     .pipe($.sass({
       outputStyle: 'expanded',
       precision: 10,
+      functions: {
+        'urlencode($url)': function (url) {
+          var v = new SassString();
+          v.setValue(encodeURIComponent(url.getValue()));
+          return v;
+        }
+      },
       includePaths: require('node-bourbon').includePaths
     }))
     .pipe($.sourcemaps.write())
@@ -204,13 +223,14 @@ gulp.task('html', ['styles'], function () {
 
 gulp.task('images', function () {
   return gulp.src('app/assets/graphics/**/*')
-    .pipe($.cache($.imagemin({
-      progressive: true,
-      interlaced: true,
+    .pipe($.cache($.imagemin([
+      $.imagemin.gifsicle({interlaced: true}),
+      $.imagemin.jpegtran({progressive: true}),
+      $.imagemin.optipng({optimizationLevel: 5}),
       // don't remove IDs from SVGs, they are often used
       // as hooks for embedding and styling
-      svgoPlugins: [{cleanupIDs: false}]
-    })))
+      $.imagemin.svgo({plugins: [{cleanupIDs: false}]})
+    ])))
     .pipe(gulp.dest('dist/assets/graphics'));
 });
 

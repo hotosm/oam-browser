@@ -1,20 +1,23 @@
 'use strict';
-var React = require('react/addons');
-var Reflux = require('reflux');
-var Router = require('react-router');
-var Dropdown = require('./shared/dropdown');
-var actions = require('../actions/actions');
-var searchQueryStore = require('../stores/search_query_store');
-var cookie = require('../utils/cookie');
-var config = require('../config.js');
+import { hashHistory } from 'react-router';
+import React from 'react';
+import Reflux from 'reflux';
+import Dropdown from './shared/dropdown';
+import actions from '../actions/actions';
+import searchQueryStore from '../stores/search_query_store';
+import cookie from '../utils/cookie';
+import config from '../config.js';
 
 var Filters = React.createClass({
   displayName: 'Filters',
 
+  propTypes: {
+    query: React.PropTypes.object,
+    params: React.PropTypes.object
+  },
+
   mixins: [
-    Reflux.listenTo(searchQueryStore, 'onSearchQuery'),
-    Router.Navigation,
-    Router.State
+    Reflux.listenTo(searchQueryStore, 'onSearchQuery')
   ],
 
   getInitialState: function () {
@@ -45,14 +48,14 @@ var Filters = React.createClass({
   },
 
   _updateUrl: function (prop, value) {
-    var query = this.getQuery();
+    var query = this.props.query;
     if (value === 'all') {
       delete query[prop];
     } else {
       query[prop] = value;
     }
 
-    var mapView = this.getParams().map;
+    var mapView = this.props.params.map;
     if (!mapView) {
       var cookieView = cookie.read('oam-browser:map-view');
       if (cookieView !== 'undefined') {
@@ -62,7 +65,7 @@ var Filters = React.createClass({
       }
     }
 
-    this.transitionTo('map', {map: mapView}, query);
+    hashHistory.push({pathname: mapView, query: query});
   },
 
   render: function () {

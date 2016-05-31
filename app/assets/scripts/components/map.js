@@ -1,21 +1,20 @@
 /* global L */
 'use strict';
-
 require('mapbox.js');
 
-var React = require('react/addons');
-var Reflux = require('reflux');
-var Router = require('react-router');
-var _ = require('lodash');
-var tilebelt = require('tilebelt');
-var centroid = require('turf-centroid');
-var inside = require('turf-inside');
-var overlaps = require('turf-overlaps');
-var actions = require('../actions/actions');
-var config = require('../config.js');
-var utils = require('../utils/utils');
-var DSZoom = require('../utils/ds_zoom');
-var mapStore = require('../stores/map_store');
+import { hashHistory } from 'react-router';
+import React from 'react';
+import Reflux from 'reflux';
+import _ from 'lodash';
+import tilebelt from 'tilebelt';
+import centroid from 'turf-centroid';
+import inside from 'turf-inside';
+import overlaps from 'turf-overlaps';
+import actions from '../actions/actions';
+import config from '../config.js';
+import utils from '../utils/utils';
+import mapStore from '../stores/map_store';
+import DSZoom from '../utils/ds_zoom';
 
 L.mapbox.accessToken = config.map.mapbox.accessToken;
 
@@ -23,6 +22,7 @@ var Map = React.createClass({
   displayName: 'Map',
 
   propTypes: {
+    query: React.PropTypes.object,
     mapView: React.PropTypes.string,
     selectedSquareQuadkey: React.PropTypes.string,
     selectedItemId: React.PropTypes.string,
@@ -34,10 +34,7 @@ var Map = React.createClass({
     Reflux.listenTo(actions.resultOver, 'onResultOver'),
     Reflux.listenTo(actions.resultOut, 'onResultOut'),
     Reflux.listenTo(actions.geocoderResult, 'onGeocoderResult'),
-    Reflux.listenTo(actions.requestMyLocation, 'onRequestMyLocation'),
-
-    Router.Navigation,
-    Router.State
+    Reflux.listenTo(actions.requestMyLocation, 'onRequestMyLocation')
   ],
 
   map: null,
@@ -76,7 +73,7 @@ var Map = React.createClass({
   componentDidMount: function () {
     console.log('componentDidMount MapBoxMap');
 
-    this.map = L.mapbox.map(this.getDOMNode().querySelector('#map'), config.map.baseLayer, {
+    this.map = L.mapbox.map(this.refs.mapContainer, config.map.baseLayer, {
       zoomControl: false,
       minZoom: config.map.minZoom,
       maxZoom: config.map.maxZoom,
@@ -136,7 +133,7 @@ var Map = React.createClass({
   render: function () {
     return (
       <div>
-        <div id='map'></div>
+        <div id='map' ref='mapContainer'></div>
       </div>
     );
   },
@@ -144,12 +141,15 @@ var Map = React.createClass({
   // Map event
   onMapMoveend: function (e) {
     console.log('event:', 'moveend');
+    var path = this.mapViewToString();
+    if (this.props.selectedSquareQuadkey) {
+      path += `/${this.props.selectedSquareQuadkey}`;
+    }
+    if (this.props.selectedItemId) {
+      path += `/${this.props.selectedItemId}`;
+    }
 
-    var routes = this.getRoutes();
-    var params = _.cloneDeep(this.getParams());
-    params.map = this.mapViewToString();
-    var routeName = routes[routes.length - 1].name || 'map';
-    this.replaceWith(routeName, params, this.getQuery());
+    hashHistory.replace({pathname: path, query: this.props.query});
   },
 
   // Map event
@@ -179,7 +179,7 @@ var Map = React.createClass({
     if (this.props.selectedSquareQuadkey) {
       console.log('onGridSqrClick', 'There was a square selected. UNSELECTING');
       // There is a square selected. Unselect.
-      this.transitionTo('map', {map: this.props.mapView}, this.getQuery());
+      hashHistory.push({pathname: `/${this.props.mapView}`, query: this.props.query});
     } else if (e.layer.feature.properties.count) {
       console.log('onGridSqrClick', 'No square selected. SELECTING');
       var quadKey = e.layer.feature.properties._quadKey;
@@ -187,7 +187,7 @@ var Map = React.createClass({
       var squareCenter = centroid(e.layer.feature).geometry.coordinates;
       var mapView = utils.getMapViewString(squareCenter[0], squareCenter[1], z);
       console.log('transition /:map/:square', {map: mapView, square: quadKey});
-      this.transitionTo('results', {map: mapView, square: quadKey}, this.getQuery());
+      hashHistory.push({pathname: `/${mapView}/${quadKey}`, query: this.props.query});
     }
   },
 
@@ -196,7 +196,7 @@ var Map = React.createClass({
     if (bounds) {
       // Move the map.
       this.map.fitBounds(bounds);
-      this.transitionTo('map', {map: this.mapViewToString()}, this.getQuery());
+      hashHistory.push({pathname: `/${this.mapViewToString()}`, query: this.props.query});
     }
   },
 
@@ -204,7 +204,8 @@ var Map = React.createClass({
   onRequestMyLocation: function () {
     navigator.geolocation.getCurrentPosition(position => {
       let {longitude, latitude} = position.coords;
-      this.transitionTo('map', {map: utils.getMapViewString(longitude, latitude, 15)}, this.getQuery());
+      let mapView = utils.getMapViewString(longitude, latitude, 15);
+      hashHistory.push({pathname: `/${mapView}`, query: this.props.query});
     }, err => {
       console.log('my location error', err);
     });

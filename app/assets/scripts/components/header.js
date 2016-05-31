@@ -1,15 +1,20 @@
 'use strict';
-var React = require('react/addons');
-var Keys = require('react-keybinding');
-var $ = require('jquery');
-var Dropdown = require('./shared/dropdown');
-var actions = require('../actions/actions');
-var Filters = require('./filters');
-var utils = require('../utils/utils');
-var config = require('../config');
+import React from 'react';
+import Keys from 'react-keybinding';
+import $ from 'jquery';
+import Dropdown from './shared/dropdown';
+import actions from '../actions/actions';
+import Filters from './filters';
+import utils from '../utils/utils';
+import config from '../config';
 
 var Header = React.createClass({
   displayName: 'Header',
+
+  propTypes: {
+    query: React.PropTypes.object,
+    params: React.PropTypes.object
+  },
 
   mixins: [
     Keys
@@ -22,7 +27,7 @@ var Header = React.createClass({
     's': function () {
       // By delaying the focus some millis we prevent the 's' from being
       // typed in the search box.
-      setTimeout(() => this.refs.geocoder.getDOMNode().focus(), 10);
+      setTimeout(() => this.refs.geocoder.focus(), 10);
     }
   },
 
@@ -98,7 +103,9 @@ var Header = React.createClass({
               </div>
             </form>
             <ul className='app-menu'>
-              <Filters />
+              <Filters
+                params={this.props.params}
+                query={this.props.query} />
             </ul>
           </div>
           <div className='nav-block-sec'>

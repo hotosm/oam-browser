@@ -1,8 +1,8 @@
 'use strict';
-var React = require('react/addons');
-var Reflux = require('reflux');
-var BModal = require('./base_modal');
-var actions = require('../../actions/actions');
+import React from 'react';
+import Reflux from 'reflux';
+import BModal from './base_modal';
+import actions from '../../actions/actions';
 
 var MessageModal = React.createClass({
   displayName: 'MessageModal',

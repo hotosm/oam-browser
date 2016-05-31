@@ -1,6 +1,6 @@
 'use strict';
-var React = require('react/addons');
-var BModal = require('./base_modal');
+import React from 'react';
+import BModal from './base_modal';
 
 var InfoModal = React.createClass({
   displayName: 'InfoModal',

@@ -47,15 +47,6 @@ var prodBuild = false;
 
 function readPackage () {
   pkg = JSON.parse(fs.readFileSync('package.json'));
-  // When requiring react with addons the site suddenly stops working.
-  // This happens because multiple copies of react are included.
-  // One is react with the addons, the other one is the normal react
-  // as specified in the dependencies.
-  // https://github.com/rackt/react-router/issues/1093
-  // This is easily solvable by replacing the react to be included through the
-  // dependencies with the one with addons.
-  pkg.dependencies['react/addons'] = pkg.dependencies.react;
-  delete pkg.dependencies.react;
 }
 readPackage();
 

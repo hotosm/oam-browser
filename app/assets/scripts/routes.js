@@ -1,21 +1,21 @@
 'use strict';
-var React = require('react/addons');
-var Router = require('react-router');
-var Route = Router.Route;
-var DefaultRoute = Router.DefaultRoute;
+import React from 'react';
+import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 
-var App = require('./components/app');
-var Home = require('./components/home');
+import App from './components/app';
+import Home from './components/home';
 
 var routes = (
-  <Route handler={App}>
-    <Route name='map' path='/:map' handler={Home}>
-      <Route name='results' path=':square' handler={Home}>
-        <Route name='item' path=':item_id' handler={Home} />
+  <Router history={hashHistory}>
+    <Route path='/' component={App}>
+      <IndexRoute component={Home} />
+      <Route name='map' path='/:map' component={Home}>
+        <Route name='results' path=':square' component={Home}>
+          <Route name='item' path=':item_id' component={Home} />
+        </Route>
       </Route>
     </Route>
-    <DefaultRoute handler={Home} />
-  </Route>
+  </Router>
 );
 
 module.exports = routes;

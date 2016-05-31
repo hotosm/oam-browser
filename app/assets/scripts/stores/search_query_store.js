@@ -1,6 +1,6 @@
-var Reflux = require('reflux');
-var actions = require('../actions/actions');
-var _ = require('lodash');
+import Reflux from 'reflux';
+import actions from '../actions/actions';
+import _ from 'lodash';
 
 /**
  * Models the "search parameters" from the point of view of the application.

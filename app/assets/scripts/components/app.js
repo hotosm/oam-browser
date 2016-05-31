@@ -1,17 +1,19 @@
 'use strict';
-var React = require('react/addons');
-var Router = require('react-router');
-var RouteHandler = Router.RouteHandler;
-var InfoModal = require('./modals/info_modal');
-var WelcomeModal = require('./modals/welcome_modal');
-var MessageModal = require('./modals/message_modal');
-var Header = require('./header');
-var actions = require('../actions/actions');
+import React from 'react';
+import InfoModal from './modals/info_modal';
+import WelcomeModal from './modals/welcome_modal';
+import MessageModal from './modals/message_modal';
+import Header from './header';
+import actions from '../actions/actions';
 
 var App = React.createClass({
   displayName: 'App',
 
-  mixins: [ Router.State ],
+  propTypes: {
+    params: React.PropTypes.object,
+    location: React.PropTypes.object,
+    children: React.PropTypes.object
+  },
 
   componentWillMount: function () {
     // Pull the search filter state from the URL.  Why is this here instead
@@ -20,28 +22,30 @@ var App = React.createClass({
     // where the map move action will get fired, triggering the first API load.
     //
     // TODO: this should be reviewed at some point.
-    var params = this.getQuery();
-    if (params.date) {
-      actions.setDateFilter(params.date);
+    var query = this.props.location.query || {};
+    if (query.date) {
+      actions.setDateFilter(query.date);
     }
-    if (params.resolution) {
-      actions.setResolutionFilter(params.resolution);
+    if (query.resolution) {
+      actions.setResolutionFilter(query.resolution);
     }
-    if (params.type) {
-      actions.setDataTypeFilter(params.type);
+    if (query.type) {
+      actions.setDataTypeFilter(query.type);
     }
   },
 
   render: function () {
     // Only show the modal if there are no url params.
     // There can't be any other without map
-    var showWelcomeModal = !this.getParams().map;
+    var params = this.props.params || {};
+    var query = this.props.location.query || {};
+    var showWelcomeModal = !params.map;
 
     return (
       <div>
-        <Header />
+        <Header params={params} query={query} />
         <main id='site-body' role='main'>
-          <RouteHandler />
+        {React.cloneElement(this.props.children, { params: params, query: query })}
         </main>
         <WelcomeModal revealed={showWelcomeModal} />
         <InfoModal />

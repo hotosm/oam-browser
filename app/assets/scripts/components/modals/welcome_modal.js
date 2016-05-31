@@ -1,12 +1,12 @@
 'use strict';
-var React = require('react/addons');
-var Reflux = require('reflux');
-var Router = require('react-router');
-var centroid = require('turf-centroid');
-var BModal = require('./base_modal');
-var actions = require('../../actions/actions');
-var mapStore = require('../../stores/map_store');
-var utils = require('../../utils/utils');
+import { hashHistory } from 'react-router';
+import React from 'react';
+import Reflux from 'reflux';
+import centroid from 'turf-centroid';
+import BModal from './base_modal';
+import actions from '../../actions/actions';
+import mapStore from '../../stores/map_store';
+import utils from '../../utils/utils';
 
 var WelcomeModal = React.createClass({
   displayName: 'WelcomeModal',
@@ -16,9 +16,7 @@ var WelcomeModal = React.createClass({
   },
 
   mixins: [
-    Reflux.listenTo(actions.latestImageryLoaded, 'onLatestImageryLoaded'),
-    Router.Navigation,
-    Router.State
+    Reflux.listenTo(actions.latestImageryLoaded, 'onLatestImageryLoaded')
   ],
 
   getInitialState: function () {
@@ -53,11 +51,7 @@ var WelcomeModal = React.createClass({
 
     this.refs.base.closeModal();
 
-    this.transitionTo('item', {
-      map: mapView,
-      square: quadKey,
-      item_id: latest._id
-    });
+    hashHistory.push(`/${mapView}/${quadKey}/${latest._id}`);
 
     console.groupEnd('onBrowseLatestClick');
   },

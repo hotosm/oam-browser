@@ -1,28 +1,29 @@
 'use strict';
-var qs = require('querystring');
-var $ = require('jquery');
-var centroid = require('turf-centroid');
-var React = require('react/addons');
-var Keys = require('react-keybinding');
-var Router = require('react-router');
-var actions = require('../actions/actions');
-var ZcButton = require('./shared/zc_button');
-var Dropdown = require('./shared/dropdown');
-var utils = require('../utils/utils');
-var prettyBytes = require('pretty-bytes');
+import { hashHistory } from 'react-router';
+import React from 'react';
+import qs from 'querystring';
+import $ from 'jquery';
+import centroid from 'turf-centroid';
+import Keys from 'react-keybinding';
+import actions from '../actions/actions';
+import ZcButton from './shared/zc_button';
+import Dropdown from './shared/dropdown';
+import utils from '../utils/utils';
+import prettyBytes from 'pretty-bytes';
 
 var ResultsItem = React.createClass({
   displayName: 'ResultsItem',
 
   propTypes: {
+    query: React.PropTypes.object,
+    mapView: React.PropTypes.string,
+    selectedSquareQuadkey: React.PropTypes.string,
     pagination: React.PropTypes.object,
     data: React.PropTypes.object
   },
 
   mixins: [
-    Keys,
-    Router.State,
-    Router.Navigation
+    Keys
   ],
 
   keybindings: {
@@ -42,35 +43,27 @@ var ResultsItem = React.createClass({
     if (e) {
       e.preventDefault();
     }
-    var p = this.getParams();
-    this.transitionTo('item', {
-      map: p.map,
-      square: p.square,
-      item_id: this.props.pagination.prevId
-    }, this.getQuery());
+    let { mapView, selectedSquareQuadkey } = this.props;
+    let path = `${mapView}/${selectedSquareQuadkey}/${this.props.pagination.prevId}`;
+    hashHistory.push({pathname: path, query: this.props.query});
   },
 
   viewAllResults: function (e) {
     if (e) {
       e.preventDefault();
     }
-    var p = this.getParams();
-    this.transitionTo('results', {
-      map: p.map,
-      square: p.square
-    }, this.getQuery());
+    let { mapView, selectedSquareQuadkey } = this.props;
+    let path = `${mapView}/${selectedSquareQuadkey}`;
+    hashHistory.push({pathname: path, query: this.props.query});
   },
 
   nextResult: function (e) {
     if (e) {
       e.preventDefault();
     }
-    var p = this.getParams();
-    this.transitionTo('item', {
-      map: p.map,
-      square: p.square,
-      item_id: this.props.pagination.nextId
-    }, this.getQuery());
+    let { mapView, selectedSquareQuadkey } = this.props;
+    let path = `${mapView}/${selectedSquareQuadkey}/${this.props.pagination.nextId}`;
+    hashHistory.push({pathname: path, query: this.props.query});
   },
 
   onCopy: function (e) {
@@ -120,7 +113,7 @@ var ResultsItem = React.createClass({
     // grab centroid of the footprint
     var center = centroid(d.geojson).geometry.coordinates;
     // cheat by using current zoom level
-    var zoom = this.getParams().map.split(',')[2];
+    var zoom = this.props.mapView.split(',')[2];
     var idUrl = 'http://www.openstreetmap.org/edit' +
     '#map=' + [zoom, center[1], center[0]].join('/') +
     '?' + qs.stringify({

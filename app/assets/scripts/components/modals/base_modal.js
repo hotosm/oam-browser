@@ -1,9 +1,9 @@
 'use strict';
-var React = require('react/addons');
-var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
-var Reflux = require('reflux');
-var Keys = require('react-keybinding');
-var actions = require('../../actions/actions');
+import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import Reflux from 'reflux';
+import Keys from 'react-keybinding';
+import actions from '../../actions/actions';
 
 /**
  * The base modal contains the wrapper code for the modals and should not be
@@ -132,7 +132,7 @@ var BModal = React.createClass({
     }
 
     return (
-      <ReactCSSTransitionGroup component='div' transitionName='modal'>
+      <ReactCSSTransitionGroup component='div' transitionName='modal' transitionEnterTimeout={500} transitionLeaveTimeout={300} >
         {modal}
       </ReactCSSTransitionGroup>
     );

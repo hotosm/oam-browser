@@ -1,6 +1,6 @@
 'use strict';
-var React = require('react/addons');
-var ZeroClipboard = require('zeroclipboard');
+import React from 'react';
+import ZeroClipboard from 'zeroclipboard';
 
 var ZcButton = React.createClass({
   displayName: 'ZcButton',
@@ -30,7 +30,7 @@ var ZcButton = React.createClass({
     });
 
     var _this = this;
-    var el = this.getDOMNode();
+    var el = this.refs.el;
     var client = new ZeroClipboard(el);
     client.on('ready', function (readyEvent) {
       console.log('ZeroClipboard SWF is ready!');
@@ -53,7 +53,7 @@ var ZcButton = React.createClass({
 
   render: function () {
     return (
-      <a href='#' title={this.props.title} className={this.props.className} onClick={this.onCopyClick}><span>{this.props.text}</span></a>
+      <a ref='el' href='#' title={this.props.title} className={this.props.className} onClick={this.onCopyClick}><span>{this.props.text}</span></a>
     );
   }
 });

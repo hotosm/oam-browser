@@ -17,6 +17,7 @@ var rev = require('gulp-rev');
 var revReplace = require('gulp-rev-replace');
 var SassString = require('node-sass').types.String;
 var notifier = require('node-notifier');
+var OAM_ADDONS = require('oam-design-system/gulp-addons');
 
 // /////////////////////////////////////////////////////////////////////////////
 // --------------------------- Variables -------------------------------------//
@@ -66,7 +67,8 @@ gulp.task('serve', ['vendorScripts', 'javascript', 'styles', 'fonts'], function 
       baseDir: ['.tmp', 'app'],
       routes: {
         '/node_modules': './node_modules'
-      }
+      },
+      middleware: OAM_ADDONS.graphicsMiddleware(fs)
     }
   });
 
@@ -195,7 +197,7 @@ gulp.task('styles', function () {
           return v;
         }
       },
-      includePaths: require('node-bourbon').includePaths
+      includePaths: require('node-bourbon').with(OAM_ADDONS.scssPath)
     }))
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest('.tmp/assets/styles'))
@@ -213,7 +215,7 @@ gulp.task('html', ['styles'], function () {
 });
 
 gulp.task('images', function () {
-  return gulp.src('app/assets/graphics/**/*')
+  return gulp.src(['app/assets/graphics/**/*', OAM_ADDONS.graphicsPath + '/**/*'])
     .pipe($.cache($.imagemin([
       $.imagemin.gifsicle({interlaced: true}),
       $.imagemin.jpegtran({progressive: true}),

@@ -100,7 +100,6 @@ var Filters = React.createClass({
     return (
       <Dropdown
         element='li'
-        className='drop__content--special'
         triggerElement='a'
         triggerClassName='button button--achromic button--text-hidden drop__toggle--settings'
         triggerTitle='Settings'

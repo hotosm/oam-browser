@@ -114,7 +114,6 @@ var Header = React.createClass({
 
                 <Dropdown
                   element='li'
-                  className='drop__content--special'
                   triggerElement='a'
                   triggerClassName='button button--achromic button--text-hidden drop__toggle--info'
                   triggerTitle='Info'

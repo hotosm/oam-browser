@@ -84,7 +84,7 @@
     "react": "^15.0.1",
     "react-addons-css-transition-group": "^15.1.0",
     "react-dom": "^15.0.1",
-    "react-keybinding": "^2.0.0",
+    "react-keybinding": "git+https://github.com/gregeinfrank/react-keybinding.git#d733a47",
     "react-router": "^2.4.0",
     "reflux": "^0.4.1",
     "tilebelt": "^1.0.1",

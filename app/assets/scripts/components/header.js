@@ -2,7 +2,7 @@
 import React from 'react';
 import Keys from 'react-keybinding';
 import $ from 'jquery';
-import Dropdown from './shared/dropdown';
+import { Dropdown } from 'oam-design-system';
 import actions from '../actions/actions';
 import Filters from './filters';
 import utils from '../utils/utils';
@@ -111,7 +111,16 @@ var Header = React.createClass({
           <div className='nav-block-sec'>
             <ul className='meta-menu'>
               <li><a href='https://upload.openaerialmap.org/' className='bttn-upload' title='Go to OAM Uploader'><span>Upload</span></a></li>
-              <Dropdown element='li' className='drop dropdown right' triggerTitle='Info' triggerClassName='bttn-info' triggerText='Info'>
+
+                <Dropdown
+                  element='li'
+                  className='drop__content--special'
+                  triggerElement='a'
+                  triggerClassName='button button--achromic button--text-hidden drop__toggle--info'
+                  triggerTitle='Info'
+                  triggerText='Info'
+                  direction='down'
+                  aligment='right' >
                 <ul className='drop-menu info-menu' role='menu'>
                   <li><a href='#modal-info' title='Learn more' onClick={this.aboutClickHandler}><span>About</span></a></li>
                   <li><a href='https://github.com/hotosm/oam-browser/blob/develop/docs/user-guide.md' title='Go to User Guide'><span>Help</span></a></li>
@@ -119,6 +128,7 @@ var Header = React.createClass({
                   <li className='sep'><a href='https://status.openaerialmap.org/' className={oamHealthClass} title='Go to OAM Status'><span>Status</span></a></li>
                 </ul>
               </Dropdown>
+
             </ul>
           </div>
         </nav>

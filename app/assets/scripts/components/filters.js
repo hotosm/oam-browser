@@ -2,7 +2,7 @@
 import { hashHistory } from 'react-router';
 import React from 'react';
 import Reflux from 'reflux';
-import Dropdown from './shared/dropdown';
+import { Dropdown } from 'oam-design-system';
 import actions from '../actions/actions';
 import searchQueryStore from '../stores/search_query_store';
 import cookie from '../utils/cookie';
@@ -98,7 +98,16 @@ var Filters = React.createClass({
     ].map(filterItem.bind(this, 'dataType', this.setDataType));
 
     return (
-      <Dropdown element='li' className='drop dropdown center' triggerTitle='Settings' triggerClassName='bttn-settings' triggerText='Settings'>
+      <Dropdown
+        element='li'
+        className='drop__content--special'
+        triggerElement='a'
+        triggerClassName='button button--achromic button--text-hidden drop__toggle--settings'
+        triggerTitle='Settings'
+        triggerText='Settings'
+        direction='down'
+        aligment='center' >
+
         <dl className='drop-menu filters-options-menu' role='menu'>
           <dt className='drop-menu-sectitle'>Time</dt>
           {dates}

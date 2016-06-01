@@ -183,11 +183,14 @@
   .bttn-download {
     min-width: 48%;
   }
+  .form__label {
+    @extend .visually-hidden;
+  }
 }
 
 .has-tms {
   .single-actions {
-    .input-group {
+    .form__group {
       float: left;
       width: calc(64% - 0.5rem);
     }
@@ -248,9 +251,16 @@
     }
   }
 
-  ul > li {
-    margin-bottom: 0.5rem;
+  ul {
+    list-style: none;
+    .form__label {
+      @extend .visually-hidden;
+    }
+    &> li {
+      margin-bottom: 0.5rem;
+    }
   }
+
 
   .dropup .drop-content {
     right: -0.5rem;

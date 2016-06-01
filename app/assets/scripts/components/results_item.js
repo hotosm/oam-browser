@@ -7,7 +7,7 @@ import centroid from 'turf-centroid';
 import Keys from 'react-keybinding';
 import actions from '../actions/actions';
 import ZcButton from './shared/zc_button';
-import Dropdown from './shared/dropdown';
+import { Dropdown } from 'oam-design-system';
 import utils from '../utils/utils';
 import prettyBytes from 'pretty-bytes';
 
@@ -107,7 +107,7 @@ var ResultsItem = React.createClass({
     });
   },
 
-  renderTmsOptions: function (tmsUrl, dropClass) {
+  renderTmsOptions: function (tmsUrl, direction, aligment) {
     var d = this.props.data;
     // Generate the iD URL:
     // grab centroid of the footprint
@@ -122,17 +122,29 @@ var ResultsItem = React.createClass({
     });
 
     return (
-      <div className='input-group'>
-        <input className='form-control input-m' type='text' value={tmsUrl} readOnly data-hook='copy:data' />
-        <Dropdown element='span' className={'input-group-bttn ' + dropClass} triggerTitle='Show options' triggerClassName='bttn-uoptions' triggerText='Options'>
-          <ul className='drop-menu tms-options-menu' role='menu'>
-            <li className='has-icon-bef id-editor'><a href={idUrl} target='_blank' title='Open with iD editor'>Open with iD editor</a></li>
-            <li className='has-icon-bef josm'><a onClick={this.onOpenJosm.bind(null, tmsUrl)} title='Open with JOSM'>Open with JOSM</a></li>
-            <li className='has-icon-bef clipboard'>
-              <ZcButton onCopy={this.onCopy} title='Copy to clipboard' text='Copy to clipboard'/>
-            </li>
-          </ul>
-        </Dropdown>
+      <div className='form__group'>
+        <label className='form__label' htmlFor='tms-url'>TMS url</label>
+        <div className='form__input-group'>
+          <input id='tms-url' className='form__control form__control--medium' type='text' value={tmsUrl} readOnly data-hook='copy:data' />
+          <span className='form__input-group-button'>
+            <Dropdown
+              triggerElement='button'
+              triggerClassName='button button--achromic button--text-hidden drop__toggle--uoptions'
+              triggerTitle='Show options'
+              triggerText='Options'
+              direction={direction}
+              aligment={aligment} >
+
+              <ul className='drop-menu tms-options-menu' role='menu'>
+                <li className='has-icon-bef id-editor'><a href={idUrl} target='_blank' title='Open with iD editor'>Open with iD editor</a></li>
+                <li className='has-icon-bef josm'><a onClick={this.onOpenJosm.bind(null, tmsUrl)} title='Open with JOSM'>Open with JOSM</a></li>
+                <li className='has-icon-bef clipboard'>
+                  <ZcButton onCopy={this.onCopy} title='Copy to clipboard' text='Copy to clipboard'/>
+                </li>
+              </ul>
+            </Dropdown>
+          </span>
+        </div>
       </div>
     );
   },
@@ -141,7 +153,7 @@ var ResultsItem = React.createClass({
     var d = this.props.data;
     var pagination = this.props.pagination;
 
-    var tmsOptions = d.properties.tms ? this.renderTmsOptions(d.properties.tms, 'dropdown center') : null;
+    var tmsOptions = d.properties.tms ? this.renderTmsOptions(d.properties.tms, 'down', 'center') : null;
 
     var blurImage = {
       backgroundImage: 'url(' + d.properties.thumbnail + ')'
@@ -188,7 +200,7 @@ var ResultsItem = React.createClass({
               </header>
               <ul>
                 {d.custom_tms.map(function (o, i) {
-                  return <li key={i}>{this.renderTmsOptions(o, 'dropup right')}</li>;
+                  return <li key={i}>{this.renderTmsOptions(o, 'up', 'right')}</li>;
                 }.bind(this))}
               </ul>
             </section>

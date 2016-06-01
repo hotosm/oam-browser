@@ -235,7 +235,11 @@ input[type=submit] {
 }
 
 .drop__toggle--info:before {
-  @extend .icon-circle-info
+  @extend .icon-circle-info;
+}
+
+.drop__toggle--uoptions:before {
+  @extend .icon-s-arr-down;
 }
 
 .bttn-upload {
@@ -264,10 +268,6 @@ input[type=submit] {
 
 .bttn-clipboard {
   @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .clipboard;
-}
-
-.bttn-uoptions {
-  @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .uoptions;
 }
 
 .bttn-my-location {

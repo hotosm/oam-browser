@@ -52,7 +52,7 @@
 @import "skins";
 @import "type";
 @import "buttons";
-@import "forms";
+@import "forms--old";
 @import "overlays";
 @import "modals";
 @import "icons";
@@ -60,3 +60,12 @@
 @import "map";
 @import "results-pane";
 @import "helpers";
+
+/* Structure and content
+   ========================================================================== */
+
+/**
+ * Foreseeing new assets structure.
+ */
+
+@import "content";

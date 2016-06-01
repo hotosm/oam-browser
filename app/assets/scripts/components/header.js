@@ -103,30 +103,32 @@ var Header = React.createClass({
               </div>
             </form>
             <ul className='app-menu'>
-              <Filters
-                params={this.props.params}
-                query={this.props.query} />
+              <li>
+                <Filters
+                  params={this.props.params}
+                  query={this.props.query} />
+              </li>
             </ul>
           </div>
           <div className='nav-block-sec'>
             <ul className='meta-menu'>
               <li><a href='https://upload.openaerialmap.org/' className='bttn-upload' title='Go to OAM Uploader'><span>Upload</span></a></li>
-
+              <li>
                 <Dropdown
-                  element='li'
                   triggerElement='a'
                   triggerClassName='button button--achromic button--text-hidden drop__toggle--info'
                   triggerTitle='Info'
                   triggerText='Info'
                   direction='down'
                   aligment='right' >
-                <ul className='drop-menu info-menu' role='menu'>
-                  <li><a href='#modal-info' title='Learn more' onClick={this.aboutClickHandler}><span>About</span></a></li>
-                  <li><a href='https://github.com/hotosm/oam-browser/blob/develop/docs/user-guide.md' title='Go to User Guide'><span>Help</span></a></li>
-                  <li><a href='mailto:info@openaerialmap.org' title='Get in touch'><span>Contact</span> <small>info@openaerialmap.org</small></a></li>
-                  <li className='sep'><a href='https://status.openaerialmap.org/' className={oamHealthClass} title='Go to OAM Status'><span>Status</span></a></li>
-                </ul>
-              </Dropdown>
+                  <ul className='drop-menu info-menu' role='menu'>
+                    <li><a href='#modal-info' title='Learn more' onClick={this.aboutClickHandler}><span>About</span></a></li>
+                    <li><a href='https://github.com/hotosm/oam-browser/blob/develop/docs/user-guide.md' title='Go to User Guide'><span>Help</span></a></li>
+                    <li><a href='mailto:info@openaerialmap.org' title='Get in touch'><span>Contact</span> <small>info@openaerialmap.org</small></a></li>
+                    <li className='sep'><a href='https://status.openaerialmap.org/' className={oamHealthClass} title='Go to OAM Status'><span>Status</span></a></li>
+                  </ul>
+                </Dropdown>
+              </li>
 
             </ul>
           </div>

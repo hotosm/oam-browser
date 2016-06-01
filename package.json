@@ -78,7 +78,7 @@
     "jquery": "^2.1.4",
     "lodash": "^3.8.0",
     "mapbox.js": "^2.1.9",
-    "oam-design-system": "git+https://github.com/hotosm/oam-design-system.git#v0.2.0-beta",
+    "oam-design-system": "git+https://github.com/hotosm/oam-design-system.git#develop",
     "pretty-bytes": "^2.0.1",
     "rbush": "^1.4.1",
     "react": "^15.0.1",

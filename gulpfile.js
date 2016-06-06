@@ -197,7 +197,7 @@ gulp.task('styles', function () {
           return v;
         }
       },
-      includePaths: require('node-bourbon').with(OAM_ADDONS.scssPath)
+      includePaths: require('node-bourbon').with('.', 'node_modules/jeet/scss', OAM_ADDONS.scssPath)
     }))
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest('.tmp/assets/styles'))

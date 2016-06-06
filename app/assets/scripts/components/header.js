@@ -75,64 +75,80 @@ var Header = React.createClass({
   },
 
   render: function () {
-    var oamHealthClass = 'status-item ';
+    var oamHealthClass = 'drop__menu-item status-item ';
     switch (this.state.oamHealth) {
       case 'green':
-        oamHealthClass += 'status-up';
+        oamHealthClass += 'status-item--up';
         break;
       case 'yellow':
-        oamHealthClass += 'status-meh';
+        oamHealthClass += 'status-item--meh';
         break;
       case 'red':
-        oamHealthClass += 'status-down';
+        oamHealthClass += 'status-item--down';
         break;
       default:
-        oamHealthClass += 'status-unknown';
+        oamHealthClass += 'status-item--unknown';
     }
 
     return (
-      <header id='site-header' role='banner'>
-      <h1 id='site-title'><img src='assets/graphics/layout/oam-logo-h-pos.svg' width='167' height='32' alt='OpenAerialMap logo' /><span>OpenAerialMap</span> <small>Browser</small></h1>
-        <nav id='site-prime-nav' role='navigation'>
-          <div className='nav-block-prime'>
-            <form className='form-search' onSubmit={this.onGeocoderSearch}>
-              <div className='input-group'>
-                <input className='form-control input-m input search' type='search' placeholder='Search location' ref='geocoder' />
-                {navigator.geolocation ? <a href='#' title='Take me to my location' className='bttn-my-location' onClick={this.onMyLocationClick}><span>My location</span></a> : null}
-                <span className='input-group-bttn'><button type='submit' className='bttn-search'><span>Search</span></button></span>
-              </div>
-            </form>
-            <ul className='app-menu'>
-              <li>
-                <Filters
-                  params={this.props.params}
-                  query={this.props.query} />
-              </li>
-            </ul>
+      <header className='page__header' role='banner'>
+        <div className='inner'>
+          <div className='page__headline'>
+            <h1 className='page__title'>
+              <a href='/' title='Visit homepage'>
+                <span className='mast-logo mast-logo--h'>
+                  <img className='mast-logo__image' src='assets/graphics/layout/oam-logo-h-pos.svg' width='832' height='160' alt='OpenAerialMap logo' />
+                  <strong className='mast-logo__text'>OpenAerialMap</strong>
+                </span>
+              </a>
+            </h1>        
           </div>
-          <div className='nav-block-sec'>
-            <ul className='meta-menu'>
-              <li><a href='https://upload.openaerialmap.org/' className='bttn-upload' title='Go to OAM Uploader'><span>Upload</span></a></li>
-              <li>
-                <Dropdown
-                  triggerElement='a'
-                  triggerClassName='button button--achromic button--text-hidden drop__toggle--info'
-                  triggerTitle='Info'
-                  triggerText='Info'
-                  direction='down'
-                  aligment='right' >
-                  <ul className='drop-menu info-menu' role='menu'>
-                    <li><a href='#modal-info' title='Learn more' onClick={this.aboutClickHandler}><span>About</span></a></li>
-                    <li><a href='https://github.com/hotosm/oam-browser/blob/develop/docs/user-guide.md' title='Go to User Guide'><span>Help</span></a></li>
-                    <li><a href='mailto:info@openaerialmap.org' title='Get in touch'><span>Contact</span> <small>info@openaerialmap.org</small></a></li>
-                    <li className='sep'><a href='https://status.openaerialmap.org/' className={oamHealthClass} title='Go to OAM Status'><span>Status</span></a></li>
-                  </ul>
-                </Dropdown>
-              </li>
-
-            </ul>
-          </div>
-        </nav>
+        
+          <nav className='page__prime-nav' role='navigation'>
+            <div className='nav-block-prime'>
+              <form className='form global-search' onSubmit={this.onGeocoderSearch}>
+                <div className='form__group'>
+                  <label className='form__label' for='global-search__input'>Search</label>
+                  <div className='form__input-group'>
+                    <input className='form__control form__control--medium' id='global-search__input' type='search' placeholder='Search location' ref='geocoder' />
+                    {navigator.geolocation ? <a href='#' title='Take me to my location' className='global-search__button-location' onClick={this.onMyLocationClick}><span>My location</span></a> : null}
+                    <span className='form__input-group-button'><button className='global-search__button-go' type='submit'><span>Search</span></button></span>
+                  </div>
+                </div>
+              </form>
+              <ul className='app-menu'>
+                <li>
+                  <Filters
+                    params={this.props.params}
+                    query={this.props.query} />
+                </li>
+              </ul>
+            </div>
+            <div className='nav-block-sec'>
+              <ul className='meta-menu'>
+                <li><a href='https://upload.openaerialmap.org/' className='button-upload' title='Go to OAM Uploader'><span>Upload</span></a></li>
+                <li>
+                  <Dropdown
+                    triggerElement='a'
+                    triggerClassName='button-info'
+                    triggerTitle='Info'
+                    triggerText='Info'
+                    direction='down'
+                    aligment='right' >
+                    <ul className='drop__menu info-menu' role='menu'>
+                      <li><a className='drop__menu-item' href='#modal-info' title='Learn more' onClick={this.aboutClickHandler}><span>About</span></a></li>
+                      <li><a className='drop__menu-item' href='http://docs.openaerialmap.org/browser/getting-started/' title='Go to User Guide'><span>Help</span></a></li>
+                      <li><a className='drop__menu-item' href='mailto:info@openaerialmap.org' title='Get in touch'><span>Contact</span> <small>info@openaerialmap.org</small></a></li>
+                    </ul>
+                    <ul className='drop__menu info-menu' role='menu'>
+                      <li><a href='https://status.openaerialmap.org/' className={oamHealthClass} title='Go to OAM Status'><span>Status</span></a></li>
+                    </ul>
+                  </Dropdown>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        </div>
       </header>
     );
   }

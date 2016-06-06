@@ -44,9 +44,27 @@ var App = React.createClass({
     return (
       <div>
         <Header params={params} query={query} />
-        <main id='site-body' role='main'>
-        {React.cloneElement(this.props.children, { params: params, query: query })}
+        <main className='page__body' role='main'>
+          <section className='layout layout--app'>
+            <header className='layout__header'>
+              <div className='inner'>
+                <div className='layout__headline'>
+                  <h1 className='layout__title'>Browse</h1>
+                </div>
+              </div>
+            </header>
+            <div className='layout__body'>
+              <div className='inner'>
+                {React.cloneElement(this.props.children, { params: params, query: query })}
+              </div>
+            </div>
+          </section>
         </main>
+        <footer className='page__footer' role='contentinfo'>
+          <div className='inner'>
+            <p>Made with love by <a href='https://developmentseed.org' title='Visit Development Seed website'>Development Seed</a> and <a href='http://hot.openstreetmap.org/' title='Visit the Humanitarian OpenStreetMap Team website'>HOT</a>.</p>
+          </div>
+        </footer>
         <WelcomeModal revealed={showWelcomeModal} />
         <InfoModal />
         <MessageModal />

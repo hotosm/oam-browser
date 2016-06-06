@@ -70,12 +70,12 @@ var Filters = React.createClass({
 
   render: function () {
     function filterItem (property, clickHandler, d) {
-      var klass = this.state[property] === d.key ? 'active' : '';
+      var klass = this.state[property] === d.key ? 'drop__menu-item--active' : '';
       var click = clickHandler.bind(this, d);
       return (
-        <dd key={property + '-filter-' + d.key} className={klass}>
-          <a onClick={click} title={d.title}>{d.title}</a>
-        </dd>);
+        <li key={property + '-filter-' + d.key}>
+          <a onClick={click} title={d.title} className={`drop__menu-item ${klass}`}>{d.title}</a>
+        </li>);
     }
 
     var dates = [
@@ -99,22 +99,26 @@ var Filters = React.createClass({
 
     return (
       <Dropdown
-        element='li'
+        className='drop__content--filters'
         triggerElement='a'
-        triggerClassName='button button--achromic button--text-hidden drop__toggle--settings'
+        triggerClassName='button-filters'
         triggerTitle='Settings'
         triggerText='Settings'
         direction='down'
         aligment='center' >
 
-        <dl className='drop-menu filters-options-menu' role='menu'>
-          <dt className='drop-menu-sectitle'>Time</dt>
+        <h6 className='drop__title'>Time</h6>
+        <ul className='drop__menu drop__menu--select' role='menu'>
           {dates}
-          <dt className='drop-menu-sectitle'>Resolution</dt>
+        </ul>
+        <h6 className='drop__title'>Resolution</h6>
+        <ul className='drop__menu drop__menu--select' role='menu'>
           {resolutions}
-          <dt className='drop-menu-sectitle'>Data Type</dt>
+        </ul>
+        <h6 className='drop__title'>Data Type</h6>
+        <ul className='drop__menu drop__menu--select' role='menu'>
           {dataTypes}
-        </dl>
+        </ul>
       </Dropdown>
     );
   }

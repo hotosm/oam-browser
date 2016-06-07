@@ -84,8 +84,8 @@ var Map = React.createClass({
     var zoomCtrl = new DSZoom({
       position: 'bottomleft',
       containerClasses: 'zoom-controls',
-      zoomInClasses: 'bttn-zoomin',
-      zoomOutClasses: 'bttn-zoomout'
+      zoomInClasses: 'button-zoom button-zoom--in',
+      zoomOutClasses: 'button-zoom button-zoom--out'
     });
     this.map.addControl(zoomCtrl);
 

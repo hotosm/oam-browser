@@ -99,6 +99,7 @@ var Header = React.createClass({
                 <span className='mast-logo mast-logo--h'>
                   <img className='mast-logo__image' src='assets/graphics/layout/oam-logo-h-pos.svg' width='832' height='160' alt='OpenAerialMap logo' />
                   <strong className='mast-logo__text'>OpenAerialMap</strong>
+                  <small className='mast-logo__label'>Browser</small>
                 </span>
               </a>
             </h1>        

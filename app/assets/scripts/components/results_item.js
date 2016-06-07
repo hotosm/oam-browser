@@ -128,19 +128,18 @@ var ResultsItem = React.createClass({
           <input id='tms-url' className='form__control form__control--medium' type='text' value={tmsUrl} readOnly data-hook='copy:data' />
           <span className='form__input-group-button'>
             <Dropdown
+              className='drop__content--tms-options'
               triggerElement='button'
-              triggerClassName='button button--achromic button--text-hidden drop__toggle--uoptions'
+              triggerClassName='button-tms-options'
               triggerTitle='Show options'
               triggerText='Options'
               direction={direction}
               aligment={aligment} >
 
-              <ul className='drop-menu tms-options-menu' role='menu'>
-                <li className='has-icon-bef id-editor'><a href={idUrl} target='_blank' title='Open with iD editor'>Open with iD editor</a></li>
-                <li className='has-icon-bef josm'><a onClick={this.onOpenJosm.bind(null, tmsUrl)} title='Open with JOSM'>Open with JOSM</a></li>
-                <li className='has-icon-bef clipboard'>
-                  <ZcButton onCopy={this.onCopy} title='Copy to clipboard' text='Copy to clipboard'/>
-                </li>
+              <ul className='drop__menu drop__menu--iconified tms-options-menu' role='menu'>
+                <li><a className='drop__menu-item ide' href={idUrl} target='_blank' title='Open with iD editor'>Open with iD editor</a></li>
+                <li><a className='drop__menu-item josm' onClick={this.onOpenJosm.bind(null, tmsUrl)} title='Open with JOSM'>Open with JOSM</a></li>
+                <li><ZcButton onCopy={this.onCopy} title='Copy to clipboard' text='Copy to clipboard' /></li>
               </ul>
             </Dropdown>
           </span>
@@ -173,7 +172,7 @@ var ResultsItem = React.createClass({
             </div>
             <div className='single-actions'>
               {tmsOptions}
-              <a title='Download image' className='bttn-download' target='_blank' href={d.uuid}><span>Download</span></a>
+              <a title='Download image' className='button-download' target='_blank' href={d.uuid}><span>Download</span></a>
             </div>
             <dl className='single-details'>
               <dt><span>Date</span></dt>

@@ -37,9 +37,6 @@
 /* Structure and content
    ========================================================================== */
 
-
-
-// @import "skins";
 // @import "type";
 // @import "buttons";
 // @import "forms--old";
@@ -48,14 +45,10 @@
 // @import "icons";
 // @import "base";
 
-// @import "results-pane";
 
-
-/**
- * Foreseeing new assets structure.
- */
-
+@import "skins";
+@import "animations";
 @import "structure";
-@import "content";
-
 @import "map";
+@import "results-panel";
+@import "misc";

@@ -15,7 +15,7 @@ var ZcButton = React.createClass({
   getDefaultProps: function () {
     return {
       title: '',
-      className: '',
+      className: 'drop__menu-item clipboard',
       text: ''
     };
   },

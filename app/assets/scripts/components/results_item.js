@@ -66,8 +66,11 @@ var ResultsItem = React.createClass({
     hashHistory.push({pathname: path, query: this.props.query});
   },
 
-  onCopy: function (e) {
-    return $(e.target).parents('.input-group').find('[data-hook="copy:data"]').val();
+  onCopy: function (key, trigger) {
+    // Close the dropdown.
+    this.refs[`tms-drop-${key}`].close();
+    // Return the copy text.
+    return this.refs[`tms-url-${key}`].value;
   },
 
   onOpenJosm: function (tmsUrl) {
@@ -107,7 +110,7 @@ var ResultsItem = React.createClass({
     });
   },
 
-  renderTmsOptions: function (tmsUrl, direction, aligment) {
+  renderTmsOptions: function (tmsUrl, key, direction, aligment) {
     var d = this.props.data;
     // Generate the iD URL:
     // grab centroid of the footprint
@@ -125,7 +128,7 @@ var ResultsItem = React.createClass({
       <div className='form__group'>
         <label className='form__label' htmlFor='tms-url'>TMS url</label>
         <div className='form__input-group'>
-          <input id='tms-url' className='form__control form__control--medium' type='text' value={tmsUrl} readOnly data-hook='copy:data' />
+          <input className='form__control form__control--medium' type='text' value={tmsUrl} readOnly ref={`tms-url-${key}`} />
           <span className='form__input-group-button'>
             <Dropdown
               className='drop__content--tms-options'
@@ -135,12 +138,13 @@ var ResultsItem = React.createClass({
               triggerTitle='Show options'
               triggerText='Options'
               direction={direction}
-              alignment={aligment} >
+              alignment={aligment}
+              ref={`tms-drop-${key}`} >
 
               <ul className='drop__menu drop__menu--iconified tms-options-menu' role='menu'>
                 <li><a className='drop__menu-item ide' href={idUrl} target='_blank' title='Open with iD editor'>Open with iD editor</a></li>
                 <li><a className='drop__menu-item josm' onClick={this.onOpenJosm.bind(null, tmsUrl)} title='Open with JOSM'>Open with JOSM</a></li>
-                <li><ZcButton onCopy={this.onCopy} title='Copy to clipboard' text='Copy to clipboard' /></li>
+                <li><ZcButton onCopy={this.onCopy.bind(null, key)} title='Copy to clipboard' text='Copy to clipboard' /></li>
               </ul>
             </Dropdown>
           </span>
@@ -153,7 +157,7 @@ var ResultsItem = React.createClass({
     var d = this.props.data;
     var pagination = this.props.pagination;
 
-    var tmsOptions = d.properties.tms ? this.renderTmsOptions(d.properties.tms, 'down', 'center') : null;
+    var tmsOptions = d.properties.tms ? this.renderTmsOptions(d.properties.tms, 'main', 'down', 'center') : null;
 
     var blurImage = {
       backgroundImage: 'url(' + d.properties.thumbnail + ')'
@@ -200,7 +204,7 @@ var ResultsItem = React.createClass({
               </header>
               <ul>
                 {d.custom_tms.map(function (o, i) {
-                  return <li key={i}>{this.renderTmsOptions(o, 'up', 'right')}</li>;
+                  return <li key={i}>{this.renderTmsOptions(o, i, 'up', 'right')}</li>;
                 }.bind(this))}
               </ul>
             </section>

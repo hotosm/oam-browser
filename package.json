@@ -76,6 +76,7 @@
     "watchify": "^3.7.0"
   },
   "dependencies": {
+    "clipboard": "^1.5.10",
     "jquery": "^2.1.4",
     "lodash": "^3.8.0",
     "mapbox.js": "^2.1.9",
@@ -92,7 +93,6 @@
     "turf-centroid": "^1.1.2",
     "turf-extent": "^1.0.4",
     "turf-inside": "^1.1.4",
-    "turf-overlaps": "^1.0.3",
-    "zeroclipboard": "^2.2.0"
+    "turf-overlaps": "^1.0.3"
   }
 }

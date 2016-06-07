@@ -102,14 +102,14 @@ var Header = React.createClass({
                   <small className='mast-logo__label'>Browser</small>
                 </span>
               </a>
-            </h1>        
+            </h1>
           </div>
-        
+
           <nav className='page__prime-nav' role='navigation'>
             <div className='nav-block-prime'>
               <form className='form global-search' onSubmit={this.onGeocoderSearch}>
                 <div className='form__group'>
-                  <label className='form__label' for='global-search__input'>Search</label>
+                  <label className='form__label' htmlFor='global-search__input'>Search</label>
                   <div className='form__input-group'>
                     <input className='form__control form__control--medium' id='global-search__input' type='search' placeholder='Search location' ref='geocoder' />
                     {navigator.geolocation ? <a href='#' title='Take me to my location' className='global-search__button-location' onClick={this.onMyLocationClick}><span>My location</span></a> : null}
@@ -132,10 +132,11 @@ var Header = React.createClass({
                   <Dropdown
                     triggerElement='a'
                     triggerClassName='button-info'
+                    triggerActiveClassName='button--active'
                     triggerTitle='Info'
                     triggerText='Info'
                     direction='down'
-                    aligment='right' >
+                    alignment='right' >
                     <ul className='drop__menu info-menu' role='menu'>
                       <li><a className='drop__menu-item' href='#modal-info' title='Learn more' onClick={this.aboutClickHandler}><span>About</span></a></li>
                       <li><a className='drop__menu-item' href='http://docs.openaerialmap.org/browser/getting-started/' title='Go to User Guide'><span>Help</span></a></li>

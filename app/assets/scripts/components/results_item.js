@@ -131,10 +131,11 @@ var ResultsItem = React.createClass({
               className='drop__content--tms-options'
               triggerElement='button'
               triggerClassName='button-tms-options'
+              triggerActiveClassName='button--active'
               triggerTitle='Show options'
               triggerText='Options'
               direction={direction}
-              aligment={aligment} >
+              alignment={aligment} >
 
               <ul className='drop__menu drop__menu--iconified tms-options-menu' role='menu'>
                 <li><a className='drop__menu-item ide' href={idUrl} target='_blank' title='Open with iD editor'>Open with iD editor</a></li>

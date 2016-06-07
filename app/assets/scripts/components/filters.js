@@ -102,10 +102,11 @@ var Filters = React.createClass({
         className='drop__content--filters'
         triggerElement='a'
         triggerClassName='button-filters'
+        triggerActiveClassName='button--active'
         triggerTitle='Settings'
         triggerText='Settings'
         direction='down'
-        aligment='center' >
+        alignment='center' >
 
         <h6 className='drop__title'>Time</h6>
         <ul className='drop__menu drop__menu--select' role='menu'>

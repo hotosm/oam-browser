@@ -1,12 +1,15 @@
 'use strict';
-import { hashHistory } from 'react-router';
 import React from 'react';
 import Reflux from 'reflux';
-import centroid from 'turf-centroid';
-import BModal from './base_modal';
+import Keys from 'react-keybinding';
 import actions from '../../actions/actions';
+import OAM from 'oam-design-system';
+import { hashHistory } from 'react-router';
+import centroid from 'turf-centroid';
 import mapStore from '../../stores/map_store';
 import utils from '../../utils/utils';
+
+var { Modal, ModalHeader, ModalBody } = OAM.Modal;
 
 var WelcomeModal = React.createClass({
   displayName: 'WelcomeModal',
@@ -16,11 +19,20 @@ var WelcomeModal = React.createClass({
   },
 
   mixins: [
-    Reflux.listenTo(actions.latestImageryLoaded, 'onLatestImageryLoaded')
+    Reflux.listenTo(actions.latestImageryLoaded, 'onLatestImageryLoaded'),
+    Reflux.listenTo(actions.openModal, 'onOpenModal'),
+    Keys
   ],
+
+  keybindings: {
+    'esc': function () {
+      this.closeModal();
+    }
+  },
 
   getInitialState: function () {
     return {
+      revealed: this.props.revealed,
       browseLatestEnabled: false
     };
   },
@@ -29,6 +41,18 @@ var WelcomeModal = React.createClass({
     this.setState({
       browseLatestEnabled: true
     });
+  },
+
+  onOpenModal: function (which) {
+    return which === 'welcome' && this.openModal();
+  },
+
+  closeModal: function () {
+    this.setState({ revealed: false });
+  },
+
+  openModal: function () {
+    this.setState({ revealed: true });
   },
 
   onBrowseLatestClick: function (e) {
@@ -49,7 +73,7 @@ var WelcomeModal = React.createClass({
     console.log('quadKey', quadKey);
     console.log('full url -- %s/%s/%s', mapView, quadKey, latest._id);
 
-    this.refs.base.closeModal();
+    this.closeModal();
 
     hashHistory.push(`/${mapView}/${quadKey}/${latest._id}`);
 
@@ -66,57 +90,60 @@ var WelcomeModal = React.createClass({
         console.log('geocoder -- no result was found');
         return;
       }
-      this.refs.base.closeModal();
+      this.closeModal();
       actions.geocoderResult(bounds);
     });
   },
 
   onMyLocationClick: function (e) {
     e.preventDefault();
-    this.refs.base.closeModal();
+    this.closeModal();
     actions.requestMyLocation();
-  },
-
-  getHeader: function () {
-    return (
-      <div>
-        <h1 id='modal-title'><img src='assets/graphics/layout/oam-logo-h-neg.svg' width='167' height='32' alt='OpenAerialMap logo' /><span>OpenAerialMap</span></h1>
-        <p>Browse the open collection of aerial imagery.</p>
-      </div>
-    );
-  },
-
-  getBody: function () {
-    return (
-      <div>
-        <form className='form-search-welcome mod-block' onSubmit={this.onGeocoderSearch}>
-          <div className='input-group'>
-            <input className='form-control input-l input search' type='search' placeholder='Search location' ref='geocoder'/>
-            {navigator.geolocation ? <a href='#' title='Take me to my location' className='bttn-my-location' onClick={this.onMyLocationClick}><span>My location</span></a> : null}
-            <span className='input-group-bttn'><button type='submit' className='bttn-search-welcome'><span>Search</span></button></span>
-          </div>
-        </form>
-        <p className='mod-sep'><span>or</span></p>
-        <div className='mod-block'>
-          <a href='#' className={(this.state.browseLatestEnabled ? '' : 'disabled ') + 'bttn-latest-welcome'} onClick={this.onBrowseLatestClick}><span>View latest imagery</span></a>
-        </div>
-      </div>
-    );
-  },
-
-  getFooter: function () {
-    return false;
   },
 
   render: function () {
     return (
-      <BModal
-        ref='base'
-        type='welcome'
-        header={this.getHeader()}
-        body={this.getBody()}
-        footer={this.getFooter()}
-        revealed={this.props.revealed} />
+      <Modal
+        id='modal-welcome'
+        className='modal--medium'
+        onCloseClick={this.closeModal}
+        revealed={this.state.revealed} >
+
+        <ModalHeader>
+          <div className='modal__headline'>
+            <h1 className='modal__title'>Welcome to Open Aerial Map</h1>
+          </div>
+        </ModalHeader>
+
+        <ModalBody>
+          <div className='card'>
+            <div className='card__header'>
+              <div className='card__headline'>
+                <h1 className='card__title'>
+                  <img src='assets/graphics/layout/oam-logo-h-neg.svg' width='167' height='32' alt='OpenAerialMap logo' /><span>OpenAerialMap</span>
+                </h1>
+                <div className='card__subtitle'>Browse the open collection of aerial imagery.</div>
+              </div>
+            </div>
+            <div className='card__body'>
+              <div className='inner'>
+                <form className='form-search-welcome mod-block' onSubmit={this.onGeocoderSearch}>
+                  <div className='form__input-group'>
+                    <input className='form__control form__control--large' type='search' placeholder='Search location' ref='geocoder' />
+                    {navigator.geolocation ? <a href='#' title='Take me to my location' className='global-search__button-location' onClick={this.onMyLocationClick}><span>My location</span></a> : null}
+                    <span className='form__input-group-button'><button className='global-search__button-go button--large' type='submit'><span>Search</span></button></span>
+                  </div>
+                </form>
+                <p className='mod-sep'><span>or</span></p>
+                <div className='mod-block'>
+                  <a href='#' className={(this.state.browseLatestEnabled ? '' : 'disabled ') + 'bttn-latest-welcome'} onClick={this.onBrowseLatestClick}><span>View latest imagery</span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </ModalBody>
+      </Modal>
     );
   }
 });

@@ -1,25 +1,21 @@
 /* global L */
 'use strict';
-
 require('mapbox.js');
-var React = require('react/addons');
-var Router = require('react-router');
-var _ = require('lodash');
-var utils = require('../utils/utils');
-var config = require('../config.js');
+import { hashHistory } from 'react-router';
+import React from 'react';
+import utils from '../utils/utils';
+import config from '../config.js';
 
 var MiniMap = React.createClass({
   displayName: 'MiniMap',
 
   propTypes: {
+    query: React.PropTypes.object,
+    mapView: React.PropTypes.string,
     selectedSquare: React.PropTypes.string,
-    mapView: React.PropTypes.string
+    selectedSquareQuadkey: React.PropTypes.string,
+    selectedItemId: React.PropTypes.string
   },
-
-  mixins: [
-    Router.Navigation,
-    Router.State
-  ],
 
   map: null,
 
@@ -35,7 +31,7 @@ var MiniMap = React.createClass({
   componentDidMount: function () {
     console.log('componentDidMount MiniMap');
 
-    this.map = L.mapbox.map(this.getDOMNode(), config.map.baseLayer, {
+    this.map = L.mapbox.map(this.refs.mapContainer, config.map.baseLayer, {
       center: [0, 0],
       zoomControl: false,
       attributionControl: false,
@@ -65,17 +61,21 @@ var MiniMap = React.createClass({
   },
 
   render: function () {
-    return (<div id='minimap'></div>);
+    return (<div id='minimap' ref='mapContainer'></div>);
   },
 
   // Map event.
   onMapClick: function (e) {
-    var routes = this.getRoutes();
-    var r = routes[routes.length - 1].name || 'map';
-    var params = _.cloneDeep(this.getParams());
     var zoom = this.props.mapView.split(',')[2];
-    params.map = utils.getMapViewString(e.latlng.lng, e.latlng.lat, zoom);
-    this.transitionTo(r, params, this.getQuery());
+    var path = utils.getMapViewString(e.latlng.lng, e.latlng.lat, zoom);
+    if (this.props.selectedSquareQuadkey) {
+      path += `/${this.props.selectedSquareQuadkey}`;
+    }
+    if (this.props.selectedItemId) {
+      path += `/${this.props.selectedItemId}`;
+    }
+
+    hashHistory.push({pathname: path, query: this.props.query});
   },
 
   setCrosshair: function () {

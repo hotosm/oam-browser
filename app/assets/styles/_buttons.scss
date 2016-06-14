@@ -230,12 +230,16 @@ input[type=submit] {
   @extend .bttn, .bttn-base-light, .bttn-l, .history;
 }
 
-.bttn-settings {
-  @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .settings;
+.drop__toggle--settings:before {
+  @extend .icon-sliders-hor;
 }
 
-.bttn-info {
-  @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .info;
+.drop__toggle--info:before {
+  @extend .icon-circle-info;
+}
+
+.drop__toggle--uoptions:before {
+  @extend .icon-s-arr-down;
 }
 
 .bttn-upload {
@@ -264,10 +268,6 @@ input[type=submit] {
 
 .bttn-clipboard {
   @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .clipboard;
-}
-
-.bttn-uoptions {
-  @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .uoptions;
 }
 
 .bttn-my-location {

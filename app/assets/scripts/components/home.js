@@ -1,30 +1,28 @@
 'use strict';
-var React = require('react/addons');
-var Reflux = require('reflux');
-var Router = require('react-router');
-var _ = require('lodash');
-var MapBoxMap = require('./map');
-var MiniMap = require('./minimap');
-var ResultsPane = require('./results_pane');
-var mapStore = require('../stores/map_store');
-var searchQueryStore = require('../stores/search_query_store');
-var cookie = require('../utils/cookie');
-var utils = require('../utils/utils');
-var actions = require('../actions/actions');
-var config = require('../config.js');
+import React from 'react';
+import Reflux from 'reflux';
+import _ from 'lodash';
+import MapBoxMap from './map';
+import MiniMap from './minimap';
+import ResultsPane from './results_pane';
+import mapStore from '../stores/map_store';
+import searchQueryStore from '../stores/search_query_store';
+import cookie from '../utils/cookie';
+import utils from '../utils/utils';
+import actions from '../actions/actions';
+import config from '../config.js';
 
 var Home = React.createClass({
   displayName: 'Home',
 
   propTypes: {
-    params: React.PropTypes.object
+    params: React.PropTypes.object,
+    query: React.PropTypes.object
   },
 
   mixins: [
     Reflux.listenTo(searchQueryStore, 'onSearchQueryChanged'),
-    Reflux.listenTo(mapStore, 'onMapStoreData'),
-    Router.Navigation,
-    Router.State
+    Reflux.listenTo(mapStore, 'onMapStoreData')
   ],
 
   getInitialState: function () {
@@ -111,6 +109,7 @@ var Home = React.createClass({
   },
 
   render: function () {
+    console.log('home props', this.props);
     var selectedItem = _.find(this.state.results, {_id: this.state.selectedItemId});
 
     return (
@@ -118,18 +117,26 @@ var Home = React.createClass({
         {this.state.loading ? <p className='loading revealed'>Loading</p> : null}
 
         <MapBoxMap
+          query={this.props.query}
           mapView={this.state.map.view}
           selectedSquareQuadkey={this.state.selectedSquareQuadkey}
           selectedItemId={this.state.selectedItemId}
           selectedItem={selectedItem}
           filterParams={this.state.filterParams} />
 
-        <MiniMap selectedSquare={this.props.params.square} mapView={this.state.map.view}/>
+        <MiniMap
+          query={this.props.query}
+          selectedSquare={this.props.params.square}
+          selectedSquareQuadkey={this.state.selectedSquareQuadkey}
+          selectedItemId={this.state.selectedItemId}
+          mapView={this.state.map.view} />
 
         <ResultsPane
+          query={this.props.query}
+          mapView={this.state.map.view}
           results={this.state.results}
           selectedItemId={this.state.selectedItemId}
-          selectedSquare={this.state.selectedSquareQuadkey} />
+          selectedSquareQuadkey={this.state.selectedSquareQuadkey} />
       </div>
     );
   },

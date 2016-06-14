@@ -132,6 +132,7 @@ a:active{
 
 .app-menu,
 .meta-menu {
+  list-style: none;
   > * {
     float: left;
     margin-right: 0.5rem;

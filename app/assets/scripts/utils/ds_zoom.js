@@ -1,4 +1,7 @@
 /* global L */
+'use strict';
+require('mapbox.js');
+
 // ===========================================
 //
 //  Leaflet zoom plugin.

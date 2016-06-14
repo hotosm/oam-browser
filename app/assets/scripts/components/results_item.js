@@ -73,7 +73,10 @@ var ResultsItem = React.createClass({
     return this.refs[`tms-url-${key}`].value;
   },
 
-  onOpenJosm: function (tmsUrl) {
+  onOpenJosm: function (dropKey, tmsUrl) {
+    // Close the dropdown.
+    this.refs[`tms-drop-${dropKey}`].close();
+
     var d = this.props.data;
     var source = 'OpenAerialMap - ' + d.provider + ' - ' + d.uuid;
     // Reference:
@@ -97,7 +100,7 @@ var ResultsItem = React.createClass({
         // all good!
         actions.openModal('message', {
           title: 'Success',
-          message: 'This scene has been loaded into JOSM.'
+          message: <p>This scene has been loaded into JOSM.</p>
         });
       });
     })
@@ -105,7 +108,12 @@ var ResultsItem = React.createClass({
       console.error(err);
       actions.openModal('message', {
         title: 'Error',
-        message: <p>Could not connect to JOSM via Remote Control.  Is JOSM configured to allow <a href='https://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl' target='_blank'>remote control</a>?</p>
+        message: (
+          <div>
+            <p>Could not connect to JOSM via Remote Control.</p>
+            <p>Is JOSM configured to allow <a href='https://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl' target='_blank'>remote control</a>?</p>
+          </div>
+        )
       });
     });
   },
@@ -143,7 +151,7 @@ var ResultsItem = React.createClass({
 
               <ul className='drop__menu drop__menu--iconified tms-options-menu' role='menu'>
                 <li><a className='drop__menu-item ide' href={idUrl} target='_blank' title='Open with iD editor'>Open with iD editor</a></li>
-                <li><a className='drop__menu-item josm' onClick={this.onOpenJosm.bind(null, tmsUrl)} title='Open with JOSM'>Open with JOSM</a></li>
+                <li><a className='drop__menu-item josm' onClick={this.onOpenJosm.bind(null, key, tmsUrl)} title='Open with JOSM'>Open with JOSM</a></li>
                 <li><ZcButton onCopy={this.onCopy.bind(null, key)} title='Copy to clipboard' text='Copy to clipboard' /></li>
               </ul>
             </Dropdown>

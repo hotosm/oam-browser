@@ -1,10 +1,13 @@
 'use strict';
-var React = require('react/addons');
-var Router = require('react-router');
-var BModal = require('./base_modal');
-var _ = require('lodash');
-var serialize = require('form-serialize');
-var $ = require('jquery');
+import React from 'react';
+import Reflux from 'reflux';
+import Keys from 'react-keybinding';
+import actions from '../../actions/actions';
+import serialize from 'form-serialize';
+import $ from 'jquery';
+import _ from 'lodash';
+import OAM from 'oam-design-system';
+var { Modal, ModalHeader, ModalBody } = OAM.Modal;
 
 var FeedbackModal = React.createClass({
   displayName: 'FeedbackModal',
@@ -13,11 +16,46 @@ var FeedbackModal = React.createClass({
     revealed: React.PropTypes.bool
   },
 
-  mixins: [ Router.State ],
+  mixins: [
+    Reflux.listenTo(actions.openModal, 'onOpenModal'),
+    Keys
+  ],
+
+  keybindings: {
+    'esc': function () {
+      this.closeModal();
+    }
+  },
+
+  getInitialState: function () {
+    return {
+      revealed: false,
+      errors: {
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      },
+      lockSubmit: false
+    };
+  },
+
+  onOpenModal: function (which) {
+    return which === 'feedback' && this.openModal();
+  },
+
+  closeModal: function () {
+    this.setState({ revealed: false });
+  },
+
+  openModal: function () {
+    this.setState({ revealed: true });
+  },
 
   onSubmit: function (e) {
     e.preventDefault();
-    var form = this.refs.feedbackForm.getDOMNode();
+
+    var form = this.refs.feedbackForm;
     var serial = serialize(form, {hash: true});
     var ok = true;
     var errors = {
@@ -49,7 +87,7 @@ var FeedbackModal = React.createClass({
     this.setState({errors});
 
     if (ok) {
-      serial.path = this.getPath();
+      serial.path = window.location.href;
       console.log('serial', serial);
       this.setState({lockSubmit: true});
 
@@ -63,95 +101,72 @@ var FeedbackModal = React.createClass({
         .always(() => {
           form.reset();
           this.setState({lockSubmit: false});
-          this.refs.base.closeModal();
+          this.closeModal();
         });
     }
   },
 
-  getInitialState: function () {
-    return {
-      errors: {
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
-      },
-      lockSubmit: false
-    };
-  },
-
-  getHeader: function () {
-    return (
-      <div>
-        <h1 className='modal-title'>Feedback</h1>
-        <p>We want to know what you think.</p>
-      </div>
-    );
-  },
-
-  getBody: function () {
-    return (
-      <div>
-        <form className='form-horizontal' ref='feedbackForm'>
-          <div className='form-group'>
-            <label htmlFor='name' className='form-label'>Name</label>
-            <div className='form-control-set'>
-              <input id='name' name='name' className='form-control input-m input' type='text' placeholder='Bruce Wayne'/>
-              {this.state.errors.name ? <p className='message message-alert'>{this.state.errors.name}</p> : null}
-            </div>
-          </div>
-          <div className='form-group'>
-            <label htmlFor='email' className='form-label'>Email</label>
-            <div className='form-control-set'>
-              <input id='email' name='email' className='form-control input-m input' type='email' placeholder='bruce@wayne.co'/>
-              <p className='form-help'>Email is optional, but provide one if you want followup.</p>
-              {this.state.errors.email ? <p className='message message-alert'>{this.state.errors.email}</p> : null}
-            </div>
-          </div>
-          <div className='form-group'>
-            <label htmlFor='email' className='form-label'>Subject</label>
-            <div className='form-control-set'>
-              <select name='subject' id='subject' className='form-control'>
-                <option value='--'>Subject</option>
-                <option value='report'>Report a technical issue</option>
-                <option value='opinion'>Let us know what you think</option>
-                <option value='contact'>Get in touch with OAM team</option>
-                <option value='other'>Everything else</option>
-              </select>
-              {this.state.errors.subject ? <p className='message message-alert'>{this.state.errors.subject}</p> : null}
-            </div>
-          </div>
-          <div className='form-group'>
-            <label htmlFor='message' className='form-label'>Feedback</label>
-            <div className='form-control-set'>
-              <textarea name='message' id='message' rows='5' className='form-control'></textarea>
-              {this.state.errors.message ? <p className='message message-alert'>{this.state.errors.message}</p> : null}
-            </div>
-          </div>
-          <div className='form-note'>
-            <p>When submitting the form, your current url and other necessary information will be collected.</p>
-          </div>
-          <div className='form-actions'>
-            <button className={'bttn-submit' + (this.state.lockSubmit ? ' disabled' : '')} type='submit' onClick={this.onSubmit}><span>Submit</span></button>
-          </div>
-        </form>
-      </div>
-    );
-  },
-
-  getFooter: function () {
-    return false;
-  },
-
   render: function () {
     return (
-      <BModal
-        ref='base'
-        type='feedback'
-        header={this.getHeader()}
-        body={this.getBody()}
-        footer={this.getFooter()}
-        revealed={this.props.revealed} />
+      <Modal
+        id='modal-about'
+        className='modal--large'
+        onCloseClick={this.closeModal}
+        revealed={this.state.revealed} >
+
+        <ModalHeader>
+          <div className='modal__headline'>
+            <h1 className='modal__title'>Feedback</h1>
+            <p className='modal__subtitle'>We want to know what you think</p>
+          </div>
+        </ModalHeader>
+        <ModalBody>
+          <form className='form-horizontal' ref='feedbackForm'>
+
+            <div className='form__group'>
+              <label htmlFor='name' className='form__label'>Name</label>
+              <div className='form-control-set'>
+                <input id='name' name='name' className='form__control form__control--medium' type='text' placeholder='Bruce Wayne'/>
+                {this.state.errors.name ? <p className='message message--alert'>{this.state.errors.name}</p> : null}
+              </div>
+            </div>
+            <div className='form__group'>
+              <label htmlFor='email' className='form__label'>Email</label>
+              <div className='form-control-set'>
+                <input id='email' name='email' className='form__control form__control--medium input' type='email' placeholder='bruce@wayne.co'/>
+                <p className='form__help'>Email is optional, but provide one if you want followup.</p>
+                {this.state.errors.email ? <p className='message message--alert'>{this.state.errors.email}</p> : null}
+              </div>
+            </div>
+            <div className='form__group'>
+              <label htmlFor='email' className='form__label'>Subject</label>
+              <div className='form-control-set'>
+                <select name='subject' id='subject' className='form__control'>
+                  <option value='--'>Subject</option>
+                  <option value='report'>Report a technical issue</option>
+                  <option value='opinion'>Let us know what you think</option>
+                  <option value='contact'>Get in touch with OAM team</option>
+                  <option value='other'>Everything else</option>
+                </select>
+                {this.state.errors.subject ? <p className='message message--alert'>{this.state.errors.subject}</p> : null}
+              </div>
+            </div>
+            <div className='form__group'>
+              <label htmlFor='message' className='form__label'>Feedback</label>
+              <div className='form-control-set'>
+                <textarea name='message' id='message' rows='5' className='form__control'></textarea>
+                {this.state.errors.message ? <p className='message message--alert'>{this.state.errors.message}</p> : null}
+              </div>
+            </div>
+            <div className='form__note'>
+              <p>When submitting the form, your current url and other necessary information will be collected.</p>
+            </div>
+            <div className='form__actions'>
+              <button className={'button button--base button--large' + (this.state.lockSubmit ? ' disabled' : '')} type='submit' onClick={this.onSubmit}><span>Submit</span></button>
+            </div>
+          </form>
+        </ModalBody>
+      </Modal>
     );
   }
 });

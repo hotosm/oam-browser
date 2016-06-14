@@ -145,7 +145,7 @@ var Header = React.createClass({
                     <ul className='drop__menu info-menu' role='menu'>
                       <li><a className='drop__menu-item' href='#modal-info' title='Learn more' onClick={this.aboutClickHandler} data-hook='dropdown:close'><span>About</span></a></li>
                       <li><a className='drop__menu-item' href='http://docs.openaerialmap.org/browser/getting-started/' title='Go to User Guide'><span>Help</span></a></li>
-                      <li><a className='drop__menu-item' href='mailto:info@openaerialmap.org' title='Get in touch' onClick={this.contactClickHandler}><span>Contact</span> <small>info@openaerialmap.org</small></a></li>
+                      <li><a className='drop__menu-item' href='mailto:info@openaerialmap.org' title='Get in touch' data-hook='dropdown:close' onClick={this.contactClickHandler}><span>Contact</span> <small>info@openaerialmap.org</small></a></li>
                     </ul>
                     <ul className='drop__menu info-menu' role='menu'>
                       <li><a href='https://status.openaerialmap.org/' className={oamHealthClass} title='Go to OAM Status'><span>Status</span></a></li>

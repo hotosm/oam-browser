@@ -154,7 +154,7 @@ var FeedbackModal = React.createClass({
             <div className='form__group'>
               <label htmlFor='message' className='form__label'>Feedback</label>
               <div className='form-control-set'>
-                <textarea name='message' id='message' rows='5' className='form__control'></textarea>
+                <textarea name='message' id='message' rows='5' className='form__control' placeholder='Leave a message'></textarea>
                 {this.state.errors.message ? <p className='message message--alert'>{this.state.errors.message}</p> : null}
               </div>
             </div>

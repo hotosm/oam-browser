@@ -3,8 +3,10 @@ import { hashHistory } from 'react-router';
 import React from 'react';
 import Keys from 'react-keybinding';
 import _ from 'lodash';
+import { Dropdown } from 'oam-design-system';
 import ResultsList from './results_list';
 import ResultsItem from './results_item';
+import actions from '../actions/actions';
 
 var ResultsPane = React.createClass({
   displayName: 'ResultsPane',
@@ -28,6 +30,11 @@ var ResultsPane = React.createClass({
       }
       this.closeResults();
     }
+  },
+
+  feedbackClickHandler: function (e) {
+    e.preventDefault();
+    actions.openModal('feedback');
   },
 
   closeResults: function (e) {
@@ -69,6 +76,22 @@ var ResultsPane = React.createClass({
     return (
       <div id='results-pane' className='pane'>
         <a href='' onClick={this.closeResults} className='pane-dismiss' title='Exit selection'><span>Close</span></a>
+        <Dropdown
+          triggerElement='a'
+          triggerClassName='pane-more'
+          triggerActiveClassName='button--active'
+          triggerTitle='More options'
+          triggerText='More options'
+          direction='down'
+          alignment='right'>
+          <ul className='drop__menu info-menu' role='menu'>
+            <li><a className='drop__menu-item' href={`https://twitter.com/share?url=${encodeURIComponent(window.location.href)}`} target='_blank' title='Share on twitter' data-hook='dropdown:close'><span>Share on Twitter</span></a></li>
+            <li><a className='drop__menu-item' href={`http://facebook.com/sharer.php?u=${encodeURIComponent(window.location.href)}`} target='_blank' title='Share on Facebook' data-hook='dropdown:close'><span>Share on Facebook</span></a></li>
+          </ul>
+          <ul className='drop__menu info-menu' role='menu'>
+            <li><a className='drop__menu-item' title='Report a problem' data-hook='dropdown:close' onClick={this.feedbackClickHandler}><span>Report a problem</span></a></li>
+          </ul>
+        </Dropdown>
         {resultsPane}
       </div>
     );

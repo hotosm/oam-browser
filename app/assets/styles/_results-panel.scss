@@ -47,6 +47,29 @@
   color: tint($base-color, 64%);
 }
 
+.pane-more {
+  position: absolute;
+  top: 0.75rem;
+  right: 2.5rem;
+  z-index: 30;
+  span {
+    @extend .visually-hidden;
+  }
+  &:before {
+    @extend %oam-ds-icon-ellipsis-vertical;
+    display: block;
+    height: 2rem;
+    width: 2rem;
+    line-height: 2rem;
+    text-align: center;
+  }
+}
+
+.pane-more,
+.pane-more:visited {
+  color: tint($base-color, 64%);
+}
+
 .pane-header {
   position: relative;
   padding: 1rem;
@@ -66,7 +89,7 @@
 
 .pane-title {
   margin: 0;
-  padding-right: 2rem;
+  padding-right: 3.5rem;
   @include heading(1rem);
   @extend .truncated;
 }

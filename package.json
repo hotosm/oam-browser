@@ -66,7 +66,7 @@
     "gulp-uglify": "^1.5.2",
     "gulp-useref": "^3.1.0",
     "gulp-util": "^3.0.7",
-    "jeet": "^6.1.2",
+    "jeet": "6.1.2",
     "node-bourbon": "^4.2.3",
     "node-notifier": "^4.5.0",
     "node-sass": "^3.7.0",

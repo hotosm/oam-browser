@@ -117,7 +117,7 @@ var FeedbackModal = React.createClass({
         <ModalHeader>
           <div className='modal__headline'>
             <h1 className='modal__title'>Feedback</h1>
-            <p className='modal__subtitle'>We want to know what you think</p>
+            <p className='modal__subtitle'>Your feedback helps us build a better system</p>
           </div>
         </ModalHeader>
         <ModalBody>
@@ -141,7 +141,7 @@ var FeedbackModal = React.createClass({
             <div className='form__group'>
               <label htmlFor='email' className='form__label'>Subject</label>
               <div className='form-control-set'>
-                <select name='subject' id='subject' className='form__control'>
+                <select name='subject' id='subject' className='form__control form__control--medium'>
                   <option value='--'>Subject</option>
                   <option value='report'>Report a technical issue</option>
                   <option value='opinion'>Let us know what you think</option>

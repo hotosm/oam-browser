@@ -45,7 +45,15 @@ var FeedbackModal = React.createClass({
   },
 
   closeModal: function () {
-    this.setState({ revealed: false });
+    this.setState({
+      revealed: false,
+      errors: {
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      }
+    });
   },
 
   openModal: function () {

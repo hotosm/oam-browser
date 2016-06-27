@@ -341,3 +341,19 @@ a:active{
   from { @include transform(rotate(0deg)); }
     to { @include transform(rotate(360deg)); }
 }
+
+.message {
+  margin-top: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: $global-radius;
+  font-size: 0.875rem;
+  font-weight: $base-font-regular;
+  line-height: 1.25rem;
+  background: tint($base-color, 80%);
+  color: $base-font-color;
+  @include animation(fade-in 0.32s ease 0s 1);
+  &.message-alert {
+    background: tint($alert-color, 80%);
+    color: $alert-color;
+  }
+}

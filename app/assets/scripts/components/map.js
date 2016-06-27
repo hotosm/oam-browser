@@ -77,8 +77,16 @@ var Map = React.createClass({
       zoomControl: false,
       minZoom: config.map.minZoom,
       maxZoom: config.map.maxZoom,
-      maxBounds: L.latLngBounds([-90, -180], [90, 180])
+      maxBounds: L.latLngBounds([-90, -180], [90, 180]),
+      attributionControl: false
     });
+
+    // Edits the attribution to create link out to github issues
+    var credits = L.control.attribution().addTo(this.map);
+    credits.addAttribution('© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> | <a href="#" data-hook="map:issue">Report an issue with this map</a>');
+
+    let mapIssueTrigger = this.refs.mapContainer.querySelector('[data-hook="map:issue"]');
+    mapIssueTrigger.addEventListener('click', this.onMapIssueReport);
 
     // Custom zoom control.
     var zoomCtrl = new DSZoom({
@@ -129,6 +137,11 @@ var Map = React.createClass({
     }
   },
 
+  componentWillUnmount: function () {
+    let mapIssueTrigger = this.refs.mapContainer.querySelector('[data-hook="map:issue"]');
+    mapIssueTrigger.removeEventListener('click', this.onMapIssueReport);
+  },
+
   // Lifecycle method.
   render: function () {
     return (
@@ -136,6 +149,11 @@ var Map = React.createClass({
         <div id='map' ref='mapContainer'></div>
       </div>
     );
+  },
+
+  onMapIssueReport: function (e) {
+    e.preventDefault();
+    actions.openModal('feedback');
   },
 
   // Map event

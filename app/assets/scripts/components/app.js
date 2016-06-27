@@ -3,6 +3,7 @@ import React from 'react';
 import InfoModal from './modals/info_modal';
 import WelcomeModal from './modals/welcome_modal';
 import MessageModal from './modals/message_modal';
+import FeedbackModal from './modals/feedback_modal';
 import Header from './header';
 import actions from '../actions/actions';
 
@@ -68,6 +69,7 @@ var App = React.createClass({
         <WelcomeModal revealed={showWelcomeModal} />
         <InfoModal />
         <MessageModal />
+        <FeedbackModal />
       </div>
     );
   }

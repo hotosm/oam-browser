@@ -77,8 +77,14 @@ var Map = React.createClass({
       zoomControl: false,
       minZoom: config.map.minZoom,
       maxZoom: config.map.maxZoom,
-      maxBounds: L.latLngBounds([-90, -180], [90, 180])
+      maxBounds: L.latLngBounds([-90, -180], [90, 180]),
+      attributionControl: false
     });
+
+    // Edits the attribution to create link out to github issues
+    var issueTitle = 'Map Bug';
+    var credits = L.control.attribution().addTo(this.map);
+    credits.addAttribution('© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> | <a href="https://github.com/hotosm/oam-browser/issues/new?title=' + issueTitle + '">Report an issue with this map</a>');
 
     // Custom zoom control.
     var zoomCtrl = new DSZoom({

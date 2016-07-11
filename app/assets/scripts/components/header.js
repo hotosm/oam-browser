@@ -6,7 +6,10 @@ import { Dropdown } from 'oam-design-system';
 import actions from '../actions/actions';
 import Filters from './filters';
 import utils from '../utils/utils';
+import { hashHistory } from 'react-router';
 import config from '../config';
+import centroid from 'turf-centroid';
+import mapStore from '../stores/map_store';
 
 var Header = React.createClass({
   displayName: 'Header',
@@ -79,6 +82,29 @@ var Header = React.createClass({
     this.fetchOAMHealth();
   },
 
+  onBrowseLatestClick: function (e) {
+    e.preventDefault();
+    console.groupCollapsed('onBrowseLatestClick');
+    var previewZoom = 10;
+    var latest = mapStore.getLatestImagery();
+    var f = {
+      type: 'Feature',
+      geometry: latest.geojson
+    };
+    var center = centroid(f).geometry.coordinates;
+    var quadKey = utils.quadkeyFromCoords(center[0], center[1], previewZoom);
+    var mapView = center[0] + ',' + center[1] + ',' + previewZoom;
+
+    console.log('Feature', f);
+    console.log('coords center', center);
+    console.log('quadKey', quadKey);
+    console.log('full url -- %s/%s/%s', mapView, quadKey, latest._id);
+
+    hashHistory.push(`/${mapView}/${quadKey}/${latest._id}`);
+
+    console.groupEnd('onBrowseLatestClick');
+  },
+
   render: function () {
     var oamHealthClass = 'drop__menu-item status-item ';
     switch (this.state.oamHealth) {
@@ -132,6 +158,7 @@ var Header = React.createClass({
             </div>
             <div className='nav-block-sec'>
               <ul className='meta-menu'>
+                <li><a href='#' onClick={this.onBrowseLatestClick} className='button-upload'><span>View latest imagery</span></a></li>
                 <li><a href='https://upload.openaerialmap.org/' className='button-upload' title='Go to OAM Uploader'><span>Upload</span></a></li>
                 <li>
                   <Dropdown

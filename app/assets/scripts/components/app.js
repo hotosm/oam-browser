@@ -1,7 +1,6 @@
 'use strict';
 import React from 'react';
 import InfoModal from './modals/info_modal';
-import WelcomeModal from './modals/welcome_modal';
 import MessageModal from './modals/message_modal';
 import FeedbackModal from './modals/feedback_modal';
 import Header from './header';
@@ -40,7 +39,6 @@ var App = React.createClass({
     // There can't be any other without map
     var params = this.props.params || {};
     var query = this.props.location.query || {};
-    var showWelcomeModal = !params.map;
 
     return (
       <div>
@@ -66,7 +64,6 @@ var App = React.createClass({
             <p>Made with love by <a href='https://developmentseed.org' title='Visit Development Seed website'>Development Seed</a> and <a href='http://hot.openstreetmap.org/' title='Visit the Humanitarian OpenStreetMap Team website'>HOT</a>.</p>
           </div>
         </footer>
-        <WelcomeModal revealed={showWelcomeModal} />
         <InfoModal />
         <MessageModal />
         <FeedbackModal />

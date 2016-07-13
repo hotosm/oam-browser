@@ -148,7 +148,7 @@ var Header = React.createClass({
                     query={this.props.query} />
                 </li>
               </ul>
-              <a href='#' onClick={this.onBrowseLatestClick} className='button button-latest button--achromic'><span><i class="oam-ds-icon-circle-information"></i>Latest</span></a>
+              <a href='#' onClick={this.onBrowseLatestClick} className='button button-latest button--achromic' title='Go to the latest imagery'><span><i class="oam-ds-icon-circle-information"></i>Latest</span></a>
             </div>
             <div className='nav-block-sec'>
               <ul className='meta-menu'>

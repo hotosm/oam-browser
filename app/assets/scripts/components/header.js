@@ -126,13 +126,11 @@ var Header = React.createClass({
         <div className='inner'>
           <div className='page__headline'>
             <h1 className='page__title'>
-              <a href='/' title='Visit homepage'>
                 <span className='mast-logo mast-logo--h'>
-                  <img className='mast-logo__image' src='assets/graphics/layout/oam-logo-h-pos.svg' width='832' height='160' alt='OpenAerialMap logo' />
-                  <strong className='mast-logo__text'>OpenAerialMap</strong>
+                  <a href='https://openaerialmap.org/' title='Visit homepage'><img className='mast-logo__image' src='assets/graphics/layout/oam-logo-h-pos.svg' width='832' height='160' alt='OpenAerialMap logo' />
+                  <strong className='mast-logo__text'>OpenAerialMap</strong></a>
                   <small className='mast-logo__label'>Browser</small>
                 </span>
-              </a>
             </h1>
           </div>
 
@@ -155,10 +153,10 @@ var Header = React.createClass({
                     query={this.props.query} />
                 </li>
               </ul>
+              <a href='#' onClick={this.onBrowseLatestClick} className='button button-latest button--achromic'><span><i class="oam-ds-icon-circle-information"></i>Latest</span></a>
             </div>
             <div className='nav-block-sec'>
               <ul className='meta-menu'>
-                <li><a href='#' onClick={this.onBrowseLatestClick} className='button-upload'><span>View latest imagery</span></a></li>
                 <li><a href='https://upload.openaerialmap.org/' className='button-upload' title='Go to OAM Uploader'><span>Upload</span></a></li>
                 <li>
                   <Dropdown

@@ -43,3 +43,9 @@
     @include animation(spin-c 1s linear 0s infinite);
   }
 }
+
+.button-latest{
+  margin-left: 8px;
+  &:before { @extend %oam-ds-icon-picture;
+  } 
+}

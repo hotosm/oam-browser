@@ -50,11 +50,6 @@ var Header = React.createClass({
       });
   },
 
-  aboutClickHandler: function (e) {
-    e.preventDefault();
-    actions.openModal('info');
-  },
-
   feedbackClickHandler: function (e) {
     e.preventDefault();
     actions.openModal('feedback');
@@ -168,7 +163,7 @@ var Header = React.createClass({
                     direction='down'
                     alignment='right'>
                     <ul className='drop__menu info-menu' role='menu'>
-                      <li><a className='drop__menu-item' href='#modal-info' title='Learn more' onClick={this.aboutClickHandler} data-hook='dropdown:close'><span>About</span></a></li>
+                      <li><a className='drop__menu-item' href='http://openaerialmap.org/about' title='Learn more' data-hook='dropdown:close'><span>About</span></a></li>
                       <li><a className='drop__menu-item' href='http://docs.openaerialmap.org/browser/getting-started/' title='Go to User Guide'><span>Help</span></a></li>
                       <li><a className='drop__menu-item' href='#modal-feedback' title='Leave feedback' data-hook='dropdown:close' onClick={this.feedbackClickHandler}><span>Feedback</span></a></li>
                       <li><a className='drop__menu-item' href='mailto:info@openaerialmap.org' title='Get in touch'><span>Contact</span> <small>info@openaerialmap.org</small></a></li>

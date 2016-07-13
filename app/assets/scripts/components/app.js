@@ -1,6 +1,5 @@
 'use strict';
 import React from 'react';
-import InfoModal from './modals/info_modal';
 import MessageModal from './modals/message_modal';
 import FeedbackModal from './modals/feedback_modal';
 import Header from './header';
@@ -64,7 +63,6 @@ var App = React.createClass({
             <p>Made with love by <a href='https://developmentseed.org' title='Visit Development Seed website'>Development Seed</a> and <a href='http://hot.openstreetmap.org/' title='Visit the Humanitarian OpenStreetMap Team website'>HOT</a>.</p>
           </div>
         </footer>
-        <InfoModal />
         <MessageModal />
         <FeedbackModal />
       </div>

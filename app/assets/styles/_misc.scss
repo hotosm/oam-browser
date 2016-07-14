@@ -45,7 +45,11 @@
 }
 
 .button-latest{
-  margin-left: 8px;
-  &:before { @extend %oam-ds-icon-picture;
+  padding: 4px 0;
+  margin: 0;
+  text-align:center;
+  &:before { 
+    margin: 0;
+    @extend %oam-ds-icon-clock-back;
   } 
 }

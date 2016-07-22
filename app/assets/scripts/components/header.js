@@ -50,11 +50,6 @@ var Header = React.createClass({
       });
   },
 
-  aboutClickHandler: function (e) {
-    e.preventDefault();
-    actions.openModal('info');
-  },
-
   feedbackClickHandler: function (e) {
     e.preventDefault();
     actions.openModal('feedback');
@@ -126,13 +121,11 @@ var Header = React.createClass({
         <div className='inner'>
           <div className='page__headline'>
             <h1 className='page__title'>
-              <a href='/' title='Visit homepage'>
                 <span className='mast-logo mast-logo--h'>
-                  <img className='mast-logo__image' src='assets/graphics/layout/oam-logo-h-pos.svg' width='832' height='160' alt='OpenAerialMap logo' />
-                  <strong className='mast-logo__text'>OpenAerialMap</strong>
+                  <a href='https://openaerialmap.org/' title='Visit homepage'><img className='mast-logo__image' src='assets/graphics/layout/oam-logo-h-pos.svg' width='832' height='160' alt='OpenAerialMap logo' />
+                  <strong className='mast-logo__text'>OpenAerialMap</strong></a>
                   <small className='mast-logo__label'>Browser</small>
                 </span>
-              </a>
             </h1>
           </div>
 
@@ -154,11 +147,14 @@ var Header = React.createClass({
                     params={this.props.params}
                     query={this.props.query} />
                 </li>
+                <li>
+                              <a href='#' onClick={this.onBrowseLatestClick} className='button button-latest button--achromic' title='Go to the latest imagery'></a>
+
+                </li>
               </ul>
             </div>
             <div className='nav-block-sec'>
               <ul className='meta-menu'>
-                <li><a href='#' onClick={this.onBrowseLatestClick} className='button-upload'><span>View latest imagery</span></a></li>
                 <li><a href='https://upload.openaerialmap.org/' className='button-upload' title='Go to OAM Uploader'><span>Upload</span></a></li>
                 <li>
                   <Dropdown
@@ -170,7 +166,7 @@ var Header = React.createClass({
                     direction='down'
                     alignment='right'>
                     <ul className='drop__menu info-menu' role='menu'>
-                      <li><a className='drop__menu-item' href='#modal-info' title='Learn more' onClick={this.aboutClickHandler} data-hook='dropdown:close'><span>About</span></a></li>
+                      <li><a className='drop__menu-item' href='http://openaerialmap.org/about' title='Learn more' data-hook='dropdown:close'><span>About</span></a></li>
                       <li><a className='drop__menu-item' href='http://docs.openaerialmap.org/browser/getting-started/' title='Go to User Guide'><span>Help</span></a></li>
                       <li><a className='drop__menu-item' href='#modal-feedback' title='Leave feedback' data-hook='dropdown:close' onClick={this.feedbackClickHandler}><span>Feedback</span></a></li>
                       <li><a className='drop__menu-item' href='mailto:info@openaerialmap.org' title='Get in touch'><span>Contact</span> <small>info@openaerialmap.org</small></a></li>

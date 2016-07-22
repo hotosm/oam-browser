@@ -7,10 +7,6 @@ button, input, select, textarea {
   margin: 0;
 }
 
-.form-horizontal {
-  @extend .clearfix;
-}
-
 .form-control {
   display: block;
   width: 100%;
@@ -36,7 +32,6 @@ button, input, select, textarea {
 }
 
 select.form-control {
-  box-shadow: inset 0 -2px 0 0 rgba($base-color, 0.08);
   cursor: pointer;
 }
 
@@ -52,6 +47,7 @@ fieldset[disabled] .form-control {
 
 textarea.form-control {
   height: auto;
+  resize: vertical;
 }
 
 input[type="search"] {
@@ -134,6 +130,36 @@ input[type="search"] {
   display: table-cell;
 }
 
+// FORM HORIZONTAL
+
+.form-horizontal,
+.form-horizontal .form-group {
+  @extend .clearfix;
+}
+
+.form-horizontal .form-label {
+  width: 20%;
+  float: left;
+  margin-top: 0.52rem;
+  margin-bottom: 0;
+}
+
+.form-horizontal .form-control-set {
+  width: 80%;
+  float: left;
+}
+
+.form-horizontal .form-note {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.form-horizontal .form-note,
+.form-horizontal .form-actions {
+  width: 80%;
+  margin-left: 20%;
+}
+
 legend,
 label {
   font: inherit;
@@ -211,5 +237,20 @@ input[type=radio] {
   }
   .input.search {
     padding-right: 2rem;
+  }
+}
+
+
+/* Form misc
+   ========================================================================== */
+
+.form-help {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: rgba($base-font-color, 0.64);
+  margin-top: $inner-pad / 2;
+
+  > *:last-child {
+    margin-bottom: 0;
   }
 }

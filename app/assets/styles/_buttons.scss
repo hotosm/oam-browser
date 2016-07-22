@@ -230,12 +230,16 @@ input[type=submit] {
   @extend .bttn, .bttn-base-light, .bttn-l, .history;
 }
 
-.bttn-settings {
-  @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .settings;
+.drop__toggle--settings:before {
+  @extend .icon-sliders-hor;
 }
 
-.bttn-info {
-  @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .info;
+.drop__toggle--info:before {
+  @extend .icon-circle-info;
+}
+
+.drop__toggle--uoptions:before {
+  @extend .icon-s-arr-down;
 }
 
 .bttn-upload {
@@ -266,10 +270,6 @@ input[type=submit] {
   @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .clipboard;
 }
 
-.bttn-uoptions {
-  @extend .bttn, .bttn-base-light, .bttn-m, .bttn-notxt, .uoptions;
-}
-
 .bttn-my-location {
   position: absolute;
   right: 2.25rem;
@@ -294,5 +294,21 @@ input[type=submit] {
     font-size: 1rem;
     text-align: center;
     @extend .icon-my-location;
+  }
+}
+
+.bttn-submit {
+  @extend .bttn, .bttn-l;
+  min-width: 12rem;
+  color: #fff;
+
+  background-color: tint($base-color, 16%);
+  &:hover {
+    background-color: $base-color;
+  }
+  &.active,
+  &.active:hover,
+  &:active {
+    background-color: shade($base-color, 16%);
   }
 }

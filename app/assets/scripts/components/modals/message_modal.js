@@ -1,53 +1,67 @@
 'use strict';
-var React = require('react/addons');
-var Reflux = require('reflux');
-var BModal = require('./base_modal');
-var actions = require('../../actions/actions');
+import React from 'react';
+import Reflux from 'reflux';
+import Keys from 'react-keybinding';
+import actions from '../../actions/actions';
+import OAM from 'oam-design-system';
+var { Modal, ModalHeader, ModalBody } = OAM.Modal;
 
 var MessageModal = React.createClass({
   displayName: 'MessageModal',
 
   mixins: [
-    Reflux.listenTo(actions.openModal, 'onOpenModal')
+    Reflux.listenTo(actions.openModal, 'onOpenModal'),
+    Keys
   ],
+
+  keybindings: {
+    'esc': function () {
+      this.closeModal();
+    }
+  },
 
   getInitialState: function () {
     return {
       title: 'Message',
-      message: ''
+      message: '',
+      revealed: false
     };
   },
 
   onOpenModal: function (which, data) {
     if (which === 'message' && data) {
       this.setState(data);
+      this.openModal();
     }
   },
 
-  getHeader: function () {
-    return (<h1 className='modal-title'>{this.state.title}</h1>);
+  closeModal: function () {
+    this.setState({ revealed: false });
   },
 
-  getBody: function () {
-    return (
-      <div className='message'>
-        {this.state.message}
-      </div>
-    );
-  },
-
-  getFooter: function () {
-    return false;
+  openModal: function () {
+    this.setState({ revealed: true });
   },
 
   render: function () {
     return (
-      <BModal
-        type='message'
-        header={this.getHeader()}
-        body={this.getBody()}
-        footer={this.getFooter()}
-        revealed={false} />
+      <Modal
+        id='modal-message'
+        className='modal--large'
+        onCloseClick={this.closeModal}
+        revealed={this.state.revealed} >
+
+        <ModalHeader>
+          <div className='modal__headline'>
+            <h1 className='modal__title'>{this.state.title}</h1>
+          </div>
+        </ModalHeader>
+        <ModalBody>
+          <div className='message'>
+            {this.state.message}
+          </div>
+        </ModalBody>
+      </Modal>
     );
   }
 });

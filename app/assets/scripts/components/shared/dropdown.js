@@ -1,5 +1,5 @@
 'use strict';
-var React = require('react/addons');
+var React = require('react');
 var Reflux = require('reflux');
 var $ = require('jquery');
 
@@ -24,7 +24,7 @@ var Dropdown = React.createClass({
   mixins: [Reflux.listenTo(dropdownActions.closeOthers, 'onCloseOthers')],
 
   onCloseOthers: function ($exception) {
-    if (this.getDOMNode() !== $exception) {
+    if (this.refs.drop !== $exception) {
       this.setState({ open: false });
     }
   },
@@ -84,7 +84,7 @@ var Dropdown = React.createClass({
     }
 
     return (
-      <this.props.element className={klasses.join(' ')} data-hook='dropdown'>
+      <this.props.element className={klasses.join(' ')} data-hook='dropdown' ref='drop'>
         <a href='#' title={this.props.triggerTitle} className={this.props.triggerClassName} onClick={this.closeDropdown}><span>{this.props.triggerText}</span></a>
         <div className='drop-content'>
           {this.props.children}

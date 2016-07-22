@@ -1,4 +1,6 @@
-// MAP
+/* ==========================================================================
+   Map
+   ========================================================================== */
 
 #map {
   position: absolute;
@@ -12,14 +14,26 @@
   top: auto;
   bottom: 50%;
   left: 1rem;
-  @include transform(translate(0, 50%));
+  transform: translate(0, 50%);
 }
 
 .zoom-controls {
+  @extend .button-group, .button-group--vertical;
+  // box-shadow: 0 0 0 1px $base-alpha-color, 0 2px 6px 2px rgba($base-color, 0.24);
+  // border-radius: $base-border-radius;
   margin: 0 !important;
 }
 
-// GRID
+.button-zoom {
+  @extend .button, .button--achromic, .button--text-hidden;
+
+  &--in:before { @extend %oam-ds-icon-plus; }
+  &--out:before { @extend %oam-ds-icon-minus; }
+}
+
+
+/* Grid
+   ========================================================================== */
 
 .gl {
   fill-opacity: 0;
@@ -82,7 +96,7 @@
     background: rgba($base-color, 0.48);
     display: block;
     color: #fff;
-    border-radius: $global-radius;
+    border-radius: $base-border-radius;
     padding: 0 0.5rem;
     font-size: 0.875rem;
     line-height: 1.25rem;
@@ -93,6 +107,10 @@
   }
 }
 
+
+/* Minimap
+   ========================================================================== */
+
 #minimap {
   position: absolute;
   left: 1rem;
@@ -100,6 +118,8 @@
   width: 16rem;
   height: 10rem;
   cursor: pointer;
-
-  @extend %press-box-skin;
+  background: #fff;
+  box-shadow: 0 0 0 1px $base-alpha-color, 0 2px 6px 2px rgba($base-color, 0.24);
+  border-radius: $base-border-radius;
+  overflow: hidden;
 }

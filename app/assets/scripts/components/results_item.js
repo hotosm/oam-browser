@@ -1,28 +1,29 @@
 'use strict';
-var qs = require('querystring');
-var $ = require('jquery');
-var centroid = require('turf-centroid');
-var React = require('react/addons');
-var Keys = require('react-keybinding');
-var Router = require('react-router');
-var actions = require('../actions/actions');
-var ZcButton = require('./shared/zc_button');
-var Dropdown = require('./shared/dropdown');
-var utils = require('../utils/utils');
-var prettyBytes = require('pretty-bytes');
+import { hashHistory } from 'react-router';
+import React from 'react';
+import qs from 'querystring';
+import $ from 'jquery';
+import centroid from 'turf-centroid';
+import Keys from 'react-keybinding';
+import actions from '../actions/actions';
+import ZcButton from './shared/zc_button';
+import { Dropdown } from 'oam-design-system';
+import utils from '../utils/utils';
+import prettyBytes from 'pretty-bytes';
 
 var ResultsItem = React.createClass({
   displayName: 'ResultsItem',
 
   propTypes: {
+    query: React.PropTypes.object,
+    mapView: React.PropTypes.string,
+    selectedSquareQuadkey: React.PropTypes.string,
     pagination: React.PropTypes.object,
     data: React.PropTypes.object
   },
 
   mixins: [
-    Keys,
-    Router.State,
-    Router.Navigation
+    Keys
   ],
 
   keybindings: {
@@ -42,42 +43,40 @@ var ResultsItem = React.createClass({
     if (e) {
       e.preventDefault();
     }
-    var p = this.getParams();
-    this.transitionTo('item', {
-      map: p.map,
-      square: p.square,
-      item_id: this.props.pagination.prevId
-    }, this.getQuery());
+    let { mapView, selectedSquareQuadkey } = this.props;
+    let path = `${mapView}/${selectedSquareQuadkey}/${this.props.pagination.prevId}`;
+    hashHistory.push({pathname: path, query: this.props.query});
   },
 
   viewAllResults: function (e) {
     if (e) {
       e.preventDefault();
     }
-    var p = this.getParams();
-    this.transitionTo('results', {
-      map: p.map,
-      square: p.square
-    }, this.getQuery());
+    let { mapView, selectedSquareQuadkey } = this.props;
+    let path = `${mapView}/${selectedSquareQuadkey}`;
+    hashHistory.push({pathname: path, query: this.props.query});
   },
 
   nextResult: function (e) {
     if (e) {
       e.preventDefault();
     }
-    var p = this.getParams();
-    this.transitionTo('item', {
-      map: p.map,
-      square: p.square,
-      item_id: this.props.pagination.nextId
-    }, this.getQuery());
+    let { mapView, selectedSquareQuadkey } = this.props;
+    let path = `${mapView}/${selectedSquareQuadkey}/${this.props.pagination.nextId}`;
+    hashHistory.push({pathname: path, query: this.props.query});
   },
 
-  onCopy: function (e) {
-    return $(e.target).parents('.input-group').find('[data-hook="copy:data"]').val();
+  onCopy: function (key, trigger) {
+    // Close the dropdown.
+    this.refs[`tms-drop-${key}`].close();
+    // Return the copy text.
+    return this.refs[`tms-url-${key}`].value;
   },
 
-  onOpenJosm: function (tmsUrl) {
+  onOpenJosm: function (dropKey, tmsUrl) {
+    // Close the dropdown.
+    this.refs[`tms-drop-${dropKey}`].close();
+
     var d = this.props.data;
     var source = 'OpenAerialMap - ' + d.provider + ' - ' + d.uuid;
     // Reference:
@@ -101,7 +100,7 @@ var ResultsItem = React.createClass({
         // all good!
         actions.openModal('message', {
           title: 'Success',
-          message: 'This scene has been loaded into JOSM.'
+          message: <p>This scene has been loaded into JOSM.</p>
         });
       });
     })
@@ -109,18 +108,23 @@ var ResultsItem = React.createClass({
       console.error(err);
       actions.openModal('message', {
         title: 'Error',
-        message: <p>Could not connect to JOSM via Remote Control.  Is JOSM configured to allow <a href='https://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl' target='_blank'>remote control</a>?</p>
+        message: (
+          <div>
+            <p>Could not connect to JOSM via Remote Control.</p>
+            <p>Is JOSM configured to allow <a href='https://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl' target='_blank'>remote control</a>?</p>
+          </div>
+        )
       });
     });
   },
 
-  renderTmsOptions: function (tmsUrl, dropClass) {
+  renderTmsOptions: function (tmsUrl, key, direction, aligment) {
     var d = this.props.data;
     // Generate the iD URL:
     // grab centroid of the footprint
     var center = centroid(d.geojson).geometry.coordinates;
     // cheat by using current zoom level
-    var zoom = this.getParams().map.split(',')[2];
+    var zoom = this.props.mapView.split(',')[2];
     var idUrl = 'http://www.openstreetmap.org/edit' +
     '#map=' + [zoom, center[1], center[0]].join('/') +
     '?' + qs.stringify({
@@ -129,17 +133,30 @@ var ResultsItem = React.createClass({
     });
 
     return (
-      <div className='input-group'>
-        <input className='form-control input-m' type='text' value={tmsUrl} readOnly data-hook='copy:data' />
-        <Dropdown element='span' className={'input-group-bttn ' + dropClass} triggerTitle='Show options' triggerClassName='bttn-uoptions' triggerText='Options'>
-          <ul className='drop-menu tms-options-menu' role='menu'>
-            <li className='has-icon-bef id-editor'><a href={idUrl} target='_blank' title='Open with iD editor'>Open with iD editor</a></li>
-            <li className='has-icon-bef josm'><a onClick={this.onOpenJosm.bind(null, tmsUrl)} title='Open with JOSM'>Open with JOSM</a></li>
-            <li className='has-icon-bef clipboard'>
-              <ZcButton onCopy={this.onCopy} title='Copy to clipboard' text='Copy to clipboard'/>
-            </li>
-          </ul>
-        </Dropdown>
+      <div className='form__group'>
+        <label className='form__label' htmlFor='tms-url'>TMS url</label>
+        <div className='form__input-group'>
+          <input className='form__control form__control--medium' type='text' value={tmsUrl} readOnly ref={`tms-url-${key}`} />
+          <span className='form__input-group-button'>
+            <Dropdown
+              className='drop__content--tms-options'
+              triggerElement='button'
+              triggerClassName='button-tms-options'
+              triggerActiveClassName='button--active'
+              triggerTitle='Show options'
+              triggerText='Options'
+              direction={direction}
+              alignment={aligment}
+              ref={`tms-drop-${key}`} >
+
+              <ul className='drop__menu drop__menu--iconified tms-options-menu' role='menu'>
+                <li><a className='drop__menu-item ide' href={idUrl} target='_blank' title='Open with iD editor'>Open with iD editor</a></li>
+                <li><a className='drop__menu-item josm' onClick={this.onOpenJosm.bind(null, key, tmsUrl)} title='Open with JOSM'>Open with JOSM</a></li>
+                <li><ZcButton onCopy={this.onCopy.bind(null, key)} title='Copy to clipboard' text='Copy to clipboard' /></li>
+              </ul>
+            </Dropdown>
+          </span>
+        </div>
       </div>
     );
   },
@@ -148,7 +165,7 @@ var ResultsItem = React.createClass({
     var d = this.props.data;
     var pagination = this.props.pagination;
 
-    var tmsOptions = d.properties.tms ? this.renderTmsOptions(d.properties.tms, 'dropdown center') : null;
+    var tmsOptions = d.properties.tms ? this.renderTmsOptions(d.properties.tms, 'main', 'down', 'center') : null;
 
     var blurImage = {
       backgroundImage: 'url(' + d.properties.thumbnail + ')'
@@ -168,7 +185,7 @@ var ResultsItem = React.createClass({
             </div>
             <div className='single-actions'>
               {tmsOptions}
-              <a title='Download image' className='bttn-download' target='_blank' href={d.uuid}><span>Download</span></a>
+              <a title='Download image' className='button-download' target='_blank' href={d.uuid}><span>Download</span></a>
             </div>
             <dl className='single-details'>
               <dt><span>Date</span></dt>
@@ -195,7 +212,7 @@ var ResultsItem = React.createClass({
               </header>
               <ul>
                 {d.custom_tms.map(function (o, i) {
-                  return <li key={i}>{this.renderTmsOptions(o, 'dropup right')}</li>;
+                  return <li key={i}>{this.renderTmsOptions(o, i, 'up', 'right')}</li>;
                 }.bind(this))}
               </ul>
             </section>

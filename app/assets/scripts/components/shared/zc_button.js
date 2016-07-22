@@ -1,6 +1,6 @@
 'use strict';
-var React = require('react/addons');
-var ZeroClipboard = require('zeroclipboard');
+import React from 'react';
+import Clipboard from 'clipboard';
 
 var ZcButton = React.createClass({
   displayName: 'ZcButton',
@@ -12,10 +12,12 @@ var ZcButton = React.createClass({
     text: React.PropTypes.string
   },
 
+  clipboard: null,
+
   getDefaultProps: function () {
     return {
       title: '',
-      className: '',
+      className: 'drop__menu-item clipboard',
       text: ''
     };
   },
@@ -23,28 +25,13 @@ var ZcButton = React.createClass({
   // Lifecycle method.
   // Called once as soon as the component has a DOM representation.
   componentDidMount: function () {
-    ZeroClipboard.config({
-      swfPath: '/ZeroClipboard.swf',
-      hoverClass: 'zc-hover',
-      activeClass: 'zc-active'
+    this.clipboard = new Clipboard(this.refs.el, {
+      text: trigger => this.props.onCopy(trigger)
     });
+  },
 
-    var _this = this;
-    var el = this.getDOMNode();
-    var client = new ZeroClipboard(el);
-    client.on('ready', function (readyEvent) {
-      console.log('ZeroClipboard SWF is ready!');
-
-      el.classList.remove('disabled');
-
-      client.on('copy', function (event) {
-        var toCopy = _this.props.onCopy(event);
-        if (toCopy === false) {
-          return;
-        }
-        event.clipboardData.setData('text/plain', toCopy);
-      });
-    });
+  componentWillUnmount: function () {
+    this.clipboard.destroy();
   },
 
   onCopyClick: function (e) {
@@ -53,7 +40,7 @@ var ZcButton = React.createClass({
 
   render: function () {
     return (
-      <a href='#' title={this.props.title} className={this.props.className} onClick={this.onCopyClick}><span>{this.props.text}</span></a>
+      <a ref='el' href='#' title={this.props.title} className={this.props.className} onClick={this.onCopyClick}><span>{this.props.text}</span></a>
     );
   }
 });

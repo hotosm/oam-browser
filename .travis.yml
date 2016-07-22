@@ -5,7 +5,8 @@ env:
   global:
   - CXX=g++-4.8
   - DEPLOY_BRANCH=master
-  - secure: "WrRx8thvjJ/cnS2hETwi+bwzx38bEBrvGst699AD6+aEDeUg0Yqv45nxkeExbMwOcavtFTS/CAygkxdrduNWsLo9S984WORA37p6nvZ61y8Ed3iCRtAsHqlCWgAyrCjqEZJbty9+/V76D9cvY76LprKTaGSLDYKj9kJZiXQjppo="
+  - STAGING_BRANCH=feature/v2
+  - secure: WrRx8thvjJ/cnS2hETwi+bwzx38bEBrvGst699AD6+aEDeUg0Yqv45nxkeExbMwOcavtFTS/CAygkxdrduNWsLo9S984WORA37p6nvZ61y8Ed3iCRtAsHqlCWgAyrCjqEZJbty9+/V76D9cvY76LprKTaGSLDYKj9kJZiXQjppo=
 addons:
   apt:
     sources:
@@ -25,8 +26,20 @@ before_script:
 script:
 - npm run build
 deploy:
-  provider: script
-  skip_cleanup: true
-  script: ".build_scripts/deploy.sh"
-  on:
-    branch: "${DEPLOY_BRANCH}"
+  - provider: script
+    skip_cleanup: true
+    script: ".build_scripts/deploy.sh"
+    on:
+      branch: "${DEPLOY_BRANCH}"
+  - provider: s3
+    access_key_id: AKIAIQZ7AFVTXS64KG4A
+    secret_access_key:
+      secure: oiV9oH3ujdsu/LtjHPec9HIBntQISoc0cRWXsfOmEj1a4Wo4v6ZEIOTpXgfyFqrAyBkQVT8WhbbXwg1Dlxxk6fsJDoTNDstwVtRPzYZW+rER5YP8rfuxfR45JJ0OrHhgJhzbuD07xZhvlKzXfW+2fxKIOqaGVuSdNFZXIqEIfbQ=
+    bucket: hotosm-oam-staging
+    region: us-east-1
+    skip_cleanup: true
+    local_dir: dist
+    acl: public_read
+    on:
+      repo: hotosm/oam-browser
+      branch: "${STAGING_BRANCH}"

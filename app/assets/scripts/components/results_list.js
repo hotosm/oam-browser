@@ -1,29 +1,26 @@
 'use strict';
-var React = require('react/addons');
-var Router = require('react-router');
-var _ = require('lodash');
-var actions = require('../actions/actions');
-var utils = require('../utils/utils');
+import { hashHistory } from 'react-router';
+import React from 'react';
+import actions from '../actions/actions';
+import utils from '../utils/utils';
 
 var ResultsListItem = React.createClass({
   displayName: 'ResultsListItem',
 
   propTypes: {
+    query: React.PropTypes.object,
+    mapView: React.PropTypes.string,
+    selectedSquareQuadkey: React.PropTypes.string,
     data: React.PropTypes.object
   },
-
-  mixins: [
-    Router.Navigation,
-    Router.State
-  ],
 
   onClick: function (e) {
     e.preventDefault();
     actions.resultOut(this.props.data);
-    var params = _.cloneDeep(this.getParams());
-    params.item_id = this.props.data._id;
 
-    this.transitionTo('item', params, this.getQuery());
+    let { mapView, selectedSquareQuadkey } = this.props;
+    let path = `${mapView}/${selectedSquareQuadkey}/${this.props.data._id}`;
+    hashHistory.push({pathname: path, query: this.props.query});
   },
 
   onOver: function (e) {
@@ -70,16 +67,23 @@ var ResultsList = React.createClass({
   displayName: 'ResultsList',
 
   propTypes: {
-    selectedSquare: React.PropTypes.string,
+    query: React.PropTypes.object,
+    mapView: React.PropTypes.string,
+    selectedSquareQuadkey: React.PropTypes.string,
     results: React.PropTypes.array
   },
 
   render: function () {
-    var square = this.props.selectedSquare;
+    var square = this.props.selectedSquareQuadkey;
 
     var numRes = this.props.results.length;
-    var results = this.props.results.map(function (o) {
-      return (<ResultsListItem key={o._id} data={o} />);
+    var results = this.props.results.map(o => {
+      return <ResultsListItem
+        key={o._id}
+        query={this.props.query}
+        mapView={this.props.mapView}
+        selectedSquareQuadkey={this.props.selectedSquareQuadkey}
+        data={o} />;
     });
 
     return (

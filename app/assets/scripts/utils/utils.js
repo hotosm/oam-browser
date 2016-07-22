@@ -1,9 +1,9 @@
 'use strict';
-var centroid = require('turf-centroid');
-var extent = require('turf-extent');
-var tilebelt = require('tilebelt');
-var config = require('../config');
-var $ = require('jquery');
+import centroid from 'turf-centroid';
+import extent from 'turf-extent';
+import tilebelt from 'tilebelt';
+import config from '../config';
+import $ from 'jquery';
 
 /**
  * Converts a string to a coordinates array.

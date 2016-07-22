@@ -1,20 +1,23 @@
 'use strict';
-var React = require('react/addons');
-var Reflux = require('reflux');
-var Router = require('react-router');
-var Dropdown = require('./shared/dropdown');
-var actions = require('../actions/actions');
-var searchQueryStore = require('../stores/search_query_store');
-var cookie = require('../utils/cookie');
-var config = require('../config.js');
+import { hashHistory } from 'react-router';
+import React from 'react';
+import Reflux from 'reflux';
+import { Dropdown } from 'oam-design-system';
+import actions from '../actions/actions';
+import searchQueryStore from '../stores/search_query_store';
+import cookie from '../utils/cookie';
+import config from '../config.js';
 
 var Filters = React.createClass({
   displayName: 'Filters',
 
+  propTypes: {
+    query: React.PropTypes.object,
+    params: React.PropTypes.object
+  },
+
   mixins: [
-    Reflux.listenTo(searchQueryStore, 'onSearchQuery'),
-    Router.Navigation,
-    Router.State
+    Reflux.listenTo(searchQueryStore, 'onSearchQuery')
   ],
 
   getInitialState: function () {
@@ -45,14 +48,14 @@ var Filters = React.createClass({
   },
 
   _updateUrl: function (prop, value) {
-    var query = this.getQuery();
+    var query = this.props.query;
     if (value === 'all') {
       delete query[prop];
     } else {
       query[prop] = value;
     }
 
-    var mapView = this.getParams().map;
+    var mapView = this.props.params.map;
     if (!mapView) {
       var cookieView = cookie.read('oam-browser:map-view');
       if (cookieView !== 'undefined') {
@@ -62,17 +65,17 @@ var Filters = React.createClass({
       }
     }
 
-    this.transitionTo('map', {map: mapView}, query);
+    hashHistory.push({pathname: mapView, query: query});
   },
 
   render: function () {
     function filterItem (property, clickHandler, d) {
-      var klass = this.state[property] === d.key ? 'active' : '';
+      var klass = this.state[property] === d.key ? 'drop__menu-item--active' : '';
       var click = clickHandler.bind(this, d);
       return (
-        <dd key={property + '-filter-' + d.key} className={klass}>
-          <a onClick={click} title={d.title}>{d.title}</a>
-        </dd>);
+        <li key={property + '-filter-' + d.key}>
+          <a onClick={click} title={d.title} className={`drop__menu-item ${klass}`}>{d.title}</a>
+        </li>);
     }
 
     var dates = [
@@ -95,15 +98,28 @@ var Filters = React.createClass({
     ].map(filterItem.bind(this, 'dataType', this.setDataType));
 
     return (
-      <Dropdown element='li' className='drop dropdown center' triggerTitle='Settings' triggerClassName='bttn-settings' triggerText='Settings'>
-        <dl className='drop-menu filters-options-menu' role='menu'>
-          <dt className='drop-menu-sectitle'>Time</dt>
+      <Dropdown
+        className='drop__content--filters'
+        triggerElement='a'
+        triggerClassName='button-filters'
+        triggerActiveClassName='button--active'
+        triggerTitle='Settings'
+        triggerText='Settings'
+        direction='down'
+        alignment='center' >
+
+        <h6 className='drop__title'>Time</h6>
+        <ul className='drop__menu drop__menu--select' role='menu'>
           {dates}
-          <dt className='drop-menu-sectitle'>Resolution</dt>
+        </ul>
+        <h6 className='drop__title'>Resolution</h6>
+        <ul className='drop__menu drop__menu--select' role='menu'>
           {resolutions}
-          <dt className='drop-menu-sectitle'>Data Type</dt>
+        </ul>
+        <h6 className='drop__title'>Data Type</h6>
+        <ul className='drop__menu drop__menu--select' role='menu'>
           {dataTypes}
-        </dl>
+        </ul>
       </Dropdown>
     );
   }

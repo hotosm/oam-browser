@@ -1,13 +1,13 @@
 'use strict';
-var qs = require('querystring');
-var Reflux = require('reflux');
-var _ = require('lodash');
-var $ = require('jquery');
-var extent = require('turf-extent');
-var rbush = require('rbush');
-var actions = require('../actions/actions');
-var searchQueryStore = require('./search_query_store');
-var config = require('../config');
+import qs from 'querystring';
+import Reflux from 'reflux';
+import _ from 'lodash';
+import $ from 'jquery';
+import extent from 'turf-extent';
+import rbush from 'rbush';
+import actions from '../actions/actions';
+import searchQueryStore from './search_query_store';
+import config from '../config';
 
 module.exports = Reflux.createStore({
   storage: {

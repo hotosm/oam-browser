@@ -380,8 +380,15 @@ var Map = React.createClass({
     }
     if (this.props.selectedItem) {
       var item = this.props.selectedItem;
-      var imageBounds = [[item.bbox[1], item.bbox[0]], [item.bbox[3], item.bbox[2]]];
-      this.mapOverImageLayer = L.imageOverlay(item.properties.thumbnail, imageBounds);
+      // Use tms if available.
+      if (item.properties.tms) {
+        // Fix url. Mostly means changing {zoom} to {z}.
+        let tmsUrl = item.properties.tms.replace('{zoom}', '{z}');
+        this.mapOverImageLayer = L.tileLayer(tmsUrl);
+      } else {
+        var imageBounds = [[item.bbox[1], item.bbox[0]], [item.bbox[3], item.bbox[2]]];
+        this.mapOverImageLayer = L.imageOverlay(item.properties.thumbnail, imageBounds);
+      }
 
       this.map.addLayer(this.mapOverImageLayer);
     }

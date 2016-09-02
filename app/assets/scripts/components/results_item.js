@@ -132,6 +132,8 @@ var ResultsItem = React.createClass({
       background: 'custom:' + tmsUrl
     });
 
+    let prevSelectClass = this.state.selectedPreview === `tms-${key}` ? 'button--active' : '';
+
     return (
       <div className='form__group'>
         <label className='form__label' htmlFor='tms-url'>TMS url</label>
@@ -157,9 +159,30 @@ var ResultsItem = React.createClass({
             </Dropdown>
           </span>
         </div>
+        <button className={'button button--small button--achromic ' + prevSelectClass} type='button' onClick={this.onPreviewSelect.bind(null, {type: 'tms', index: key})}><span>preview</span></button>
       </div>
     );
   },
+
+
+  getInitialState: function () {
+    return {
+      selectedPreview: 'thumbnail'
+    };
+  },
+
+  onPreviewSelect: function (what) {
+    console.log('onPreviewSelect', what);
+    actions.selectPreview(what);
+    let selected = what.type;
+    if (what.index !== undefined) {
+      selected += `-${what.index}`;
+    }
+    this.setState({selectedPreview: selected});
+  },
+
+
+
 
   render: function () {
     var d = this.props.data;
@@ -170,6 +193,8 @@ var ResultsItem = React.createClass({
     var blurImage = {
       backgroundImage: 'url(' + d.properties.thumbnail + ')'
     };
+
+    let sp = this.state.selectedPreview;
 
     return (
       <article className={(d.properties.tms ? 'has-tms ' : '') + 'results-single'}>
@@ -186,6 +211,13 @@ var ResultsItem = React.createClass({
             <div className='single-actions'>
               {tmsOptions}
               <a title='Download image' className='button-download' target='_blank' href={d.uuid}><span>Download</span></a>
+
+              <div className='button-group button-group--horizontal' role='group'>
+                <button className={'button button--small button--achromic ' + (sp === 'none' ? 'button--active' : '') } type='button' onClick={this.onPreviewSelect.bind(null, {type: 'none'})}><span>No preview</span></button>
+                <button className={'button button--small button--achromic ' + (sp === 'thumbnail' ? 'button--active' : '') } type='button' onClick={this.onPreviewSelect.bind(null, {type: 'thumbnail'})}><span>Thumbnail</span></button>
+                <button className={'button button--small button--achromic ' + (sp === 'tms' ? 'button--active' : '') } type='button' onClick={this.onPreviewSelect.bind(null, {type: 'tms'})}><span>TMS</span></button>
+              </div>
+
             </div>
             <dl className='single-details'>
               <dt><span>Date</span></dt>

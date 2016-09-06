@@ -219,6 +219,10 @@
   .form__label {
     @extend .visually-hidden;
   }
+
+  .button--tms-preview {
+    display: none;
+  }
 }
 
 .button-download {
@@ -234,6 +238,17 @@
   &:before {
     @extend %oam-ds-icon-sm-chevron-down;
   }
+}
+
+.button--tms-preview {
+  @extend .button, .button--achromic, .button--text-hidden;
+  &:before {
+    @extend %oam-ds-icon-map;
+  }
+}
+
+.tms-preview-opts {
+  margin-top: 1rem;
 }
 
 .has-tms {
@@ -322,6 +337,16 @@
         margin-bottom: 0;
       }
     }
+  }
+
+  .form__input-group {
+    float: left;
+    width: 85%;
+  }
+
+  .button--tms-preview  {
+    float: left;
+    margin-left: 1rem;
   }
 }
 

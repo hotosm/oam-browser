@@ -39,6 +39,21 @@ var ResultsItem = React.createClass({
     }
   },
 
+  getInitialState: function () {
+    return {
+      selectedPreview: 'thumbnail'
+    };
+  },
+
+  onPreviewSelect: function (what) {
+    actions.selectPreview(what);
+    let selected = what.type;
+    if (what.index !== undefined) {
+      selected += `-${what.index}`;
+    }
+    this.setState({selectedPreview: selected});
+  },
+
   prevResult: function (e) {
     if (e) {
       e.preventDefault();
@@ -159,30 +174,10 @@ var ResultsItem = React.createClass({
             </Dropdown>
           </span>
         </div>
-        <button className={'button button--small button--achromic ' + prevSelectClass} type='button' onClick={this.onPreviewSelect.bind(null, {type: 'tms', index: key})}><span>preview</span></button>
+        <button className={'button--tms-preview ' + prevSelectClass} type='button' onClick={this.onPreviewSelect.bind(null, {type: 'tms', index: key})} title='Preview TMS on map'><span>preview</span></button>
       </div>
     );
   },
-
-
-  getInitialState: function () {
-    return {
-      selectedPreview: 'thumbnail'
-    };
-  },
-
-  onPreviewSelect: function (what) {
-    console.log('onPreviewSelect', what);
-    actions.selectPreview(what);
-    let selected = what.type;
-    if (what.index !== undefined) {
-      selected += `-${what.index}`;
-    }
-    this.setState({selectedPreview: selected});
-  },
-
-
-
 
   render: function () {
     var d = this.props.data;
@@ -212,7 +207,7 @@ var ResultsItem = React.createClass({
               {tmsOptions}
               <a title='Download image' className='button-download' target='_blank' href={d.uuid}><span>Download</span></a>
 
-              <div className='button-group button-group--horizontal' role='group'>
+              <div className='button-group button-group--horizontal tms-preview-opts' role='group'>
                 <button className={'button button--small button--achromic ' + (sp === 'none' ? 'button--active' : '') } type='button' onClick={this.onPreviewSelect.bind(null, {type: 'none'})}><span>No preview</span></button>
                 <button className={'button button--small button--achromic ' + (sp === 'thumbnail' ? 'button--active' : '') } type='button' onClick={this.onPreviewSelect.bind(null, {type: 'thumbnail'})}><span>Thumbnail</span></button>
                 <button className={'button button--small button--achromic ' + (sp === 'tms' ? 'button--active' : '') } type='button' onClick={this.onPreviewSelect.bind(null, {type: 'tms'})}><span>TMS</span></button>

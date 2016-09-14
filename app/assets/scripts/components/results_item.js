@@ -207,12 +207,14 @@ var ResultsItem = React.createClass({
               {tmsOptions}
               <a title='Download image' className='button-download' target='_blank' href={d.uuid}><span>Download</span></a>
 
-              <div className='button-group button-group--horizontal tms-preview-opts' role='group'>
-                <button className={'button button--small button--achromic ' + (sp === 'none' ? 'button--active' : '') } type='button' onClick={this.onPreviewSelect.bind(null, {type: 'none'})}><span>No preview</span></button>
-                <button className={'button button--small button--achromic ' + (sp === 'thumbnail' ? 'button--active' : '') } type='button' onClick={this.onPreviewSelect.bind(null, {type: 'thumbnail'})}><span>Thumbnail</span></button>
-                <button className={'button button--small button--achromic ' + (sp === 'tms' ? 'button--active' : '') } type='button' onClick={this.onPreviewSelect.bind(null, {type: 'tms'})}><span>TMS</span></button>
+              <div className='preview-options'>
+                <h3 className='preview-options__title'>Preview</h3>
+                <div className='button-group button-group--horizontal preview-options__buttons' role='group'>
+                  <button className={'button button--small button--display ' + (sp === 'thumbnail' ? 'button--active' : '') } type='button' onClick={this.onPreviewSelect.bind(null, {type: 'thumbnail'})}><span>Thumbnail</span></button>
+                  {d.properties.tms ? <button className={'button button--small button--display ' + (sp === 'tms' ? 'button--active' : '') } type='button' onClick={this.onPreviewSelect.bind(null, {type: 'tms'})}><span>TMS</span></button> : null}
+                  <button className={'button button--small button--display ' + (sp === 'none' ? 'button--active' : '') } type='button' onClick={this.onPreviewSelect.bind(null, {type: 'none'})}><span>None</span></button>
+                </div>
               </div>
-
             </div>
             <dl className='single-details'>
               <dt><span>Date</span></dt>

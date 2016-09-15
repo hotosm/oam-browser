@@ -46,11 +46,16 @@ var ResultsItem = React.createClass({
   },
 
   onPreviewSelect: function (what) {
-    actions.selectPreview(what);
     let selected = what.type;
     if (what.index !== undefined) {
       selected += `-${what.index}`;
+      // Clicking again in a custom tms will de-select it, defaulting to none.
+      if (selected === this.state.selectedPreview) {
+        what = {type: 'none'};
+        selected = 'none';
+      }
     }
+    actions.selectPreview(what);
     this.setState({selectedPreview: selected});
   },
 

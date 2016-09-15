@@ -386,7 +386,6 @@ var Map = React.createClass({
     }
     if (this.props.selectedItem) {
       var item = this.props.selectedItem;
-      console.log('item', item);
 
       if (previewOptions.type === 'tms') {
         // We can preview the main tms and the custom ones as well.
@@ -398,7 +397,7 @@ var Map = React.createClass({
           : item.custom_tms[previewOptions.index];
 
         // Fix url. Mostly means changing {zoom} to {z}.
-        tmsUrl = item.properties.tms.replace('{zoom}', '{z}');
+        tmsUrl = tmsUrl.replace('{zoom}', '{z}');
         this.mapOverImageLayer = L.tileLayer(tmsUrl);
       } else if (previewOptions.type === 'thumbnail') {
         var imageBounds = [[item.bbox[1], item.bbox[0]], [item.bbox[3], item.bbox[2]]];

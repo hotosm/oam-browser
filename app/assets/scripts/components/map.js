@@ -380,6 +380,7 @@ var Map = React.createClass({
   },
 
   updateSelectedItemImageFootprint: function (previewOptions) {
+    this.updateSelectedSquare();
     if (this.map.hasLayer(this.mapOverImageLayer)) {
       this.map.removeLayer(this.mapOverImageLayer);
       this.mapOverImageLayer = null;
@@ -399,6 +400,8 @@ var Map = React.createClass({
         // Fix url. Mostly means changing {zoom} to {z}.
         tmsUrl = tmsUrl.replace('{zoom}', '{z}');
         this.mapOverImageLayer = L.tileLayer(tmsUrl);
+        // Remove the selected square when previewing tms files.
+        this.mapSelectedSquareLayer.clearLayers();
       } else if (previewOptions.type === 'thumbnail') {
         var imageBounds = [[item.bbox[1], item.bbox[0]], [item.bbox[3], item.bbox[2]]];
         this.mapOverImageLayer = L.imageOverlay(item.properties.thumbnail, imageBounds);

@@ -39,6 +39,26 @@ var ResultsItem = React.createClass({
     }
   },
 
+  getInitialState: function () {
+    return {
+      selectedPreview: 'thumbnail'
+    };
+  },
+
+  onPreviewSelect: function (what) {
+    let selected = what.type;
+    if (what.index !== undefined) {
+      selected += `-${what.index}`;
+      // Clicking again in a custom tms will de-select it, defaulting to none.
+      if (selected === this.state.selectedPreview) {
+        what = {type: 'none'};
+        selected = 'none';
+      }
+    }
+    actions.selectPreview(what);
+    this.setState({selectedPreview: selected});
+  },
+
   prevResult: function (e) {
     if (e) {
       e.preventDefault();
@@ -132,6 +152,8 @@ var ResultsItem = React.createClass({
       background: 'custom:' + tmsUrl
     });
 
+    let prevSelectClass = this.state.selectedPreview === `tms-${key}` ? 'button--active' : '';
+
     return (
       <div className='form__group'>
         <label className='form__label' htmlFor='tms-url'>TMS url</label>
@@ -157,6 +179,7 @@ var ResultsItem = React.createClass({
             </Dropdown>
           </span>
         </div>
+        <button className={'button--tms-preview ' + prevSelectClass} type='button' onClick={this.onPreviewSelect.bind(null, {type: 'tms', index: key})} title='Preview TMS on map'><span>preview</span></button>
       </div>
     );
   },
@@ -170,6 +193,8 @@ var ResultsItem = React.createClass({
     var blurImage = {
       backgroundImage: 'url(' + d.properties.thumbnail + ')'
     };
+
+    let sp = this.state.selectedPreview;
 
     return (
       <article className={(d.properties.tms ? 'has-tms ' : '') + 'results-single'}>
@@ -186,6 +211,15 @@ var ResultsItem = React.createClass({
             <div className='single-actions'>
               {tmsOptions}
               <a title='Download image' className='button-download' target='_blank' href={d.uuid}><span>Download</span></a>
+
+              <div className='preview-options'>
+                <h3 className='preview-options__title'>Preview</h3>
+                <div className='button-group button-group--horizontal preview-options__buttons' role='group'>
+                  <button className={'button button--small button--display ' + (sp === 'thumbnail' ? 'button--active' : '') } type='button' onClick={this.onPreviewSelect.bind(null, {type: 'thumbnail'})}><span>Thumbnail</span></button>
+                  {d.properties.tms ? <button className={'button button--small button--display ' + (sp === 'tms' ? 'button--active' : '') } type='button' onClick={this.onPreviewSelect.bind(null, {type: 'tms'})}><span>TMS</span></button> : null}
+                  <button className={'button button--small button--display ' + (sp === 'none' ? 'button--active' : '') } type='button' onClick={this.onPreviewSelect.bind(null, {type: 'none'})}><span>None</span></button>
+                </div>
+              </div>
             </div>
             <dl className='single-details'>
               <dt><span>Date</span></dt>

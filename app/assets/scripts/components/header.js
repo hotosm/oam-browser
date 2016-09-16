@@ -58,7 +58,7 @@ var Header = React.createClass({
   onGeocoderSearch: function (e) {
     e.preventDefault();
 
-    var queryString = this.refs.geocoder.getDOMNode().value;
+    var queryString = this.refs.geocoder.value;
     utils.queryGeocoder(queryString, bounds => {
       if (!bounds) {
         console.log('geocoder -- no result was found');

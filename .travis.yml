@@ -5,7 +5,7 @@ env:
   global:
   - CXX=g++-4.8
   - DEPLOY_BRANCH=master
-  - STAGING_BRANCH=feature/v2
+  - STAGING_BRANCH=develop
   - secure: WrRx8thvjJ/cnS2hETwi+bwzx38bEBrvGst699AD6+aEDeUg0Yqv45nxkeExbMwOcavtFTS/CAygkxdrduNWsLo9S984WORA37p6nvZ61y8Ed3iCRtAsHqlCWgAyrCjqEZJbty9+/V76D9cvY76LprKTaGSLDYKj9kJZiXQjppo=
 addons:
   apt:

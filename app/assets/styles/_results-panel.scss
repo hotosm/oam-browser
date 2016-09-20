@@ -219,6 +219,10 @@
   .form__label {
     @extend .visually-hidden;
   }
+
+  .button--tms-preview {
+    display: none;
+  }
 }
 
 .button-download {
@@ -236,6 +240,13 @@
   }
 }
 
+.button--tms-preview {
+  @extend .button, .button--achromic, .button--text-hidden;
+  &:before {
+    @extend %oam-ds-icon-map;
+  }
+}
+
 .has-tms {
   .single-actions {
     .form__group {
@@ -248,6 +259,61 @@
       min-width: initial;
     }
   }
+}
+
+.preview-options {
+  @extend .clearfix;
+  position: absolute;
+  top: $global-spacing / 2;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 80;
+  width: auto;
+  pointer-events: none;
+  white-space: nowrap;
+  background: rgba(#fff, 0.48);
+  border-radius: $base-border-radius;
+  padding: 0.25rem;
+
+  .preview-options__title,
+  .preview-options__buttons,
+  .button {
+    @extend .antialiased;
+    pointer-events: auto;
+    display: inline-block;
+  }
+
+  .preview-options__buttons,
+  .button {
+    float: none;
+    vertical-align: top;
+  }
+}
+
+.button--display {
+  background: rgba($base-color, 0.48);
+  color: #fff;
+
+  &:hover {
+    background: rgba($base-color, 0.56);
+  }
+
+  &:active,
+  &.button--active,
+  &.button--active:hover {
+    background: rgba($base-color, 0.8);
+  }
+}
+
+.preview-options__title {
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 0.675rem;
+  line-height: 1.5rem;
+  font-weight: $base-font-regular;
+  color: rgba($base-font-color, 0.48);
+  padding: 0 0.5rem 0 0.25rem;
+  vertical-align: top;
 }
 
 .single-details {
@@ -270,7 +336,7 @@
     text-transform: uppercase;
     clear: left;
     padding-right: 0.5rem;
-    font-size: 0.775rem;
+    font-size: 0.675rem;
   }
   dd {
     width: 68%;
@@ -322,6 +388,16 @@
         margin-bottom: 0;
       }
     }
+  }
+
+  .form__input-group {
+    float: left;
+    width: 85%;
+  }
+
+  .button--tms-preview  {
+    float: left;
+    margin-left: 1rem;
   }
 }
 

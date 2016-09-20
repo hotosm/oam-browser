@@ -33,6 +33,7 @@ var Map = React.createClass({
   mixins: [
     Reflux.listenTo(actions.resultOver, 'onResultOver'),
     Reflux.listenTo(actions.resultOut, 'onResultOut'),
+    Reflux.listenTo(actions.selectPreview, 'onSelectPreview'),
     Reflux.listenTo(actions.geocoderResult, 'onGeocoderResult'),
     Reflux.listenTo(actions.requestMyLocation, 'onRequestMyLocation')
   ],
@@ -50,6 +51,12 @@ var Map = React.createClass({
   requireMapViewUpdate: true,
   // Allow us to know if the image has changed and needs to be updated.
   requireSelectedItemUpdate: true,
+  // Control if the selected square is present or not.
+  disableSelectedSquare: false,
+
+  onSelectPreview: function (what) {
+    this.updateSelectedItemImageFootprint(what);
+  },
 
   // Lifecycle method.
   componentWillReceiveProps: function (nextProps) {
@@ -133,7 +140,7 @@ var Map = React.createClass({
     this.updateSelectedSquare();
 
     if (this.requireSelectedItemUpdate) {
-      this.updateSelectedItemImageFootprint();
+      this.updateSelectedItemImageFootprint({type: 'thumbnail'});
     }
   },
 
@@ -363,7 +370,7 @@ var Map = React.createClass({
     this.mapSelectedSquareLayer.clearLayers();
     // If there is a selected square add it to its own layer.
     // In this way we can scale the grid without touching the selected square.
-    if (this.getSqrQuadKey()) {
+    if (this.getSqrQuadKey() && !this.disableSelectedSquare) {
       var qk = this.getSqrQuadKey();
       var coords = utils.coordsFromQuadkey(qk);
       var f = utils.getPolygonFeature(coords);
@@ -374,17 +381,36 @@ var Map = React.createClass({
     }
   },
 
-  updateSelectedItemImageFootprint: function () {
+  updateSelectedItemImageFootprint: function (previewOptions) {
+    this.disableSelectedSquare = false;
     if (this.map.hasLayer(this.mapOverImageLayer)) {
       this.map.removeLayer(this.mapOverImageLayer);
+      this.mapOverImageLayer = null;
     }
     if (this.props.selectedItem) {
       var item = this.props.selectedItem;
-      var imageBounds = [[item.bbox[1], item.bbox[0]], [item.bbox[3], item.bbox[2]]];
-      this.mapOverImageLayer = L.imageOverlay(item.properties.thumbnail, imageBounds);
 
-      this.map.addLayer(this.mapOverImageLayer);
+      if (previewOptions.type === 'tms') {
+        // We can preview the main tms and the custom ones as well.
+        // When previewing the main tms the index property won't be set.
+        // We're not doing any validation here because the action call is
+        // controlled.
+        let tmsUrl = previewOptions.index === undefined
+          ? item.properties.tms
+          : item.custom_tms[previewOptions.index];
+
+        // Fix url. Mostly means changing {zoom} to {z}.
+        tmsUrl = tmsUrl.replace('{zoom}', '{z}');
+        this.mapOverImageLayer = L.tileLayer(tmsUrl);
+        this.disableSelectedSquare = true;
+      } else if (previewOptions.type === 'thumbnail') {
+        var imageBounds = [[item.bbox[1], item.bbox[0]], [item.bbox[3], item.bbox[2]]];
+        this.mapOverImageLayer = L.imageOverlay(item.properties.thumbnail, imageBounds);
+      }
+
+      this.mapOverImageLayer && this.map.addLayer(this.mapOverImageLayer);
     }
+    this.updateSelectedSquare();
   },
 
   // Helper functions

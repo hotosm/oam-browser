@@ -8,6 +8,7 @@ import rbush from 'rbush';
 import actions from '../actions/actions';
 import searchQueryStore from './search_query_store';
 import config from '../config';
+import baseLayers from '../utils/map-layers';
 
 module.exports = Reflux.createStore({
   storage: {
@@ -15,15 +16,21 @@ module.exports = Reflux.createStore({
     results: [],
     sqrSelected: null,
     latestImagery: null,
-    footprintsTree: null
+    footprintsTree: null,
+    baseLayer: baseLayers[0]
   },
 
   // Called on creation.
   // Setup listeners.
   init: function () {
     this.listenTo(actions.selectedBbox, this.onSelectedBbox);
+    this.listenTo(actions.setBaseLayer, this.onSetBaseLayer);
     this.queryLatestImagery();
     this.queryFootprints();
+  },
+
+  onSetBaseLayer: function (layer) {
+    this.storage.baseLayer = layer;
   },
 
   queryLatestImagery: function () {
@@ -176,6 +183,14 @@ module.exports = Reflux.createStore({
    */
   getResults: function () {
     return this.storage.results;
+  },
+
+  /**
+   * Returns the base layer currently selected.
+   * @return Object
+   */
+  getBaseLayer: function () {
+    return this.storage.baseLayer;
   }
 
 });

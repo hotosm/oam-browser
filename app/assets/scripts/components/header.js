@@ -10,6 +10,7 @@ import { hashHistory } from 'react-router';
 import config from '../config';
 import centroid from 'turf-centroid';
 import mapStore from '../stores/map_store';
+import MapLayers from './map-layers';
 
 var Header = React.createClass({
   displayName: 'Header',
@@ -148,8 +149,10 @@ var Header = React.createClass({
                     query={this.props.query} />
                 </li>
                 <li>
-                              <a href='#' onClick={this.onBrowseLatestClick} className='button button-latest button--achromic' title='Go to the latest imagery'></a>
-
+                  <a href='#' onClick={this.onBrowseLatestClick} className='button-latest' title='Go to the latest imagery'><span>Latest imagery</span></a>
+                </li>
+                <li className='map-layers'>
+                  <MapLayers />
                 </li>
               </ul>
             </div>

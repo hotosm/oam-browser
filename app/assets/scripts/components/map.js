@@ -35,7 +35,8 @@ var Map = React.createClass({
     Reflux.listenTo(actions.resultOut, 'onResultOut'),
     Reflux.listenTo(actions.selectPreview, 'onSelectPreview'),
     Reflux.listenTo(actions.geocoderResult, 'onGeocoderResult'),
-    Reflux.listenTo(actions.requestMyLocation, 'onRequestMyLocation')
+    Reflux.listenTo(actions.requestMyLocation, 'onRequestMyLocation'),
+    Reflux.listenTo(actions.setBaseLayer, 'onChangeBaseLayer')
   ],
 
   map: null,
@@ -53,6 +54,9 @@ var Map = React.createClass({
   requireSelectedItemUpdate: true,
   // Control if the selected square is present or not.
   disableSelectedSquare: false,
+
+  // Current active base layer.
+  baseLayer: null,
 
   onSelectPreview: function (what) {
     this.updateSelectedItemImageFootprint(what);
@@ -80,13 +84,16 @@ var Map = React.createClass({
   componentDidMount: function () {
     console.log('componentDidMount MapBoxMap');
 
-    this.map = L.mapbox.map(this.refs.mapContainer, config.map.baseLayer, {
+    this.map = L.mapbox.map(this.refs.mapContainer, null, {
       zoomControl: false,
       minZoom: config.map.minZoom,
       maxZoom: config.map.maxZoom,
       maxBounds: L.latLngBounds([-90, -180], [90, 180]),
       attributionControl: false
     });
+
+    this.baseLayer = L.tileLayer(mapStore.getBaseLayer().url);
+    this.map.addLayer(this.baseLayer);
 
     // Edits the attribution to create link out to github issues
     var credits = L.control.attribution().addTo(this.map);
@@ -223,6 +230,16 @@ var Map = React.createClass({
       this.map.fitBounds(bounds);
       hashHistory.push({pathname: `/${this.mapViewToString()}`, query: this.props.query});
     }
+  },
+
+  // Actions listener.
+  onChangeBaseLayer: function () {
+    let layer = mapStore.getBaseLayer();
+    if (this.baseLayer) {
+      this.map.removeLayer(this.baseLayer);
+    }
+    this.baseLayer = L.tileLayer(layer.url);
+    this.map.addLayer(this.baseLayer);
   },
 
   // Actions listener.

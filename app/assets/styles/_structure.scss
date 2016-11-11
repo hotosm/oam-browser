@@ -164,6 +164,20 @@
   }
 }
 
+.button-layers {
+  @extend .button, .button--achromic, .button--text-hidden, .drop__toggle;
+  &:before {
+    @extend %oam-ds-icon-layers;
+  }
+}
+
+.button-latest {
+  @extend .button, .button--achromic, .button--text-hidden, .drop__toggle;
+  &:before {
+    @extend %oam-ds-icon-clock-back;
+  }
+}
+
 .info-menu small {
   display: block;
   opacity: 0.64;
@@ -392,5 +406,57 @@
       max-width: none;
       background: red;
     }
+  }
+}
+
+/* Map layers
+   ========================================================================== */
+
+.map-layers {
+  position: absolute;
+  left: 0;
+  top: 50vh;
+  transform: translate(0px, -90px);
+
+  &__content {
+    height: 10rem;
+    z-index: 1000;
+    width: 12rem;
+    padding: $global-spacing;
+    overflow: hidden;
+    text-align: left;
+    color: $base-font-color;
+    font-size: 1rem;
+    line-height: 1.5;
+    background: #fff;
+    box-shadow: 0 2px 12px 2px $base-alpha-color, 0 0 0 1px $base-alpha-color;
+    border-radius: $base-border-radius;
+  }
+}
+
+.map-layers-list {
+  .drop__menu-item {
+    padding-left: 3.5rem;
+    line-height: 2.5rem;
+
+    &--active:after {
+      top: 50%;
+      transform: translate(0, -50%);
+    }
+  }
+
+  &__map {
+    position: absolute !important;
+    height: 2rem;
+    width: 2rem;
+    top: 50%;
+    left: 1rem;
+    transform: translate(0px, -50%);
+    border-radius: $base-border-radius;
+  }
+
+  &__label {
+    font-size: 0.775rem;
+    color: $base-font-color;
   }
 }

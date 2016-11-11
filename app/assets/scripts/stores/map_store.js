@@ -5,6 +5,7 @@ import _ from 'lodash';
 import $ from 'jquery';
 import extent from 'turf-extent';
 import rbush from 'rbush';
+
 import actions from '../actions/actions';
 import searchQueryStore from './search_query_store';
 import config from '../config';
@@ -46,20 +47,20 @@ module.exports = Reflux.createStore({
   queryFootprints: function () {
     var _this = this;
 
-    console.time('fetch footprints');
+    // console.time('fetch footprints');
     $.get(config.catalog.url + '/meta?limit=99999')
       .success(function (data) {
-        console.timeEnd('fetch footprints');
+        // console.timeEnd('fetch footprints');
         var footprintsFeature = _this.parseFootprints(data.results);
 
-        console.time('index footprints');
+        // console.time('index footprints');
         var tree = rbush(9);
         tree.load(footprintsFeature.features.map(function (feat) {
           var item = feat.geometry.bbox;
           item.feature = feat;
           return item;
         }));
-        console.timeEnd('index footprints');
+        // console.timeEnd('index footprints');
         // Done.
         _this.storage.footprintsTree = tree;
         _this.trigger('footprints');
@@ -105,7 +106,7 @@ module.exports = Reflux.createStore({
   queryData: function () {
     var parameters = searchQueryStore.getParameters();
     var _this = this;
-    console.log('mapstore queryData', parameters);
+    // console.log('mapstore queryData', parameters);
 
     // hit API and broadcast result
     var resolutionFilter = {
@@ -136,28 +137,28 @@ module.exports = Reflux.createStore({
 
     // Calculate bbox;
     var bbox = this.storage.selectedBbox.join(',');
-    console.log('selected feature bbox', bbox);
+    // console.log('selected feature bbox', bbox);
 
     var params = _.assign({
       limit: 4000,
       bbox: bbox
     }, resolutionFilter, dateFilter, typeFilter);
 
-    console.log('search:', params);
+    // console.log('search:', params);
     var strParams = qs.stringify(params);
     if (strParams === this.storage.prevSearchParams) {
-      console.log('search params did not change. Api call aborted.');
+      // console.log('search params did not change. Api call aborted.');
       _this.trigger('squareData');
       return;
     } else {
-      console.log('prev params', this.storage.prevSearchParams);
-      console.log('curr params', strParams);
+      // console.log('prev params', this.storage.prevSearchParams);
+      // console.log('curr params', strParams);
     }
     this.storage.prevSearchParams = strParams;
 
     $.get(config.catalog.url + '/meta?' + strParams)
       .success(function (data) {
-        console.log('api catalog results:', data);
+        // console.log('api catalog results:', data);
         _this.storage.results = data.results;
         _this.trigger('squareData');
       });

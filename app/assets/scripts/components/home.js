@@ -2,6 +2,7 @@
 import React from 'react';
 import Reflux from 'reflux';
 import _ from 'lodash';
+
 import MapBoxMap from './map';
 import MiniMap from './minimap';
 import ResultsPane from './results_pane';
@@ -39,7 +40,7 @@ var Home = React.createClass({
   },
 
   onMapStoreData: function (what) {
-    console.log('onMapStoreData', mapStore.storage);
+    // console.log('onMapStoreData', mapStore.storage);
     var state = _.cloneDeep(this.state);
     state.results = mapStore.getResults();
     state.loading = what === 'squareData' ? false : mapStore.footprintsWereFecthed();
@@ -48,7 +49,7 @@ var Home = React.createClass({
 
   // Action listener
   onSearchQueryChanged: function (params) {
-    console.log('home onSearchQueryChanged');
+    // console.log('home onSearchQueryChanged');
     this.setState({filterParams: params});
   },
 
@@ -80,12 +81,12 @@ var Home = React.createClass({
     // If the square was set and it's not anymore means that the results
     // have been dismissed.
     if (this.props.params.square && !nextProps.params.square) {
-      console.log('componentWillReceiveProps -- results pane was dismissed');
+      // console.log('componentWillReceiveProps -- results pane was dismissed');
       // Clean the results.
       state.results = [];
     }
     if (this.props.params.square !== nextProps.params.square && nextProps.params.square) {
-      console.log('Home component quadkey changed', nextProps.params.square);
+      // console.log('Home component quadkey changed', nextProps.params.square);
       var bbox = utils.tileBboxFromQuadkey(nextProps.params.square);
       state.loading = true;
       actions.selectedBbox(bbox);
@@ -102,14 +103,14 @@ var Home = React.createClass({
 
   componentDidMount: function () {
     if (this.state.selectedSquareQuadkey) {
-      console.log('Home component mounted with quadkey', this.state.selectedSquareQuadkey);
+      // console.log('Home component mounted with quadkey', this.state.selectedSquareQuadkey);
       var bbox = utils.tileBboxFromQuadkey(this.state.selectedSquareQuadkey);
       actions.selectedBbox(bbox);
     }
   },
 
   render: function () {
-    console.log('home props', this.props);
+    // console.log('home props', this.props);
     var selectedItem = _.find(this.state.results, {_id: this.state.selectedItemId});
 
     return (

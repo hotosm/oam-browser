@@ -1,8 +1,10 @@
 /* global L */
 'use strict';
 require('mapbox.js');
+
 import { hashHistory } from 'react-router';
 import React from 'react';
+
 import utils from '../utils/utils';
 import config from '../config.js';
 
@@ -29,7 +31,7 @@ var MiniMap = React.createClass({
   // Lifecycle method.
   // Called once as soon as the component has a DOM representation.
   componentDidMount: function () {
-    console.log('componentDidMount MiniMap');
+    // console.log('componentDidMount MiniMap');
 
     this.map = L.mapbox.map(this.refs.mapContainer, config.map.baseLayer, {
       center: [0, 0],
@@ -80,7 +82,6 @@ var MiniMap = React.createClass({
 
   setCrosshair: function () {
     if (this.props.selectedSquare) {
-      console.log('minimap -- setting crosshair');
       var center = utils.tileCenterFromQuadkey(this.props.selectedSquare).geometry.coordinates;
       this.targetLines.setLatLngs([
         [
@@ -93,7 +94,6 @@ var MiniMap = React.createClass({
         ]
       ]);
     } else {
-      console.log('minimap -- unsetting crosshair');
       this.targetLines.clearLayers();
     }
   }

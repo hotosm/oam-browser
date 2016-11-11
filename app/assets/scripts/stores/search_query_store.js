@@ -1,6 +1,7 @@
 import Reflux from 'reflux';
-import actions from '../actions/actions';
 import _ from 'lodash';
+
+import actions from '../actions/actions';
 
 /**
  * Models the "search parameters" from the point of view of the application.

@@ -1,6 +1,7 @@
 /* global L */
 'use strict';
 import React from 'react';
+
 import { Dropdown } from 'oam-design-system';
 import baseLayers from '../utils/map-layers';
 import actions from '../actions/actions';

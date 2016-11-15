@@ -6,7 +6,7 @@ import { hashHistory } from 'react-router';
 import React from 'react';
 
 import utils from '../utils/utils';
-import config from '../config.js';
+import mapLayers from '../utils/map-layers';
 
 var MiniMap = React.createClass({
   displayName: 'MiniMap',
@@ -33,7 +33,7 @@ var MiniMap = React.createClass({
   componentDidMount: function () {
     // console.log('componentDidMount MiniMap');
 
-    this.map = L.mapbox.map(this.refs.mapContainer, config.map.baseLayer, {
+    this.map = L.mapbox.map(this.refs.mapContainer, null, {
       center: [0, 0],
       zoomControl: false,
       attributionControl: false,
@@ -44,6 +44,8 @@ var MiniMap = React.createClass({
       boxZoom: false,
       maxBounds: L.latLngBounds([-90, -180], [90, 180])
     }).fitBounds(L.latLngBounds([-90, -180], [90, 180]));
+
+    this.map.addLayer(L.tileLayer(mapLayers[0].url));
 
     this.targetLines = L.multiPolyline([], {
       clickable: false,

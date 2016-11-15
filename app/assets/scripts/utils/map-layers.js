@@ -3,23 +3,18 @@ import config from '../config';
 
 module.exports = [
   {
-    id: 'hot-base',
-    name: 'Hot layer',
-    url: 'http://a.tiles.mapbox.com/v4/hot.ml5mgnm7/{z}/{x}/{y}.png?access_token=' + config.map.mapbox.accessToken
+    id: 'oam-base',
+    name: 'OAM base',
+    url: 'https://api.mapbox.com/styles/v1/hot/cividbt4w00ax2jn8517i2nc9/tiles/256/{z}/{x}/{y}?access_token=' + config.map.mapbox.accessToken
   },
   {
-    id: 'streets',
-    name: 'Streets',
-    url: 'https://a.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=' + config.map.mapbox.accessToken
-  },
-  {
-    id: 'outdoors',
-    name: 'Outdoors',
-    url: 'https://a.tiles.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token=' + config.map.mapbox.accessToken
+    id: 'osm',
+    name: 'OSM',
+    url: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'
   },
   {
     id: 'satellite',
     name: 'Satellite',
-    url: 'https://a.tiles.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=' + config.map.mapbox.accessToken
+    url: 'https://api.mapbox.com/styles/v1/hot/civicyccw00bv2io77zqq401h/tiles/256/{z}/{x}/{y}?access_token=' + config.map.mapbox.accessToken
   }
 ];

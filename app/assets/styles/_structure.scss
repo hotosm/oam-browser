@@ -434,13 +434,10 @@
       top: 50%;
       transform: translate(0, -50%);
     }
-
-    > * {
-      @include flex(0 0 auto);
-    }
   }
 
   &__map {
+    @include flex(0 0 auto);
     height: 2rem;
     width: 2rem;
     margin-right: 0.5rem;

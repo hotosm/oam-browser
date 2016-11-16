@@ -31,6 +31,7 @@ var MapLayers = React.createClass({
         triggerTitle='Choose map layer'
         triggerText='Choose map layer'
         direction='left'
+        className='drop__content--maplayers'
         alignment='middle'>
 
           <ul className='drop__menu drop__menu--select map-layers-list'>
@@ -89,7 +90,7 @@ var MapLayerItem = React.createClass({
     return (
       <a href='#' className={c} onClick={this.props.onLayerSelect.bind(null, this.props.layer)} data-hook='dropdown:close'>
         <div className='map-layers-list__map' ref='map'></div>
-        {this.props.layer.name}
+        <span className='map-layers-list__text'>{this.props.layer.name}</span>
       </a>
     );
   }

@@ -5,11 +5,12 @@ import qs from 'querystring';
 import $ from 'jquery';
 import centroid from 'turf-centroid';
 import Keys from 'react-keybinding';
+import { Dropdown } from 'oam-design-system';
+import prettyBytes from 'pretty-bytes';
+
 import actions from '../actions/actions';
 import ZcButton from './shared/zc_button';
-import { Dropdown } from 'oam-design-system';
 import utils from '../utils/utils';
-import prettyBytes from 'pretty-bytes';
 
 var ResultsItem = React.createClass({
   displayName: 'ResultsItem',

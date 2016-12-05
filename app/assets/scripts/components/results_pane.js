@@ -4,6 +4,7 @@ import React from 'react';
 import Keys from 'react-keybinding';
 import _ from 'lodash';
 import { Dropdown } from 'oam-design-system';
+
 import ResultsList from './results_list';
 import ResultsItem from './results_item';
 import actions from '../actions/actions';
@@ -45,8 +46,6 @@ var ResultsPane = React.createClass({
   },
 
   render: function () {
-    console.log('results pane render', this.props);
-
     var resultsPane = null;
     if (this.props.results.length && this.props.selectedItemId) {
       var i = _.findIndex(this.props.results, {_id: this.props.selectedItemId});

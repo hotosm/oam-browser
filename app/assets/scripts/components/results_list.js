@@ -1,6 +1,7 @@
 'use strict';
 import { hashHistory } from 'react-router';
 import React from 'react';
+
 import actions from '../actions/actions';
 import utils from '../utils/utils';
 

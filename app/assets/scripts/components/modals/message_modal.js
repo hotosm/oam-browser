@@ -2,8 +2,10 @@
 import React from 'react';
 import Reflux from 'reflux';
 import Keys from 'react-keybinding';
-import actions from '../../actions/actions';
 import OAM from 'oam-design-system';
+
+import actions from '../../actions/actions';
+
 var { Modal, ModalHeader, ModalBody } = OAM.Modal;
 
 var MessageModal = React.createClass({

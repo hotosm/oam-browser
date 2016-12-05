@@ -6,7 +6,7 @@ env:
   - CXX=g++-4.8
   - DEPLOY_BRANCH=master
   - STAGING_BRANCH=develop
-  - secure: WrRx8thvjJ/cnS2hETwi+bwzx38bEBrvGst699AD6+aEDeUg0Yqv45nxkeExbMwOcavtFTS/CAygkxdrduNWsLo9S984WORA37p6nvZ61y8Ed3iCRtAsHqlCWgAyrCjqEZJbty9+/V76D9cvY76LprKTaGSLDYKj9kJZiXQjppo=
+  - secure: fZv+ikPPQFtFe6Trfj4dptPGwVS6tgzwv1L/omCtjan+EmM6soYzUjXb+TCOXhcU0D8fJZIPDpbjFE/p5VQYpeXV7YSPbkSy5/vvRy67NQPLsWcyraRpe8fwc/r/fgGEyDnFVlm0Qwd7AFU8xy0Zl3R5McUljUHVG/WXwiXhttM=
 addons:
   apt:
     sources:

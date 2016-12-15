@@ -37,7 +37,7 @@ npm install
 
 #### Environment Variables
 
-The configuration options are defined in `app/assets/scripts/config.js`.
+The configuration options for local development are defined in `app/assets/scripts/config/local.js`.
 If you're using a custom [oam-catalog](https://github.com/hotosm/oam-catalog/) or a different map account, you need to update the respective values:
 
 ```js

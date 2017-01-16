@@ -20,11 +20,12 @@ cache:
 before_install:
 - chmod +x ./.build_scripts/deploy.sh
 - chmod +x ./.build_scripts/lint.sh
+- chmod +x ./.build_scripts/build.sh
 before_script:
 - "./.build_scripts/lint.sh"
 - npm test
 script:
-- npm run build
+- ".build_scripts/build.sh"
 deploy:
   - provider: script
     skip_cleanup: true

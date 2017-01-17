@@ -10,6 +10,7 @@ import tilebelt from 'tilebelt';
 import centroid from 'turf-centroid';
 import inside from 'turf-inside';
 import overlaps from 'turf-overlaps';
+
 import actions from '../actions/actions';
 import config from '../config.js';
 import utils from '../utils/utils';
@@ -35,7 +36,8 @@ var Map = React.createClass({
     Reflux.listenTo(actions.resultOut, 'onResultOut'),
     Reflux.listenTo(actions.selectPreview, 'onSelectPreview'),
     Reflux.listenTo(actions.geocoderResult, 'onGeocoderResult'),
-    Reflux.listenTo(actions.requestMyLocation, 'onRequestMyLocation')
+    Reflux.listenTo(actions.requestMyLocation, 'onRequestMyLocation'),
+    Reflux.listenTo(actions.setBaseLayer, 'onChangeBaseLayer')
   ],
 
   map: null,
@@ -54,39 +56,45 @@ var Map = React.createClass({
   // Control if the selected square is present or not.
   disableSelectedSquare: false,
 
+  // Current active base layer.
+  baseLayer: null,
+
   onSelectPreview: function (what) {
     this.updateSelectedItemImageFootprint(what);
   },
 
   // Lifecycle method.
   componentWillReceiveProps: function (nextProps) {
-    console.groupCollapsed('componentWillReceiveProps');
+    // console.groupCollapsed('componentWillReceiveProps');
 
-    console.log('previous map view --', this.props.mapView);
-    console.log('new map view --', nextProps.mapView);
+    // console.log('previous map view --', this.props.mapView);
+    // console.log('new map view --', nextProps.mapView);
     this.requireMapViewUpdate = this.props.mapView !== nextProps.mapView;
-    console.log('require map view update', this.requireMapViewUpdate);
+    // console.log('require map view update', this.requireMapViewUpdate);
 
-    console.log('previous selectedItem --', _.get(this.props.selectedItem, '_id', null));
-    console.log('new selectedItem --', _.get(nextProps.selectedItem, '_id', null));
+    // console.log('previous selectedItem --', _.get(this.props.selectedItem, '_id', null));
+    // console.log('new selectedItem --', _.get(nextProps.selectedItem, '_id', null));
     this.requireSelectedItemUpdate = _.get(this.props.selectedItem, '_id', null) !== _.get(nextProps.selectedItem, '_id', null);
-    console.log('require selected item update', this.requireSelectedItemUpdate);
+    // console.log('require selected item update', this.requireSelectedItemUpdate);
 
-    console.groupEnd('componentWillReceiveProps');
+    // console.groupEnd('componentWillReceiveProps');
   },
 
   // Lifecycle method.
   // Called once as soon as the component has a DOM representation.
   componentDidMount: function () {
-    console.log('componentDidMount MapBoxMap');
+    // console.log('componentDidMount MapBoxMap');
 
-    this.map = L.mapbox.map(this.refs.mapContainer, config.map.baseLayer, {
+    this.map = L.mapbox.map(this.refs.mapContainer, null, {
       zoomControl: false,
       minZoom: config.map.minZoom,
       maxZoom: config.map.maxZoom,
       maxBounds: L.latLngBounds([-90, -180], [90, 180]),
       attributionControl: false
     });
+
+    this.baseLayer = L.tileLayer(mapStore.getBaseLayer().url);
+    this.map.addLayer(this.baseLayer);
 
     // Edits the attribution to create link out to github issues
     var credits = L.control.attribution().addTo(this.map);
@@ -128,13 +136,13 @@ var Map = React.createClass({
   // Lifecycle method.
   // Called when the component gets updated.
   componentDidUpdate: function (prevProps, prevState) {
-    console.log('componentDidUpdate');
+    // console.log('componentDidUpdate');
 
     // Is there a need to update the map view.
     if (this.requireMapViewUpdate) {
       var routerMap = this.stringToMapView(this.props.mapView);
       this.map.setView([routerMap.lat, routerMap.lng], routerMap.zoom);
-      console.log('componentDidUpdate', 'map view updated');
+      // console.log('componentDidUpdate', 'map view updated');
     }
     this.updateGrid();
     this.updateSelectedSquare();
@@ -165,7 +173,7 @@ var Map = React.createClass({
 
   // Map event
   onMapMoveend: function (e) {
-    console.log('event:', 'moveend');
+    // console.log('event:', 'moveend');
     var path = this.mapViewToString();
     if (this.props.selectedSquareQuadkey) {
       path += `/${this.props.selectedSquareQuadkey}`;
@@ -197,21 +205,21 @@ var Map = React.createClass({
 
   // Map event
   onGridSqrClick: function (e) {
-    console.log('onGridSqrClick', e);
+    // console.log('onGridSqrClick', e);
     // Ensure that the popup doesn't open.
     e.layer.closePopup();
 
     if (this.props.selectedSquareQuadkey) {
-      console.log('onGridSqrClick', 'There was a square selected. UNSELECTING');
+      // console.log('onGridSqrClick', 'There was a square selected. UNSELECTING');
       // There is a square selected. Unselect.
       hashHistory.push({pathname: `/${this.props.mapView}`, query: this.props.query});
     } else if (e.layer.feature.properties.count) {
-      console.log('onGridSqrClick', 'No square selected. SELECTING');
+      // console.log('onGridSqrClick', 'No square selected. SELECTING');
       var quadKey = e.layer.feature.properties._quadKey;
       var z = Math.round(this.map.getZoom());
       var squareCenter = centroid(e.layer.feature).geometry.coordinates;
       var mapView = utils.getMapViewString(squareCenter[0], squareCenter[1], z);
-      console.log('transition /:map/:square', {map: mapView, square: quadKey});
+      // console.log('transition /:map/:square', {map: mapView, square: quadKey});
       hashHistory.push({pathname: `/${mapView}/${quadKey}`, query: this.props.query});
     }
   },
@@ -226,13 +234,23 @@ var Map = React.createClass({
   },
 
   // Actions listener.
+  onChangeBaseLayer: function () {
+    let layer = mapStore.getBaseLayer();
+    if (this.baseLayer) {
+      this.map.removeLayer(this.baseLayer);
+    }
+    this.baseLayer = L.tileLayer(layer.url);
+    this.map.addLayer(this.baseLayer);
+  },
+
+  // Actions listener.
   onRequestMyLocation: function () {
     navigator.geolocation.getCurrentPosition(position => {
       let {longitude, latitude} = position.coords;
       let mapView = utils.getMapViewString(longitude, latitude, 15);
       hashHistory.push({pathname: `/${mapView}`, query: this.props.query});
     }, err => {
-      console.log('my location error', err);
+      console.warn('my location error', err);
     });
   },
 
@@ -252,8 +270,8 @@ var Map = React.createClass({
 
   updateGrid: function () {
     var _this = this;
-    console.groupCollapsed('updateGrid');
-    console.log('filterparams', this.props.filterParams);
+    // console.groupCollapsed('updateGrid');
+    // console.log('filterparams', this.props.filterParams);
     this.mapGridLayer.clearLayers();
 
     // Recompute grid based on current map view (bounds + zoom).
@@ -262,7 +280,7 @@ var Map = React.createClass({
 
     // Stick a 'count' property onto each grid square, based on the number of
     // footprints that intersect with the square.
-    console.time('aggregate on grid');
+    // console.time('aggregate on grid');
     gridData.features.forEach(function (gridSquare) {
       var featureCenter = centroid(gridSquare);
       // The footprints with bboxes that intersect with this grid square.
@@ -327,7 +345,7 @@ var Map = React.createClass({
       });
       gridSquare.properties.count = foots.length;
     });
-    console.timeEnd('aggregate on grid');
+    // console.timeEnd('aggregate on grid');
 
     // Color the grid accordingly.
     this.mapGridLayer.addData(gridData);
@@ -362,7 +380,7 @@ var Map = React.createClass({
       l.bindPopup(p);
     });
 
-    console.groupEnd('updateGrid');
+    // console.groupEnd('updateGrid');
   },
 
   updateSelectedSquare: function () {
@@ -426,7 +444,7 @@ var Map = React.createClass({
    * @param {Array} bounds [minx, miny, maxx, maxy]
    */
   computeGrid: function (zoom, bounds) {
-    console.time('grid');
+    // console.time('grid');
     // We'll use tilebelt to make pseudo-tiles at a zoom three levels higher
     // than the given zoom.  This means that for each actual map tile, there will
     // be 4^3 = 64 grid squares.
@@ -450,7 +468,7 @@ var Map = React.createClass({
         boxes.push(feature);
       }
     }
-    console.timeEnd('grid');
+    // console.timeEnd('grid');
     return {
       type: 'FeatureCollection',
       features: boxes

@@ -36,5 +36,7 @@ module.exports = Reflux.createActions({
 
   'requestMyLocation': {},
 
-  'selectPreview': {}
+  'selectPreview': {},
+
+  'setBaseLayer': {}
 });

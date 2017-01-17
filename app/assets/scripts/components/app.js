@@ -1,5 +1,6 @@
 'use strict';
 import React from 'react';
+
 import MessageModal from './modals/message_modal';
 import FeedbackModal from './modals/feedback_modal';
 import Header from './header';

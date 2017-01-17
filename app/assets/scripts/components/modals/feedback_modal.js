@@ -2,11 +2,13 @@
 import React from 'react';
 import Reflux from 'reflux';
 import Keys from 'react-keybinding';
-import actions from '../../actions/actions';
 import serialize from 'form-serialize';
 import $ from 'jquery';
 import _ from 'lodash';
 import OAM from 'oam-design-system';
+
+import actions from '../../actions/actions';
+
 var { Modal, ModalHeader, ModalBody } = OAM.Modal;
 
 var FeedbackModal = React.createClass({

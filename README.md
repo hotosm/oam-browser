@@ -76,3 +76,5 @@ npm run lint
 ```
 Lints the app according with the defined style.
 
+## License
+Oam Browser is licensed under **BSD 3-Clause License**, see the [LICENSE](LICENSE) file for more details.

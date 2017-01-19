@@ -3,6 +3,7 @@ import { hashHistory } from 'react-router';
 import React from 'react';
 import Reflux from 'reflux';
 import { Dropdown } from 'oam-design-system';
+
 import actions from '../actions/actions';
 import searchQueryStore from '../stores/search_query_store';
 import cookie from '../utils/cookie';

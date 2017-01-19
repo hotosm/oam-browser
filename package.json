@@ -10,6 +10,7 @@
     "name": "Development Seed",
     "url": "https://developmentseed.org"
   },
+  "license": "BSD 3-Clause",
   "bugs": {
     "url": "https://github.com/hotosm/oam-browser/issues"
   },
@@ -19,6 +20,7 @@
     "postinstall": "[ -f app/assets/scripts/config/local.js ] || echo 'module.exports = {};' > app/assets/scripts/config/local.js",
     "serve": "gulp serve",
     "build": "DS_ENV=production NODE_ENV=production gulp",
+    "stage": "DS_ENV=staging NODE_ENV=staging gulp",
     "lint": "eslint app/assets/scripts/ --ext .js",
     "test": "echo NO TESTS YET && exit 0"
   },

@@ -1,15 +1,17 @@
 'use strict';
 import React from 'react';
+import { hashHistory } from 'react-router';
 import Keys from 'react-keybinding';
 import $ from 'jquery';
+import centroid from 'turf-centroid';
 import { Dropdown } from 'oam-design-system';
+
 import actions from '../actions/actions';
 import Filters from './filters';
 import utils from '../utils/utils';
-import { hashHistory } from 'react-router';
 import config from '../config';
-import centroid from 'turf-centroid';
 import mapStore from '../stores/map_store';
+import MapLayers from './map-layers';
 
 var Header = React.createClass({
   displayName: 'Header',
@@ -58,10 +60,10 @@ var Header = React.createClass({
   onGeocoderSearch: function (e) {
     e.preventDefault();
 
-    var queryString = this.refs.geocoder.getDOMNode().value;
+    var queryString = this.refs.geocoder.value;
     utils.queryGeocoder(queryString, bounds => {
       if (!bounds) {
-        console.log('geocoder -- no result was found');
+        console.warn('geocoder -- no result was found');
         return;
       }
       actions.geocoderResult(bounds);
@@ -79,7 +81,7 @@ var Header = React.createClass({
 
   onBrowseLatestClick: function (e) {
     e.preventDefault();
-    console.groupCollapsed('onBrowseLatestClick');
+    // console.groupCollapsed('onBrowseLatestClick');
     var previewZoom = 10;
     var latest = mapStore.getLatestImagery();
     var f = {
@@ -90,14 +92,14 @@ var Header = React.createClass({
     var quadKey = utils.quadkeyFromCoords(center[0], center[1], previewZoom);
     var mapView = center[0] + ',' + center[1] + ',' + previewZoom;
 
-    console.log('Feature', f);
-    console.log('coords center', center);
-    console.log('quadKey', quadKey);
-    console.log('full url -- %s/%s/%s', mapView, quadKey, latest._id);
+    // console.log('Feature', f);
+    // console.log('coords center', center);
+    // console.log('quadKey', quadKey);
+    // console.log('full url -- %s/%s/%s', mapView, quadKey, latest._id);
 
     hashHistory.push(`/${mapView}/${quadKey}/${latest._id}`);
 
-    console.groupEnd('onBrowseLatestClick');
+    // console.groupEnd('onBrowseLatestClick');
   },
 
   render: function () {
@@ -148,8 +150,10 @@ var Header = React.createClass({
                     query={this.props.query} />
                 </li>
                 <li>
-                              <a href='#' onClick={this.onBrowseLatestClick} className='button button-latest button--achromic' title='Go to the latest imagery'></a>
-
+                  <a href='#' onClick={this.onBrowseLatestClick} className='button-latest' title='Go to the latest imagery'><span>Latest imagery</span></a>
+                </li>
+                <li className='map-layers'>
+                  <MapLayers />
                 </li>
               </ul>
             </div>

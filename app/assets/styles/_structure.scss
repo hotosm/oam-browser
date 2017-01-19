@@ -164,6 +164,20 @@
   }
 }
 
+.button-layers {
+  @extend .button, .button--achromic, .button--text-hidden, .drop__toggle;
+  &:before {
+    @extend %oam-ds-icon-layers;
+  }
+}
+
+.button-latest {
+  @extend .button, .button--achromic, .button--text-hidden, .drop__toggle;
+  &:before {
+    @extend %oam-ds-icon-clock-back;
+  }
+}
+
 .info-menu small {
   display: block;
   opacity: 0.64;
@@ -392,5 +406,41 @@
       max-width: none;
       background: red;
     }
+  }
+}
+
+/* Map layers
+   ========================================================================== */
+
+.map-layers {
+  position: absolute;
+  left: 0;
+  top: 50vh;
+  transform: translate(0px, -90px);
+}
+
+.drop__content--maplayers {
+  width: 14rem;
+}
+
+.map-layers-list {
+  .drop__menu-item {
+    @include display(flex);
+    @include justify-content(flex-start);
+    @include align-items(center);
+    @include flex-wrap(nowrap);
+
+    &--active:after {
+      top: 50%;
+      transform: translate(0, -50%);
+    }
+  }
+
+  &__map {
+    @include flex(0 0 auto);
+    height: 2rem;
+    width: 2rem;
+    margin-right: 0.5rem;
+    border-radius: $base-border-radius / 2;
   }
 }

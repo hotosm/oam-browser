@@ -10,11 +10,11 @@ module.exports = {
       accessToken: 'pk.eyJ1IjoiaG90IiwiYSI6ImNpdmlkM2lkMDAwYTAydXBnNXFkd2EwemsifQ.KPrUb_mKlPmHCR6LNrSihQ'
     },
 
-    initialZoom: 8,
+    initialZoom: 3,
     minZoom: 2,
     maxZoom: undefined,
 
-    initialView: [60.177, 25.148]
+    initialView: [-18.632, 18.479]
   },
   catalog: {
     url: 'https://oam-catalog-staging.herokuapp.com'

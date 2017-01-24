@@ -47,6 +47,18 @@
   stroke: rgba($base-color, 0.08);
   stroke-width: 1;
   @include transition(all 0.2s ease 0s);
+
+  // Style cell shading according to layer
+  .base-layer--oam-base & {
+    fill: $primary-color;
+  }
+  .base-layer--osm & {
+    fill: $primary-color;
+  }
+  .base-layer--satellite & {
+    fill: #FFF;
+  }
+  
 }
 .gs-active {
   fill-opacity: 0.64;

@@ -89,7 +89,7 @@ var Map = React.createClass({
       zoomControl: false,
       minZoom: config.map.minZoom,
       maxZoom: config.map.maxZoom,
-      maxBounds: L.latLngBounds([-90, -180], [90, 180]),
+      maxBounds: L.latLngBounds([-90, -210], [90, 210]),
       attributionControl: false
     });
 

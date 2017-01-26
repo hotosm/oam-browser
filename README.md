@@ -121,4 +121,4 @@ This will package the app and place all the contents in the `dist` directory.
 The app can then be run by any web server.
 
 ## License
-Oam Uploader is licensed under **BSD 3-Clause License**, see the [LICENSE](LICENSE) file for more details.
+OAM Browser is licensed under **BSD 3-Clause License**, see the [LICENSE](LICENSE) file for more details.

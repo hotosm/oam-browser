@@ -60,11 +60,11 @@
     stroke: rgba(#FFF, 0.05);
   }
   
-}
-.gs-active {
-  fill-opacity: 0.64;
-  fill: $secondary-color!important;
-  pointer-events: none;
+  &.gs-active {
+    fill-opacity: 0.64;
+    fill: $secondary-color;
+    pointer-events: none;
+  }
 }
 
 .gs-density-high {

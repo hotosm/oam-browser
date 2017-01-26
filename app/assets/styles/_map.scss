@@ -47,21 +47,37 @@
   stroke: rgba($base-color, 0.08);
   stroke-width: 1;
   @include transition(all 0.2s ease 0s);
-}
-.gs-active {
-  fill-opacity: 0.64;
-  fill: $secondary-color;
-  pointer-events: none;
+
+  // Style cell shading according to layer
+  .base-layer--oam-base & {
+    fill: $primary-color;
+  }
+  .base-layer--osm & {
+    fill: $primary-color;
+  }
+  .base-layer--satellite & {
+    fill: #FFF;
+    stroke: rgba(#FFF, 0.05);
+  }
+  
+  &.gs-active {
+    fill-opacity: 0.64;
+    fill: $secondary-color;
+    pointer-events: none;
+  }
 }
 
 .gs-density-high {
-  fill-opacity: 0.48;
+  fill-opacity: 0.7;
+}
+.gs-density-medhigh {
+  fill-opacity: 0.5;
 }
 .gs-density-med {
-  fill-opacity: 0.24;
+  fill-opacity: 0.4;
 }
 .gs-density-low {
-  fill-opacity: 0.08;
+  fill-opacity: 0.3;
 }
 
 .gs-density-high.gs-inactive,

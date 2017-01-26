@@ -57,23 +57,27 @@
   }
   .base-layer--satellite & {
     fill: #FFF;
+    stroke: rgba(#FFF, 0.05);
   }
   
 }
 .gs-active {
   fill-opacity: 0.64;
-  fill: $secondary-color;
+  fill: $secondary-color!important;
   pointer-events: none;
 }
 
 .gs-density-high {
-  fill-opacity: 0.48;
+  fill-opacity: 0.7;
+}
+.gs-density-medhigh {
+  fill-opacity: 0.5;
 }
 .gs-density-med {
-  fill-opacity: 0.24;
+  fill-opacity: 0.4;
 }
 .gs-density-low {
-  fill-opacity: 0.08;
+  fill-opacity: 0.3;
 }
 
 .gs-density-high.gs-inactive,

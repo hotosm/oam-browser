@@ -362,8 +362,10 @@ var Map = React.createClass({
         elClasses.push('gs-inactive');
       } else {
         // Gradation.
-        if (l.feature.properties.count >= 10) {
+        if (l.feature.properties.count >= 50) {
           elClasses.push('gs-density-high');
+        } else if (l.feature.properties.count >= 20) {
+            elClasses.push('gs-density-medhigh');
         } else if (l.feature.properties.count >= 5) {
           elClasses.push('gs-density-med');
         } else if (l.feature.properties.count > 0) {

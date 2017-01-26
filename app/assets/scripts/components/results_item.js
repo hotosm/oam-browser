@@ -87,11 +87,15 @@ var ResultsItem = React.createClass({
     hashHistory.push({pathname: path, query: this.props.query});
   },
 
-  onCopy: function (key, trigger) {
+  onCopy: function (key, trigger, type) {
     // Close the dropdown.
     this.refs[`tms-drop-${key}`].close();
     // Return the copy text.
-    return this.refs[`tms-url-${key}`].value;
+    if ({type}.type.innerText == 'Copy WMTS URL'){
+      return this.refs[`tms-url-${key}`].value + '\/wmts';
+    } else {
+      return this.refs[`tms-url-${key}`].value + '\/{z}\/{x}\/{y}.png';
+    }
   },
 
   onOpenJosm: function (dropKey, tmsUrl) {
@@ -141,6 +145,10 @@ var ResultsItem = React.createClass({
 
   renderTmsOptions: function (tmsUrl, key, direction, aligment) {
     var d = this.props.data;
+    var tileJSONUrl = tmsUrl.slice(0,-16);
+    var tms = tileJSONUrl + '\/{z}\/{x}\/{y}.png';
+    var wmts = tileJSONUrl + '\/wmts';
+    
     // Generate the iD URL:
     // grab centroid of the footprint
     var center = centroid(d.geojson).geometry.coordinates;
@@ -157,9 +165,9 @@ var ResultsItem = React.createClass({
 
     return (
       <div className='form__group'>
-        <label className='form__label' htmlFor='tms-url'>TMS url</label>
+        <label className='form__label' htmlFor='tms-url'>TileJSON url</label>
         <div className='form__input-group'>
-          <input className='form__control form__control--medium' type='text' value={tmsUrl} readOnly ref={`tms-url-${key}`} />
+          <input className='form__control form__control--medium' type='text' value={tileJSONUrl} readOnly ref={`tms-url-${key}`} />
           <span className='form__input-group-button'>
             <Dropdown
               className='drop__content--tms-options'
@@ -175,7 +183,8 @@ var ResultsItem = React.createClass({
               <ul className='drop__menu drop__menu--iconified tms-options-menu' role='menu'>
                 <li><a className='drop__menu-item ide' href={idUrl} target='_blank' title='Open with iD editor'>Open with iD editor</a></li>
                 <li><a className='drop__menu-item josm' onClick={this.onOpenJosm.bind(null, key, tmsUrl)} title='Open with JOSM'>Open with JOSM</a></li>
-                <li><ZcButton onCopy={this.onCopy.bind(null, key)} title='Copy to clipboard' text='Copy to clipboard' /></li>
+                <li><ZcButton onCopy={this.onCopy.bind(null, key, tms)} title='Copy TMS URL' text='Copy TMS URL' /></li>
+                <li><ZcButton onCopy={this.onCopy.bind(null, key, wmts)} title='Copy WMTS URL' text='Copy WMTS URL' /></li>
               </ul>
             </Dropdown>
           </span>

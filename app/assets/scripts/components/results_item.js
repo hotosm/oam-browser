@@ -87,11 +87,15 @@ var ResultsItem = React.createClass({
     hashHistory.push({pathname: path, query: this.props.query});
   },
 
-  onCopy: function (key, trigger) {
+  onCopy: function (key, trigger, tileJSONUrl) {
     // Close the dropdown.
     this.refs[`tms-drop-${key}`].close();
     // Return the copy text.
-    return this.refs[`tms-url-${key}`].value;
+    if ({tileJSONUrl}.tileJSONUrl === 'wmts'){
+      return this.props.data.properties.wmts;
+    } else {
+      return this.props.data.properties.tms;
+    }
   },
 
   onOpenJosm: function (dropKey, tmsUrl) {
@@ -137,6 +141,55 @@ var ResultsItem = React.createClass({
         )
       });
     });
+  },
+
+  renderWMTSOptions: function (tmsUrl, key, direction, aligment, option) {
+    var d = this.props.data;
+    var tileJSONUrl = tmsUrl.slice(0,-16);
+    
+    // Generate the iD URL:
+    // grab centroid of the footprint
+    var center = centroid(d.geojson).geometry.coordinates;
+    // cheat by using current zoom level
+    var zoom = this.props.mapView.split(',')[2];
+    var idUrl = 'http://www.openstreetmap.org/edit' +
+    '#map=' + [zoom, center[1], center[0]].join('/') +
+    '?' + qs.stringify({
+      editor: 'id',
+      background: 'custom:' + tmsUrl
+    });
+
+    let prevSelectClass = this.state.selectedPreview === `tms-${key}` ? 'button--active' : '';
+
+    return (
+      <div className='form__group'>
+        <label className='form__label' htmlFor='tms-url'>TileJSON url</label>
+        <div className='form__input-group'>
+          <input className='form__control form__control--medium' type='text' value={tileJSONUrl} readOnly ref={`tms-url-${key}`} />
+          <span className='form__input-group-button'>
+            <Dropdown
+              className='drop__content--tms-options'
+              triggerElement='button'
+              triggerClassName='button-tms-options'
+              triggerActiveClassName='button--active'
+              triggerTitle='Show options'
+              triggerText='Options'
+              direction={direction}
+              alignment={aligment}
+              ref={`tms-drop-${key}`} >
+
+              <ul className='drop__menu drop__menu--iconified tms-options-menu' role='menu'>
+                <li><a className='drop__menu-item ide' href={idUrl} target='_blank' title='Open with iD editor'>Open with iD editor</a></li>
+                <li><a className='drop__menu-item josm' onClick={this.onOpenJosm.bind(null, key, tmsUrl)} title='Open with JOSM'>Open with JOSM</a></li>
+                <li><ZcButton onCopy={this.onCopy.bind(null, key, tileJSONUrl, 'tms')} title='Copy TMS URL' text='Copy TMS URL' /></li>
+                <li><ZcButton onCopy={this.onCopy.bind(null, key, tileJSONUrl, 'wmts')} title='Copy WMTS URL' text='Copy WMTS URL' /></li>
+              </ul>
+            </Dropdown>
+          </span>
+        </div>
+        <button className={'button--tms-preview ' + prevSelectClass} type='button' onClick={this.onPreviewSelect.bind(null, {type: 'tms', index: key})} title='Preview TMS on map'><span>preview</span></button>
+      </div>
+    );
   },
 
   renderTmsOptions: function (tmsUrl, key, direction, aligment) {
@@ -189,7 +242,15 @@ var ResultsItem = React.createClass({
     var d = this.props.data;
     var pagination = this.props.pagination;
 
-    var tmsOptions = d.properties.tms ? this.renderTmsOptions(d.properties.tms, 'main', 'down', 'center') : null;
+    //var tmsOptions = d.properties.tms ? this.renderTmsOptions(d.properties.tms, 'main', 'down', 'center') : null;
+
+    if (d.properties.wmts && d.properties.tms) {
+      var tmsOptions = this.renderWMTSOptions(d.properties.tms, 'main', 'down', 'center');
+    } else if (d.properties.tms) {
+      var tmsOptions = this.renderTmsOptions(d.properties.tms, 'main', 'down', 'center');
+    } else {
+      var tmsOptions = null;
+    }
 
     var blurImage = {
       backgroundImage: 'url(' + d.properties.thumbnail + ')'

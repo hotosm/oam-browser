@@ -89,12 +89,14 @@ var Map = React.createClass({
       zoomControl: false,
       minZoom: config.map.minZoom,
       maxZoom: config.map.maxZoom,
-      maxBounds: L.latLngBounds([-90, -180], [90, 180]),
+      maxBounds: L.latLngBounds([-90, -210], [90, 210]),
       attributionControl: false
     });
 
     this.baseLayer = L.tileLayer(mapStore.getBaseLayer().url);
     this.map.addLayer(this.baseLayer);
+
+    this.refs.mapContainer.classList.add(`base-layer--${mapStore.getBaseLayer().id}`);
 
     // Edits the attribution to create link out to github issues
     var credits = L.control.attribution().addTo(this.map);
@@ -236,6 +238,8 @@ var Map = React.createClass({
   // Actions listener.
   onChangeBaseLayer: function () {
     let layer = mapStore.getBaseLayer();
+    this.refs.mapContainer.className = this.refs.mapContainer.className.replace(/\bbase-layer--\S*/, '');
+    this.refs.mapContainer.classList.add(`base-layer--${layer.id}`);
     if (this.baseLayer) {
       this.map.removeLayer(this.baseLayer);
     }
@@ -358,8 +362,10 @@ var Map = React.createClass({
         elClasses.push('gs-inactive');
       } else {
         // Gradation.
-        if (l.feature.properties.count >= 10) {
+        if (l.feature.properties.count >= 50) {
           elClasses.push('gs-density-high');
+        } else if (l.feature.properties.count >= 20) {
+          elClasses.push('gs-density-medhigh');
         } else if (l.feature.properties.count >= 5) {
           elClasses.push('gs-density-med');
         } else if (l.feature.properties.count > 0) {

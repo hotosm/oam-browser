@@ -14,11 +14,13 @@
   "bugs": {
     "url": "https://github.com/hotosm/oam-browser/issues"
   },
+  "license": "BSD 3-Clause",
   "homepage": "http://openaerialmap.org/",
   "scripts": {
     "postinstall": "[ -f app/assets/scripts/config/local.js ] || echo 'module.exports = {};' > app/assets/scripts/config/local.js",
     "serve": "gulp serve",
     "build": "DS_ENV=production NODE_ENV=production gulp",
+    "stage": "DS_ENV=staging NODE_ENV=staging gulp",
     "lint": "eslint app/assets/scripts/ --ext .js",
     "test": "echo NO TESTS YET && exit 0"
   },

@@ -4,5 +4,8 @@
  */
 
 module.exports = {
-  environment: 'staging'
+  environment: 'staging',
+  catalog: {
+    url: 'https://oam-catalog-staging.herokuapp.com'
+  }
 };

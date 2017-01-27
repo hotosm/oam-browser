@@ -139,7 +139,25 @@ var ResultsItem = React.createClass({
     });
   },
 
-  renderTmsOptions: function (tmsUrl, key, direction, aligment) {
+  renderCopyWMTS: function (dropdownKey) {
+    var wmts = this.props.data.properties.wmts;
+    if (!wmts) {
+      return null;
+    }
+
+    var onCopy = () => {
+      this.refs[`tms-drop-${dropdownKey}`].close();
+      return wmts;
+    };
+
+    return (
+      <ul className='drop__menu drop__menu--iconified tms-options-menu' role='menu'>
+        <li><ZcButton onCopy={onCopy} title='Copy WMTS url' text='Copy WMTS url' /></li>
+      </ul>
+    );
+  },
+
+  renderTmsOptions: function (tmsUrl, key, direction, aligment, includeMainWMTS) {
     var d = this.props.data;
     // Generate the iD URL:
     // grab centroid of the footprint
@@ -175,8 +193,9 @@ var ResultsItem = React.createClass({
               <ul className='drop__menu drop__menu--iconified tms-options-menu' role='menu'>
                 <li><a className='drop__menu-item ide' href={idUrl} target='_blank' title='Open with iD editor'>Open with iD editor</a></li>
                 <li><a className='drop__menu-item josm' onClick={this.onOpenJosm.bind(null, key, tmsUrl)} title='Open with JOSM'>Open with JOSM</a></li>
-                <li><ZcButton onCopy={this.onCopy.bind(null, key)} title='Copy to clipboard' text='Copy to clipboard' /></li>
+                <li><ZcButton onCopy={this.onCopy.bind(null, key)} title='Copy TMS url' text='Copy TMS url' /></li>
               </ul>
+              {includeMainWMTS && this.renderCopyWMTS(key)}
             </Dropdown>
           </span>
         </div>
@@ -189,7 +208,7 @@ var ResultsItem = React.createClass({
     var d = this.props.data;
     var pagination = this.props.pagination;
 
-    var tmsOptions = d.properties.tms ? this.renderTmsOptions(d.properties.tms, 'main', 'down', 'center') : null;
+    var tmsOptions = d.properties.tms ? this.renderTmsOptions(d.properties.tms, 'main', 'down', 'center', true) : null;
 
     var blurImage = {
       backgroundImage: 'url(' + d.properties.thumbnail + ')'

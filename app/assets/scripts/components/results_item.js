@@ -159,15 +159,15 @@ var ResultsItem = React.createClass({
 
   renderTmsOptions: function (tmsUrl, key, direction, aligment, includeMainWMTS) {
     var d = this.props.data;
+    console.log(tmsUrl);
     // Generate the iD URL:
     // grab centroid of the footprint
     var center = centroid(d.geojson).geometry.coordinates;
     // cheat by using current zoom level
     var zoom = this.props.mapView.split(',')[2];
-    var idUrl = 'http://www.openstreetmap.org/edit' +
+    var idUrl = 'http://www.openstreetmap.org/edit?editor=id' +
     '#map=' + [zoom, center[1], center[0]].join('/') +
-    '?' + qs.stringify({
-      editor: 'id',
+    '&' + qs.stringify({
       background: 'custom:' + tmsUrl
     });
 

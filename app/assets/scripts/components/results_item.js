@@ -159,7 +159,6 @@ var ResultsItem = React.createClass({
 
   renderTmsOptions: function (tmsUrl, key, direction, aligment, includeMainWMTS) {
     var d = this.props.data;
-    console.log(tmsUrl);
     // Generate the iD URL:
     // grab centroid of the footprint
     var center = centroid(d.geojson).geometry.coordinates;

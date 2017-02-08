@@ -5,7 +5,7 @@ module.exports = [
   {
     id: 'oam-base',
     name: 'Mapbox Light',
-    url: 'https://api.mapbox.com/styles/v1/hot/cividbt4w00ax2jn8517i2nc9/tiles/256/{z}/{x}/{y}?access_token=' + config.map.mapbox.accessToken
+    url: 'https://api.mapbox.com/styles/v1/openaerialmap/ciyx269by002w2rldex1768f5/tiles/256/{z}/{x}/{y}?access_token=' + config.map.mapbox.accessToken
   },
   {
     id: 'osm',
@@ -15,6 +15,6 @@ module.exports = [
   {
     id: 'satellite',
     name: 'Mapbox Satellite',
-    url: 'https://api.mapbox.com/styles/v1/hot/civicyccw00bv2io77zqq401h/tiles/256/{z}/{x}/{y}?access_token=' + config.map.mapbox.accessToken
+    url: 'https://api.mapbox.com/styles/v1/openaerialmap/ciyx28hy800362rto0u9x10fv/tiles/256/{z}/{x}/{y}?access_token=' + config.map.mapbox.accessToken
   }
 ];

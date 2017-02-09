@@ -164,10 +164,9 @@ var ResultsItem = React.createClass({
     var center = centroid(d.geojson).geometry.coordinates;
     // cheat by using current zoom level
     var zoom = this.props.mapView.split(',')[2];
-    var idUrl = 'http://www.openstreetmap.org/edit' +
+    var idUrl = 'http://www.openstreetmap.org/edit?editor=id' +
     '#map=' + [zoom, center[1], center[0]].join('/') +
-    '?' + qs.stringify({
-      editor: 'id',
+    '&' + qs.stringify({
       background: 'custom:' + tmsUrl
     });
 

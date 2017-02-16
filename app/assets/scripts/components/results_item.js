@@ -100,9 +100,7 @@ var ResultsItem = React.createClass({
 
     var d = this.props.data;
     var source = 'OpenAerialMap - ' + d.provider + ' - ' + d.uuid;
-    var urlPrefix = document.location.protocol === 'https:' ?
-      'https://127.0.0.1:8112' :
-      'http://127.0.0.1:8111';
+    var urlPrefix = document.location.protocol === 'https:' ? 'https://127.0.0.1:8112' : 'http://127.0.0.1:8111';
     // Reference:
     // http://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl#load_and_zoom
     $.get(urlPrefix + '/load_and_zoom?' + qs.stringify({

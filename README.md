@@ -17,7 +17,7 @@ The OAM Imagery Browser is a part of the [OpenAerialMap](https://github.com/hoto
 
 Submit any issues and feedback regarding the imagery browser in the [issue tracker](https://github.com/hotosm/oam-browser/issues). 
 
-Access the site at http://beta.openaerialmap.org. 
+Access the site at http://map.openaerialmap.org. 
 
 
 ## Installation and Usage

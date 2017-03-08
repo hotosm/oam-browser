@@ -100,9 +100,10 @@ var ResultsItem = React.createClass({
 
     var d = this.props.data;
     var source = 'OpenAerialMap - ' + d.provider + ' - ' + d.uuid;
+    var urlPrefix = document.location.protocol === 'https:' ? 'https://127.0.0.1:8112' : 'http://127.0.0.1:8111';
     // Reference:
     // http://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl#load_and_zoom
-    $.get('http://127.0.0.1:8111/load_and_zoom?' + qs.stringify({
+    $.get(urlPrefix + '/load_and_zoom?' + qs.stringify({
       left: d.bbox[0],
       right: d.bbox[2],
       bottom: d.bbox[1],
@@ -113,7 +114,7 @@ var ResultsItem = React.createClass({
       // Reference:
       // http://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl#imagery
       // Note: `url` needs to be the last parameter.
-      $.get('http://127.0.0.1:8111/imagery?' + qs.stringify({
+      $.get(urlPrefix + '/imagery?' + qs.stringify({
         type: 'tms',
         title: source
       }) + '&url=' + tmsUrl)

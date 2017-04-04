@@ -14,7 +14,7 @@ var ResultsPane = React.createClass({
 
   propTypes: {
     query: React.PropTypes.object,
-    mapView: React.PropTypes.string,
+    map: React.PropTypes.object,
     results: React.PropTypes.array,
     selectedItemId: React.PropTypes.string,
     selectedSquareQuadkey: React.PropTypes.string
@@ -23,6 +23,9 @@ var ResultsPane = React.createClass({
   mixins: [
     Keys
   ],
+
+  // Populated only when a single imagery result is selected.
+  currentResult: null,
 
   keybindings: {
     'esc': function () {
@@ -38,17 +41,24 @@ var ResultsPane = React.createClass({
     actions.openModal('feedback');
   },
 
+  zoomToFit: function (e) {
+    e.preventDefault();
+    const bbox = this.currentResult.bbox;
+    actions.fitToBounds([[bbox[1], bbox[0]], [bbox[3], bbox[2]]]);
+  },
+
   closeResults: function (e) {
     if (e) {
       e.preventDefault();
     }
-    hashHistory.push({pathname: this.props.mapView, query: this.props.query});
+    hashHistory.push({pathname: this.props.map.view, query: this.props.query});
   },
 
   render: function () {
     var resultsPane = null;
     if (this.props.results.length && this.props.selectedItemId) {
       var i = _.findIndex(this.props.results, {_id: this.props.selectedItemId});
+      this.currentResult = this.props.results[i];
       var pg = {
         total: this.props.results.length,
         current: i + 1,
@@ -57,14 +67,14 @@ var ResultsPane = React.createClass({
       };
       resultsPane = <ResultsItem
         query={this.props.query}
-        mapView={this.props.mapView}
+        map={this.props.map}
         selectedSquareQuadkey={this.props.selectedSquareQuadkey}
-        data={this.props.results[i]}
+        data={this.currentResult}
         pagination={pg} />;
     } else if (this.props.results.length && this.props.selectedSquareQuadkey) {
       resultsPane = <ResultsList
         query={this.props.query}
-        mapView={this.props.mapView}
+        map={this.props.map}
         selectedSquareQuadkey={this.props.selectedSquareQuadkey}
         results={this.props.results} />;
     } else {
@@ -74,7 +84,6 @@ var ResultsPane = React.createClass({
 
     return (
       <div id='results-pane' className='pane'>
-        <a href='' onClick={this.closeResults} className='pane-dismiss' title='Exit selection'><span>Close</span></a>
         <Dropdown
           triggerElement='a'
           triggerClassName='pane-more'
@@ -83,14 +92,56 @@ var ResultsPane = React.createClass({
           triggerText='More options'
           direction='down'
           alignment='right'>
+
           <ul className='drop__menu info-menu' role='menu'>
-            <li><a className='drop__menu-item' href={`https://twitter.com/share?url=${encodeURIComponent(window.location.href)}`} target='_blank' title='Share on twitter' data-hook='dropdown:close'><span>Share on Twitter</span></a></li>
-            <li><a className='drop__menu-item' href={`http://facebook.com/sharer.php?u=${encodeURIComponent(window.location.href)}`} target='_blank' title='Share on Facebook' data-hook='dropdown:close'><span>Share on Facebook</span></a></li>
+            <li>
+              <a
+                className='drop__menu-item'
+                href={`https://twitter.com/share?url=${encodeURIComponent(window.location.href)}`}
+                target='_blank'
+                title='Share on twitter'
+                data-hook='dropdown:close'>
+                <span>Share on Twitter</span>
+              </a>
+            </li>
+
+            <li>
+              <a
+                className='drop__menu-item'
+                href={`http://facebook.com/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+                target='_blank'
+                title='Share on Facebook'
+                data-hook='dropdown:close'>
+                <span>Share on Facebook</span>
+              </a>
+            </li>
           </ul>
+
           <ul className='drop__menu info-menu' role='menu'>
-            <li><a className='drop__menu-item' title='Report a problem' data-hook='dropdown:close' onClick={this.feedbackClickHandler}><span>Report a problem</span></a></li>
+            <li>
+              <a
+                className='drop__menu-item'
+                title='Report a problem'
+                data-hook='dropdown:close'
+                onClick={this.feedbackClickHandler}>
+                <span>Report a problem</span>
+              </a>
+            </li>
           </ul>
         </Dropdown>
+
+        <a href='' onClick={this.closeResults} className='pane-dismiss' title='Exit selection'>
+          <span>Close</span>
+        </a>
+
+        <a
+          href=''
+          onClick={this.zoomToFit}
+          className={`pane-zoom-to-fit ${this.currentResult === null && 'visually-hidden'}`}
+          title='Zoom to fit imagery on screen'>
+          <span>Zoom To Fit</span>
+        </a>
+
         {resultsPane}
       </div>
     );

@@ -119,7 +119,8 @@ var Home = React.createClass({
 
         <MapBoxMap
           query={this.props.query}
-          mapView={this.state.map.view}
+          params={this.props.params}
+          map={this.state.map}
           selectedSquareQuadkey={this.state.selectedSquareQuadkey}
           selectedItemId={this.state.selectedItemId}
           selectedItem={selectedItem}
@@ -130,11 +131,11 @@ var Home = React.createClass({
           selectedSquare={this.props.params.square}
           selectedSquareQuadkey={this.state.selectedSquareQuadkey}
           selectedItemId={this.state.selectedItemId}
-          mapView={this.state.map.view} />
+          map={this.state.map} />
 
         <ResultsPane
           query={this.props.query}
-          mapView={this.state.map.view}
+          map={this.state.map}
           results={this.state.results}
           selectedItemId={this.state.selectedItemId}
           selectedSquareQuadkey={this.state.selectedSquareQuadkey} />

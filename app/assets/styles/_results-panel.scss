@@ -40,19 +40,19 @@
   }
 }
 
-.pane-zoom-to-fit {
+.pane-more {
   @extend .pane-top-control;
   right: 4.5rem;
   &:before {
-    @extend %oam-ds-icon-location;
+    @extend %oam-ds-icon-ellipsis-vertical;
   }
 }
 
-.pane-more {
+.pane-zoom-to-fit {
   @extend .pane-top-control;
   right: 2.5rem;
   &:before {
-    @extend %oam-ds-icon-ellipsis-vertical;
+    @extend %oam-ds-icon-crosshair-2;
   }
 }
 
@@ -64,8 +64,8 @@
   }
 }
 
-.pane-zoom-to-fit,
 .pane-more,
+.pane-zoom-to-fit,
 .pane-dismiss {
   color: tint($base-color, 64%);
   &:visited {

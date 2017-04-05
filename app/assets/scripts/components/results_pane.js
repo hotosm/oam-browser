@@ -130,16 +130,16 @@ var ResultsPane = React.createClass({
           </ul>
         </Dropdown>
 
-        <a href='' onClick={this.closeResults} className='pane-dismiss' title='Exit selection'>
-          <span>Close</span>
-        </a>
-
         <a
           href=''
           onClick={this.zoomToFit}
           className={`pane-zoom-to-fit ${this.currentResult === null && 'visually-hidden'}`}
           title='Zoom to fit imagery on screen'>
           <span>Zoom To Fit</span>
+        </a>
+
+        <a href='' onClick={this.closeResults} className='pane-dismiss' title='Exit selection'>
+          <span>Close</span>
         </a>
 
         {resultsPane}

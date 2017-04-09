@@ -17,7 +17,7 @@ var ResultsItem = React.createClass({
 
   propTypes: {
     query: React.PropTypes.object,
-    mapView: React.PropTypes.string,
+    map: React.PropTypes.object,
     selectedSquareQuadkey: React.PropTypes.string,
     pagination: React.PropTypes.object,
     data: React.PropTypes.object
@@ -64,8 +64,8 @@ var ResultsItem = React.createClass({
     if (e) {
       e.preventDefault();
     }
-    let { mapView, selectedSquareQuadkey } = this.props;
-    let path = `${mapView}/${selectedSquareQuadkey}/${this.props.pagination.prevId}`;
+    let { map, selectedSquareQuadkey } = this.props;
+    let path = `${map.view}/${selectedSquareQuadkey}/${this.props.pagination.prevId}`;
     hashHistory.push({pathname: path, query: this.props.query});
   },
 
@@ -73,8 +73,8 @@ var ResultsItem = React.createClass({
     if (e) {
       e.preventDefault();
     }
-    let { mapView, selectedSquareQuadkey } = this.props;
-    let path = `${mapView}/${selectedSquareQuadkey}`;
+    let { map, selectedSquareQuadkey } = this.props;
+    let path = `${map.view}/${selectedSquareQuadkey}`;
     hashHistory.push({pathname: path, query: this.props.query});
   },
 
@@ -82,8 +82,8 @@ var ResultsItem = React.createClass({
     if (e) {
       e.preventDefault();
     }
-    let { mapView, selectedSquareQuadkey } = this.props;
-    let path = `${mapView}/${selectedSquareQuadkey}/${this.props.pagination.nextId}`;
+    let { map, selectedSquareQuadkey } = this.props;
+    let path = `${map.view}/${selectedSquareQuadkey}/${this.props.pagination.nextId}`;
     hashHistory.push({pathname: path, query: this.props.query});
   },
 
@@ -110,34 +110,34 @@ var ResultsItem = React.createClass({
       top: d.bbox[3],
       source: source
     }))
-    .success(function (data) {
-      // Reference:
-      // http://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl#imagery
-      // Note: `url` needs to be the last parameter.
-      $.get(urlPrefix + '/imagery?' + qs.stringify({
-        type: 'tms',
-        title: source
-      }) + '&url=' + tmsUrl)
-      .success(function () {
-        // all good!
+      .success(function (data) {
+        // Reference:
+        // http://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl#imagery
+        // Note: `url` needs to be the last parameter.
+        $.get(urlPrefix + '/imagery?' + qs.stringify({
+          type: 'tms',
+          title: source
+        }) + '&url=' + tmsUrl)
+          .success(function () {
+            // all good!
+            actions.openModal('message', {
+              title: 'Success',
+              message: <p>This scene has been loaded into JOSM.</p>
+            });
+          });
+      })
+      .fail(function (err) {
+        console.error(err);
         actions.openModal('message', {
-          title: 'Success',
-          message: <p>This scene has been loaded into JOSM.</p>
+          title: 'Error',
+          message: (
+            <div>
+              <p>Could not connect to JOSM via Remote Control.</p>
+              <p>Is JOSM configured to allow <a href='https://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl' target='_blank'>remote control</a>?</p>
+            </div>
+          )
         });
       });
-    })
-    .fail(function (err) {
-      console.error(err);
-      actions.openModal('message', {
-        title: 'Error',
-        message: (
-          <div>
-            <p>Could not connect to JOSM via Remote Control.</p>
-            <p>Is JOSM configured to allow <a href='https://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl' target='_blank'>remote control</a>?</p>
-          </div>
-        )
-      });
-    });
   },
 
   renderCopyWMTS: function (dropdownKey) {
@@ -164,12 +164,12 @@ var ResultsItem = React.createClass({
     // grab centroid of the footprint
     var center = centroid(d.geojson).geometry.coordinates;
     // cheat by using current zoom level
-    var zoom = this.props.mapView.split(',')[2];
+    var zoom = this.props.map.view.split(',')[2];
     var idUrl = 'http://www.openstreetmap.org/edit?editor=id' +
-    '#map=' + [zoom, center[1], center[0]].join('/') +
-    '&' + qs.stringify({
-      background: 'custom:' + tmsUrl
-    });
+      '#map=' + [zoom, center[1], center[0]].join('/') +
+      '&' + qs.stringify({
+        background: 'custom:' + tmsUrl
+      });
 
     let prevSelectClass = this.state.selectedPreview === `tms-${key}` ? 'button--active' : '';
 
@@ -219,7 +219,11 @@ var ResultsItem = React.createClass({
     return (
       <article className={(d.properties.tms ? 'has-tms ' : '') + 'results-single'}>
         <header className='pane-header'>
-          <h1 className='pane-title' title={d.title.replace(/\.[a-z]+$/, '')}>{d.title.replace(/\.[a-z]+$/, '')}</h1>
+          <h1
+            className='pane-title with-zoom-to-fit'
+            title={d.title.replace(/\.[a-z]+$/, '')}>
+            {d.title.replace(/\.[a-z]+$/, '')}
+          </h1>
           <p className='pane-subtitle'>{pagination.current} of {pagination.total} results</p>
         </header>
         <div className='pane-body'>
@@ -259,26 +263,46 @@ var ResultsItem = React.createClass({
             </dl>
 
             {d.custom_tms ? (
-            <section className='single-related-tms'>
-              <header>
-                <h1>Available map layers</h1>
-                <p>This image is part of the following map layers:</p>
-              </header>
-              <ul>
-                {d.custom_tms.map(function (o, i) {
-                  return <li key={i}>{this.renderTmsOptions(o, i, 'up', 'right')}</li>;
-                }.bind(this))}
-              </ul>
-            </section>
+              <section className='single-related-tms'>
+                <header>
+                  <h1>Available map layers</h1>
+                  <p>This image is part of the following map layers:</p>
+                </header>
+                <ul>
+                  {d.custom_tms.map(function (o, i) {
+                    return <li key={i}>{this.renderTmsOptions(o, i, 'up', 'right')}</li>;
+                  }.bind(this))}
+                </ul>
+              </section>
             ) : null}
 
           </div>
         </div>
         <footer className='pane-footer'>
           <ul className='single-pager'>
-            <li className='view-all'><a href='#' onClick={this.viewAllResults} title='View all results'><span>All</span></a></li>
-            <li className='view-prev'><a href='#' onClick={this.prevResult} className={this.props.pagination.prevId ? '' : 'disabled'} title='View previous result'><span>Prev</span></a></li>
-            <li className='view-next'><a href='#' onClick={this.nextResult} className={this.props.pagination.nextId ? '' : 'disabled'} title='View next result'><span>Next</span></a></li>
+            <li className='view-all'>
+              <a href='#' onClick={this.viewAllResults} title='View all results'>
+                <span>All</span>
+              </a>
+            </li>
+            <li className='view-prev'>
+              <a
+                href='#'
+                onClick={this.prevResult}
+                className={this.props.pagination.prevId ? '' : 'disabled'}
+                title='View previous result'>
+                <span>Prev</span>
+              </a>
+            </li>
+            <li className='view-next'>
+              <a
+                href='#'
+                onClick={this.nextResult}
+                className={this.props.pagination.nextId ? '' : 'disabled'}
+                title='View next result'>
+                <span>Next</span>
+              </a>
+            </li>
           </ul>
         </footer>
       </article>

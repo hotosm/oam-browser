@@ -66,7 +66,7 @@ var Header = React.createClass({
         console.warn('geocoder -- no result was found');
         return;
       }
-      actions.geocoderResult(bounds);
+      actions.fitToBounds(bounds);
     });
   },
 
@@ -81,7 +81,6 @@ var Header = React.createClass({
 
   onBrowseLatestClick: function (e) {
     e.preventDefault();
-    // console.groupCollapsed('onBrowseLatestClick');
     var previewZoom = 10;
     var latest = mapStore.getLatestImagery();
     var f = {
@@ -92,14 +91,7 @@ var Header = React.createClass({
     var quadKey = utils.quadkeyFromCoords(center[0], center[1], previewZoom);
     var mapView = center[0] + ',' + center[1] + ',' + previewZoom;
 
-    // console.log('Feature', f);
-    // console.log('coords center', center);
-    // console.log('quadKey', quadKey);
-    // console.log('full url -- %s/%s/%s', mapView, quadKey, latest._id);
-
     hashHistory.push(`/${mapView}/${quadKey}/${latest._id}`);
-
-    // console.groupEnd('onBrowseLatestClick');
   },
 
   render: function () {

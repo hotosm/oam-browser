@@ -10,7 +10,7 @@ var ResultsListItem = React.createClass({
 
   propTypes: {
     query: React.PropTypes.object,
-    mapView: React.PropTypes.string,
+    map: React.PropTypes.object,
     selectedSquareQuadkey: React.PropTypes.string,
     data: React.PropTypes.object
   },
@@ -19,8 +19,8 @@ var ResultsListItem = React.createClass({
     e.preventDefault();
     actions.resultOut(this.props.data);
 
-    let { mapView, selectedSquareQuadkey } = this.props;
-    let path = `${mapView}/${selectedSquareQuadkey}/${this.props.data._id}`;
+    let { map, selectedSquareQuadkey } = this.props;
+    let path = `${map.view}/${selectedSquareQuadkey}/${this.props.data._id}`;
     hashHistory.push({pathname: path, query: this.props.query});
   },
 
@@ -69,7 +69,7 @@ var ResultsList = React.createClass({
 
   propTypes: {
     query: React.PropTypes.object,
-    mapView: React.PropTypes.string,
+    map: React.PropTypes.object,
     selectedSquareQuadkey: React.PropTypes.string,
     results: React.PropTypes.array
   },
@@ -82,7 +82,7 @@ var ResultsList = React.createClass({
       return <ResultsListItem
         key={o._id}
         query={this.props.query}
-        mapView={this.props.mapView}
+        map={this.props.map}
         selectedSquareQuadkey={this.props.selectedSquareQuadkey}
         data={o} />;
     });

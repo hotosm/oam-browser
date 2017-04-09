@@ -32,7 +32,7 @@ module.exports = Reflux.createActions({
   // openModal(which)
   'openModal': {},
 
-  'geocoderResult': {},
+  'fitToBounds': {},
 
   'requestMyLocation': {},
 

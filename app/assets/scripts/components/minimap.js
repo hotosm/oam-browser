@@ -13,7 +13,7 @@ var MiniMap = React.createClass({
 
   propTypes: {
     query: React.PropTypes.object,
-    mapView: React.PropTypes.string,
+    map: React.PropTypes.object,
     selectedSquare: React.PropTypes.string,
     selectedSquareQuadkey: React.PropTypes.string,
     selectedItemId: React.PropTypes.string
@@ -70,7 +70,7 @@ var MiniMap = React.createClass({
 
   // Map event.
   onMapClick: function (e) {
-    var zoom = this.props.mapView.split(',')[2];
+    var zoom = this.props.map.view.split(',')[2];
     var path = utils.getMapViewString(e.latlng.lng, e.latlng.lat, zoom);
     if (this.props.selectedSquareQuadkey) {
       path += `/${this.props.selectedSquareQuadkey}`;

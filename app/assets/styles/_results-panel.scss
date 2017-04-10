@@ -24,50 +24,53 @@
   margin: -1rem;
 }
 
-.pane-dismiss {
+.pane-top-control {
   position: absolute;
   top: 0.75rem;
-  right: 0.5rem;
   z-index: 30;
   span {
     @extend .visually-hidden;
   }
   &:before {
-    @extend %oam-ds-icon-sm-xmark;
     display: block;
     height: 2rem;
     width: 2rem;
     line-height: 2rem;
     text-align: center;
   }
-}
-
-.pane-dismiss,
-.pane-dismiss:visited {
-  color: tint($base-color, 64%);
 }
 
 .pane-more {
-  position: absolute;
-  top: 0.75rem;
-  right: 2.5rem;
-  z-index: 30;
-  span {
-    @extend .visually-hidden;
-  }
+  @extend .pane-top-control;
+  right: 4.5rem;
   &:before {
     @extend %oam-ds-icon-ellipsis-vertical;
-    display: block;
-    height: 2rem;
-    width: 2rem;
-    line-height: 2rem;
-    text-align: center;
+  }
+}
+
+.pane-zoom-to-fit {
+  @extend .pane-top-control;
+  right: 2.5rem;
+  &:before {
+    @extend %oam-ds-icon-crosshair-2;
+  }
+}
+
+.pane-dismiss {
+  @extend .pane-top-control;
+  right: 0.5rem;
+  &:before {
+    @extend %oam-ds-icon-sm-xmark;
   }
 }
 
 .pane-more,
-.pane-more:visited {
+.pane-zoom-to-fit,
+.pane-dismiss {
   color: tint($base-color, 64%);
+  &:visited {
+    color: inherit;
+  }
 }
 
 .pane-header {
@@ -92,6 +95,9 @@
   padding-right: 3.5rem;
   @include heading(1rem);
   @extend .truncated;
+  &.with-zoom-to-fit {
+    padding-right: 5.5em;
+  }
 }
 
 .pane-subtitle {

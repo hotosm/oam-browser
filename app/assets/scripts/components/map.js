@@ -24,7 +24,7 @@ var Map = React.createClass({
 
   propTypes: {
     query: React.PropTypes.object,
-    mapView: React.PropTypes.string,
+    map: React.PropTypes.object,
     selectedSquareQuadkey: React.PropTypes.string,
     selectedItemId: React.PropTypes.string,
     selectedItem: React.PropTypes.object,
@@ -35,7 +35,7 @@ var Map = React.createClass({
     Reflux.listenTo(actions.resultOver, 'onResultOver'),
     Reflux.listenTo(actions.resultOut, 'onResultOut'),
     Reflux.listenTo(actions.selectPreview, 'onSelectPreview'),
-    Reflux.listenTo(actions.geocoderResult, 'onGeocoderResult'),
+    Reflux.listenTo(actions.fitToBounds, 'onFitToBounds'),
     Reflux.listenTo(actions.requestMyLocation, 'onRequestMyLocation'),
     Reflux.listenTo(actions.setBaseLayer, 'onChangeBaseLayer')
   ],
@@ -63,21 +63,12 @@ var Map = React.createClass({
     this.updateSelectedItemImageFootprint(what);
   },
 
-  // Lifecycle method.
   componentWillReceiveProps: function (nextProps) {
-    // console.groupCollapsed('componentWillReceiveProps');
+    this.requireMapViewUpdate = this.props.map.view !== nextProps.map.view;
 
-    // console.log('previous map view --', this.props.mapView);
-    // console.log('new map view --', nextProps.mapView);
-    this.requireMapViewUpdate = this.props.mapView !== nextProps.mapView;
-    // console.log('require map view update', this.requireMapViewUpdate);
-
-    // console.log('previous selectedItem --', _.get(this.props.selectedItem, '_id', null));
-    // console.log('new selectedItem --', _.get(nextProps.selectedItem, '_id', null));
-    this.requireSelectedItemUpdate = _.get(this.props.selectedItem, '_id', null) !== _.get(nextProps.selectedItem, '_id', null);
-    // console.log('require selected item update', this.requireSelectedItemUpdate);
-
-    // console.groupEnd('componentWillReceiveProps');
+    const currentSelectedItem = _.get(this.props.selectedItem, '_id', null);
+    const nextSelectedItem = _.get(nextProps.selectedItem, '_id', null);
+    this.requireSelectedItemUpdate = currentSelectedItem !== nextSelectedItem;
   },
 
   // Lifecycle method.
@@ -124,7 +115,7 @@ var Map = React.createClass({
     this.mapGridLayer.on('click', this.onGridSqrClick);
 
     // Map position from path.
-    var mapString = this.stringToMapView(this.props.mapView);
+    var mapString = this.stringToMapView(this.props.map.view);
     var view = [mapString.lat, mapString.lng];
     var zoom = mapString.zoom;
     this.map.setView(view, zoom);
@@ -142,7 +133,7 @@ var Map = React.createClass({
 
     // Is there a need to update the map view.
     if (this.requireMapViewUpdate) {
-      var routerMap = this.stringToMapView(this.props.mapView);
+      var routerMap = this.stringToMapView(this.props.map.view);
       this.map.setView([routerMap.lat, routerMap.lng], routerMap.zoom);
       // console.log('componentDidUpdate', 'map view updated');
     }
@@ -214,24 +205,22 @@ var Map = React.createClass({
     if (this.props.selectedSquareQuadkey) {
       // console.log('onGridSqrClick', 'There was a square selected. UNSELECTING');
       // There is a square selected. Unselect.
-      hashHistory.push({pathname: `/${this.props.mapView}`, query: this.props.query});
+      hashHistory.push({pathname: `/${this.props.map.view}`, query: this.props.query});
     } else if (e.layer.feature.properties.count) {
       // console.log('onGridSqrClick', 'No square selected. SELECTING');
       var quadKey = e.layer.feature.properties._quadKey;
       var z = Math.round(this.map.getZoom());
       var squareCenter = centroid(e.layer.feature).geometry.coordinates;
       var mapView = utils.getMapViewString(squareCenter[0], squareCenter[1], z);
-      // console.log('transition /:map/:square', {map: mapView, square: quadKey});
       hashHistory.push({pathname: `/${mapView}/${quadKey}`, query: this.props.query});
     }
   },
 
   // Actions listener.
-  onGeocoderResult: function (bounds) {
+  onFitToBounds: function (bounds) {
     if (bounds) {
-      // Move the map.
       this.map.fitBounds(bounds);
-      hashHistory.push({pathname: `/${this.mapViewToString()}`, query: this.props.query});
+      this.onMapMoveend();
     }
   },
 

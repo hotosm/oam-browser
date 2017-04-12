@@ -136,43 +136,97 @@ var FeedbackModal = React.createClass({
             <div className='form__group'>
               <label htmlFor='name' className='form__label'>Name</label>
               <div className='form-control-set'>
-                <input id='name' name='name' className='form__control form__control--medium' type='text' placeholder='Bruce Wayne'/>
-                {this.state.errors.name ? <p className='message message--alert'>{this.state.errors.name}</p> : null}
+                <input
+                  id='name'
+                  name='name'
+                  className='form__control form__control--medium'
+                  type='text'
+                  placeholder='Bruce Wayne'/>
+                {
+                  this.state.errors.name
+                  ? <p className='message message--alert'>
+                      {this.state.errors.name}
+                    </p>
+                  : null
+                }
               </div>
             </div>
             <div className='form__group'>
               <label htmlFor='email' className='form__label'>Email</label>
               <div className='form-control-set'>
-                <input id='email' name='email' className='form__control form__control--medium input' type='email' placeholder='bruce@wayne.co'/>
-                <p className='form__help'>Email is optional, but provide one if you want followup.</p>
-                {this.state.errors.email ? <p className='message message--alert'>{this.state.errors.email}</p> : null}
+                <input
+                  id='email'
+                  name='email'
+                  className='form__control form__control--medium input'
+                  type='email'
+                  placeholder='bruce@wayne.co'/>
+                <p className='form__help'>
+                  Email is optional, but provide one if you want followup.
+                </p>
+                {
+                  this.state.errors.email
+                  ? <p className='message message--alert'>
+                      {this.state.errors.email}
+                    </p>
+                  : null
+                }
               </div>
             </div>
             <div className='form__group'>
               <label htmlFor='email' className='form__label'>Subject</label>
               <div className='form-control-set'>
-                <select name='subject' id='subject' className='form__control form__control--medium'>
+                <select
+                  name='subject'
+                  id='subject'
+                  className='form__control form__control--medium'>
                   <option value='--'>Subject</option>
                   <option value='report'>Report a technical issue</option>
                   <option value='opinion'>Let us know what you think</option>
                   <option value='contact'>Get in touch with OAM team</option>
                   <option value='other'>Everything else</option>
                 </select>
-                {this.state.errors.subject ? <p className='message message--alert'>{this.state.errors.subject}</p> : null}
+                {
+                  this.state.errors.subject
+                  ? <p className='message message--alert'>
+                      {this.state.errors.subject}</p>
+                  : null
+                }
               </div>
             </div>
             <div className='form__group'>
               <label htmlFor='message' className='form__label'>Feedback</label>
               <div className='form-control-set'>
-                <textarea name='message' id='message' rows='5' className='form__control' placeholder='Leave a message'></textarea>
-                {this.state.errors.message ? <p className='message message--alert'>{this.state.errors.message}</p> : null}
+                <textarea
+                  name='message'
+                  id='message'
+                  rows='5'
+                  className='form__control'
+                  placeholder='Leave a message'>
+                </textarea>
+                {
+                  this.state.errors.message
+                  ? <p className='message message--alert'>
+                      {this.state.errors.message}
+                    </p>
+                  : null
+                }
               </div>
             </div>
             <div className='form__note'>
-              <p>When submitting the form, your current url and other necessary information will be collected.</p>
+              <p>
+                When submitting the form, your current url and other
+                necessary information will be collected.
+              </p>
             </div>
             <div className='form__actions'>
-              <button className={'button button--base button--large' + (this.state.lockSubmit ? ' disabled' : '')} type='submit' onClick={this.onSubmit}><span>Submit</span></button>
+              <button
+                className={
+                  'button button--base button--large' + (this.state.lockSubmit ? ' disabled' : '')
+                }
+                type='submit'
+                onClick={this.onSubmit}>
+                <span>Submit</span>
+              </button>
             </div>
           </form>
         </ModalBody>

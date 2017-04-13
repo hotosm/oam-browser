@@ -3,6 +3,7 @@ import React from 'react';
 import Reflux from 'reflux';
 import Keys from 'react-keybinding';
 import serialize from 'form-serialize';
+import config from '../../config.js';
 import $ from 'jquery';
 import _ from 'lodash';
 import OAM from 'oam-design-system';
@@ -32,6 +33,7 @@ var FeedbackModal = React.createClass({
   getInitialState: function () {
     return {
       revealed: false,
+      response: null,
       errors: {
         name: '',
         email: '',
@@ -49,6 +51,7 @@ var FeedbackModal = React.createClass({
   closeModal: function () {
     this.setState({
       revealed: false,
+      response: null,
       errors: {
         name: '',
         email: '',
@@ -99,9 +102,12 @@ var FeedbackModal = React.createClass({
     if (ok) {
       serial.path = window.location.href;
       console.log('serial', serial);
-      this.setState({lockSubmit: true});
+      this.setState({
+        lockSubmit: true,
+        response: null
+      });
 
-      $.post('https://docs.google.com/a/developmentseed.org/forms/d/1VOcERexikGP5N6xkjPDgUuDLUcS_Ktxj_ALNokNuttc/formResponse', {
+      $.post(config.feedbackSubmissionURL, {
         'entry.1992005100': serial.name,
         'entry.1437255376': serial.email,
         'entry.1013721428': serial.subject,
@@ -109,9 +115,14 @@ var FeedbackModal = React.createClass({
         'entry.1747851236': serial.path
       })
         .always(() => {
-          form.reset();
           this.setState({lockSubmit: false});
-          this.closeModal();
+        })
+        .done(() => {
+          this.setState({response: 'Your feedback has been submitted. Thank you.'});
+          form.reset();
+        })
+        .fail(() => {
+          this.setState({response: 'There was a problem during submission. Please try again.'});
         });
     }
   },
@@ -227,6 +238,13 @@ var FeedbackModal = React.createClass({
                 onClick={this.onSubmit}>
                 <span>Submit</span>
               </button>
+              {
+                this.state.response
+                ? <span className='message form__response'>
+                    {this.state.response}
+                  </span>
+                : null
+              }
             </div>
           </form>
         </ModalBody>

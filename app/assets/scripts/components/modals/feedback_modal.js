@@ -107,12 +107,10 @@ var FeedbackModal = React.createClass({
         response: null
       });
 
-      $.post(config.feedbackSubmissionURL, {
-        'entry.1992005100': serial.name,
-        'entry.1437255376': serial.email,
-        'entry.1013721428': serial.subject,
-        'entry.212244570': serial.message,
-        'entry.1747851236': serial.path
+      $.ajax({
+        dataType: 'jsonp',
+        url: config.feedbackSubmissionURL,
+        data: serial
       })
         .always(() => {
           this.setState({lockSubmit: false});

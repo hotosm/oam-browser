@@ -19,5 +19,6 @@ module.exports = {
   catalog: {
     url: 'https://api.openaerialmap.org'
   },
-  oamStatus: 'https://status.openaerialmap.org/healthcheck'
+  oamStatus: 'https://status.openaerialmap.org/healthcheck',
+  feedbackSubmissionURL: 'https://docs.google.com/a/developmentseed.org/forms/d/1VOcERexikGP5N6xkjPDgUuDLUcS_Ktxj_ALNokNuttc/formResponse'
 };

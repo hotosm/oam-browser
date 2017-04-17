@@ -1,4 +1,3 @@
 module.exports = {
-  environment: 'development',
-  feedbackSubmissionURL: ''
+  environment: 'development'
 };

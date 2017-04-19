@@ -23,12 +23,24 @@ var DSZoom = L.Control.extend({
     var options = this.options;
     var container = L.DomUtil.create('div', options.containerClasses);
 
-    this._zoomInButton = this._createButton(options.zoomInText, options.zoomInClasses, container, this._zoomIn);
-    this._zoomOutButton = this._createButton(options.zoomOutText, options.zoomOutClasses, container, this._zoomOut);
+    this._zoomInButton = this._createButton(
+      options.zoomInText,
+      options.zoomInClasses,
+      container,
+      this._zoomIn
+    );
+    this._zoomOutButton = this._createButton(
+      options.zoomOutText,
+      options.zoomOutClasses,
+      container,
+      this._zoomOut
+    );
 
     this._updateDisabled();
 
-    map.on('zoomend zoomlevelschange', this._updateDisabled, this);
+    // Watch out for the rate at which `layeradd` is called, around 160 times
+    // per map movement. It may be better to use a Reflux action.
+    map.on('zoomend zoomlevelschange layeradd', this._updateDisabled, this);
 
     return container;
   },

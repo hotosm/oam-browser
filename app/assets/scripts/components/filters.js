@@ -56,7 +56,7 @@ var Filters = React.createClass({
       query[prop] = value;
     }
 
-    var mapView = this.props.params.map;
+    var mapView = this.props.params.map.view;
     if (!mapView) {
       var cookieView = cookie.read('oam-browser:map-view');
       if (cookieView !== 'undefined') {

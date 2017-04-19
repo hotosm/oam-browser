@@ -12,7 +12,7 @@ module.exports = {
 
     initialZoom: 3,
     minZoom: 2,
-    maxZoom: undefined,
+    maxZoom: 18,
 
     initialView: [-18.632, 18.479]
   },

@@ -2,7 +2,7 @@
 import { hashHistory } from 'react-router';
 import React from 'react';
 import qs from 'querystring';
-import $ from 'jquery';
+import $ from '../deprecate/jquery';
 import centroid from 'turf-centroid';
 import Keys from 'react-keybinding';
 import { Dropdown } from 'oam-design-system';

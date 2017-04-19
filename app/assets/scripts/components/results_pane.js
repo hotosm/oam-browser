@@ -79,7 +79,6 @@ var ResultsPane = React.createClass({
       // No results, no pane.
       return null;
     }
-
     return (
       <div id='results-pane' className='pane'>
         <Dropdown
@@ -131,7 +130,7 @@ var ResultsPane = React.createClass({
         <a
           href=''
           onClick={this.zoomToFit}
-          className={`pane-zoom-to-fit ${this.currentResult === null && 'visually-hidden'}`}
+          className={`pane-zoom-to-fit ${!this.currentResult && 'visually-hidden'}`}
           title='Zoom to fit imagery on screen'>
           <span>Zoom To Fit</span>
         </a>

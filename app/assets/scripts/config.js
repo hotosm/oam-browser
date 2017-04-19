@@ -19,7 +19,13 @@ import { defaultsDeep } from 'lodash';
  *      polluting the repo.
  */
 
-var configurations = require('./config/*.js', {mode: 'hash'});
+// Manually requiring each file, rather than globing, is easier on node.js
+// when running tests.
+var configurations = {
+  local: require('./config/local.js'),
+  staging: require('./config/staging.js'),
+  production: require('./config/production.js')
+};
 var config = configurations.local || {};
 
 if (process.env.DS_ENV === 'staging') {

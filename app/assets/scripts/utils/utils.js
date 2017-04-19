@@ -3,7 +3,7 @@ import centroid from 'turf-centroid';
 import extent from 'turf-extent';
 import tilebelt from 'tilebelt';
 import config from '../config';
-import $ from 'jquery';
+import $ from '../deprecate/jquery';
 
 /**
  * Converts a string to a coordinates array.

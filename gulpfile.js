@@ -158,6 +158,10 @@ gulp.task('vendorScripts', function () {
     debug: true,
     require: pkg.dependencies ? Object.keys(pkg.dependencies) : []
   });
+  // Only used for React 0.13/0.14 compat during testing.
+  vb.external('react/addons');
+  vb.external('react/lib/ReactContext');
+  vb.external('react/lib/ExecutionEnvironment');
   return vb.bundle()
     .on('error', gutil.log.bind(gutil, 'Browserify Error'))
     .pipe(source('vendor.js'))

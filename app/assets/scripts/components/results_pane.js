@@ -48,9 +48,7 @@ var ResultsPane = React.createClass({
   },
 
   closeResults: function (e) {
-    if (e) {
-      e.preventDefault();
-    }
+    if (e) e.preventDefault();
     hashHistory.push({pathname: this.props.map.view, query: this.props.query});
   },
 

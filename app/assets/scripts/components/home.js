@@ -40,7 +40,6 @@ var Home = React.createClass({
   },
 
   onMapStoreData: function (what) {
-    // console.log('onMapStoreData', mapStore.storage);
     var state = _.cloneDeep(this.state);
     state.results = mapStore.getResults();
     state.loading = what === 'squareData' ? false : mapStore.footprintsWereFecthed();
@@ -49,7 +48,6 @@ var Home = React.createClass({
 
   // Action listener
   onSearchQueryChanged: function (params) {
-    // console.log('home onSearchQueryChanged');
     this.setState({filterParams: params});
   },
 

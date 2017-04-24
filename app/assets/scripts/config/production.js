@@ -12,12 +12,13 @@ module.exports = {
 
     initialZoom: 3,
     minZoom: 2,
-    maxZoom: undefined,
+    maxZoom: 18,
 
     initialView: [-18.632, 18.479]
   },
   catalog: {
     url: 'https://api.openaerialmap.org'
   },
-  oamStatus: 'https://status.openaerialmap.org/healthcheck'
+  oamStatus: 'https://status.openaerialmap.org/healthcheck',
+  feedbackSubmissionURL: 'https://getsimpleform.com/messages/ajax?form_api_token=506fc2ac58582416b6086a68a343e344'
 };

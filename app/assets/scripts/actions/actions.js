@@ -28,6 +28,7 @@ module.exports = Reflux.createActions({
   // Results pane related actions.
   'resultOver': {},
   'resultOut': {},
+  'resultSelected': {},
 
   // openModal(which)
   'openModal': {},

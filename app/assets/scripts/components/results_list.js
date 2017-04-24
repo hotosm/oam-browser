@@ -1,5 +1,4 @@
 'use strict';
-import { hashHistory } from 'react-router';
 import React from 'react';
 
 import actions from '../actions/actions';
@@ -17,11 +16,7 @@ var ResultsListItem = React.createClass({
 
   onClick: function (e) {
     e.preventDefault();
-    actions.resultOut(this.props.data);
-
-    let { map, selectedSquareQuadkey } = this.props;
-    let path = `${map.view}/${selectedSquareQuadkey}/${this.props.data._id}`;
-    hashHistory.push({pathname: path, query: this.props.query});
+    actions.resultSelected(this.props);
   },
 
   onOver: function (e) {
@@ -40,11 +35,24 @@ var ResultsListItem = React.createClass({
     return (
       <li>
         <article className='card card-result-entry'>
-          <a href='#' onClick={this.onClick} onMouseOver={this.onOver} onMouseOut={this.onOut}>
+          <a
+            href='#'
+            onClick={this.onClick}
+            onMouseOver={this.onOver}
+            onMouseOut={this.onOut}
+          >
             <header className='card-header'>
               <h1 className='card-title'>{d.title}</h1>
               <div className='card-media'>
-                <img alt='Result thumbnail' width='768' height='432' src={d.properties.thumbnail || 'assets/graphics/layout/img-placeholder.svg' } />
+                <img
+                  alt='Result thumbnail'
+                  width='768'
+                  height='432'
+                  src={
+                    d.properties.thumbnail ||
+                      'assets/graphics/layout/img-placeholder.svg'
+                  }
+                />
               </div>
             </header>
             <div className='card-body'>
@@ -52,7 +60,11 @@ var ResultsListItem = React.createClass({
                 <dt>Type</dt>
                 <dd>{d.properties.tms ? 'Image + Map Layer' : 'Image'}</dd>
                 <dt>Date</dt>
-                <dd>{d.acquisition_start ? d.acquisition_start.slice(0, 10) : 'N/A'}</dd>
+                <dd>
+                  {d.acquisition_start
+                    ? d.acquisition_start.slice(0, 10)
+                    : 'N/A'}
+                </dd>
                 <dt>Res</dt>
                 <dd>{utils.gsdToUnit(d.gsd)}</dd>
               </dl>
@@ -90,7 +102,12 @@ var ResultsList = React.createClass({
     return (
       <section className='results-hub'>
         <header className='pane-header'>
-          <h1 className='pane-title' title={'Available imagery for square with quadKey ' + square}>Available Imagery</h1>
+          <h1
+            className='pane-title'
+            title={'Available imagery for square with quadKey ' + square}
+          >
+            Available Imagery
+          </h1>
           <p className='pane-subtitle'>{numRes} results</p>
         </header>
         <div className='pane-body'>
@@ -98,7 +115,7 @@ var ResultsList = React.createClass({
             <ol className='results-list'>{results}</ol>
           </div>
         </div>
-        <footer className='pane-footer'></footer>
+        <footer className='pane-footer' />
       </section>
     );
   }

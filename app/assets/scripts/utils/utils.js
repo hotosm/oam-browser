@@ -41,7 +41,7 @@ module.exports.getPolygonFeature = function (coords) {
 };
 
 /**
- * Coverts the given gsb to meters or centimeters
+ * Coverts the given GSD to meters or centimeters
  * @param  float gsd in meters
  * @return string
  */
@@ -98,16 +98,7 @@ module.exports.queryGeocoder = function (query, successCb, errorCb) {
   var req = $.get(uri);
 
   if (successCb) {
-    req = req.success(function (data) {
-      var bounds = false;
-      if (data.features.length) {
-        bounds = [
-          [data.features[0].bbox[1], data.features[0].bbox[0]],
-          [data.features[0].bbox[3], data.features[0].bbox[2]]
-        ];
-      }
-      successCb(bounds, data);
-    });
+    req = req.success(successCb);
   }
 
   if (errorCb) {
@@ -118,8 +109,6 @@ module.exports.queryGeocoder = function (query, successCb, errorCb) {
 };
 
 module.exports.getMapViewString = function (lng, lat, zoom) {
-  // lng = Math.round(lng * 1e5) / 1e5;
-  // lat = Math.round(lat * 1e5) / 1e5;
   return [lng, lat, zoom].join(',');
 };
 

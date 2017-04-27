@@ -1,5 +1,9 @@
+function waitUntilGone (selector) {
+  browser.waitForExist(selector, 300000, true);
+}
+
 function finishLoading () {
-  browser.waitForExist('.loading.revealed', 300000, true);
+  waitUntilGone('.loading.revealed');
 }
 
 describe('Basic', () => {
@@ -11,6 +15,8 @@ describe('Basic', () => {
 
   it('should find imagery over London', () => {
     $('#global-search__input').setValue(['London', 'Enter']);
+    waitUntilGone('.autocomplete__menu-item*=Loading...');
+    $('#global-search__input').setValue(['Enter']);
     finishLoading();
     browser.click('#map');
     finishLoading();
@@ -35,7 +41,7 @@ describe('Selected Layers', () => {
     browser.click('.preview-options__buttons:nth-child(2)');
     // TODO: waiting here is necessary because of a blocking sync AJAX hack
     // in map.js getLayerMaxZoom().
-    browser.waitForExist('.button-zoom--in.disabled', 60000, true);
+    waitUntilGone('.button-zoom--in.disabled', 60000, true);
     const classes = $('.button-zoom--in').getAttribute('class');
     expect(classes).not.to.include('disabled');
   });

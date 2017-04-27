@@ -12,6 +12,7 @@ import utils from '../utils/utils';
 import config from '../config';
 import mapStore from '../stores/map_store';
 import MapLayers from './map-layers';
+import SearchBox from './search_box';
 
 var Header = React.createClass({
   displayName: 'Header',
@@ -21,15 +22,13 @@ var Header = React.createClass({
     params: React.PropTypes.object
   },
 
-  mixins: [
-    Keys
-  ],
+  mixins: [Keys],
 
   keybindings: {
-    'i': function () {
+    i: function () {
       actions.openModal('info');
     },
-    's': function () {
+    s: function () {
       // By delaying the focus some millis we prevent the 's' from being
       // typed in the search box.
       setTimeout(() => this.refs.geocoder.focus(), 10);
@@ -38,41 +37,22 @@ var Header = React.createClass({
 
   getInitialState: function () {
     return {
-      'oamHealth': null
+      oamHealth: null
     };
   },
 
   fetchOAMHealth: function () {
     var _this = this;
-    $.get(config.oamStatus)
-      .success(function (data) {
-        _this.setState({
-          'oamHealth': data.health
-        });
+    $.get(config.oamStatus).success(function (data) {
+      _this.setState({
+        oamHealth: data.health
       });
+    });
   },
 
   feedbackClickHandler: function (e) {
     e.preventDefault();
     actions.openModal('feedback');
-  },
-
-  onGeocoderSearch: function (e) {
-    e.preventDefault();
-
-    var queryString = this.refs.geocoder.value;
-    utils.queryGeocoder(queryString, bounds => {
-      if (!bounds) {
-        console.warn('geocoder -- no result was found');
-        return;
-      }
-      actions.fitToBounds(bounds);
-    });
-  },
-
-  onMyLocationClick: function (e) {
-    e.preventDefault();
-    actions.requestMyLocation();
   },
 
   componentDidMount: function () {
@@ -115,34 +95,41 @@ var Header = React.createClass({
         <div className='inner'>
           <div className='page__headline'>
             <h1 className='page__title'>
-                <span className='mast-logo mast-logo--h'>
-                  <a href='https://openaerialmap.org/' title='Visit homepage'><img className='mast-logo__image' src='assets/graphics/layout/oam-logo-h-pos.svg' width='832' height='160' alt='OpenAerialMap logo' />
-                  <strong className='mast-logo__text'>OpenAerialMap</strong></a>
-                  <small className='mast-logo__label'>Browser</small>
-                </span>
+              <span className='mast-logo mast-logo--h'>
+                <a href='https://openaerialmap.org/' title='Visit homepage'>
+                  <img
+                    className='mast-logo__image'
+                    src='assets/graphics/layout/oam-logo-h-pos.svg'
+                    width='832'
+                    height='160'
+                    alt='OpenAerialMap logo'
+                  />
+                  <strong className='mast-logo__text'>OpenAerialMap</strong>
+                </a>
+                <small className='mast-logo__label'>Browser</small>
+              </span>
             </h1>
           </div>
 
           <nav className='page__prime-nav' role='navigation'>
             <div className='nav-block-prime'>
-              <form className='form global-search' onSubmit={this.onGeocoderSearch}>
-                <div className='form__group'>
-                  <label className='form__label' htmlFor='global-search__input'>Search</label>
-                  <div className='form__input-group'>
-                    <input className='form__control form__control--medium' id='global-search__input' type='search' placeholder='Search location' ref='geocoder' />
-                    {navigator.geolocation ? <a href='#' title='Take me to my location' className='global-search__button-location' onClick={this.onMyLocationClick}><span>My location</span></a> : null}
-                    <span className='form__input-group-button'><button className='global-search__button-go' type='submit'><span>Search</span></button></span>
-                  </div>
-                </div>
-              </form>
+              <SearchBox />
               <ul className='app-menu'>
                 <li>
                   <Filters
                     params={this.props.params}
-                    query={this.props.query} />
+                    query={this.props.query}
+                  />
                 </li>
                 <li>
-                  <a href='#' onClick={this.onBrowseLatestClick} className='button-latest' title='Go to the latest imagery'><span>Latest imagery</span></a>
+                  <a
+                    href='#'
+                    onClick={this.onBrowseLatestClick}
+                    className='button-latest'
+                    title='Go to the latest imagery'
+                  >
+                    <span>Latest imagery</span>
+                  </a>
                 </li>
                 <li className='map-layers'>
                   <MapLayers />
@@ -151,7 +138,15 @@ var Header = React.createClass({
             </div>
             <div className='nav-block-sec'>
               <ul className='meta-menu'>
-                <li><a href='https://upload.openaerialmap.org/' className='button-upload' title='Go to OAM Uploader'><span>Upload</span></a></li>
+                <li>
+                  <a
+                    href='https://upload.openaerialmap.org/'
+                    className='button-upload'
+                    title='Go to OAM Uploader'
+                  >
+                    <span>Upload</span>
+                  </a>
+                </li>
                 <li>
                   <Dropdown
                     triggerElement='a'
@@ -160,15 +155,61 @@ var Header = React.createClass({
                     triggerTitle='Info'
                     triggerText='Info'
                     direction='down'
-                    alignment='right'>
+                    alignment='right'
+                  >
                     <ul className='drop__menu info-menu' role='menu'>
-                      <li><a className='drop__menu-item' href='http://openaerialmap.org/about' title='Learn more' data-hook='dropdown:close'><span>About</span></a></li>
-                      <li><a className='drop__menu-item' href='http://docs.openaerialmap.org/browser/getting-started/' title='Go to User Guide'><span>Help</span></a></li>
-                      <li><a className='drop__menu-item' href='#modal-feedback' title='Leave feedback' data-hook='dropdown:close' onClick={this.feedbackClickHandler}><span>Feedback</span></a></li>
-                      <li><a className='drop__menu-item' href='mailto:info@openaerialmap.org' title='Get in touch'><span>Contact</span> <small>info@openaerialmap.org</small></a></li>
+                      <li>
+                        <a
+                          className='drop__menu-item'
+                          href='http://openaerialmap.org/about'
+                          title='Learn more'
+                          data-hook='dropdown:close'
+                        >
+                          <span>About</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          className='drop__menu-item'
+                          href='http://docs.openaerialmap.org/browser/getting-started/'
+                          title='Go to User Guide'
+                        >
+                          <span>Help</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          className='drop__menu-item'
+                          href='#modal-feedback'
+                          title='Leave feedback'
+                          data-hook='dropdown:close'
+                          onClick={this.feedbackClickHandler}
+                        >
+                          <span>Feedback</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          className='drop__menu-item'
+                          href='mailto:info@openaerialmap.org'
+                          title='Get in touch'
+                        >
+                          <span>Contact</span>
+                          {' '}
+                          <small>info@openaerialmap.org</small>
+                        </a>
+                      </li>
                     </ul>
                     <ul className='drop__menu info-menu' role='menu'>
-                      <li><a href='https://status.openaerialmap.org/' className={oamHealthClass} title='Go to OAM Status'><span>Status</span></a></li>
+                      <li>
+                        <a
+                          href='https://status.openaerialmap.org/'
+                          className={oamHealthClass}
+                          title='Go to OAM Status'
+                        >
+                          <span>Status</span>
+                        </a>
+                      </li>
                     </ul>
                   </Dropdown>
                 </li>

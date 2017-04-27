@@ -38,6 +38,7 @@ var Map = React.createClass({
     Reflux.listenTo(actions.resultSelected, 'onResultSelected'),
     Reflux.listenTo(actions.selectPreview, 'onSelectPreview'),
     Reflux.listenTo(actions.fitToBounds, 'onFitToBounds'),
+    Reflux.listenTo(actions.moveToCoords, 'onMoveToCoords'),
     Reflux.listenTo(actions.requestMyLocation, 'onRequestMyLocation'),
     Reflux.listenTo(actions.setBaseLayer, 'onChangeBaseLayer')
   ],
@@ -239,6 +240,14 @@ var Map = React.createClass({
   },
 
   // Actions listener.
+  onMoveToCoords: function (coords) {
+    const center = [coords[1], coords[0]];
+    const zoom = 16;
+    this.map.setView(center, zoom);
+    this.onMapMoveend();
+  },
+
+  // Actions listener.
   onChangeBaseLayer: function () {
     let layer = mapStore.getBaseLayer();
     this.refs.mapContainer.className = this.refs.mapContainer.className.replace(
@@ -369,7 +378,6 @@ var Map = React.createClass({
         });
       gridSquare.properties.count = foots.length;
     });
-    // console.timeEnd('aggregate on grid');
 
     // Color the grid accordingly.
     this.mapGridLayer.addData(gridData);
@@ -426,7 +434,7 @@ var Map = React.createClass({
   },
 
   // When zoomed in to a layer that accepts high zoom levels and that
-  // layer is removed, we need to zoom backk out to the default max
+  // layer is removed, we need to zoom back out to the default max
   // zoom, but still remain centred on the same coord.
   correctOverZoom: function () {
     this.map.options.maxZoom = config.map.maxZoom;
@@ -477,7 +485,7 @@ var Map = React.createClass({
   // Mapbox.js doesn't seem to account for the new zoom levels when adding a layer.
   // So we need to fetch the tilejSON data over HTTP, parse it for the max zoom,
   // then apply it both to the map to adjust the zoom controls and the layer to make
-  // it trigger the relevant HTTP tiling requests for zoom levels above the deffault
+  // it trigger the relevant HTTP tiling requests for zoom levels above the default
   // 18.
   // TODO: Add layer's tileJSON, or relevant portions thereof, to oin-meta-generator.
   //       This will prevent the need for;

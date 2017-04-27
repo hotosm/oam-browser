@@ -34,6 +34,7 @@ module.exports = Reflux.createActions({
   'openModal': {},
 
   'fitToBounds': {},
+  'moveToCoords': {},
 
   'requestMyLocation': {},
 

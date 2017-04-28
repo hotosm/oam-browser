@@ -1,0 +1,8 @@
+{
+  'globals': {
+    'browser',
+    'expect',
+    '$',
+    '$$'
+  }
+}

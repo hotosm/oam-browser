@@ -1,6 +1,12 @@
+// Transpile everything to es2015
 require('babel-register')({
-  // Don't ignore transpilation of files from node_modules/
-  ignore: false,
+
+  // Because oam-design-system is an external dependency under
+  // By default babel-register ignores everything under node_modules.
+  // This is a problem for us because oam-design-system is there. Thus
+  // follows the regex:
+  only: /assets\/scripts|oam-design\/assets|test/,
+
   'presets': [
     'react',
     'stage-0',

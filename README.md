@@ -1,7 +1,12 @@
-<h1 align="center">OAM Imagery Browser
-  <a href="https://travis-ci.org/hotosm/oam-browser">
-    <img src="https://travis-ci.org/hotosm/oam-browser.svg?branch=master" alt="Build Status"></img>
-  </a></h1>
+
+<h1 align="center">OAM Imagery Browser</h1>
+
+<a href="https://travis-ci.org/hotosm/oam-browser">
+  <img src="https://travis-ci.org/hotosm/oam-browser.svg?branch=master" alt="Build Status"></img>
+</a>
+
+![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=cXlaWlgyeEhmUUlISEpjTU9OQTg3RzdLVUlqUWo0V0JsOG5sMGJ4MlNnYz0tLWhtNFRWMnBlYWJnQUd6TFFZVzJxK3c9PQ==--955a5de2e9ea1506cdeb8cebdcbca07435613863)
+
 
 <div align="center">
   <h3>

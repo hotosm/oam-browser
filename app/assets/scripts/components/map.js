@@ -484,7 +484,9 @@ var Map = React.createClass({
   //       1. Hacking the `tms` field to get the base tileJSON URI.
   //       2. Making a blocking synchronous XHR call.
   getLayerMaxZoom: function (tmsURI) {
-    const tileJSONURI = tmsURI.replace(/\/\{z\}\/\{x\}\/\{y\}.*/, '');
+    const tileJSONURI = tmsURI
+      .replace(/\/\{z\}\/\{x\}\/\{y\}.*/, '')
+      .replace('http://', 'https://');
     let maxZoom;
     $.get({url: tileJSONURI, async: false}).success((data) => {
       maxZoom = data.maxzoom;

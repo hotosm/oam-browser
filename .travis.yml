@@ -1,11 +1,12 @@
 language: node_js
 
 # As long as the "Build on push" and "Build on PR" settings are on, then
-# building only the develop branch here means that we can dedeuplicate
-# the occurence of PR and Push builds on PRs.
+# building only the develop anad master  branches here means that we can
+# dedeuplicate the occurence of PR and Push builds on PRs.
 branches:
   only:
     - develop
+    - master 
 
 env:
   global:

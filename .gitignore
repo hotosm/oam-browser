@@ -109,3 +109,4 @@ temp
 tmp
 .tmp
 dist
+test/integration/error_screenshots

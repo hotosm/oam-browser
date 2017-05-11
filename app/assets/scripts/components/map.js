@@ -484,7 +484,9 @@ var Map = React.createClass({
   //       1. Hacking the `tms` field to get the base tileJSON URI.
   //       2. Making a blocking synchronous XHR call.
   getLayerMaxZoom: function (tmsURI) {
-    const tileJSONURI = tmsURI.replace(/\/\{z\}\/\{x\}\/\{y\}.*/, '');
+    const tileJSONURI = tmsURI
+      .replace(/\/\{z\}\/\{x\}\/\{y\}.*/, '')
+      .replace('http://', 'https://');
     let maxZoom;
     $.get({url: tileJSONURI, async: false}).success((data) => {
       maxZoom = data.maxzoom;
@@ -506,7 +508,7 @@ var Map = React.createClass({
    */
   computeGrid: function (zoom, bounds) {
     // We'll use tilebelt to make pseudo-tiles at a zoom three levels higher
-    // than the given zoom.  This means that for each actual map tile, there will
+    // than the given zoom. This means that for each actual map tile, there will
     // be 4^3 = 64 grid squares.
     zoom += 2;
     var ll = tilebelt.pointToTile(bounds[0], bounds[1], zoom);
@@ -528,7 +530,6 @@ var Map = React.createClass({
         boxes.push(feature);
       }
     }
-    // console.timeEnd('grid');
     return {
       type: 'FeatureCollection',
       features: boxes

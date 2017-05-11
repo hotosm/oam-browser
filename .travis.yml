@@ -1,31 +1,38 @@
 language: node_js
-node_js:
-- '4'
+
+# As long as the "Build on push" and "Build on PR" settings are on, then
+# building only the develop anad master  branches here means that we can
+# dedeuplicate the occurence of PR and Push builds on PRs.
+branches:
+  only:
+    - develop
+    - master 
+
 env:
   global:
-  - CXX=g++-4.8
-  - DEPLOY_BRANCH=master
-  - STAGING_BRANCH=develop
-  - secure: fZv+ikPPQFtFe6Trfj4dptPGwVS6tgzwv1L/omCtjan+EmM6soYzUjXb+TCOXhcU0D8fJZIPDpbjFE/p5VQYpeXV7YSPbkSy5/vvRy67NQPLsWcyraRpe8fwc/r/fgGEyDnFVlm0Qwd7AFU8xy0Zl3R5McUljUHVG/WXwiXhttM=
+    - CXX=g++-4.8
+    - DEPLOY_BRANCH=master
+    - STAGING_BRANCH=develop
+    - secure: fZv+ikPPQFtFe6Trfj4dptPGwVS6tgzwv1L/omCtjan+EmM6soYzUjXb+TCOXhcU0D8fJZIPDpbjFE/p5VQYpeXV7YSPbkSy5/vvRy67NQPLsWcyraRpe8fwc/r/fgGEyDnFVlm0Qwd7AFU8xy0Zl3R5McUljUHVG/WXwiXhttM=
 addons:
   apt:
     sources:
-    - ubuntu-toolchain-r-test
+      - ubuntu-toolchain-r-test
     packages:
-    - g++-4.8
+      - g++-4.8
 cache:
   apt: true
   directories:
-  - node_modules
+    - node_modules
 before_install:
-- chmod +x ./.build_scripts/deploy.sh
-- chmod +x ./.build_scripts/lint.sh
-- chmod +x ./.build_scripts/build.sh
+  - chmod +x ./.build_scripts/deploy.sh
+  - chmod +x ./.build_scripts/lint.sh
+  - chmod +x ./.build_scripts/build.sh
 before_script:
-- "./.build_scripts/lint.sh"
-- npm test
+  - "./.build_scripts/lint.sh"
+  - npm test
 script:
-- ".build_scripts/build.sh"
+  - ".build_scripts/build.sh"
 deploy:
   - provider: script
     skip_cleanup: true

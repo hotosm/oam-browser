@@ -125,5 +125,19 @@ npm run build
 This will package the app and place all the contents in the `dist` directory.
 The app can then be run by any web server.
 
+## Testing
+2 distinct test suites exist.
+
+**Unit-like tests**, under `test/specs`    
+These should be isolated and fast, with as much mocking/stubbing as possible, suitable for TDD. Run with:    
+`mocha --opts test/specs/mocha.opts test/specs` or `npm test`
+
+**Integration tests**, under `test/integration`    
+These are end-to-end, cross-browser tests, that should test as much of the stack as possible. Currently they are run on Browser Stack against various browsers. They can be run locally against a Web Driver compatible browser client like (chromedriver)[https://sites.google.com/a/chromium.org/chromedriver/] or (geckodriver)[https://github.com/mozilla/geckodriver]. To run locally, use:    
+`wdio test/integration/wdio.local.conf.js`.
+
+Because `wdio` wraps `mocha`, you can send `mocha` args via `wdio.default.conf.js`'s `mochaOpts` field. For instance `grep` has been added so you can isolate a single test run with:    
+`MOCHA_MATCH='should find imagery' wdio test/integration/wdio.local.conf.js`
+
 ## License
 OAM Browser is licensed under **BSD 3-Clause License**, see the [LICENSE](LICENSE) file for more details.

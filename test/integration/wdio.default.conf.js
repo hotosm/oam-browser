@@ -124,7 +124,8 @@ exports.config = {
   mochaOpts: {
     require: './test/integration/.setup.js',
     timeout: 600000,
-    ui: 'bdd'
+    ui: 'bdd',
+    grep: process.env.MOCHA_MATCH
   },
   reporters: ['spec'],
 

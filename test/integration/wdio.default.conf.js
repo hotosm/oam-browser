@@ -164,6 +164,7 @@ exports.config = {
     chai.Should();
     var chaiWebdriver = require('chai-webdriverio').default;
     chai.use(chaiWebdriver(browser));
+    browser.deleteCookie();
   }
   // },
   //

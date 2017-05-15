@@ -1,7 +1,6 @@
 // Transpile everything to es2015
 require('babel-register')({
 
-  // Because oam-design-system is an external dependency under
   // By default babel-register ignores everything under node_modules.
   // This is a problem for us because oam-design-system is there. Thus
   // follows the regex:

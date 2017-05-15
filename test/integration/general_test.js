@@ -1,5 +1,5 @@
 function finishLoading () {
-  browser.waitForVisible('.loading.revealed', 300000, true);
+  browser.waitForExist('.loading.revealed', 300000, true);
 }
 
 describe('Basic', () => {
@@ -23,14 +23,19 @@ describe('Basic', () => {
 });
 
 describe('Selected Layers', () => {
-  it.only('should allow zooming beyond 18 for high res tiles', () => {
+  it('should allow zooming beyond 18 for high res tiles', () => {
     // Known high res imagery in Sanfrancisco
-    const sanFran = '#/-122.409,37.735,18/0230102033332/58d7f0e7b0eae7f3b143c108';
+    const sanFran = '#/-122.409,37.735,18/0230102033332/58d7f0e7b0eae7f3b143c108?_k=ju8si1';
+    // TODO: Why doesn't deleteCookie() in the mocha's before() work?
+    browser.url('/');
     browser.url(sanFran);
     finishLoading();
     expect('.button-zoom--in.disabled');
     // Click the 'TMS' button
     browser.click('.preview-options__buttons:nth-child(2)');
+    // TODO: waiting here is necessary because of a blocking sync AJAX hack
+    // in map.js getLayerMaxZoom().
+    browser.waitForExist('.button-zoom--in.disabled', 60000, true);
     const classes = $('.button-zoom--in').getAttribute('class');
     expect(classes).not.to.include('disabled');
   });

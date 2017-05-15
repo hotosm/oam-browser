@@ -21,3 +21,17 @@ describe('Basic', () => {
     expect(results.length).to.be.at.least(8);
   });
 });
+
+describe('Selected Layers', () => {
+  it.only('should allow zooming beyond 18 for high res tiles', () => {
+    // Known high res imagery in Sanfrancisco
+    const sanFran = '#/-122.409,37.735,18/0230102033332/58d7f0e7b0eae7f3b143c108';
+    browser.url(sanFran);
+    finishLoading();
+    expect('.button-zoom--in.disabled');
+    // Click the 'TMS' button
+    browser.click('.preview-options__buttons:nth-child(2)');
+    const classes = $('.button-zoom--in').getAttribute('class');
+    expect(classes).not.to.include('disabled');
+  });
+});

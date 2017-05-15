@@ -5,7 +5,7 @@
   <img src="https://travis-ci.org/hotosm/oam-browser.svg?branch=master" alt="Build Status"></img>
 </a>
 
-![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=cXlaWlgyeEhmUUlISEpjTU9OQTg3RzdLVUlqUWo0V0JsOG5sMGJ4MlNnYz0tLWhtNFRWMnBlYWJnQUd6TFFZVzJxK3c9PQ==--955a5de2e9ea1506cdeb8cebdcbca07435613863)
+![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=cDZRbGdjT2RDWjh1SmlzblV0N2RmQlMxZ0gzVWpRYVZMNDA0QnhMOU9hUT0tLUw1SU5KbTFueXJ3cjhYMktKRFczb0E9PQ==--6eea14e7ccbb21dc29f04d43dbbe2c8111e7a198)
 
 
 <div align="center">

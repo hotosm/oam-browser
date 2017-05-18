@@ -109,12 +109,12 @@
   }
 }
 
+.form__input-group-button {
+  vertical-align: top;
+}
+
 .global-search__button-go {
   @extend .button, .button--achromic, .button--text-hidden, .button--medium;
-
-  // TODO: Absolute positioning is not good
-  position: relative;
-  top: -3px;
 
   &:before {
     @extend %oam-ds-icon-magnifier-right;

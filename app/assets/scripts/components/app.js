@@ -1,7 +1,9 @@
 'use strict';
 import React from 'react';
+import Reflux from 'reflux';
 
 import MessageModal from './modals/message_modal';
+import Notifications from '../components/uploader/notifications';
 import FeedbackModal from './modals/feedback_modal';
 import Header from './header';
 import actions from '../actions/actions';
@@ -9,8 +11,15 @@ import actions from '../actions/actions';
 var App = React.createClass({
   displayName: 'App',
 
+  mixins: [
+    Reflux.listenTo(actions.showNotification, 'onNotificationShow'),
+    Reflux.listenTo(actions.clearNotification, 'dismissNotification'),
+    Reflux.listenTo(actions.clearNotificationAfter, 'dismissNotification')
+  ],
+
   propTypes: {
     params: React.PropTypes.object,
+    routes: React.PropTypes.array,
     location: React.PropTypes.object,
     children: React.PropTypes.object
   },
@@ -34,15 +43,52 @@ var App = React.createClass({
     }
   },
 
+  getInitialState: function () {
+    return {
+      notification: { type: null, message: null }
+    };
+  },
+
+  onNotificationShow: function (type, message) {
+    this.setState({
+      notification: { type: type, message: message }
+    });
+  },
+
+  dismissNotification: function (time) {
+    if (!time) {
+      time = 0;
+    }
+
+    setTimeout(function () {
+      this.setState({
+        notification: { type: null, message: null }
+      });
+    }.bind(this), time);
+  },
+
   render: function () {
     // Only show the modal if there are no url params.
-    // There can't be any other without map
+    // There can't be any other without map.
     var params = this.props.params || {};
     var query = this.props.location.query || {};
 
+    // If we're on a specific coordinate location.
+    const isLocation = this.props.routes[this.props.routes.length - 1].name === 'map';
+    // If we're on the homepage.
+    const isHome = this.props.location.pathname === '/';
+
+    // Is this the main map view?
+    const isMap = isLocation || isHome;
+
     return (
       <div>
-        <Header params={params} query={query} />
+
+        { isMap
+          ? <Header params={params} query={query} />
+          : null
+        }
+
         <main className='page__body' role='main'>
           <section className='layout layout--app'>
             <header className='layout__header'>
@@ -54,17 +100,45 @@ var App = React.createClass({
             </header>
             <div className='layout__body'>
               <div className='inner'>
-                {React.cloneElement(this.props.children, { params: params, query: query })}
+                {React.cloneElement(this.props.children, {
+                  params: params,
+                  query: query
+                })}
               </div>
             </div>
           </section>
         </main>
         <footer className='page__footer' role='contentinfo'>
           <div className='inner'>
-            <p>Made with love by <a href='https://developmentseed.org' title='Visit Development Seed website'>Development Seed</a> and <a href='http://hot.openstreetmap.org/' title='Visit the Humanitarian OpenStreetMap Team website'>HOT</a>.</p>
+            <p>
+              Made with love by
+              {' '}
+              <a
+                href='https://developmentseed.org'
+                title='Visit Development Seed website'
+              >
+                Development Seed
+              </a>
+              {' '}
+              and
+              {' '}
+              <a
+                href='http://hot.openstreetmap.org/'
+                title='Visit the Humanitarian OpenStreetMap Team website'
+              >
+                HOT
+              </a>
+              .
+            </p>
           </div>
         </footer>
         <MessageModal />
+        <Notifications
+          type={this.state.notification.type}
+          onNotificationDismiss={this.dismissNotification}
+        >
+          {this.state.notification.message}
+        </Notifications>
         <FeedbackModal />
       </div>
     );

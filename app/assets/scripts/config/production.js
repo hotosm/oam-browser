@@ -1,10 +1,11 @@
 'use strict';
-/*
- * App config for production.
- */
 
 module.exports = {
   environment: 'production',
+  OAMUploaderApi: 'https://upload-api.openaerialmap.org/',
+  uploadBucket: 'oam-uploader-production-temp',
+  googleClient: '36015894456-p23fapcrlb8gu5jso00j69uv1c8861j1.apps.googleusercontent.com',
+  googleDeveloperKey: '',
   map: {
     mapbox: {
       accessToken: 'pk.eyJ1Ijoib3BlbmFlcmlhbG1hcCIsImEiOiJjaXl4MjM5c20wMDBmMzNucnZtbnYwZTcxIn0.IKG5flWCS6QfpO3iOdRveg'

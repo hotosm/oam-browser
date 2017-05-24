@@ -14,7 +14,7 @@
     <meta name="twitter:title" content="OpenAerialMap Browser">
     <meta name="twitter:description" content="Browse the open collection of aerial imagery." />
     <meta name="twitter:image:src" content="assets/graphics/meta/default-meta-image.png" />
-    <!--/ Twitter --> 
+    <!--/ Twitter -->
 
     <!-- OG -->
     <meta property="og:site_name" content="OpenAerialMap Browser" />
@@ -43,10 +43,16 @@
     <!-- endbuild -->
 
     <link rel="author" type="text/plain" href="humans.txt" />
+
+    <script>
+      // OAM_UP will contain some core variables to control the state of things.
+      // Mostly for google's shenanigans.
+      window.OAM_UP = {};
+    </script>
   </head>
 
   <body class="page page--app">
-  
+
     <div class="inner" id="page-canvas">
       <!-- Content goes inside #site-canvas -->
     </div>

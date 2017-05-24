@@ -43,3 +43,24 @@ describe('Selected Layers', () => {
     expect(classes).not.to.include('disabled');
   });
 });
+
+describe('Upload Form', () => {
+  const sampleImagery = 'https://github.com/openimagerynetwork/oin-meta-generator/blob/master/' +
+    'test/fixtures/everest-utm.gtiff?raw=true';
+
+  it('should submit imagery', () => {
+    browser.url('#/upload');
+    $('#uploader-token').setValue('a4c74e86faba225cd2c10b0257ac672e230ae43068440a14a82c31b9426c1ef5');
+    $('#uploader-name').setValue('Automated Test Name');
+    $('#uploader-email').setValue('automatedtest@example.com');
+    $('#scene-0-title').setValue('Automated Test Title');
+    $('#scene-0-sensor').setValue('Automated Test Sensor');
+    browser.click('button=Url');
+    $('#scene-0-img-loc-0-url').setValue(sampleImagery);
+    $('#scene-0-provider').setValue('Automated Test Provider');
+    browser.click('button=Submit');
+    browser.waitForExist('a=Check upload status.');
+    browser.click('a=Check upload status.');
+    expect('p.status').to.have.text('PENDING');
+  });
+});

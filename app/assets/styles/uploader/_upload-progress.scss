@@ -1,0 +1,73 @@
+#upload-progress {
+  overflow: auto;
+  transition: all 1s ease-in-out;
+  padding-left: 0.5rem;
+
+  &.upload-inactive {
+    opacity: 0;
+  }
+
+  .meter {
+    box-sizing: content-box;
+    height: 20px;
+    position: relative;
+    margin: 0;
+    background: rgb(237, 239, 240);
+    border-radius: 25px;
+    box-shadow: inset 0 -1px 1px rgba(255,255,255,0.3);
+  }
+
+  .meter > span {
+    display: block;
+    height: 100%;
+    border-radius: 4px;
+    background-color: rgb(74, 96, 105);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .meter > span:after, .animate > span > span {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background-image: linear-gradient(
+      -45deg, rgba(255, 255, 255, .2) 25%,
+              transparent 25%,
+              transparent 50%,
+              rgba(255, 255, 255, .2) 50%,
+              rgba(255, 255, 255, .2) 75%,
+              transparent 75%,
+              transparent
+    );
+    z-index: 1;
+    background-size: 50px 50px;
+    animation: move 2s linear infinite;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .animate > span:after {
+    display: none;
+  }
+
+  @keyframes move {
+    0% {
+     background-position: 0 0;
+    }
+    100% {
+     background-position: 50px 50px;
+    }
+  }
+}
+
+.form-actions {
+  .bttn-submit {
+    width: 10rem;
+    float: left;
+  }
+
+  .upload-status {
+    font-weight: 600;
+    font-size: 0.75rem;
+  }
+}

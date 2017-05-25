@@ -73,6 +73,7 @@ export default class SearchBox extends React.Component {
             onChange={(event, value) => this.setState({ value: value })}
             onSelect={this.gotoSelection}
             onSubmit={this.getGeocoderResults}
+            wrapperStyle={{}}
             renderItem={(item, isHighlighted) => (
               <div
                 key={item.abbr}

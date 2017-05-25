@@ -125,7 +125,7 @@
   @extend .button, .button--base-unbounded, .button--text-hidden, .button--medium;
   position: absolute;
   right: 2rem;
-  top: 45%;
+  top: 50%;
   z-index: 99;
 
   &:before {

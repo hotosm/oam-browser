@@ -93,8 +93,12 @@
     @extend .visually-hidden;
   }
 
-  .form__control {
-    padding-right: 2.25rem;
+  .form__input-group{
+    .form__control {
+      padding-right: 2.25rem;
+      border-top-left-radius: $base-border-radius;
+      border-bottom-left-radius: $base-border-radius;
+    }
   }
 
   .autocomplete__menu-item {
@@ -125,7 +129,7 @@
   @extend .button, .button--base-unbounded, .button--text-hidden, .button--medium;
   position: absolute;
   right: 2rem;
-  top: 45%;
+  top: 50%;
   z-index: 99;
 
   &:before {

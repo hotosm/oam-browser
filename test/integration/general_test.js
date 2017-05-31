@@ -16,7 +16,7 @@ describe('Basic', () => {
   it('should find imagery over London', () => {
     $('#global-search__input').setValue(['London', 'Enter']);
     waitUntilGone('.autocomplete__menu-item*=Loading...');
-    $('#global-search__input').setValue(['Enter']);
+    browser.click('.autocomplete__menu-item.is-highlighted');
     finishLoading();
     browser.click('#map');
     finishLoading();

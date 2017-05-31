@@ -7,7 +7,7 @@ const date = new Date();
 const time = date.toLocaleTimeString();
 
 const buildDefaults = {
-  project: 'hotosm/oam-browser',
+  project: 'hotosm/oam-browser(' + process.env.CIRCLE_BRANCH + ')',
   build: process.env.CIRCLE_BUILD_NUM || `${os.hostname()} ${time}`,
   name: 'Frontend tests',
   os: 'WINDOWS',

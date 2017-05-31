@@ -35,7 +35,7 @@ let browserStackConf = {
   }, {
     browserName: 'firefox'
   }, {
-    browserName: 'internet explorer'
+    browserName: 'edge'
   }].map(function (browser) {
     return _.defaults(browser, buildDefaults);
   }),

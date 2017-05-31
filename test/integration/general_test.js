@@ -20,9 +20,6 @@ describe('Basic', () => {
     finishLoading();
     browser.click('#map');
     finishLoading();
-    // IE11 seems to have a serious JS perf problem, so finishLoading() can't
-    // be relied upon.
-    browser.waitForVisible('.pane-body-inner .results-list li', 300000);
     const results = $$('.pane-body-inner .results-list li');
     expect(results.length).to.be.at.least(8);
   });

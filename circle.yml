@@ -5,7 +5,7 @@
 
 test:
   override:
-    - DS_ENV=staging NODE_ENV=staging npm run serve:
+    - npm run serve:
         background: true
     # Make sure all the JS and CSS is built
     - sleep 30

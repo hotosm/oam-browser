@@ -1,5 +1,5 @@
 'use strict';
-import { defaultsDeep } from 'lodash';
+import { _ } from 'lodash';
 /*
  * App configuration.
  *
@@ -26,11 +26,44 @@ var configurations = {
   staging: require('./config/staging.js'),
   production: require('./config/production.js')
 };
-var config = configurations.local || {};
 
-if (process.env.DS_ENV === 'staging') {
-  defaultsDeep(config, configurations.staging);
+var config;
+
+// If the developer hasn't put anything in local.js then give them
+// the values from staging.
+if (_.isEmpty(configurations.local)) {
+  config = configurations.staging;
+} else {
+  config = configurations.local;
 }
-defaultsDeep(config, configurations.production);
+
+// For integration tests (and as a general default) use the live catalog API.
+// TODO: Testing should be idempotent - it should not be dependent on any
+//       pre-existing or user-defined setup. Therefore test data should be
+//       created at the point of test runs.
+if (!_.has(configurations.local, 'catalog.url')) {
+  _.merge(config, {
+    catalog: {
+      url: configurations.production.catalog.url
+    }
+  });
+}
+
+// Set all staging config
+if (process.env.DS_ENV === 'staging') {
+  config = configurations.staging;
+}
+
+// Set all production config
+if (process.env.DS_ENV === 'production' || process.env.NODE_ENV === 'production') {
+  config = configurations.production;
+}
+
+// Copy over any production settings that weren't specifically set above
+for (var p in configurations.production) {
+  if (typeof config[p] === 'undefined') {
+    config[p] = configurations.production[p];
+  }
+}
 
 module.exports = config;

@@ -13,10 +13,3 @@ module.exports = {
   OAMBrowserUrl: 'http://hotosm-oam-staging.s3-website-us-east-1.amazonaws.com'
 };
 
-// copy over any production settings that weren't specifically set above
-var production = require('./production');
-for (var p in production) {
-  if (typeof module.exports[p] === 'undefined') {
-    module.exports[p] = production[p];
-  }
-}

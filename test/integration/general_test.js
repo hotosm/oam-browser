@@ -35,7 +35,8 @@ describe('Selected Layers', () => {
     finishLoading();
     expect('.button-zoom--in.disabled');
     // Click the 'TMS' button
-    browser.click('.preview-options__buttons:nth-child(2)');
+    browser.waitForVisible('button=TMS');
+    browser.click('button=TMS');
     // TODO: waiting here is necessary because of a blocking sync AJAX hack
     // in map.js getLayerMaxZoom().
     waitUntilGone('.button-zoom--in.disabled');
@@ -59,9 +60,9 @@ describe('Upload Form', () => {
     $('#scene-0-img-loc-0-url').setValue(sampleImagery);
     $('#scene-0-provider').setValue('Automated Test Provider');
     browser.click('button=Submit');
-    browser.waitForExist('a=Check upload status.');
+    browser.waitForVisible('a=Check upload status.');
     browser.click('a=Check upload status.');
-    browser.waitForExist('h2=Status upload');
+    browser.waitForVisible('h2=Status upload');
     const status = browser.getText('p.status').toLowerCase();
     expect(status).to.eq('pending');
   });

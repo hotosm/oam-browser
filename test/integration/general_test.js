@@ -1,5 +1,5 @@
 function waitUntilGone (selector) {
-  browser.waitForExist(selector, 300000, true);
+  browser.waitForVisible(selector, 300000, true);
 }
 
 function finishLoading () {
@@ -38,7 +38,7 @@ describe('Selected Layers', () => {
     browser.click('.preview-options__buttons:nth-child(2)');
     // TODO: waiting here is necessary because of a blocking sync AJAX hack
     // in map.js getLayerMaxZoom().
-    waitUntilGone('.button-zoom--in.disabled', 60000, true);
+    waitUntilGone('.button-zoom--in.disabled');
     const classes = $('.button-zoom--in').getAttribute('class');
     expect(classes).not.to.include('disabled');
   });
@@ -61,6 +61,8 @@ describe('Upload Form', () => {
     browser.click('button=Submit');
     browser.waitForExist('a=Check upload status.');
     browser.click('a=Check upload status.');
-    expect('p.status').to.have.text('PENDING');
+    browser.waitForExist('h2=Status upload');
+    const status = browser.getText('p.status').toLowerCase();
+    expect(status).to.eq('pending');
   });
 });

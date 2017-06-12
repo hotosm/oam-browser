@@ -70,7 +70,7 @@ module.exports = React.createClass({
           loading: false,
           errored: resp.statusCode < 200 || resp.statusCode >= 400,
           message: 'API responded with ' + resp.statusCode,
-          data: data
+          data: data.results
         });
       } catch (err) {
         console.error(err);

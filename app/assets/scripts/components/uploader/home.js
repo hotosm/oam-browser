@@ -513,7 +513,7 @@ module.exports = React.createClass({
         this.setState({ loading: false });
 
         if (resp.statusCode >= 200 && resp.statusCode < 400) {
-          var id = JSON.parse(body.toString()).upload;
+          var id = JSON.parse(body.toString()).results.upload;
 
           AppActions.showNotification(
             'success',

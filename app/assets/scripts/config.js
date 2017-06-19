@@ -50,7 +50,7 @@ if (!_.has(configurations.local, 'catalog.url')) {
 }
 
 // Set all staging config
-if (process.env.DS_ENV === 'staging') {
+if (process.env.DS_ENV === 'staging' || process.env.NODE_ENV === 'staging') {
   config = configurations.staging;
 }
 

@@ -3,7 +3,7 @@ function waitUntilGone (selector) {
 }
 
 function finishLoading () {
-  waitUntilGone('.loading.revealed');
+  waitUntilGone('.loading');
 }
 
 describe('Basic', () => {
@@ -20,7 +20,9 @@ describe('Basic', () => {
     finishLoading();
     browser.click('#map');
     finishLoading();
-    const results = $$('.pane-body-inner .results-list li');
+    const resultsSelector = '.pane-body-inner .results-list li';
+    browser.waitForExist(resultsSelector);
+    const results = $$(resultsSelector);
     expect(results.length).to.be.at.least(8);
   });
 });

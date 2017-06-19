@@ -6,7 +6,9 @@ function finishLoading () {
   waitUntilGone('.loading');
 }
 
-describe('Basic', () => {
+describe('Basic', function () {
+  this.retries(3); // this requires function() not ()=>
+
   beforeEach(() => browser.url('/'));
 
   it('should have the right page title', () => {
@@ -27,7 +29,9 @@ describe('Basic', () => {
   });
 });
 
-describe('Selected Layers', () => {
+describe('Selected Layers', function () {
+  this.retries(3); // this requires function() not ()=>
+
   it('should allow zooming beyond 18 for high res tiles', () => {
     // Known high res imagery in Sanfrancisco
     const sanFran = '#/-122.409,37.735,18/0230102033332/58d7f0e7b0eae7f3b143c108?_k=ju8si1';
@@ -47,7 +51,9 @@ describe('Selected Layers', () => {
   });
 });
 
-describe('Upload Form', () => {
+describe('Upload Form', function () {
+  this.retries(3); // this requires function() not ()=>
+
   const sampleImagery = 'https://github.com/openimagerynetwork/oin-meta-generator/blob/master/' +
     'test/fixtures/everest-utm.gtiff?raw=true';
 

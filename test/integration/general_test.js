@@ -1,9 +1,9 @@
 function waitUntilGone (selector) {
-  browser.waitForExist(selector, 300000, true);
+  browser.waitForVisible(selector, 300000, true);
 }
 
 function finishLoading () {
-  waitUntilGone('.loading.revealed');
+  waitUntilGone('.loading');
 }
 
 describe('Basic', () => {
@@ -20,7 +20,9 @@ describe('Basic', () => {
     finishLoading();
     browser.click('#map');
     finishLoading();
-    const results = $$('.pane-body-inner .results-list li');
+    const resultsSelector = '.pane-body-inner .results-list li';
+    browser.waitForExist(resultsSelector);
+    const results = $$(resultsSelector);
     expect(results.length).to.be.at.least(8);
   });
 });
@@ -35,10 +37,10 @@ describe('Selected Layers', () => {
     finishLoading();
     expect('.button-zoom--in.disabled');
     // Click the 'TMS' button
-    browser.click('.preview-options__buttons:nth-child(2)');
+    browser.click('button=TMS');
     // TODO: waiting here is necessary because of a blocking sync AJAX hack
     // in map.js getLayerMaxZoom().
-    waitUntilGone('.button-zoom--in.disabled', 60000, true);
+    waitUntilGone('.button-zoom--in.disabled');
     const classes = $('.button-zoom--in').getAttribute('class');
     expect(classes).not.to.include('disabled');
   });

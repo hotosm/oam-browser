@@ -140,7 +140,7 @@ var Header = React.createClass({
               <ul className='meta-menu'>
                 <li>
                   <a
-                    href='https://upload.openaerialmap.org/'
+                    href='#/upload'
                     className='button-upload'
                     title='Go to OAM Uploader'
                   >

@@ -1,0 +1,300 @@
+// BUTTONS
+
+// GLOBAL
+
+button,
+html input[type=button],
+input[type=reset],
+input[type=submit] {
+  -webkit-appearance: button;
+  cursor: pointer;
+  @include transform(translateZ(0));
+}
+
+.bttn {
+  @include user-select(none);
+  display: inline-block;
+  font-family: $base-font-family;
+  font-weight: $base-font-bold;
+  font-style: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  border-radius: $global-radius;
+  border: 0;
+  background-image: none;
+  line-height: 1.5rem;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.75rem;
+  text-shadow: none;
+  opacity: 1;
+  box-shadow: inset 0 -2px 0 0 rgba($base-color, 0.12), 0 0 0 1px $brdr-rgba, 0 1px 2px 0 rgba($base-color, 0.24);
+  .open > &,
+  &:active,
+  &.active {
+    box-shadow: inset 0 2px 0 0 rgba($base-color, 0.12), 0 0 0 1px rgba($base-color, 0.24), 0 1px 2px 0 rgba($base-color, 0.24);
+    outline: none;
+    @include transform(translate(0));
+  }
+  &:hover {
+    opacity: 1;
+  }
+  &.disabled, &[disabled] {
+    @extend .disabled;
+  }
+  &.hide-txt {
+    &:before {
+      margin-right: 0;
+    }
+    &:after {
+      margin-left: 0;
+    }
+    > * {
+      @extend .visually-hidden;
+    }
+  }
+  @include transition(background-color 0.24s ease 0s, opacity 0s linear 0s);
+
+ /* Icon handling */
+  &::before, &::after,
+  [class^="collecticon-"], [class*=" collecticon-"] {
+    font-size: 1rem;
+  }
+  &::before { margin-right: 0.375rem; }
+  &::after { margin-left: 0.375rem; }
+
+  &::before,
+  &::after,
+  > * {
+    vertical-align: top;
+    display: inline-block;
+    line-height: inherit !important;
+  }
+}
+
+
+// COLORS
+
+// Base Light
+.bttn-base-light,
+.bttn-base-light:visited {
+  @include bttn-variation(#fff);
+  color: $base-font-color;
+}
+
+// Base Dark
+.bttn-base-dark,
+.bttn-base-dark:visited {
+  @include bttn-variation($base-font-color);
+  color: #fff;
+}
+
+// Primary
+.bttn-primary,
+.bttn-primary:visited {
+  @include bttn-variation($primary-color);
+  color: #fff;
+}
+
+// Secondary
+.bttn-secondary,
+.bttn-secondary:visited {
+  @include bttn-variation($secondary-color);
+  color: #fff;
+}
+
+
+// SIZES
+
+// Small (24px)
+.bttn-s,
+.bttn-group-s .bttn {
+  line-height: 1.25rem;
+  font-size: 0.875rem;
+  padding: 0.125rem 0.5rem;
+  min-width: 1.5rem;
+}
+
+// Medium (32px)
+// Default
+.bttn-m,
+.bttn-group-m .bttn {
+  line-height: 1.5rem;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.75rem;
+  min-width: 2rem;
+}
+
+/* Large (40px) */
+.bttn-l,
+.bttn-group-l .bttn {
+  line-height: 1.5rem;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  min-width: 2.5rem;
+}
+
+// ICONS
+
+.bttn {
+  &:before,
+  &:after {
+    opacity: 0.48;
+    font-size: 1rem;
+  }
+  &:before { margin-right: 0.375rem; }
+  &:after { margin-left: 0.375rem; }
+  &.next:after {
+    margin-left: 0.25rem;
+    @extend %oam-ds-icon-sm-chevron-right;
+  }
+  &.prev:before {
+    margin-right: 0.25rem;
+    @extend %oam-ds-icon-sm-chevron-left;
+  }
+  &.plus:before { @extend %oam-ds-icon-sm-plus; }
+  &.minus:before { @extend %oam-ds-icon-sm-minus; }
+  &.clipboard:before { @extend %oam-ds-icon-clipboard-list; }
+
+  &.delete:before { @extend %oam-ds-icon-trash-bin; }
+  &.edit:before { @extend %oam-ds-icon-pencil; }
+}
+
+.bttn-notxt {
+  padding-left: 0;
+  padding-right: 0;
+  &:before,
+  &:after {
+    margin: 0;
+    opacity: 1;
+  }
+  > * {
+    @extend .visually-hidden;
+  }
+}
+
+// GROUP
+
+.bttn-group,
+.bttn-group-vertical {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 0;
+  &.bttn-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    > li .bttn {
+      display: block;
+    }
+  }
+  > *,
+  > .bttn {
+    position: relative;
+    margin: 0;
+  }
+}
+
+.bttn-group {
+  > *,
+  > .bttn {
+    float: left;
+  }
+  > *:first-child:not(:last-child) .bttn,
+  > .bttn:first-child:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  > *:last-child:not(:first-child) .bttn,
+  > .bttn:last-child:not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  > *:not(:first-child):not(:last-child) .bttn,
+  > .bttn:not(:first-child):not(:last-child) {
+    border-radius: 0;
+  }
+  > .bttn + .bttn,
+  &.bttn-list > li + li {
+    margin-left: -1px;
+  }
+}
+
+.bttn-group-vertical {
+  > *,
+  > .bttn {
+    float: left;
+    clear: both;
+  }
+  > *:first-child:not(:last-child) .bttn,
+  > .bttn:first-child:not(:last-child) {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  > *:last-child:not(:first-child) .bttn,
+  > .bttn:last-child:not(:first-child) {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  > *:not(:first-child):not(:last-child) .bttn,
+  > .bttn:not(:first-child):not(:last-child) {
+    border-radius: 0;
+  }
+}
+
+
+// EXTENDS
+
+.bttn-submit {
+  @extend .bttn, .bttn-base-dark, .bttn-l;
+  min-width: 12rem;
+}
+
+.bttn-add-scene {
+  @extend .bttn, .bttn-base-light, .bttn-m, .plus;
+}
+
+.bttn-remove-scene {
+  @extend .bttn, .bttn-base-light, .bttn-m, .delete, .bttn-notxt;
+}
+
+.bttn-view-image {
+  @extend .bttn, .bttn-base-light, .bttn-s;
+}
+
+.bttn-request-token {
+  @extend .bttn, .bttn-base-light, .bttn-l;
+}
+
+.bttn-imagery-manual {
+  @extend .bttn, .bttn-base-light, .bttn-s;
+  &::before {
+    @extend %oam-ds-icon-link;
+  }
+}
+
+.bttn-imagery-dropbox {
+  @extend .bttn, .bttn-base-light, .bttn-s;
+  &::before {
+    //@extend %oam-ds-icon-dropbox;
+  }
+}
+
+.bttn-imagery-gdrive {
+  @extend .bttn, .bttn-base-light, .bttn-s;
+  &::before {
+    //@extend %oam-ds-icon-google-drive;
+  }
+}
+
+.bttn-imagery-upload {
+  @extend .bttn, .bttn-base-light, .bttn-s;
+  &::before {
+    @extend %oam-ds-icon-arrow-up;
+  }
+ }
+
+.bttn-remove-imagery {
+  @extend .bttn, .bttn-base-light, .bttn-s, .delete, .bttn-notxt;
+}

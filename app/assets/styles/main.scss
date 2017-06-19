@@ -9,25 +9,17 @@
  * Bourbon for extended SASS functionality:
  * http://bourbon.io/
  */
-
 @import "bourbon";
 
 /**
  * Jeet, a grid system designed for humans:
  * http://jeet.gs/
  */
-
 @import "jeet/index";
-
-/**
- * OpenAerialMap Design System
- */
 
 @import "oam-design-system";
 
-/* Structure and content
-   ========================================================================== */
-
+// Structure and content
 @import "skins";
 @import "animations";
 @import "structure";
@@ -37,3 +29,19 @@
 @import "modal-welcome";
 @import "modal-feedback";
 @import "misc";
+
+// These came from the oam-uploader repo when the uploader form
+// was in a separate repo.
+// TODO: Explore merging and consolodating.
+@import "neat";
+@import "uploader/neat-addons";
+@import "uploader/variables";
+@import "uploader/mixins";
+@import "uploader/base";
+@import "uploader/panels";
+@import "uploader/buttons";
+@import "uploader/forms";
+@import "uploader/overlays";
+@import "uploader/upload-progress";
+@import "uploader/react-widgets";
+

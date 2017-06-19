@@ -18,6 +18,7 @@ var revReplace = require('gulp-rev-replace');
 var SassString = require('node-sass').types.String;
 var notifier = require('node-notifier');
 var OAM_ADDONS = require('oam-design-system/gulp-addons');
+var cp = require('child_process');
 
 // /////////////////////////////////////////////////////////////////////////////
 // --------------------------- Variables -------------------------------------//
@@ -135,9 +136,9 @@ gulp.task('javascript', function () {
       })
       .pipe(source('bundle.js'))
       .pipe(buffer())
-      // Source maps.
       .pipe(sourcemaps.init({loadMaps: true}))
       .pipe(sourcemaps.write('./'))
+      // Source maps.
       .pipe(gulp.dest('.tmp/assets/scripts'))
       .pipe(reload({stream: true}));
   }
@@ -190,7 +191,7 @@ gulp.task('styles', function () {
       // Allows the watch to continue.
       this.emit('end');
     }))
-    .pipe($.sourcemaps.init())
+    .pipe(sourcemaps.init())
     .pipe($.sass({
       outputStyle: 'expanded',
       precision: 10,
@@ -201,9 +202,12 @@ gulp.task('styles', function () {
           return v;
         }
       },
-      includePaths: require('node-bourbon').with('.', 'node_modules/jeet/scss', OAM_ADDONS.scssPath)
+      includePaths: [].concat(
+        require('node-bourbon').with('.', 'node_modules/jeet/scss', OAM_ADDONS.scssPath),
+        require('node-neat').includePaths
+      )
     }))
-    .pipe($.sourcemaps.write())
+    .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('.tmp/assets/styles'))
     .pipe(reload({stream: true}));
 });

@@ -81,6 +81,7 @@
     "jeet": "6.1.2",
     "mocha": "^3.2.0",
     "node-bourbon": "^4.2.3",
+    "node-neat": "^1.7.2",
     "node-notifier": "^4.5.0",
     "node-sass": "^3.7.0",
     "react-addons-test-utils": "^15.5.1",
@@ -96,13 +97,17 @@
   },
   "dependencies": {
     "clipboard": "^1.5.10",
+    "joi": "^6.6.1",
     "form-serialize": "^0.7.1",
     "jquery": "^2.1.4",
     "lodash": "^3.8.0",
+    "lodash.defaultsdeep": "^4.3.5",
     "mapbox.js": "^2.1.9",
     "oam-design-system": "git+https://github.com/hotosm/oam-design-system.git#develop",
     "pretty-bytes": "^2.0.1",
     "rbush": "^1.4.1",
+    "moment": "^2.10.6",
+    "nets": "^3.1.0",
     "react": "^15.0.1",
     "react-addons-css-transition-group": "^15.1.0",
     "react-autocomplete": "^1.5.0",
@@ -110,10 +115,14 @@
     "react-keybinding": "git+https://github.com/gregeinfrank/react-keybinding.git#d733a47",
     "react-router": "^2.4.0",
     "reflux": "^0.4.1",
+    "react-validation-mixin": "^4.2.0",
+    "react-widgets": "^3.4.6",
+    "titlecase": "^1.0.2",
     "tilebelt": "^1.0.1",
     "turf-centroid": "^1.1.2",
     "turf-extent": "^1.0.4",
     "turf-inside": "^1.1.4",
-    "turf-overlaps": "^1.0.3"
+    "turf-overlaps": "^1.0.3",
+    "wellknown": "^0.5.0"
   }
 }

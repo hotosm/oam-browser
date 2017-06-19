@@ -40,5 +40,9 @@ module.exports = Reflux.createActions({
 
   'selectPreview': {},
 
-  'setBaseLayer': {}
+  'setBaseLayer': {},
+
+  'showNotification': {},
+  'clearNotification': {},
+  'clearNotificationAfter': {}
 });

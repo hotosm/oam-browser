@@ -1,4 +1,3 @@
-
 <h1 align="center">OAM Imagery Browser</h1>
 
 <a href="https://travis-ci.org/hotosm/oam-browser">
@@ -22,7 +21,7 @@ The OAM Imagery Browser is a part of the [OpenAerialMap](https://github.com/hoto
 
 Submit any issues and feedback regarding the imagery browser in the [issue tracker](https://github.com/hotosm/oam-browser/issues). 
 
-Access the site at http://beta.openaerialmap.org. 
+Access the site at http://openaerialmap.org. 
 
 
 ## Installation and Usage
@@ -68,6 +67,9 @@ The following options must be set: (The used file will depend on the context)
   - `initialView` - Coordinates for the initial view in format `[lng, lat]`
   - `catalog.url` - The [OAM catalog](https://github.com/hotosm/oam-catalog) url (no trailing slash).
   - `oamStatus` - The oam status healthcheck endpoint
+  - `OAMUploaderApi` - The address of the [Uploader Api](https://github.com/hotosm/oam-uploader-api).
+  - `googleClient` - The client provided by google to use for the GDrive integration.
+  - `googleDeveloperKey` - The developer key provided by google to use for the GDrive integration.
 
 Example:
 ``` 

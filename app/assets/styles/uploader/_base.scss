@@ -1,0 +1,257 @@
+.site-header {
+  padding-top: 2rem;
+  margin: 0;
+  text-align: center;
+  > .inner {
+    @extend .row;
+    @extend .centered;
+  }
+}
+
+.site-title {
+  position: relative;
+  margin: 0;
+  * {
+    vertical-align: top;
+  }
+  img {
+    display: inline-block;
+  }
+  span {
+    @extend .visually-hidden;
+  }
+  small {
+    @extend .antialiased;
+    display: inline-block;
+    margin: 0.45rem 0 0 0.5rem;
+    background: rgba($base-color, 0.64);
+    color: #fff;
+    border-radius: $global-radius;
+    padding: 0 0.25rem;
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+    text-transform: uppercase;
+  }
+}
+
+.centered {
+  max-width: $row-max-width;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.intro-block {
+  @extend .prose;
+  text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+
+  pre {
+    text-align: left;
+  }
+
+  @include media(medium-up) {
+    margin-bottom: 3rem;
+  }
+
+  @include media(xlarge-up) {
+  }
+}
+
+.intro-ctas {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  li {
+    display: inline-block;
+    margin: 0.25rem;
+  }
+  @include media(medium-up) {
+    margin: 0 0.25rem;
+  }
+}
+
+
+/* MISC */
+
+.notification {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  border-radius: $base-border-radius;
+  background: rgba($base-color, 0.8);
+  padding: 1rem 2.5rem 1rem 4rem;
+  color: #fff;
+  @extend .antialiased;
+  @include transition(all 0.24s ease 0s);
+  @include transform(translateZ(0));
+  overflow: hidden;
+  z-index: 9999;
+  &:before {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    height: 16rem;
+    line-height: 16rem;
+    width: 3rem;
+    text-align: center;
+    background: rgba($base-color, 0.92);
+    border-radius: $base-border-radius 0 0 $base-border-radius;
+    font-size: 1.5rem;
+    vertical-align: middle;
+    @include transform(translate(0, -50%));
+  }
+  &.notification-success:before {
+    background: rgba($success-color, 0.92);
+    @extend %oam-ds-icon-circle-tick;
+  }
+  &.notification-info:before {
+    background: rgba($info-color, 0.92);
+    @extend %oam-ds-icon-circle-information;
+  }
+  &.notification-warning:before {
+    background: rgba($warning-color, 0.92);
+    @extend %oam-ds-icon-circle-exclamation;
+  }
+  &.notification-alert:before {
+    background: rgba($danger-color, 0.92);
+    @extend %oam-ds-icon-circle-xmark;
+  }
+}
+
+.notification-dismiss {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
+  text-align: center;
+  height: 2rem;
+  width: 2rem;
+  line-height: 2rem;
+  font-size: 1rem;
+  &:visited, & {
+    color: rgba(#fff, 0.32);
+  }
+  span {
+    @extend .visually-hidden;
+  }
+  &:before {
+    @extend %oam-ds-icon-sm-xmark;
+  }
+}
+
+.status {
+  position: relative;
+  @extend .antialiased;
+  display: inline-block;
+  background: $base-font-color;
+  color: #fff;
+  border-radius: $base-border-radius;
+  padding: 0 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1.5rem;
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: $base-font-bold;
+  font-style: normal;
+  &:before {
+    font-size: 1rem;
+    margin-right: 0.25rem;
+    line-height: 1.5rem!important;
+    vertical-align: top;
+  }
+  &.status-active {
+    background: $secondary-color;
+  }
+  &.status-blocked {
+    background: $danger-color;
+  }
+  &.status-processing {
+    background: $info-color;
+    &:before {
+      @extend %oam-ds-icon-circle-information;
+    }
+  }
+  &.status-error {
+    background: $danger-color;
+    &:before {
+      @extend %oam-ds-icon-circle-xmark;
+    }
+  }
+  &.status-success {
+    background: $secondary-color;
+    &:before {
+      @extend %oam-ds-icon-circle-tick;
+    }
+  }
+}
+
+.message {
+  margin-top: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: $base-border-radius;
+  font-size: 0.875rem;
+  font-weight: $base-font-regular;
+  line-height: 1.25rem;
+  background: tint($base-color, 80%);
+  color: $base-font-color;
+  @include animation(fade-in 0.32s ease 0s 1);
+  &.message-alert {
+    background: tint($danger-color, 80%);
+    color: $danger-color;
+  }
+}
+
+.loading {
+  @extend .antialiased;
+  position: fixed;
+  z-index: 9980;
+  top: 50%;
+  left: 50%;
+  width: 8rem;
+  height: 8rem;
+  margin: -4rem 0 0 -4rem;
+  background: rgba($base-color, 0.8);
+  padding: 2rem 1rem;
+  border-radius: $base-border-radius;
+  color: #fff;
+  text-align: center;
+
+  opacity: 0;
+  visibility: hidden;
+  @include transform(scale(0));
+  @include transition(all 0.24s ease 0s);
+
+  &.revealed {
+    opacity: 1;
+    visibility: visible;
+    @include transform(scale(1));
+  }
+
+  &:before {
+    display: block;
+    @extend %oam-ds-icon-arrow-spin-clockwise;
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+    line-height: 1;
+    margin: 0 auto 0.5rem auto;
+    @include animation(spin-c 1s linear 0s infinite);
+  }
+}
+
+/* ANIMATIONS */
+
+@include keyframes(spin-c) {
+  from { @include transform(rotate(0deg)); }
+    to { @include transform(rotate(360deg)); }
+}
+
+@include keyframes(fade-in) {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

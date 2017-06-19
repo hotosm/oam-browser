@@ -1,0 +1,50 @@
+// We use these as default colors throughout
+$base-color: #1f3b45;                   // Midnight Blue
+$primary-color: #439ab4;              	// Blue
+$secondary-color: #68c39f;          	  // Green
+// $tertiary-color: #ffffff;            // Undefined
+
+$alert-color: #ea4f54;                  // Red
+$success-color: $secondary-color;       // Green
+$warning-color: #f6d55f;                // Yellow
+$info-color: $primary-color;            // Blue
+
+// We use these to control various font styles
+// $base-* refers to the base styles when there's nothing else to override them.
+$base-font-color: tint($base-color, 20%);
+$base-font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$base-font-style: normal;
+$base-font-light: 300;
+$base-font-regular: 400;
+$base-font-bold: 700;
+$base-font-weight: $base-font-light;
+
+$code-font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+
+// We use these to make sure border radius matches unless we want it different.
+$global-radius: 0.25rem;
+$semi-radius: $global-radius/2;
+$global-rounded: 60rem;
+
+// We use this rgba for shadowing
+$brdr-rgba: rgba($base-color, 0.08); // border-like shadow
+$frame-rgba: rgba($base-color, 0.16);
+
+$flat-shadow-rgba: rgba($base-color, 0.08); // flat drop shadow
+$spread-shadow-rgba: rgba($base-color, 0.24); // spread drop shadow
+
+// We use this set site row's min and max width
+$row-min-width: 320px;
+$row-max-width: 1280px;
+
+// Media query ranges
+$xsmall-range: (0, 543px);
+$small-range: (544px, 767px);
+$medium-range: (768px, 991px);
+$large-range: (992px, 1199px);
+$xlarge-range: (1200px);
+
+$screen: "only screen";
+
+// Inner paddings
+$inner-pad: 1rem;

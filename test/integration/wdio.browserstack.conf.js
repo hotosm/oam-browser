@@ -25,15 +25,8 @@ let browserStackConf = {
   services: ['browserstack'],
   browserstackLocal: true,
 
-  // TODO: Safari is difficult to trigger a click on the map with.
-  // Safari 10.0 has better support for moveTo() commands, but
-  // it has other problems. Look into selectively running tests
-  // depending on which browsers support the required commands
-  // for that test.
   capabilities: [{
     browserName: 'chrome'
-  }, {
-    browserName: 'firefox'
   }, {
     browserName: 'edge'
   }].map(function (browser) {

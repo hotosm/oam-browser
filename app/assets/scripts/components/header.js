@@ -148,6 +148,13 @@ var Header = React.createClass({
                   </a>
                 </li>
                 <li>
+                  <a
+                    href='http://localhost:4000/login?original_uri=http://localhost:3000'
+                  >
+                    <span>Login</span>
+                  </a>
+                </li>
+                <li>
                   <Dropdown
                     triggerElement='a'
                     triggerClassName='button-info'

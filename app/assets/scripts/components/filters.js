@@ -58,9 +58,9 @@ var Filters = React.createClass({
 
     var mapView = this.props.params.map.view;
     if (!mapView) {
-      var cookieView = cookie.read('oam-browser:map-view');
+      var cookieView = cookie.read('oam-map-view');
       if (cookieView !== 'undefined') {
-        mapView = cookie.read('oam-browser:map-view');
+        mapView = cookie.read('oam-map-view').replace(/|/g, ',');
       } else {
         mapView = config.map.initialView.concat(config.map.initialZoom).join(',');
       }

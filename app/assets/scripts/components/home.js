@@ -69,7 +69,7 @@ var Home = React.createClass({
     if (this.getMapViewOrDefault(this.props.params.map) !== nextMapView) {
       state.map.view = nextMapView;
       // Map view changed. Store cookie.
-      cookie.create('oam-browser:map-view', state.map.view);
+      cookie.create('oam-map-view', state.map.view.replace(/,/g, '|'));
     }
 
     // Selected Square
@@ -149,13 +149,13 @@ var Home = React.createClass({
    */
   getMapViewOrDefault: function (mapView) {
     if (!mapView) {
-      var cookieView = cookie.read('oam-browser:map-view');
+      var cookieView = cookie.read('oam-map-view');
       if (cookieView !== 'undefined' && cookieView !== null) {
-        mapView = cookie.read('oam-browser:map-view');
+        mapView = cookie.read('oam-map-view').replace(/\|/g, ',');
       } else {
         mapView = config.map.initialView.concat(config.map.initialZoom).join(',');
         // Let's correct the cookie value.
-        cookie.create('oam-browser:map-view', mapView);
+        cookie.create('oam-map-view', mapView.replace(/,/g, '|'));
       }
     }
     return mapView;

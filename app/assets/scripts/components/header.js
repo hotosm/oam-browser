@@ -1,5 +1,6 @@
 'use strict';
 import React from 'react';
+import Reflux from 'reflux';
 import { hashHistory } from 'react-router';
 import Keys from 'react-keybinding';
 import $ from 'jquery';
@@ -11,6 +12,7 @@ import Filters from './filters';
 import utils from '../utils/utils';
 import config from '../config';
 import mapStore from '../stores/map_store';
+import userStore from '../stores/user_store';
 import MapLayers from './map-layers';
 import SearchBox from './search_box';
 
@@ -22,7 +24,10 @@ var Header = React.createClass({
     params: React.PropTypes.object
   },
 
-  mixins: [Keys],
+  mixins: [
+    Keys,
+    Reflux.listenTo(userStore, 'onUserStoreData')
+  ],
 
   keybindings: {
     i: function () {
@@ -39,6 +44,13 @@ var Header = React.createClass({
     return {
       oamHealth: null
     };
+  },
+
+  onUserStoreData: function (_triggered) {
+    this.setState({
+      user: userStore.storage.user,
+      userLoggedIn: userStore.isLoggedIn()
+    });
   },
 
   fetchOAMHealth: function () {
@@ -148,11 +160,14 @@ var Header = React.createClass({
                   </a>
                 </li>
                 <li>
-                  <a
-                    href='http://localhost:4000/login?original_uri=http://localhost:3000'
-                  >
-                    <span>Login</span>
-                  </a>
+                  { this.state.userLoggedIn ? (
+                    <div>
+                      <span>{this.state.user.name}</span> |
+                      <a onClick={actions.userLogOut}>Logout</a>
+                    </div>
+                  ) : (
+                    <a href={userStore.loginUri}>Login</a>
+                  )}
                 </li>
                 <li>
                   <Dropdown

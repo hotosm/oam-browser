@@ -44,5 +44,8 @@ module.exports = Reflux.createActions({
 
   'showNotification': {},
   'clearNotification': {},
-  'clearNotificationAfter': {}
+  'clearNotificationAfter': {},
+
+  'userLogOut': {},
+  'userLogIn': {}
 });

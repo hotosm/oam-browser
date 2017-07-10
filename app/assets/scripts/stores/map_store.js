@@ -193,5 +193,4 @@ module.exports = Reflux.createStore({
   getBaseLayer: function () {
     return this.storage.baseLayer;
   }
-
 });

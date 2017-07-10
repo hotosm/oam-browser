@@ -8,27 +8,18 @@ import Account from './components/account';
 import UploaderForm from './components/uploader/home';
 import UploaderStatus from './components/uploader/status';
 
-var AppActions = require('./actions/actions');
-var cookie = require('./utils/cookie.js');
-
-var User = {
-  isLoggedIn: function () {
-    return !!cookie.read('oam-session');
-  }
-};
-
-function requireAuth (_nextState, replace) {
-  if (!User.isLoggedIn()) {
-    replace('/');
-    AppActions.showNotification('alert', 'You must be logged in.');
-  }
-}
+import User from './utils/user';
 
 var routes = (
   <Router history={hashHistory}>
-    <Route path='/' component={App}>
+    <Route path='/' component={App} onEnter={User.setup.bind(User)}>
       <IndexRoute component={Home} />
-      <Route name='account' path='/account' component={Account} onEnter={requireAuth} />
+      <Route
+        name='account'
+        path='/account'
+        component={Account}
+        onEnter={User.routeRequiresAuth.bind(User)}
+      />
       <Route name='upload' path='/upload' component={UploaderForm} />
       <Route name='upload-status' path='/upload/status/:id' component={UploaderStatus} />
       <Route name='map' path='/:map' component={Home}>

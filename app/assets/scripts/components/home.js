@@ -148,7 +148,7 @@ var Home = React.createClass({
    * @return mapView
    */
   getMapViewOrDefault: function (mapView) {
-    if (!mapView) {
+    if (!this.isMapViewValid(mapView)) {
       var cookieView = cookie.read('oam-map-view');
       if (cookieView !== 'undefined' && cookieView !== null) {
         mapView = cookie.read('oam-map-view').replace(/\|/g, ',');
@@ -159,6 +159,14 @@ var Home = React.createClass({
       }
     }
     return mapView;
+  },
+
+  // The router path for the map view is defined on the route like `/:mapview`.
+  // So we don't have a 404, we can only check if the URL looks like a map view.
+  // TODO: Return an actual 404 page.
+  isMapViewValid: function (mapView) {
+    if (typeof mapView !== 'string') return;
+    return mapView.split(',').length === 3;
   }
 });
 

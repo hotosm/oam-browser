@@ -46,5 +46,5 @@ module.exports.read = function (name) {
  */
 module.exports.erase = function (name, path) {
   path = path || '/';
-  module.exports.createCookie(name, '', -1, path);
+  this.create(name, '', -1, path);
 };

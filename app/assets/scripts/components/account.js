@@ -1,15 +1,10 @@
 'use strict';
 import React from 'react';
-// import Reflux from 'reflux';
-// import _ from 'lodash';
 
-// import cookie from '../utils/cookie';
-// import utils from '../utils/utils';
-// import actions from '../actions/actions';
-// import config from '../config.js';
+import userStore from '../stores/user_store';
 
 module.exports = React.createClass({
-  displayName: 'Home',
+  displayName: 'Account',
 
   propTypes: {
     params: React.PropTypes.object,
@@ -20,8 +15,7 @@ module.exports = React.createClass({
   ],
 
   getInitialState: function () {
-    return {
-    };
+    return {};
   },
 
   componentWillMount: function () {
@@ -36,7 +30,16 @@ module.exports = React.createClass({
   render: function () {
     return (
       <div>
-        User accounts
+        <a href="#/">Home</a>
+        <img
+          className="profile_pic"
+          src={userStore.storage.user.profile_pic_uri}
+        />
+        <ul>
+          <li>{userStore.storage.user.name}</li>
+          <li>{userStore.storage.user.contact_email}</li>
+          <li>Total images: {userStore.storage.user.images.length}</li>
+        </ul>
       </div>
     );
   }

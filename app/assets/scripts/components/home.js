@@ -29,7 +29,7 @@ var Home = React.createClass({
   getInitialState: function () {
     return {
       results: [],
-      loading: true,
+      loading: mapStore.footprintsWereFecthed(),
       map: {
         view: null
       },
@@ -101,14 +101,12 @@ var Home = React.createClass({
 
   componentDidMount: function () {
     if (this.state.selectedSquareQuadkey) {
-      // console.log('Home component mounted with quadkey', this.state.selectedSquareQuadkey);
       var bbox = utils.tileBboxFromQuadkey(this.state.selectedSquareQuadkey);
       actions.selectedBbox(bbox);
     }
   },
 
   render: function () {
-    // console.log('home props', this.props);
     var selectedItem = _.find(this.state.results, {_id: this.state.selectedItemId});
 
     return (

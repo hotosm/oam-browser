@@ -1,10 +1,3 @@
-// TODO:
-//   None of the state here is hooked into the React state/render lifecycle.
-//   So turn this object into into a wrapped component decorator and connect it
-//   to a store. See:
-//     https://auth0.com/blog/adding-authentication-to-your-react-flux-app/
-//     https://github.com/adambene/react-authenticate/blob/master/src/authenticate.js
-
 import $ from '../deprecate/jquery';
 import Reflux from 'reflux';
 
@@ -57,14 +50,16 @@ module.exports = Reflux.createStore({
   },
 
   // The concept of being fully logged in requires both the session cookie
-  // and populated user details aquired from a subsequent authenticated API
-  // request.
+  // and populated user details acquired from a subsequent authenticated API
+  // request. It goes without saying, though I shall say it anyway, none of
+  // the frontend code offers anykind of verification of authentication, that
+  // is purely the responsiility of the API.
   isLoggedIn: function () {
     return this.isUserInLocalStorage() && this.isSessionCookiePresent();
   },
 
   // Is this the first time we've checked if the user is logged in since
-  // they actually logged in?
+  // they actually logged in through an OAuth flow?
   isFirstCheckSinceSuccessfulOauth: function () {
     return !this.isUserInLocalStorage() && this.isSessionCookiePresent();
   },

@@ -12,7 +12,7 @@ import User from './utils/user';
 
 var routes = (
   <Router history={hashHistory}>
-    <Route path='/' component={App} onEnter={User.setup.bind(User)}>
+    <Route path='/' component={App}>
       <IndexRoute component={Home} />
       <Route
         name='account'

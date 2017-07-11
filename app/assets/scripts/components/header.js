@@ -10,6 +10,7 @@ import { Dropdown } from 'oam-design-system';
 import actions from '../actions/actions';
 import Filters from './filters';
 import utils from '../utils/utils';
+import User from '../utils/user';
 import config from '../config';
 import mapStore from '../stores/map_store';
 import userStore from '../stores/user_store';
@@ -46,6 +47,12 @@ var Header = React.createClass({
     };
   },
 
+  // TODO:
+  //   Refactor common user code into a decorator so that any component can be
+  //   simply augmented to include the relevant user functions/listenerers, etc.
+  //   Eg;
+  //     https://auth0.com/blog/adding-authentication-to-your-react-flux-app/
+  //     https://github.com/adambene/react-authenticate/blob/master/src/authenticate.js
   onUserStoreData: function (_triggered) {
     this.setState({
       user: userStore.storage.user,
@@ -65,6 +72,10 @@ var Header = React.createClass({
   feedbackClickHandler: function (e) {
     e.preventDefault();
     actions.openModal('feedback');
+  },
+
+  componentWillMount: function () {
+    User.setup();
   },
 
   componentDidMount: function () {
@@ -162,7 +173,11 @@ var Header = React.createClass({
                 <li>
                   { this.state.userLoggedIn ? (
                     <div>
-                      <span>{this.state.user.name}</span> |
+                      <img
+                        className="profile_pic"
+                        src={userStore.storage.user.profile_pic_uri}
+                      />
+                      <a href="#/account">Account</a> |&nbsp;
                       <a onClick={actions.userLogOut}>Logout</a>
                     </div>
                   ) : (

@@ -23,6 +23,7 @@ import { _ } from 'lodash';
 // when running tests.
 var configurations = {
   local: require('./config/local.js'),
+  test: require('./config/test.js'),
   staging: require('./config/staging.js'),
   production: require('./config/production.js')
 };
@@ -37,16 +38,8 @@ if (_.isEmpty(configurations.local)) {
   config = configurations.local;
 }
 
-// For integration tests (and as a general default) use the live catalog API.
-// TODO: Testing should be idempotent - it should not be dependent on any
-//       pre-existing or user-defined setup. Therefore test data should be
-//       created at the point of test runs.
-if (!_.has(configurations.local, 'catalog.url')) {
-  _.merge(config, {
-    catalog: {
-      url: configurations.production.catalog.url
-    }
-  });
+if (process.env.TRAVIS === 'true') {
+  config = configurations.test;
 }
 
 // Set all staging config
@@ -60,6 +53,8 @@ if (process.env.DS_ENV === 'production' || process.env.NODE_ENV === 'production'
 }
 
 // Copy over any production settings that weren't specifically set above
+// TODO: Explicitly declare each environment's config. Defaulting to production
+//   could be dangerous.
 for (var p in configurations.production) {
   if (typeof config[p] === 'undefined') {
     config[p] = configurations.production[p];

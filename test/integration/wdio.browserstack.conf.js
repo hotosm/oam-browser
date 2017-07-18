@@ -1,4 +1,5 @@
 'use strict';
+
 const os = require('os');
 const _ = require('lodash');
 const defaultConf = require('./wdio.default.conf.js').config;
@@ -7,8 +8,8 @@ const date = new Date();
 const time = date.toLocaleTimeString();
 
 const buildDefaults = {
-  project: 'hotosm/oam-browser(' + process.env.CIRCLE_BRANCH + ')',
-  build: process.env.CIRCLE_BUILD_NUM || `${os.hostname()} ${time}`,
+  project: 'hotosm/oam-browser(' + process.env.TRAVIS_BRANCH + ')',
+  build: process.env.TRAVIS_BUILD_NUMBER || `${os.hostname()} ${time}`,
   name: 'Frontend tests',
   os: 'WINDOWS',
   os_version: '10',

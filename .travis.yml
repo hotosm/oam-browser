@@ -1,8 +1,8 @@
 language: node_js
 
 # As long as the "Build on push" and "Build on PR" settings are on, then
-# building only the develop anad master  branches here means that we can
-# dedeuplicate the occurence of PR and Push builds on PRs.
+# building only the develop anad master branches here means that we can
+# deduplicate the occurence of PR and Push builds on PRs.
 branches:
   only:
     - develop
@@ -10,44 +10,62 @@ branches:
 
 env:
   global:
-    - CXX=g++-4.8
     - DEPLOY_BRANCH=master
     - STAGING_BRANCH=develop
+      # Github HTTPS push token for production Github pages deploy
     - secure: fZv+ikPPQFtFe6Trfj4dptPGwVS6tgzwv1L/omCtjan+EmM6soYzUjXb+TCOXhcU0D8fJZIPDpbjFE/p5VQYpeXV7YSPbkSy5/vvRy67NQPLsWcyraRpe8fwc/r/fgGEyDnFVlm0Qwd7AFU8xy0Zl3R5McUljUHVG/WXwiXhttM=
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-4.8
-cache:
-  apt: true
-  directories:
-    - node_modules
-before_install:
-  - chmod +x ./.build_scripts/deploy.sh
-  - chmod +x ./.build_scripts/lint.sh
-  - chmod +x ./.build_scripts/build.sh
-before_script:
-  - "./.build_scripts/lint.sh"
-  - npm test
-script:
-  - ".build_scripts/build.sh"
-deploy:
-  - provider: script
-    skip_cleanup: true
-    script: ".build_scripts/deploy.sh"
-    on:
-      branch: "${DEPLOY_BRANCH}"
-  - provider: s3
-    access_key_id: AKIAIQZ7AFVTXS64KG4A
-    secret_access_key:
-      secure: oiV9oH3ujdsu/LtjHPec9HIBntQISoc0cRWXsfOmEj1a4Wo4v6ZEIOTpXgfyFqrAyBkQVT8WhbbXwg1Dlxxk6fsJDoTNDstwVtRPzYZW+rER5YP8rfuxfR45JJ0OrHhgJhzbuD07xZhvlKzXfW+2fxKIOqaGVuSdNFZXIqEIfbQ=
-    bucket: hotosm-oam-staging
-    region: us-east-1
-    skip_cleanup: true
-    local_dir: dist
-    acl: public_read
-    on:
-      repo: hotosm/oam-browser
-      branch: "${STAGING_BRANCH}"
+      # OAM ENV
+    - secure: HCCPmMJQhYJ4hG+YCcZc9hmFDThpXsNZDO8ktMQjluvIZAarsoBn6BXOIyyATil9bkGgdzzQzKilimg2TNFFsGCjyd8vxsbSA7igrxahxmM0qSGsVoAzIoWKsqJJHY0muHto/7Mmg47xa0sI2CcHaX5aKIPC2l8FD5GLYcdn39c=
+    - secure: ZyTkxBgknlW11Aow0jQBv8pFdANlkrpe24QeWgKBh3LHVYqMBQoIbEWOAKL80tH+D7REOqLkZfvpqqGAkHLFBglbfT9D0V8w0zs7MzNlSYBH3txJ3NgI921GjeO/Z4dkp30C/jajKUWqEff3U6spp2RSNsv8rym1E3b/uKHeTI4=  
+
+jobs:
+  include:
+
+    - stage: Specs
+      before_script:
+        - "./.build_scripts/lint.sh"
+      script:
+        - npm test
+
+    # These test against the Catalog API version as defined by the frontend's
+    # config requirements.
+    - stage: Integration against Catalog API versions
+      matrix:
+        include:
+          env:
+            # `pinned` checks the `catalog_version` in package.json
+            - CATALOG_API_VERSION=pinned
+              # `latest` just checks out the master branch
+            - CATALOG_API_VERSION=latest
+        allow_failures:
+          - env: CATALOG_API_VERSION=latest
+      script:
+        - test/integration/build.sh $CATALOG_API_VERSION
+        - test/integration/run.sh
+      after_success:
+        - ".build_scripts/build.sh"
+
+    - stage: Deploy
+      script: skip
+      deploy:
+        # Only for production branch: deploys to Github pages
+        - provider: script
+          skip_cleanup: true
+          script: ".build_scripts/deploy.sh"
+          on:
+            branch: "${DEPLOY_BRANCH}"
+
+        # Only for staging branch: deploys to s3
+        - provider: s3
+          access_key_id: AKIAIQZ7AFVTXS64KG4A
+          secret_access_key:
+            secure: oiV9oH3ujdsu/LtjHPec9HIBntQISoc0cRWXsfOmEj1a4Wo4v6ZEIOTpXgfyFqrAyBkQVT8WhbbXwg1Dlxxk6fsJDoTNDstwVtRPzYZW+rER5YP8rfuxfR45JJ0OrHhgJhzbuD07xZhvlKzXfW+2fxKIOqaGVuSdNFZXIqEIfbQ=
+          bucket: hotosm-oam-staging
+          region: us-east-1
+          skip_cleanup: true
+          local_dir: dist
+          acl: public_read
+          on:
+            repo: hotosm/oam-browser
+            branch: "${STAGING_BRANCH}"
+

@@ -73,21 +73,9 @@ var App = React.createClass({
     var params = this.props.params || {};
     var query = this.props.location.query || {};
 
-    // If we're on a specific coordinate location.
-    const isLocation = this.props.routes[this.props.routes.length - 1].name === 'map';
-    // If we're on the homepage.
-    const isHome = this.props.location.pathname === '/';
-
-    // Is this the main map view?
-    const isMap = isLocation || isHome;
-
     return (
       <div>
-
-        { isMap
-          ? <Header params={params} query={query} />
-          : null
-        }
+        <Header params={params} query={query} />
 
         <main className='page__body' role='main'>
           <section className='layout layout--app'>

@@ -5,8 +5,7 @@ var ValidationMixin = require('react-validation-mixin');
 var Joi = require('joi');
 var nets = require('nets');
 var Scene = require('./scene');
-var Dropdown = require('oam-design-system').Dropdown;
-var apiUrl = require('../../config').OAMUploaderApi;
+var apiUrl = require('../../config').catalog.url;
 var AppActions = require('../../actions/actions');
 var cookie = require('../../utils/cookie.js');
 var $ = require('jquery');
@@ -34,10 +33,6 @@ module.exports = React.createClass({
   mixins: [ValidationMixin],
 
   validatorTypes: {
-    'uploader-name': Joi.string().label('Name').required(),
-    'uploader-token': Joi.string().required().hex().length(64).label('Token'),
-    'uploader-email': Joi.string().email().label('Email'),
-
     scenes: Joi.array().items(
       Joi.object().keys({
         title: Joi.string().min(1).required().label('Title'),
@@ -267,7 +262,7 @@ module.exports = React.createClass({
   },
 
   uploadFile: function (file, token, callback) {
-    fetch(url.resolve(apiUrl, '/uploads/url?access_token=' + token), {
+    fetch(url.resolve(apiUrl, '/uploads/url'), {
       method: 'POST',
       body: JSON.stringify({
         name: file.newName,
@@ -364,8 +359,8 @@ module.exports = React.createClass({
             scenes: this.state.scenes.map(function (scene) {
               var other = scene['contact-type'] === 'other';
               var contact = {
-                name: other ? scene['contact-name'] : uploader.name,
-                email: other ? scene['contact-email'] : uploader.email
+                name: other ? scene['contact-name'] : 'uploader',
+                email: other ? scene['contact-email'] : 'uploader'
               };
 
               var tms = scene['tile-url'].trim();
@@ -576,80 +571,10 @@ module.exports = React.createClass({
   render: function () {
     return (
       <div>
-
-        <header className='site-header' role='banner'>
-          <div className='inner'>
-            <div className='site-headline'>
-              <h1 className='site-title'>
-                <img
-                  src='assets/graphics/layout/oam-logo-h-pos.svg'
-                  width='167'
-                  height='32'
-                  alt='OpenAerialMap logo'
-                />
-                <span>OpenAerialMap</span>
-                {' '}
-                <small>Uploader</small>
-              </h1>
-            </div>
-          </div>
-        </header>
-
-        <div className='intro-block'>
-          <p>
-            Welcome to the
-            {' '}
-            <a href='http://openaerialmap.org/' title='Visit OpenAerialMap'>
-              OpenAerialMap
-            </a>
-            {' '}
-            Imagery Uploader.
-            <br />
-            {' '}
-            Use the form below to submit your imagery - a valid upload token is needed.
-            <br />
-            {' '}
-            <a
-              href='https://github.com/hotosm/oam-uploader'
-              title='Go to the GitHub repo'
-            >
-              Read the documentation
-            </a>
-            {' '}
-            to learn how to contribute.
-          </p>
-          <Dropdown
-            element='div'
-            className='drop dropdown center'
-            triggerTitle='Request a token'
-            triggerClassName='bttn-request-token'
-            triggerText='Request a token'
-          >
-            <ul className='drop-menu request-token-menu' role='menu'>
-              <li className='github has-icon-bef'>
-                <a
-                  href='https://github.com/hotosm/oam-uploader-admin/issues/new?title=New%20Token--%5BNAME%5D&body=Name%3A%20%0AEmail%3A%20%0ALocation%20of%20imagery%3A%20%0ASource%20of%20imagery%3A%20%0AShort%20description%20of%20collection%3A%0AHave%20you%20received%20approval%20for%20making%20this%20imagery%20available%20(yes%2Fno)%3F%3A'
-                  title='Open GitHub issue'
-                >
-                  <span>Open GitHub issue</span>
-                </a>
-              </li>
-              <li className='email has-icon-bef'>
-                <a
-                  href='mailto:info%40openaerialmap.org?subject=New%20Token--%5BNAME%5D&body=Name%3A%20%0AEmail%3A%20%0ALocation%20of%20imagery%3A%20%0ASource%20of%20imagery%3A%20%0AShort%20description%20of%20collection%3A%0AHave%20you%20received%20approval%20for%20making%20this%20imagery%20available%20(yes%2Fno)%3F%3A'
-                  title='Send email'
-                >
-                  <span>Send email</span>
-                </a>
-              </li>
-            </ul>
-          </Dropdown>
-        </div>
-
         <section className='panel upload-panel'>
           <header className='panel-header'>
             <div className='panel-headline'>
-              <h1 className='panel-title'>Upload</h1>
+              <h1 className='panel-title'>Upload Imagery</h1>
             </div>
           </header>
           <div className='panel-body'>
@@ -661,70 +586,6 @@ module.exports = React.createClass({
               <div className='meter'>
                 <span />
               </div>
-
-              <fieldset className='form-fieldset general'>
-                <legend className='form-legend'>General</legend>
-                <div className='form-group'>
-                  <label className='form-label' htmlFor='uploader-token'>
-                    Token
-                  </label>
-                  <div className='form-control-set'>
-                    <input
-                      type='password'
-                      className='form-control'
-                      placeholder='Key'
-                      name='uploader-token'
-                      id='uploader-token'
-                      onBlur={this.handleValidation('uploader-token')}
-                      onChange={this.onValueChange}
-                      value={this.state['uploader-token']}
-                    />
-                    {this.renderErrorMessage(
-                      this.getValidationMessages('uploader-token')[0]
-                    )}
-                  </div>
-                </div>
-                <div className='form-group'>
-                  <label className='form-label' htmlFor='uploader-name'>
-                    Uploader <span className='visually-hidden'>name</span>
-                  </label>
-                  <div className='form-control-set'>
-                    <input
-                      type='text'
-                      className='form-control'
-                      placeholder='Name'
-                      name='uploader-name'
-                      id='uploader-name'
-                      onBlur={this.handleValidation('uploader-name')}
-                      onChange={this.onValueChange}
-                      value={this.state['uploader-name']}
-                    />
-                    {this.renderErrorMessage(
-                      this.getValidationMessages('uploader-name')[0]
-                    )}
-                  </div>
-                </div>
-                <div className='form-group'>
-                  <label className='form-label none' htmlFor='uploader-email'>
-                    <span className='visually-hidden'>Uploader email</span>
-                  </label>
-                  <div className='form-control-set'>
-                    <input
-                      type='email'
-                      className='form-control'
-                      placeholder='Email'
-                      name='uploader-email'
-                      id='uploader-email'
-                      onBlur={this.handleValidation('uploader-email')}
-                      onChange={this.onValueChange}
-                      value={this.state['uploader-email']}
-                    />
-                    {this.renderErrorMessage(
-                      this.getValidationMessages('uploader-email')[0]
-                    )}
-                  </div>
-                </div>
-              </fieldset>
 
               {this.state.scenes.map(this.renderScene)}
 

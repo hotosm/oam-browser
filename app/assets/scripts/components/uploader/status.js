@@ -9,7 +9,7 @@ var tilebelt = require('tilebelt');
 var util = require('util');
 var url = require('url');
 var nets = require('nets');
-var apiUrl = require('../../config.js').OAMUploaderApi;
+var apiUrl = require('../../config.js').catalog.url;
 var browserUrl = require('../../config.js').OAMBrowserUrl;
 
 function dateFormat (date) {

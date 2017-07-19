@@ -81,6 +81,7 @@ module.exports = Reflux.createStore({
   logOut: function () {
     cookie.erase('oam-session');
     localStorage.removeItem('oam-user');
+    localStorage.removeItem('upload-form-fields');
     this.storage.user = null;
     this.trigger('user');
     hashHistory.push({pathname: '/'});

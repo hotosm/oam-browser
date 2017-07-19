@@ -38,17 +38,17 @@ if (_.isEmpty(configurations.local)) {
   config = configurations.local;
 }
 
-if (process.env.TRAVIS === 'true') {
+if (process.env.NODE_ENV === 'test' || process.env.TRAVIS === 'true') {
   config = configurations.test;
 }
 
 // Set all staging config
-if (process.env.DS_ENV === 'staging' || process.env.NODE_ENV === 'staging') {
+if (process.env.NODE_ENV === 'staging') {
   config = configurations.staging;
 }
 
 // Set all production config
-if (process.env.DS_ENV === 'production' || process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production') {
   config = configurations.production;
 }
 

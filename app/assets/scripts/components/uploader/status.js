@@ -106,15 +106,17 @@ module.exports = React.createClass({
               <dt>Tile service</dt>,
               <dd>{scene.tms}</dd>
             ] : '' }
-            <dt>Contact</dt>
-            <dd>
-              <span className='name'>
-                {scene.contact.name}
-              </span>
-              <span className='email'>
-                {scene.contact.email}
-              </span>
-            </dd>
+            { scene.contact ? [
+              <dt>Contact</dt>,
+              <dd>
+                <span className='name'>
+                  {scene.contact.name}
+                </span>
+                <span className='email'>
+                  {scene.contact.email}
+                </span>
+              </dd>
+            ] : '' }
           </dl>
 
           {scene.images.map(this.renderImage)}
@@ -209,15 +211,6 @@ module.exports = React.createClass({
           </header>
           <div className='panel-body'>
             <dl className='status-details'>
-              <dt>Uploader</dt>
-              <dd>
-                <span className='name'>
-                  {data.uploader.name}
-                </span>
-                <span className='email'>
-                  {data.uploader.email}
-                </span>
-              </dd>
               <dt>Date</dt>
               <dd>{dateFormat(data.createdAt)}</dd>
             </dl>

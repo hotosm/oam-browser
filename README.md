@@ -23,7 +23,6 @@ Submit any issues and feedback regarding the imagery browser in the [issue track
 
 Access the site at http://openaerialmap.org. 
 
-
 ## Installation and Usage
 
 The steps below will walk you through setting up your own instance of the oam-browser.
@@ -56,53 +55,8 @@ After installing the projects there will be 3 main files:
   - `production.js`
 
 The `production.js` file serves as base and the other 2 will override it as needed:
-  - `staging.js` will be loaded whenever the env variable `DS_ENV` is set to staging.
+  - `staging.js` will be loaded whenever the env variable `NODE_ENV` is set to staging.
   - `local.js` will be loaded if it exists.
-
-The following options must be set: (The used file will depend on the context)
-  - `map.mapbox.accessToken` - The token for mapbox.
-  - `initialZoom` - The initial zoom for the map.
-  - `minZoom` - The minimum zoom allowed.
-  - `maxZoom` - The maximum zoom allowed.
-  - `initialView` - Coordinates for the initial view in format `[lng, lat]`
-  - `catalog.url` - The [OAM catalog](https://github.com/hotosm/oam-catalog) url (no trailing slash).
-  - `oamStatus` - The oam status healthcheck endpoint
-  - `OAMUploaderApi` - The address of the [Uploader Api](https://github.com/hotosm/oam-uploader-api).
-  - `googleClient` - The client provided by google to use for the GDrive integration.
-  - `googleDeveloperKey` - The developer key provided by google to use for the GDrive integration.
-
-Example:
-``` 
-module.exports = {
-  map: {
-    mapbox: {
-      accessToken: 'pk.eyJ1IjoiaG90IiwiYSI6ImNpdmlkM2lkMDAwYTAydXBnNXFkd2EwemsifQ.KPrUb_mKlPmHCR6LNrSihQ'
-    },
-
-    initialZoom: 8,
-    minZoom: 2,
-    maxZoom: undefined,
-
-    initialView: [60.177, 25.148]
-  },
-  catalog: {
-    url: 'https://api.openaerialmap.org'
-  },
-  oamStatus: 'https://status.openaerialmap.org/healthcheck'
-};
-```
-
-#### Map layers
-The layers for the layer switcher can be customized in `app/assets/scripts/utils/map-layers-js`.
-Each layer definition must be and object with the following properties:
-```
-  {
-    id: 'unique id',
-    name: 'Display name',
-    url: 'full tms url'
-  }
-```
-Note: The url **must** be a tms url like: 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'
 
 #### Starting the app
 
@@ -118,7 +72,7 @@ npm run lint
 ```
 Lints the app according with the defined style.
 
-# Deployment
+# Production deployment
 To prepare the app for deployment run:
 
 ```

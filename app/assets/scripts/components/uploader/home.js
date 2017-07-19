@@ -7,13 +7,10 @@ var nets = require('nets');
 var Scene = require('./scene');
 var apiUrl = require('../../config').catalog.url;
 var AppActions = require('../../actions/actions');
-var cookie = require('../../utils/cookie.js');
 var $ = require('jquery');
 var _ = require('lodash');
 
 var config = require('../../config');
-
-const cookieNamespace = 'oam-uploader';
 
 // Sanity note:
 // There are some places where the component state is being altered directly.
@@ -80,11 +77,6 @@ module.exports = React.createClass({
 
   // Store entered values to these values in order to prepopulate the form on the next visit
   fieldsToPrepopulate: {
-    parent: [
-      'uploader-token',
-      'uploader-name',
-      'uploader-email'
-    ],
     scene: [
       'title',
       'platform-type',
@@ -102,39 +94,15 @@ module.exports = React.createClass({
   },
 
   getInitialState: function () {
-    if (process.env.DS_DEBUG) {
-      return {
-        loading: false,
-
-        // Form properties.
-        'uploader-token': '',
-        'uploader-name': 'Dummy Dum Dum',
-        'uploader-email': 'zimmy@fake.com',
-        scenes: [this.getSceneDataTemplate()],
-        uploadActive: false,
-        uploadProgress: 0,
-        uploadError: false,
-        uploadStatus: ''
-      };
-    }
-
-    let defaults = {
+    return {
       loading: false,
-
       // Form properties.
-      'uploader-token': '',
-      'uploader-name': '',
-      'uploader-email': '',
       scenes: [this.getSceneDataTemplate()],
       uploadActive: false,
       uploadProgress: 0,
       uploadError: false,
       uploadStatus: ''
     };
-
-    defaults = this.applyCookieValues(this.fieldsToPrepopulate.parent, defaults);
-
-    return defaults;
   },
 
   getSceneDataTemplate: function () {
@@ -145,69 +113,32 @@ module.exports = React.createClass({
     midnight.setHours(0);
     var now = new Date();
 
-    if (process.env.DS_DEBUG) {
-      return {
-        title: 'An imaginary scene',
-        'platform-type': 'satellite',
-        sensor: 'x',
-        'date-start': midnight.toISOString(),
-        'date-end': now.toISOString(),
-        'img-loc': [this.getSceneImgLocTemplate()],
-        'tile-url': '',
-        provider: 'Mocks R Us',
-        'contact-type': 'uploader',
-        'contact-name': '',
-        'contact-email': '',
-        license: 'CC-BY 4.0',
-        tags: 'tropical, paradise'
-      };
-    }
-
     let defaults = {
+      'title': '',
       'platform-type': 'satellite',
-      sensor: '',
+      'sensor': '',
       'date-start': midnight.toISOString(),
       'date-end': now.toISOString(),
       'img-loc': [],
       'tile-url': '',
-      provider: '',
+      'provider': '',
       'contact-type': 'uploader',
       'contact-name': '',
       'contact-email': '',
-      license: 'CC-BY 4.0',
-      tags: ''
+      'license': 'CC-BY 4.0',
+      'tags': ''
     };
 
-    defaults = this.applyCookieValues(this.fieldsToPrepopulate.scene, defaults);
+    // Merge in any fields from a previous upload
+    defaults = _.defaults(
+      JSON.parse(localStorage.getItem('upload-form-fields')) || {},
+      defaults
+    );
 
     return defaults;
-  },
-
-  cookieNameForFormField: function (field) {
-    return `${cookieNamespace}:${field}`;
-  },
-
-  applyCookieValues: function (fields, defaults) {
-    fields.map((field) => {
-      defaults[field] = cookie.read(this.cookieNameForFormField(field)) || defaults[field];
-    });
-    return defaults;
-  },
-
-  saveValuesToCookie: function (fields, source) {
-    fields.map((field) => {
-      cookie.create(this.cookieNameForFormField(field), source[field]);
-    });
   },
 
   getSceneImgLocTemplate: function () {
-    if (process.env.DS_DEBUG) {
-      return {
-        url: 'http://fake-imagery.net/fake.tif',
-        origin: 'manual'
-      };
-    }
-
     return {
       url: '',
       origin: ''
@@ -254,14 +185,11 @@ module.exports = React.createClass({
 
   resetForm: function () {
     this.setState({
-      'uploader-token': null,
-      'uploader-name': null,
-      'uploader-email': null,
       scenes: [this.getSceneDataTemplate()]
     });
   },
 
-  uploadFile: function (file, token, callback) {
+  uploadFile: function (file, callback) {
     fetch(url.resolve(apiUrl, '/uploads/url'), {
       method: 'POST',
       body: JSON.stringify({
@@ -348,20 +276,15 @@ module.exports = React.createClass({
           // 4 - Hide loading. -- this.setState({loading: false});
           // 5 - Reset form when success. -- this.resetForm();
 
-          var token = this.state['uploader-token'];
-
-          var uploader = {
-            name: this.state['uploader-name'],
-            email: this.state['uploader-email']
-          };
           var data = {
-            uploader: uploader,
             scenes: this.state.scenes.map(function (scene) {
-              var other = scene['contact-type'] === 'other';
-              var contact = {
-                name: other ? scene['contact-name'] : 'uploader',
-                email: other ? scene['contact-email'] : 'uploader'
-              };
+              var contact = null;
+              if (scene['contact-type'] === 'other') {
+                contact = {
+                  name: scene['contact-name'],
+                  email: scene['contact-email']
+                };
+              }
 
               var tms = scene['tile-url'].trim();
               tms = tms.length === 0 ? undefined : tms;
@@ -407,10 +330,9 @@ module.exports = React.createClass({
             })
           };
 
-          // Keep these values to prepopulate the form for convenience on any future uploads
-          this.saveValuesToCookie(this.fieldsToPrepopulate.parent, this.state);
-          // Just use the values from the first dataset/scene to save for prepopulation
-          this.saveValuesToCookie(this.fieldsToPrepopulate.scene, this.state.scenes[0]);
+          // Use the values from the first dataset/scene to save for prepopulation of
+          // future uploads
+          localStorage.setItem('upload-form-fields', JSON.stringify(this.state.scenes[0]));
 
           // Gather list of files to upload
           let uploads = [];
@@ -428,14 +350,14 @@ module.exports = React.createClass({
           const totalFiles = uploads.length;
           if (!totalFiles) {
             // Submit the form now
-            this.submitData(data, token);
+            this.submitData(data);
           } else {
             // Upload list of files before submitting the form
             let progressStats = {};
             uploads.forEach(file => {
               // Init progress status to 0
               progressStats[file.data.name] = 0;
-              this.uploadFile(file, token, (err, result) => {
+              this.uploadFile(file, (err, result) => {
                 if (err) {
                   console.log('error', err);
                   this.setState({
@@ -481,7 +403,7 @@ module.exports = React.createClass({
                     uploadActive: false,
                     uploadStatus: 'Upload complete!'
                   });
-                  this.submitData(data, token);
+                  this.submitData(data);
                 }
               });
             });
@@ -491,15 +413,16 @@ module.exports = React.createClass({
     );
   },
 
-  submitData: function (data, token) {
+  submitData: function (data) {
     nets(
       {
-        url: url.resolve(apiUrl, '/uploads?access_token=' + token),
+        url: url.resolve(apiUrl, '/uploads'),
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        withCredentials: true
       },
       function (err, resp, body) {
         if (err) {
@@ -521,7 +444,7 @@ module.exports = React.createClass({
         } else {
           var message = null;
           if (resp.statusCode === 401) {
-            message = <span>The provided token is not valid.</span>;
+            message = <span>You are not logged in.</span>;
           } else {
             message = (
               <span>

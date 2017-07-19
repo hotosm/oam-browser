@@ -25,9 +25,13 @@ var routes = (
         path='/upload'
         component={UploaderForm}
         onEnter={User.routeRequiresAuth.bind(User)}
-      >
-        <Route name='upload-status' path='/upload/status/:id' component={UploaderStatus} />
-      </Route>
+      />
+      <Route
+        name='upload-status'
+        path='/upload/status/:id'
+        component={UploaderStatus}
+        onEnter={User.routeRequiresAuth.bind(User)}
+      />
       <Route name='map' path='/:map' component={Home}>
         <Route name='results' path=':square' component={Home}>
           <Route name='item' path=':item_id' component={Home} />

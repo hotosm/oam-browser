@@ -10,7 +10,7 @@ module.exports = Reflux.createStore({
   // This is a simple HTTP endpoint on the API that triggers the entire OAuth flow
   // and redirects back to the original login point with a set session cookie, if
   // everything went well.
-  loginUri: config.catalog.url + '/login?original_uri=http://localhost:3000',
+  loginUri: config.catalog.url + '/login?original_uri=' + config.OAMBrowserUrl,
 
   storage: {
     // User's details, name, profile pic, etc.

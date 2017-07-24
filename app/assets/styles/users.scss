@@ -1,0 +1,19 @@
+.account__images {
+  ul, li {
+    list-style-type: none;
+  }
+  &-upload {
+    display: block;
+    margin-bottom: 1em;
+    img {
+      display: inline-block;
+      margin-right: 2em;
+      vertical-align: top;
+    }
+    ul {
+      display: inline-block;
+      margin-left: 0;
+      padding-left: 0;
+    }
+  }
+}

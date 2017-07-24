@@ -2,8 +2,28 @@
 import centroid from 'turf-centroid';
 import extent from 'turf-extent';
 import tilebelt from 'tilebelt';
+import parse from 'wellknown';
 import config from '../config';
 import $ from '../deprecate/jquery';
+
+// Use image metadata to construct OAM Browser URL describing the map view,
+// associated grid tile. Image ID is not available since it has not been indexed,
+// by the Catalog yet
+// adapted from "https://github.com/hotosm/openaerialmap.org/blob/master/app/assets/scripts/main.js#L36-L50
+module.exports.imageUri = function (imgData) {
+  const previewZoom = 10;
+  // Use turf to calculate the center of the image
+  const footprint = parse(imgData.footprint);
+  const center = centroid(footprint).geometry.coordinates;
+
+  // Calculate the tile quadkey for the image using Mapbox tilebelt
+  // * a square at zoom Z is the same as a map tile at zoom Z+3 (previewZoom)
+  const tile = tilebelt.pointToTile(center[0], center[1], previewZoom + 3);
+  const quadKey = tilebelt.tileToQuadkey(tile);
+  const mapView = center[0] + ',' + center[1] + ',' + previewZoom;
+  // Return OAM Browser URL including map view, tile, and image id
+  return `#/${mapView}/${quadKey}/`;
+};
 
 /**
  * Converts a string to a coordinates array.

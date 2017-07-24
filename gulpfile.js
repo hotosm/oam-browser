@@ -65,15 +65,9 @@ gulp.task('serve', ['vendorScripts', 'javascript', 'styles', 'fonts'], function 
   });
 
   // watch for changes
-  gulp.watch([
-    'app/*.html',
-    'app/assets/graphics/**/*',
-    '.tmp/assets/fonts/**/*'
-  ]).on('change', reload);
-
-  gulp.watch('app/assets/styles/**/*.scss', ['styles']);
-  gulp.watch('app/assets/fonts/**/*', ['fonts']);
+  gulp.watch(['app/*.html']).on('change', reload);
   gulp.watch('package.json', ['vendorScripts']);
+  gulp.watch('app/assets/styles/**/*.scss', ['styles']);
 });
 
 gulp.task('clean', function () {
@@ -200,7 +194,7 @@ gulp.task('styles', function () {
     }))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('.tmp/assets/styles'))
-    .pipe(reload({stream: true}));
+    .pipe(browserSync.stream({match: '**/*.css'}));
 });
 
 gulp.task('html', ['styles'], function () {

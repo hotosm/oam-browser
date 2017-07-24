@@ -75,7 +75,12 @@ var App = React.createClass({
 
     return (
       <div>
-        <Header params={params} query={query} />
+        <Header
+          params={params}
+          query={query}
+          routes={this.props.routes}
+          location={this.props.location}
+        />
 
         <main className='page__body' role='main'>
           <section className='layout layout--app'>

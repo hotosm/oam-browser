@@ -22,6 +22,8 @@ var Header = React.createClass({
 
   propTypes: {
     query: React.PropTypes.object,
+    routes: React.PropTypes.array,
+    location: React.PropTypes.object,
     params: React.PropTypes.object
   },
 
@@ -97,6 +99,15 @@ var Header = React.createClass({
     hashHistory.push(`/${mapView}/${quadKey}/${latest._id}`);
   },
 
+  isMap: function () {
+    // If we're on a specific coordinate location.
+    const isLocation = this.props.routes[this.props.routes.length - 1].name === 'map';
+    // If we're on the homepage.
+    const isHome = this.props.location.pathname === '/';
+    // Is this the main map view?
+    return isLocation || isHome;
+  },
+
   render: function () {
     var oamHealthClass = 'drop__menu-item status-item ';
     switch (this.state.oamHealth) {
@@ -119,7 +130,7 @@ var Header = React.createClass({
           <div className='page__headline'>
             <h1 className='page__title'>
               <span className='mast-logo mast-logo--h'>
-                <a href='https://openaerialmap.org/' title='Visit homepage'>
+                <a href='#/' title='Home'>
                   <img
                     className='mast-logo__image'
                     src='assets/graphics/layout/oam-logo-h-pos.svg'
@@ -128,48 +139,42 @@ var Header = React.createClass({
                     alt='OpenAerialMap logo'
                   />
                   <strong className='mast-logo__text'>OpenAerialMap</strong>
+                  <small className='mast-logo__label'>Browser</small>
                 </a>
-                <small className='mast-logo__label'>Browser</small>
               </span>
             </h1>
           </div>
 
           <nav className='page__prime-nav' role='navigation'>
-            <div className='nav-block-prime'>
-              <SearchBox />
-              <ul className='app-menu'>
-                <li>
-                  <Filters
-                    params={this.props.params}
-                    query={this.props.query}
-                  />
-                </li>
-                <li>
-                  <a
-                    href='#'
-                    onClick={this.onBrowseLatestClick}
-                    className='button-latest'
-                    title='Go to the latest imagery'
-                  >
-                    <span>Latest imagery</span>
-                  </a>
-                </li>
-                <li className='map-layers'>
-                  <MapLayers />
-                </li>
-              </ul>
-            </div>
+            { this.isMap()
+              ? <div className='nav-block-prime'>
+                  <SearchBox />
+                  <ul className='app-menu'>
+                    <li>
+                      <Filters
+                        params={this.props.params}
+                        query={this.props.query}
+                      />
+                    </li>
+                    <li>
+                      <a
+                        href='#'
+                        onClick={this.onBrowseLatestClick}
+                        className='button-latest'
+                        title='Go to the latest imagery'
+                      >
+                        <span>Latest imagery</span>
+                      </a>
+                    </li>
+                    <li className='map-layers'>
+                      <MapLayers />
+                    </li>
+                  </ul>
+                </div>
+              : null
+            }
             <div className='nav-block-sec'>
               <ul className='meta-menu'>
-                <li>
-                  <a
-                    href='#/upload'
-                    className='button-upload'
-                    title='Go to OAM Uploader'
-                  >
-                    <span>Upload</span>
-                  </a>
-                </li>
                 <li>
                   { this.state.userLoggedIn ? (
                     <div>
@@ -183,6 +188,15 @@ var Header = React.createClass({
                   ) : (
                     <a href={userStore.loginUri}>Login</a>
                   )}
+                </li>
+                <li>
+                  <a
+                    href='#/upload'
+                    className='button-upload'
+                    title='Go to OAM Uploader'
+                  >
+                    <span>Upload</span>
+                  </a>
                 </li>
                 <li>
                   <Dropdown

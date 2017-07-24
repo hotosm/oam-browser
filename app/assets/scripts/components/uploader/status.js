@@ -2,39 +2,17 @@
 var Router = require('react-router');
 var React = require('react');
 var moment = require('moment');
-var turfCentroid = require('turf-centroid');
-var parse = require('wellknown');
-var tilebelt = require('tilebelt');
-
 var util = require('util');
 var url = require('url');
 var nets = require('nets');
+
 var apiUrl = require('../../config.js').catalog.url;
-var browserUrl = require('../../config.js').OAMBrowserUrl;
+var utils = require('../../utils/utils');
 
 function dateFormat (date) {
   // http://momentjs.com/docs/#/displaying/
   return moment(date).format('YYYY-M-D [at] H:mm');
 }
-
-// Use image metadata to construct OAM Browser URL describing the map view,
-// associated grid tile. Image ID is not available since it has not been indexed,
-// by the Catalog yet
-// adapted from "https://github.com/hotosm/openaerialmap.org/blob/master/app/assets/scripts/main.js#L36-L50
-const constructUrl = (imgData) => {
-  const previewZoom = 10;
-  // Use turf to calculate the center of the image
-  const footprint = parse(imgData.footprint);
-  const center = turfCentroid(footprint).geometry.coordinates;
-
-  // Calculate the tile quadkey for the image using Mapbox tilebelt
-  // * a square at zoom Z is the same as a map tile at zoom Z+3 (previewZoom)
-  const tile = tilebelt.pointToTile(center[0], center[1], previewZoom + 3);
-  const quadKey = tilebelt.tileToQuadkey(tile);
-  const mapView = center[0] + ',' + center[1] + ',' + previewZoom;
-  // Return OAM Browser URL including map view, tile, and image id
-  return `${browserUrl}/#/${mapView}/${quadKey}/`;
-};
 
 module.exports = React.createClass({
   displayName: 'Status',
@@ -132,7 +110,7 @@ module.exports = React.createClass({
     var messages = (image.messages || []).map(function (msg) { return <li>{msg}</li>; });
     if (image.status === 'finished') {
       var imgData = image.metadata;
-      var url = constructUrl(imgData);
+      var url = utils.imageUri(imgData);
 
       status = 'status-success';
       messages.unshift(

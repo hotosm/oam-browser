@@ -55,7 +55,6 @@
   }
 }
 
-
 /* Navigation */
 
 .nav-block-prime,
@@ -235,6 +234,12 @@
   @extend .clearfix;
 }
 
+.page__content {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 80px;
+  max-width: $row-max-width;
+}
 
 /* Footer
    ========================================================================== */
@@ -251,7 +256,7 @@
   > .inner {
     @extend .row, .row--centered;
   }
-  
+
   *:last-child {
     margin-bottom: 0;
   }

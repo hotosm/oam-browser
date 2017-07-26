@@ -52,8 +52,8 @@ module.exports = Reflux.createStore({
   // The concept of being fully logged in requires both the session cookie
   // and populated user details acquired from a subsequent authenticated API
   // request. It goes without saying, though I shall say it anyway, none of
-  // the frontend code offers anykind of verification of authentication, that
-  // is purely the responsiility of the API.
+  // the frontend code offers any kind of verification of authentication, that
+  // is purely the responsibility of the API.
   isLoggedIn: function () {
     return this.isUserInLocalStorage() && this.isSessionCookiePresent();
   },

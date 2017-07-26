@@ -192,6 +192,7 @@ module.exports = React.createClass({
   uploadFile: function (file, callback) {
     fetch(url.resolve(apiUrl, '/uploads/url'), {
       method: 'POST',
+      credentials: 'include',
       body: JSON.stringify({
         name: file.newName,
         type: file.data.type
@@ -199,7 +200,7 @@ module.exports = React.createClass({
     })
       .then(response => response.json())
       .then(data => {
-        let presignedUrl = data.url;
+        let presignedUrl = data.results.url;
         $.ajax({
           xhr: function () {
             let xhr = new window.XMLHttpRequest();

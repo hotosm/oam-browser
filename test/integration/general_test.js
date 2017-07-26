@@ -52,20 +52,15 @@ function logOut () {
 
 function submitImagery (imageryUri, title = 'Test imagery') {
   logIn();
-
-  let status = '';
   browser.url('#/upload');
-  $('#scene-0-title').setValue(title);
-  $('#scene-0-sensor').setValue('Automated Test Sensor');
-  browser.click('button=Url');
-  $('#scene-0-img-loc-0-url').setValue(imageryUri);
-  if ($$('.bttn-remove-imagery').length === 2) {
-    // The URL button is pretty sensitive, sometimes you press
-    // it and 2 inputs appear.
-    $$('.bttn-remove-imagery')[1].click();
-  }
-  $('#scene-0-provider').setValue('Automated Test Provider');
+  fillInUploadForm(title);
+  inputRemoteImageryUri(imageryUri);
   browser.click('button=Submit');
+  return waitForImageryProcessing();
+}
+
+function waitForImageryProcessing () {
+  let status = '';
   browser.waitForVisible('a=Check upload status.');
   browser.click('a=Check upload status.');
   browser.waitForVisible('h2=Status upload');
@@ -77,6 +72,22 @@ function submitImagery (imageryUri, title = 'Test imagery') {
     browser.refresh();
   }
   return false;
+}
+
+function fillInUploadForm (title) {
+  $('#scene-0-title').setValue(title);
+  $('#scene-0-sensor').setValue('Automated Test Sensor');
+  $('#scene-0-provider').setValue('Automated Test Provider');
+}
+
+function inputRemoteImageryUri (imageryUri) {
+  browser.click('button=Url');
+  $('#scene-0-img-loc-0-url').setValue(imageryUri);
+  // The URL button is pretty sensitive, sometimes you press
+  // it and 2 inputs appear.
+  if ($$('.bttn-remove-imagery').length === 2) {
+    $$('.bttn-remove-imagery')[1].click();
+  }
 }
 
 function getImageryResults () {
@@ -156,17 +167,30 @@ describe('Uploading', function () {
 
   describe('Basic imagery submission', function () {
     it('should submit imagery', () => {
-      let title = Math.random().toString(36).slice(2);
+      const title = Math.random().toString(36).slice(2);
       submitImagery(everest, title);
       browser.click('a=View image');
       getImageryResults();
       browser.click('.pane-body-inner .results-list li:first-child');
       expect('h1=' + title).to.be.there();
-      let src = $('.single-media img').getAttribute('src');
+      const src = $('.single-media img').getAttribute('src');
       expect(src).to.match(/_thumb/);
       // TODO: In order to test the actual TMS we need to fire up the dynamic tiler locally
       // and use visual regression. Looks like there's already a nice wdio extension for
       // that: https://github.com/zinserjan/wdio-visual-regression-service
+    });
+
+    it('should submit a local file', () => {
+      const title = Math.random().toString(36).slice(2);
+      const localPath = `${__dirname}/fixtures/everest-utm.gtiff`;
+      logIn();
+      browser.url('#/upload');
+      fillInUploadForm(title);
+      browser.click('button=Local File');
+      browser.chooseFile('#scene-0-img-loc-0-url', localPath);
+      browser.click('button=Submit');
+      waitForImageryProcessing();
+      expect('a=View image').to.be.there();
     });
   });
 

@@ -35,9 +35,10 @@ let browserStackConf = {
     build: process.env.TRAVIS_BUILD_NUMBER || `${os.hostname()} ${time}`,
     name: 'Against API from ' + (process.env.CATALOG_API_VERSION || process.env.TRAVIS_BRANCH),
     os: 'WINDOWS',
-    os_version: '10',
+    os_version: '8',
     'browserstack.debug': true,
     'browserstack.local': true,
+    'browserstack.networkLogs': true,
     'browserstack.localIdentifier': tunnelId
   }]
 };

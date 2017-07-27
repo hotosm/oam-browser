@@ -106,12 +106,6 @@ describe('Map', function () {
   this.retries(3); // this requires function() not ()=>
 
   describe('Basic', function () {
-    beforeEach(() => browser.url('/'));
-
-    it('should have the right page title', () => {
-      expect(browser.getTitle()).to.eq('OpenAerialMap Browser');
-    });
-
     it('should find imagery over the Himalayas', () => {
       submitImagery(everest);
       browser.url('/');

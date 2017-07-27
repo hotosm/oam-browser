@@ -91,7 +91,7 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0",
-    "wdio-browserstack-service": "^0.1.4",
+    "wdio-browserstack-service": "^0.1.11",
     "wdio-mocha-framework": "^0.5.10",
     "wdio-spec-reporter": "^0.1.0",
     "webdriverio": "^4.7.1"

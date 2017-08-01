@@ -186,7 +186,10 @@ var Header = React.createClass({
                       <a onClick={actions.userLogOut}>Logout</a>
                     </div>
                   ) : (
-                    <a href={userStore.loginUri}>Login</a>
+                    <div className="oauth-logins">
+                      <a href={userStore.facebookLoginUri}>Facebook</a> |&nbsp;
+                      <a href={userStore.googleLoginUri}>Google</a>
+                    </div>
                   )}
                 </li>
                 <li>

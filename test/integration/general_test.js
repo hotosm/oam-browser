@@ -25,7 +25,7 @@ function finishLoading () {
 
 function logIn () {
   browser.url('/');
-  browser.click('a=Login');
+  browser.click('a=Facebook');
   if (browser.getUrl().match(/facebook.com/)) {
     // Note that if you change the user, you will need to manually
     // step in at the point where you accept authorisation of the app.

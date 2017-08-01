@@ -10,7 +10,9 @@ module.exports = Reflux.createStore({
   // This is a simple HTTP endpoint on the API that triggers the entire OAuth flow
   // and redirects back to the original login point with a set session cookie, if
   // everything went well.
-  loginUri: config.catalog.url + '/login?original_uri=' + config.OAMBrowserUrl,
+  loginUri: function (service) {
+    return config.catalog.url + '/oauth/' + service + '?original_uri=' + config.OAMBrowserUrl;
+  },
 
   storage: {
     // User's details, name, profile pic, etc.
@@ -18,6 +20,9 @@ module.exports = Reflux.createStore({
   },
 
   init: function () {
+    // To begin OAuth login flows
+    this.facebookLoginUri = this.loginUri('facebook');
+    this.googleLoginUri = this.loginUri('google');
     this.listenTo(actions.userLogIn, this.logIn);
     this.listenTo(actions.userLogOut, this.logOut);
     this.checkIfUserAlreadyLoggedIn();

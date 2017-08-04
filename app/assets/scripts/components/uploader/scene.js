@@ -30,6 +30,7 @@ module.exports = React.createClass({
     addImageryLocationToScene: React.PropTypes.func,
     removeImageryLocatioFromScene: React.PropTypes.func,
 
+    type: React.PropTypes.string,
     index: React.PropTypes.number,
     total: React.PropTypes.number,
     data: React.PropTypes.object
@@ -191,8 +192,74 @@ Please check the instructions on how to use files from Google Drive.
     );
   },
 
+  renderImagerySource: function (i) {
+    return (
+      <div className='form-group'>
+        <label className='form-label'>Imagery location</label>
+        <div className='form-control-set'>
+          {this.props.data['img-loc'].map((o, imgI) => (
+            <ImageryLocation
+              key={imgI}
+              onValueChange={this.onImgLocValueChange}
+              renderErrorMessage={this.props.renderErrorMessage}
+              getValidationMessages={this.props.getValidationMessages}
+              handleValidation={this.props.handleValidation}
+              removeImageryLocation={this.removeImageryLocation}
+              sceneName={this.getName('img-loc')}
+              sceneId={this.getId('img-loc')}
+              index={imgI}
+              validationName={'scenes.' + i + '.img-loc'}
+              total={this.props.data['img-loc'].length}
+              data={o}
+            />
+          ))}
+          <div className='imagery-location-import'>
+            <button
+              type='button'
+              className='bttn-imagery-upload'
+              onClick={() => this.addImageryLocation('upload')}
+              title='Upload file directly'>
+              <span>Local File</span>
+            </button>
+            <button
+              type='button'
+              className='bttn-imagery-manual'
+              onClick={() => this.addImageryLocation('manual')}
+              title='Write url'>
+              <span>Url</span>
+            </button>
+            <button
+              type='button'
+              className='bttn-imagery-dropbox'
+              onClick={this.importDropboxClick}
+              title='Import file from dropbox'>
+              <span>Dropbox</span>
+            </button>
+            <button
+              type='button'
+              className='bttn-imagery-gdrive'
+              onClick={this.importGDriveClick}
+              title='Import file from Google Drive'>
+              <span>Drive</span>
+            </button>
+            {this.props.renderErrorMessage(this.props.getValidationMessages('scenes.' + i + '.img-loc')[0])}
+            <p className='form-help'>
+              Select file source location. <br />
+              Click <a href='https://docs.openaerialmap.org/uploader/uploader-form/#via-google-drive'
+                title='How to select files from google drive'>
+                here</a> for instructions on how to use Google Drive.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  },
+
   renderContact: function () {
-    if (this.props.data['contact-type'] !== 'other') {
+    const isOther = this.props.data['contact-type'] === 'other';
+    const isUploader = this.props.type === 'uploader';
+
+    if ((isUploader && !isOther)) {
       return null;
     }
 
@@ -200,43 +267,35 @@ Please check the instructions on how to use files from Google Drive.
     var i = this.props.index;
     return (
       <div>
-        <div className='form-group'>
-          <label
-            className='form-label none'
-            htmlFor={this.getId('contact-name')}>
-            <span className='visually-hidden'>Contact name</span>
-          </label>
-          <div className='form-control-set'>
-            <input
-              type='text'
-              className='form-control'
-              placeholder='Name'
-              name={this.getName('contact-name')}
-              id={this.getId('contact-name')}
-              onBlur={this.props.handleValidation('scenes.' + i + '.contact-name')}
-              onChange={this.onChange}
-              value={this.props.data['contact-name']} />
-            {this.props.renderErrorMessage(this.props.getValidationMessages('scenes.' + i + '.contact-name')[0])}
-          </div>
-        </div>
-        <div className='form-group'>
-          <label
-            className='form-label none'
-            htmlFor={this.getId('contact-email')}>
-            <span className='visually-hidden'>Contact email</span>
-          </label>
-          <div className='form-control-set'>
-            <input
-              type='email'
-              className='form-control'
-              placeholder='Email'
-              name={this.getName('contact-email')}
-              id={this.getId('contact-email')}
-              onBlur={this.props.handleValidation('scenes.' + i + '.contact-email')}
-              onChange={this.onChange} value={this.props.data['contact-email']} />
-            {this.props.renderErrorMessage(this.props.getValidationMessages('scenes.' + i + '.contact-email')[0])}
-          </div>
-        </div>
+        <label
+          className='form-label none'
+          htmlFor={this.getId('contact-name')}>
+          <span className='visually-hidden'>Contact name</span>
+        </label>
+        <input
+          type='text'
+          className='form-control'
+          placeholder='Name'
+          name={this.getName('contact-name')}
+          id={this.getId('contact-name')}
+          onBlur={this.props.handleValidation('scenes.' + i + '.contact-name')}
+          onChange={this.onChange}
+          value={this.props.data['contact-name']} />
+        {this.props.renderErrorMessage(this.props.getValidationMessages('scenes.' + i + '.contact-name')[0])}
+        <label
+          className='form-label none'
+          htmlFor={this.getId('contact-email')}>
+          <span className='visually-hidden'>Contact email</span>
+        </label>
+        <input
+          type='email'
+          className='form-control'
+          placeholder='Email'
+          name={this.getName('contact-email')}
+          id={this.getId('contact-email')}
+          onBlur={this.props.handleValidation('scenes.' + i + '.contact-email')}
+          onChange={this.onChange} value={this.props.data['contact-email']} />
+        {this.props.renderErrorMessage(this.props.getValidationMessages('scenes.' + i + '.contact-email')[0])}
       </div>
     );
   },
@@ -248,7 +307,7 @@ Please check the instructions on how to use files from Google Drive.
     return (
       <fieldset className='form-fieldset scene'>
         <legend className='form-legend'>Dataset {i > 0 ? i + 1 : ''}</legend>
-        {this.renderRemoveBtn()}
+        {this.props.type === 'uploader' ? this.renderRemoveBtn() : null}
         <div className='form-group'>
           <label className='form-label' htmlFor={this.getId('title')}>Title</label>
           <div className='form-control-set'>
@@ -374,64 +433,7 @@ Please check the instructions on how to use files from Google Drive.
             </p>
           </div>
         </div>
-        <div className='form-group'>
-          <label className='form-label'>Imagery location</label>
-          <div className='form-control-set'>
-            {this.props.data['img-loc'].map((o, imgI) => (
-              <ImageryLocation
-                key={imgI}
-                onValueChange={this.onImgLocValueChange}
-                renderErrorMessage={this.props.renderErrorMessage}
-                getValidationMessages={this.props.getValidationMessages}
-                handleValidation={this.props.handleValidation}
-                removeImageryLocation={this.removeImageryLocation}
-                sceneName={this.getName('img-loc')}
-                sceneId={this.getId('img-loc')}
-                index={imgI}
-                validationName={'scenes.' + i + '.img-loc'}
-                total={this.props.data['img-loc'].length}
-                data={o}
-              />
-            ))}
-            <div className='imagery-location-import'>
-              <button
-                type='button'
-                className='bttn-imagery-upload'
-                onClick={() => this.addImageryLocation('upload')}
-                title='Upload file directly'>
-                <span>Local File</span>
-              </button>
-              <button
-                type='button'
-                className='bttn-imagery-manual'
-                onClick={() => this.addImageryLocation('manual')}
-                title='Write url'>
-                <span>Url</span>
-              </button>
-              <button
-                type='button'
-                className='bttn-imagery-dropbox'
-                onClick={this.importDropboxClick}
-                title='Import file from dropbox'>
-                <span>Dropbox</span>
-              </button>
-              <button
-                type='button'
-                className='bttn-imagery-gdrive'
-                onClick={this.importGDriveClick}
-                title='Import file from Google Drive'>
-                <span>Drive</span>
-              </button>
-              {this.props.renderErrorMessage(this.props.getValidationMessages('scenes.' + i + '.img-loc')[0])}
-              <p className='form-help'>
-                Select file source location. <br />
-                Click <a href='https://docs.openaerialmap.org/uploader/uploader-form/#via-google-drive'
-                  title='How to select files from google drive'>
-                  here</a> for instructions on how to use Google Drive.
-              </p>
-            </div>
-          </div>
-        </div>
+        {this.props.type === 'uploader' ? this.renderImagerySource(i) : null}
         <div className='form-group'>
           <label className='form-label' htmlFor={this.getId('tile-url')}>Tile service</label>
           <div className='form-control-set'>
@@ -490,34 +492,36 @@ Please check the instructions on how to use files from Google Drive.
             </p>
           </div>
         </div>
-        <div className='form-group'>
+        <div className='form-group scene-contact'>
           <label className='form-label'>Contact</label>
-          <div className='form-options-set'>
-            <div className='radio'>
-              <label>
-                <input
-                  type='radio'
-                  name={this.getRadioName('contact-type')}
-                  onChange={this.onChange}
-                  value='uploader'
-                  checked={this.props.data['contact-type'] === 'uploader'} />
-                Same as uploader
-              </label>
+          <div className='form-control-set'>
+            <div className={'form-options-set ' + (this.props.type === 'editor' ? 'hidden' : '')}>
+              <div className='radio'>
+                <label>
+                  <input
+                    type='radio'
+                    name={this.getRadioName('contact-type')}
+                    onChange={this.onChange}
+                    value='uploader'
+                    checked={this.props.data['contact-type'] === 'uploader'} />
+                  Same as uploader
+                </label>
+              </div>
+              <div className='radio'>
+                <label>
+                  <input
+                    type='radio'
+                    name={this.getRadioName('contact-type')}
+                    onChange={this.onChange}
+                    value='other'
+                    checked={this.props.data['contact-type'] === 'other'} />
+                  Other
+                </label>
+              </div>
             </div>
-            <div className='radio'>
-              <label>
-                <input
-                  type='radio'
-                  name={this.getRadioName('contact-type')}
-                  onChange={this.onChange}
-                  value='other'
-                  checked={this.props.data['contact-type'] === 'other'} />
-                Other
-              </label>
-            </div>
+            {this.renderContact()}
           </div>
         </div>
-        {this.renderContact()}
         <div className='form-group'>
           <label className='form-label'>License</label>
           <div className='form-options-set'>

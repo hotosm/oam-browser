@@ -5,6 +5,7 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import App from './components/app';
 import Home from './components/home';
 import Account from './components/account';
+import ImageryEdit from './components/imagery_edit';
 import UploaderForm from './components/uploader/home';
 import UploaderStatus from './components/uploader/status';
 
@@ -18,6 +19,12 @@ var routes = (
         name='account'
         path='/account'
         component={Account}
+        onEnter={User.routeRequiresAuth.bind(User)}
+      />
+      <Route
+        name='imagery'
+        path='/imagery/:id/edit'
+        component={ImageryEdit}
         onEnter={User.routeRequiresAuth.bind(User)}
       />
       <Route

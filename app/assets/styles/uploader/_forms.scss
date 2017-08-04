@@ -349,3 +349,20 @@ input[type=radio] {
     margin-right: 1rem;
   }
 }
+
+.scene-contact {
+  label {
+    margin-bottom: 0;
+    min-height: 0;
+  }
+
+  input {
+    margin-bottom: 1em;
+  }
+
+  .radio {
+    display: inline-block;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+  }
+}

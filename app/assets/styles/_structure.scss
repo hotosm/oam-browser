@@ -325,7 +325,7 @@
     > *:last-child {
       margin-bottom: 0;
     }
-    
+
     @include media(medium-up) {
       @include col(10/12);
     }

@@ -1,6 +1,8 @@
 'use strict';
 import React from 'react';
+var $ = require('jquery');
 
+var apiUrl = require('../config').catalog.url;
 import userStore from '../stores/user_store';
 import utils from '../utils/utils';
 
@@ -16,16 +18,28 @@ module.exports = React.createClass({
   ],
 
   getInitialState: function () {
-    return {};
-  },
-
-  componentWillMount: function () {
-  },
-
-  componentWillReceiveProps: function (nextProps) {
+    return {
+      images: []
+    };
   },
 
   componentDidMount: function () {
+    this.fetchUserData();
+  },
+
+  // TODO:
+  //   * Refactor into centralised API class
+  //   * Call to /meta not /user
+  //   * Paginate
+  fetchUserData: function () {
+    $.get({
+      url: apiUrl + '/user',
+      xhrFields: {
+        withCredentials: true
+      }
+    }).done((response) => {
+      this.setState({images: response.results.images});
+    });
   },
 
   render: function () {
@@ -40,8 +54,8 @@ module.exports = React.createClass({
           {userStore.storage.user.name}
         </h1>
         <ul className="account__images">
-          { userStore.storage.user.images.length > 0
-            ? userStore.storage.user.images.map((image, i) =>
+          { this.state.images.length > 0
+            ? this.state.images.map((image, i) =>
                 <li className="account__images-upload">
                   <img src={image.properties.thumbnail} width="100" key={i} />
                   <ul>
@@ -52,7 +66,7 @@ module.exports = React.createClass({
                     <li>File size: {image.file_size / 1000}k</li>
                     <li>
                       <a href={utils.imageUri(image)}>View</a> |
-                      Edit |
+                      <a href={'/#/imagery/' + image._id + '/edit'}>Edit</a> |
                       Delete
                     </li>
                   </ul>

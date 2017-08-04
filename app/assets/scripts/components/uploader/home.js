@@ -7,6 +7,7 @@ var nets = require('nets');
 var Scene = require('./scene');
 var apiUrl = require('../../config').catalog.url;
 var AppActions = require('../../actions/actions');
+var imageryValidations = require('../shared/imagery_validations');
 var $ = require('jquery');
 var _ = require('lodash');
 
@@ -31,47 +32,25 @@ module.exports = React.createClass({
 
   validatorTypes: {
     scenes: Joi.array().items(
-      Joi.object().keys({
-        title: Joi.string().min(1).required().label('Title'),
-        'platform-type': Joi.string()
-          .required()
-          .valid('satellite', 'aircraft', 'uav', 'ballon', 'kite'),
-        sensor: Joi.string().required().label('Sensor'),
-        'date-start': Joi.date().required().label('Date start'),
-        'date-end': Joi.date()
-          .min(Joi.ref('date-start'))
-          .max('now')
-          .required()
-          .label('Date End'),
-
-        'img-loc': Joi.array()
-          .min(1)
-          .items(
-            Joi.object().keys({
-              url: Joi.string().uri().required().label('Imagery url'),
-              origin: Joi.string().required().label('Imagery file origin'),
-              file: Joi.label('File').when('origin', {
-                is: 'upload',
-                then: Joi.object().required()
-              })
-            })
-          )
-          .label('Imagery location'),
-
-        'tile-url': Joi.string().allow('').label('Tile service'),
-        provider: Joi.string().required().label('Provider'),
-        'contact-type': Joi.string().required().valid('uploader', 'other'),
-        'contact-name': Joi.label('Name').when('contact-type', {
-          is: 'other',
-          then: Joi.string().required()
-        }),
-        'contact-email': Joi.label('Email').when('contact-type', {
-          is: 'other',
-          then: Joi.string().email().required()
-        }),
-        license: Joi.string().required().label('License'),
-        tags: Joi.string().allow('').label('Tags')
-      })
+      Joi.object().keys(
+        _.assign(
+          imageryValidations, {
+            'img-loc': Joi.array()
+              .min(1)
+              .items(
+                Joi.object().keys({
+                  url: Joi.string().uri().required().label('Imagery url'),
+                  origin: Joi.string().required().label('Imagery file origin'),
+                  file: Joi.label('File').when('origin', {
+                    is: 'upload',
+                    then: Joi.object().required()
+                  })
+                })
+              )
+              .label('Imagery location')
+          }
+        )
+      )
     )
   },
 
@@ -477,6 +456,7 @@ module.exports = React.createClass({
   renderScene: function (data, index) {
     return (
       <Scene
+        type={'uploader'}
         key={index}
         total={this.state.scenes.length}
         index={index}

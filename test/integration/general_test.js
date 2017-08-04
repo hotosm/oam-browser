@@ -211,5 +211,17 @@ describe('Uploading', function () {
       expect(classes).not.to.include('disabled');
     });
   });
+
+  describe('Updating images', function () {
+    it('should update an images title', () => {
+      submitImagery(everest);
+      browser.url('#/account');
+      browser.click('a=Edit');
+      $('#scene-0-title').setValue('A different title');
+      browser.click('button=Submit');
+      browser.url('#/account');
+      expect('strong=A different title').to.be.there();
+    });
+  });
 });
 

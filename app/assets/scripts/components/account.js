@@ -42,6 +42,18 @@ module.exports = React.createClass({
     });
   },
 
+  deleteImagery: function (id) {
+    $.ajax({
+      url: apiUrl + '/meta/' + id,
+      method: 'DELETE',
+      xhrFields: {
+        withCredentials: true
+      }
+    }).done((response) => {
+      this.fetchUserData();
+    });
+  },
+
   render: function () {
     return (
       <div className="page__content">
@@ -65,9 +77,9 @@ module.exports = React.createClass({
                     <li>Resolution: {image.gsd}m</li>
                     <li>File size: {image.file_size / 1000}k</li>
                     <li>
-                      <a href={utils.imageUri(image)}>View</a> |
-                      <a href={'/#/imagery/' + image._id + '/edit'}>Edit</a> |
-                      Delete
+                      <a href={utils.imageUri(image)}>View</a> |&nbsp;
+                      <a href={'/#/imagery/' + image._id + '/edit'}>Edit</a> |&nbsp;
+                      <a onClick={() => this.deleteImagery(image._id)} className='imagery-delete'>Delete</a>
                     </li>
                   </ul>
                 </li>

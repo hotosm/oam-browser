@@ -156,7 +156,7 @@ describe('User authentication', function () {
   });
 });
 
-describe('Uploading', function () {
+describe('Imagery', function () {
   this.retries(3); // this requires function() not ()=>
 
   describe('Basic imagery submission', function () {
@@ -221,6 +221,15 @@ describe('Uploading', function () {
       browser.click('button=Submit');
       browser.url('#/account');
       expect('strong=A different title').to.be.there();
+    });
+
+    it('should delete an image', () => {
+      submitImagery(everest, 'Delete me :(');
+      browser.url('#/account');
+      expect('strong=Delete me :(').to.be.there();
+      browser.click('a=Delete');
+      browser.url('#/account');
+      expect('strong=Delete me :(').not.to.be.there();
     });
   });
 });

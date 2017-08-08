@@ -19,6 +19,7 @@ module.exports = React.createClass({
 
   getInitialState: function () {
     return {
+      loading: true,
       images: []
     };
   },
@@ -32,17 +33,26 @@ module.exports = React.createClass({
   //   * Call to /meta not /user
   //   * Paginate
   fetchUserData: function () {
+    this.setState({
+      loading: true
+    });
     $.get({
       url: apiUrl + '/user',
       xhrFields: {
         withCredentials: true
       }
     }).done((response) => {
-      this.setState({images: response.results.images});
+      this.setState({
+        images: response.results.images,
+        loading: false
+      });
     });
   },
 
   deleteImagery: function (id) {
+    this.setState({
+      loading: true
+    });
     $.ajax({
       url: apiUrl + '/meta/' + id,
       method: 'DELETE',
@@ -56,6 +66,7 @@ module.exports = React.createClass({
 
   render: function () {
     return (
+      <div>
       <div className="page__content">
         <h1>
           <img
@@ -87,6 +98,10 @@ module.exports = React.createClass({
             : <em>You haven't uploaded any images yet.</em>
           }
         </ul>
+      </div>
+        {this.state.loading
+          ? <p className='loading revealed'>Loading</p>
+          : null}
       </div>
     );
   }

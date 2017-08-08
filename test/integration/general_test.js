@@ -216,19 +216,26 @@ describe('Imagery', function () {
     it('should update an images title', () => {
       submitImagery(everest);
       browser.url('#/account');
+      finishLoading();
       browser.click('a=Edit');
+      finishLoading();
       $('#scene-0-title').setValue('A different title');
       browser.click('button=Submit');
+      finishLoading();
       browser.url('#/account');
+      finishLoading();
       expect('strong=A different title').to.be.there();
     });
 
     it('should delete an image', () => {
       submitImagery(everest, 'Delete me :(');
       browser.url('#/account');
+      finishLoading();
       expect('strong=Delete me :(').to.be.there();
       browser.click('a=Delete');
+      finishLoading();
       browser.url('#/account');
+      finishLoading();
       expect('strong=Delete me :(').not.to.be.there();
     });
   });

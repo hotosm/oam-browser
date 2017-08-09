@@ -104,14 +104,16 @@ module.exports = React.createClass({
                     <li>Sensor: {image.properties.sensor}</li>
                     <li>Resolution: {image.gsd}m</li>
                     <li>File size: {image.file_size / 1000}k</li>
-                    { this.requestedUser === 'current'
-                      ? <li>
-                          <a href={utils.imageUri(image)}>View</a> |&nbsp;
-                          <a href={'/#/imagery/' + image._id + '/edit'}>Edit</a> |&nbsp;
-                          <a onClick={() => this.deleteImagery(image._id)} className='imagery-delete'>Delete</a>
-                        </li>
-                      : null
-                    }
+                    <li>
+                      <a href={utils.imageUri(image)}>View</a>
+                      { this.requestedUser === 'current'
+                        ? <span> |&nbsp;
+                            <a href={'/#/imagery/' + image._id + '/edit'}>Edit</a> |&nbsp;
+                            <a onClick={() => this.deleteImagery(image._id)} className='imagery-delete'>Delete</a>
+                          </span>
+                        : null
+                      }
+                    </li>
                   </ul>
                 </li>
               )

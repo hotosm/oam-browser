@@ -3,7 +3,6 @@ import React from 'react';
 var $ = require('jquery');
 
 var apiUrl = require('../config').catalog.url;
-import userStore from '../stores/user_store';
 import utils from '../utils/utils';
 
 module.exports = React.createClass({
@@ -20,30 +19,48 @@ module.exports = React.createClass({
   getInitialState: function () {
     return {
       loading: true,
-      images: []
+      user: {
+        images: []
+      }
     };
   },
 
-  componentDidMount: function () {
+  componentWillMount: function () {
+    this.loadUser(this.props);
+  },
+
+  componentWillReceiveProps: function (newProps) {
+    this.loadUser(newProps);
+  },
+
+  loadUser: function (props) {
+    if (props.params.id) {
+      this.requestedUser = props.params.id;
+    } else {
+      this.requestedUser = 'current';
+    }
     this.fetchUserData();
   },
 
   // TODO:
   //   * Refactor into centralised API class
-  //   * Call to /meta not /user
   //   * Paginate
   fetchUserData: function () {
+    let userPath = '';
     this.setState({
       loading: true
     });
+    if (this.requestedUser !== 'current') {
+      userPath = '/' + this.requestedUser;
+    }
     $.get({
-      url: apiUrl + '/user',
+      url: apiUrl + '/user' + userPath,
       xhrFields: {
         withCredentials: true
       }
     }).done((response) => {
       this.setState({
-        images: response.results.images,
+        user: response.results,
         loading: false
       });
     });
@@ -71,14 +88,14 @@ module.exports = React.createClass({
         <h1>
           <img
             className="profile_pic"
-            src={userStore.storage.user.profile_pic_uri}
+            src={this.state.user.profile_pic_uri}
             width="100"
           />
-          {userStore.storage.user.name}
+          {this.state.user.name}
         </h1>
         <ul className="account__images">
-          { this.state.images.length > 0
-            ? this.state.images.map((image, i) =>
+          { this.state.user.images.length > 0
+            ? this.state.user.images.map((image, i) =>
                 <li className="account__images-upload">
                   <img src={image.properties.thumbnail} width="100" key={i} />
                   <ul>
@@ -87,15 +104,18 @@ module.exports = React.createClass({
                     <li>Sensor: {image.properties.sensor}</li>
                     <li>Resolution: {image.gsd}m</li>
                     <li>File size: {image.file_size / 1000}k</li>
-                    <li>
-                      <a href={utils.imageUri(image)}>View</a> |&nbsp;
-                      <a href={'/#/imagery/' + image._id + '/edit'}>Edit</a> |&nbsp;
-                      <a onClick={() => this.deleteImagery(image._id)} className='imagery-delete'>Delete</a>
-                    </li>
+                    { this.requestedUser === 'current'
+                      ? <li>
+                          <a href={utils.imageUri(image)}>View</a> |&nbsp;
+                          <a href={'/#/imagery/' + image._id + '/edit'}>Edit</a> |&nbsp;
+                          <a onClick={() => this.deleteImagery(image._id)} className='imagery-delete'>Delete</a>
+                        </li>
+                      : null
+                    }
                   </ul>
                 </li>
               )
-            : <em>You haven't uploaded any images yet.</em>
+            : <em>No uploaded images yet.</em>
           }
         </ul>
       </div>

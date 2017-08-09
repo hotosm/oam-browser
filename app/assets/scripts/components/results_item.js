@@ -260,6 +260,10 @@ var ResultsItem = React.createClass({
               <dd className='cap'>{d.properties.sensor ? d.properties.sensor : 'not available'}</dd>
               <dt><span>Provider</span></dt>
               <dd className='cap'>{d.provider}</dd>
+              <dt><span>User</span></dt>
+              <dd className='cap'>
+                <a href={`#/user/${d.user._id}`}>{d.user.name}</a>
+              </dd>
             </dl>
 
             {d.custom_tms ? (

@@ -4,7 +4,7 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 
 import App from './components/app';
 import Home from './components/home';
-import Account from './components/account';
+import UserPage from './components/user_page';
 import ImageryEdit from './components/imagery_edit';
 import UploaderForm from './components/uploader/home';
 import UploaderStatus from './components/uploader/status';
@@ -18,8 +18,13 @@ var routes = (
       <Route
         name='account'
         path='/account'
-        component={Account}
+        component={UserPage}
         onEnter={User.routeRequiresAuth.bind(User)}
+      />
+      <Route
+        name='user'
+        path='/user/:id'
+        component={UserPage}
       />
       <Route
         name='imagery'

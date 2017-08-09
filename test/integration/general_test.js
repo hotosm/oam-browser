@@ -2,6 +2,7 @@ const {spawnSync} = require('child_process');
 const dbName = 'oam-api-test';
 const everest = 'https://github.com/openimagerynetwork/oin-meta-generator/blob/master/' +
       'test/fixtures/everest-utm.gtiff?raw=true';
+const everestUriCoords = '#/86.92655592750047,27.98899065877948,12';
 
 function dropDatabase () {
   const child = spawnSync('mongo', [
@@ -157,7 +158,7 @@ describe('User authentication', function () {
 });
 
 describe('Imagery', function () {
-  this.retries(3); // this requires function() not ()=>
+  this.retries(1); // this requires function() not ()=>
 
   describe('Basic imagery submission', function () {
     it('should submit imagery', () => {
@@ -185,6 +186,23 @@ describe('Imagery', function () {
       browser.click('button=Submit');
       waitForImageryProcessing();
       expect('a=View image').to.be.there();
+    });
+
+    it("should list a users's images", () => {
+      const title = Math.random().toString(36).slice(2);
+      submitImagery(everest, title);
+      browser.click('a=Logout');
+      browser.url(everestUriCoords);
+      finishLoading();
+      browser.click('#map');
+      getImageryResults();
+      browser.click('.pane-body-inner .results-list li:first-child');
+      browser.click('a=Open Graph Test User');
+      finishLoading();
+      expect('h1=Open Graph Test User').to.be.there();
+      expect('strong=' + title).to.be.there();
+      expect('li=Sensor: Automated Test Sensor').to.be.there();
+      expect('a=Delete').to.not.be.there();
     });
   });
 

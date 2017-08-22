@@ -119,6 +119,10 @@ module.exports = React.createClass({
     meta['platform'] = fields['platform-type'];
     meta['acquisition_start'] = fields['date-start'];
     meta['acquisition_end'] = fields['date-end'];
+    delete meta['sensor'];
+    meta['properties'] = {
+      sensor: fields['sensor']
+    };
     return meta;
   },
 

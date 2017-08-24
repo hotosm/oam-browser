@@ -1,0 +1,114 @@
+/* ==========================================================================
+   Panels
+   ========================================================================== */
+
+.panel {
+  position: relative;
+  font-size: 1rem;
+  line-height: 1.5;
+  background: tint($base-color, 96%);
+  box-shadow: 0 2px 12px 2px $base-alpha-color, 0 0 0 1px $base-alpha-color;
+  border-radius: $base-border-radius;
+
+  &__headline,
+  &__body,
+  &__body-inner,
+  &__footer {
+    > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.panel__header {
+  position: relative;
+  z-index: 2;
+  padding: $global-spacing;
+  background: #fff;
+  border-radius: $base-border-radius $base-border-radius 0 0;
+  box-shadow: 0 1px 0 0 $base-alpha-color;
+}
+
+.panel__title {
+  @include heading(1rem);
+  margin: 0;
+}
+
+.panel__subtitle {
+  @extend .heading-alt;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  margin: 0;
+  .drop__toggle {
+    &:visited, & {
+      color: $base-font-color;
+    }
+  }
+}
+
+.panel__headline,
+.panel__meta-actions {
+  display: table-cell;
+  &, > * {
+    vertical-align: top;
+  }
+}
+
+.panel__headline {
+  width: 100%;
+}
+
+.panel__meta-actions {
+  text-align: right;
+  padding-left: 0.5rem;
+
+  [class*="button"],
+  [class*="drop__toggle"] {
+    opacity: 0.48;
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.panel__footer {
+  position: relative;
+  z-index: 2;
+  background: #fff;
+  border-radius: 0 0 $base-border-radius $base-border-radius;
+  min-height: 1rem;
+  padding: $global-spacing;
+  box-shadow: 0 -1px 0 0 $base-alpha-color;
+  &:empty {
+    padding: 0;
+  }
+}
+
+.panel__body {
+  position: relative;
+  z-index: 1;
+  > *:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.panel__body-inner {
+  padding: $global-spacing;
+}
+
+.panel-blank-message {
+  text-align: center;
+  padding: ($global-spacing * 8) ($global-spacing * 2);
+  color: rgba($base-font-color, 0.64);
+}
+
+
+/* Panel buttons
+   ========================================================================== */
+
+.panel__button-dismiss {
+  @extend .button, .button--base-unbounded, .button--small, .button--text-hidden;
+  &:before {
+    @extend %oam-ds-icon-sm-xmark;
+  }
+}

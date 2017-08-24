@@ -1,0 +1,100 @@
+/* ==========================================================================
+   Alerts
+   ========================================================================== */
+
+.alert {
+  position: relative;
+  @extend .antialiased;
+  border-radius: $base-border-radius;
+  background: rgba($base-color, 0.8);
+  padding: 0.5rem 2.5rem 0.5rem 4rem;
+  color: #fff;
+  overflow: hidden;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0 0 $global-spacing 0;
+  > *:last-child {
+    margin-bottom: 0;
+  }
+
+  &:before {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translate(0, -50%);
+    height: 16rem;
+    line-height: 16rem;
+    width: 3rem;
+    text-align: center;
+    background: rgba($base-color, 0.92);
+    border-radius: $base-border-radius 0 0 $base-border-radius;
+    font-size: 1.5rem;
+    vertical-align: middle;
+  }
+
+  /* Animation */
+  transform: translateZ(0);
+  transition: all 0.24s ease 0s;
+}
+
+
+/* Alert context modifiers
+   ========================================================================== */
+
+.alert--success {
+  &:before {
+    background: rgba($success-color, 0.92);
+    @extend %oam-ds-icon-circle-tick;
+  }
+}
+.alert--info {
+  &:before {
+    background: rgba($info-color, 0.92);
+    @extend %oam-ds-icon-circle-information;
+  }
+}
+.alert--warning {
+  &:before {
+    background: rgba($warning-color, 0.92);
+    @extend %oam-ds-icon-circle-exclamation;
+  }
+}
+.alert--danger {
+  &:before {
+    background: rgba($danger-color, 0.92);
+    @extend %oam-ds-icon-circle-xmark;
+  }
+}
+
+
+/* Alert position modifiers
+   ========================================================================== */
+
+.alert--popover {
+  position: fixed;
+  z-index: 9996;
+  bottom: $global-spacing;
+  right: $global-spacing;
+  padding: 1.5rem 2.5rem 1.5rem 4rem;
+  margin: 0;
+  max-width: 24rem;
+}
+
+
+/* Alert buttons
+   ========================================================================== */
+
+.alert__button-dismiss {
+  @extend .button, .button--small, .button--achromic-unbounded, .button--text-hidden;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 10;
+  opacity: 0.48;
+  &:hover {
+    opacity: 1;
+  }
+  &:before {
+    @extend %oam-ds-icon-sm-xmark;
+  }
+}

@@ -1,0 +1,43 @@
+/* ==========================================================================
+   Code
+   ========================================================================== */
+
+code, kbd, pre, samp {
+  font-family: $code-font-family;
+  font-size: 80%;
+}
+
+code, pre, kbd {
+  border-radius: $base-border-radius;
+  background: rgba($base-color, 0.04);
+}
+
+code, kbd {
+  padding: 0.125rem 0.25rem;
+}
+
+kbd {
+  @extend .antialiased;
+  border-radius: $base-border-radius;
+  background: rgba($base-color, 0.64);
+  color: #fff;
+  kbd {
+    background: none;
+    font-size: 100%;
+    padding: 0;
+  }
+}
+
+pre {
+  display: block;
+  padding: $global-spacing;
+  word-break: break-all;
+  word-wrap: break-word;
+  box-shadow: inset 0 0 0 1px $base-alpha-color;
+  overflow: auto;
+  code {
+    padding: 0;
+    background: none;
+    font-size: inherit;
+  }
+}

@@ -1,7 +1,8 @@
-app/assets/scripts/config/local.js
+src/config/local.js
 node_modules
 bower_components
 .sass-cache
+src/styles/*.css
 .bundle
 bundle
 test/integration/error_screenshots

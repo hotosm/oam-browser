@@ -1,0 +1,60 @@
+/* ==========================================================================
+   Index
+   ========================================================================== */
+
+/**
+ * Following Necolas' Principles of writing consistent, idiomatic CSS:
+ * https://github.com/necolas/idiomatic-css
+ */
+
+
+/* Normalize
+   ========================================================================== */
+
+/**
+ * Normalize.css, a modern, HTML5-ready alternative to CSS resets:
+ * http://necolas.github.io/normalize.css/
+ */
+
+@import "oam-design-system/normalize";
+
+/**
+ * Kenneth Ormandy's OpenType features—ligatures, kerning, and more—to Normalize.css:
+ * https://github.com/kennethormandy/normalize-opentype.css
+ */
+
+@import "oam-design-system/normalize-opentype";
+
+
+/* Settings
+   ========================================================================== */
+
+@import "oam-design-system/variables";
+@import "oam-design-system/functions";
+@import "oam-design-system/mixins";
+
+
+/* Core
+   ========================================================================== */
+
+@import "oam-design-system/base";
+@import "oam-design-system/typography";
+@import "oam-design-system/tables";
+@import "oam-design-system/code";
+@import "oam-design-system/media";
+@import "oam-design-system/oam-ds-icons";
+@import "oam-design-system/utilities";
+
+
+/* Components
+   ========================================================================== */
+
+@import "oam-design-system/buttons";
+@import "oam-design-system/forms";
+@import "oam-design-system/drops";
+@import "oam-design-system/panels";
+@import "oam-design-system/alerts";
+@import "oam-design-system/modals";
+@import "oam-design-system/layout";
+@import "oam-design-system/constructs";
+

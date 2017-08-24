@@ -1,27 +1,6 @@
-<h1 align="center">OAM Imagery Browser</h1>
+# OpenAerialMap
 
-<a href="https://travis-ci.org/hotosm/oam-browser">
-  <img src="https://travis-ci.org/hotosm/oam-browser.svg?branch=master" alt="Build Status"></img>
-</a>
-
-![BrowserStack Status](https://www.browserstack.com/automate/badge.svg?badge_key=cDZRbGdjT2RDWjh1SmlzblV0N2RmQlMxZ0gzVWpRYVZMNDA0QnhMOU9hUT0tLUw1SU5KbTFueXJ3cjhYMktKRFczb0E9PQ==--6eea14e7ccbb21dc29f04d43dbbe2c8111e7a198)
-
-
-<div align="center">
-  <h3>
-  <a href="https://docs.openaerialmap.org/ecosystem/getting-started">Ecosystem</a>
-  <span> | </span>
-  <a href="https://github.com/hotosm/oam-catalog">Catalog API</a>
-  <span> | </span>
-  <a href="https://github.com/hotosm/openaerialmap.org">OAM Homepage</a>
-  </h3>
-</div>
-
-The OAM Imagery Browser is a part of the [OpenAerialMap](https://github.com/hotosm/OpenAerialMap) project. It gets data from the [OAM Catalog API](). Read the [ecosystem documentation](https://docs.openaerialmap.org/ecosystem/getting-started) and the [Github OAM docs](https://github.com/hotosm/openaerialmap) for more information about the project and contribute to the development. 
-
-Submit any issues and feedback regarding the imagery browser in the [issue tracker](https://github.com/hotosm/oam-browser/issues). 
-
-Access the site at http://openaerialmap.org. 
+OpenAerialMap (OAM) is a collection of openly licensed satellite and unmanned aerial vehicle (UAV) imagery. OAM is an open service that will provide storage and serach of this imagery.
 
 ## Installation and Usage
 

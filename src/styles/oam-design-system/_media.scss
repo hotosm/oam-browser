@@ -1,0 +1,65 @@
+/* ==========================================================================
+   Media
+   ========================================================================== */
+
+
+figure {
+  padding: 0;
+  margin: 0 0 $global-spacing 0;
+}
+
+img {
+  vertical-align: middle;
+}
+
+.image-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+.image-full {
+  width: 100%;
+  height: auto;
+}
+
+/* Prose specific */
+
+.prose > img,
+.prose > figure img {
+  max-width: 100%;
+  height: auto;
+}
+
+.prose > figure figcaption {
+  color: rgba($base-color, 0.48);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  padding-top: 1rem;
+  font-weight: $base-font-regular;
+}
+
+
+/* Aligning
+   ========================================================================== */
+
+img.align-center,
+figure.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+img.align-left,
+figure.align-left {
+  float: left;
+  margin-right: $global-spacing * 1.5;
+  text-align: left;
+}
+
+img.align-right,
+figure.align-right {
+  float: right;
+  margin-left:  $global-spacing * 1.5;
+  text-align: right;
+}

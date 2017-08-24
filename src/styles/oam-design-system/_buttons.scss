@@ -1,0 +1,245 @@
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.button {
+  @include user-select(none);
+  display: inline-block;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  line-height: 1.5rem;
+  font-size: 1rem;
+  padding: 0.25rem 0.75rem;
+  min-width: 2rem;
+  background: none; 
+  text-shadow: none;
+  border: 0;
+  border-radius: $base-border-radius;
+  font-weight: $base-font-bold;
+  cursor: pointer;
+
+  /* States */
+
+  &:hover {
+    opacity: initial;
+  }
+
+  .drop--open > &,
+  &.button--active,
+  &:active {
+    z-index: 2;
+    transform: none;
+  }
+
+  &, &:focus {
+    outline: none; // This causes usability problems. Needs fixing.
+  }
+
+  /* Icon handling */
+  &::before, &::after,
+  [class^="oam-ds-icon-"], [class*=" oam-ds-icon-"],
+  [class^="collecticons-"], [class*=" collecticons-"] {
+    font-size: 1rem;
+  }
+  &::before { margin-right: 0.375rem; }
+  &::after { margin-left: 0.375rem; }
+
+  &::before,
+  &::after,
+  > * {
+    vertical-align: top;
+    display: inline-block;
+    line-height: inherit !important;
+  }
+
+  /* Checkbox/radio handling */
+  > input[type=checkbox],
+  > input[type=radio] {
+    @extend .visually-hidden;
+  }
+
+  /* Animation */
+  transition: background-color 0.24s ease 0s;
+}
+
+
+/* Button color modifiers
+   ========================================================================== */
+
+/* Base */
+
+.button--base {
+  @include button-variation("filled", "dark", tint($base-color, 32%));
+}
+
+/* Base Unbounded */
+
+.button--base-unbounded {
+  @include button-variation("unbounded", null, $base-font-color);
+}
+
+/* Achromic */
+
+.button--achromic {
+  @include button-variation("filled", "light", #fff);
+}
+
+/* Achromic Unbounded */
+
+.button--achromic-unbounded {
+  @include button-variation("unbounded", null, #fff);
+}
+
+/* Primary */
+
+.button--primary {
+  @include button-variation("filled", "dark", $primary-color);
+}
+
+/* Primary Unbounded */
+
+.button--primary-unbounded {
+  @include button-variation("unbounded", null, $primary-color);
+}
+
+/* Secondary */
+
+.button--secondary {
+  @include button-variation("filled", "dark", $secondary-color);
+}
+
+/* Secondary Unbounded */
+
+.button--secondary-unbounded {
+  @include button-variation("unbounded", null, $secondary-color);
+}
+
+
+/* Button size modifiers
+   ========================================================================== */
+
+/* Small (24px) */
+
+.button--small,
+.button-group--small .button {
+  line-height: 1.25rem;
+  font-size: 0.875rem;
+  padding: 0.125rem 0.5rem;
+  min-width: 1.5rem;
+}
+
+/* Medium (32px)
+   Default
+*/
+
+.button--medium,
+.button-group--medium .button {
+  line-height: 1.5rem;
+  font-size: 1rem;
+  padding: 0.25rem 0.75rem;
+  min-width: 2rem;
+}
+
+/* Large (40px) */
+
+.button--large,
+.button-group--large .button {
+  line-height: 1.5rem;
+  font-size: 1.25rem;
+  padding: 0.5rem 1rem;
+  min-width: 2.5rem;
+}
+
+/* XLarge (48px) */
+
+.button--xlarge,
+.button-group--xlarge .button {
+  line-height: 2rem;
+  font-size: 1.25rem;
+  padding: 0.5rem 1rem;
+  min-width: 3rem;
+}
+
+
+/* Button contaning icons & icons modifiers
+   ========================================================================== */
+
+.button--text-hidden {
+  &::before,
+  &::after {
+    margin: 0;
+  }
+  > *:not([class^="oam-ds-icon-"]):not([class*=" oam-ds-icon-"]):not([class^="collecticons-"]):not([class*=" collecticons-"]) {
+    @extend .visually-hidden;
+  }
+  :not(.button-group) & {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+
+/* ==========================================================================
+   Button groups
+   ========================================================================== */
+
+.button-group {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  > .button {
+    display: block;
+    position: relative;
+    margin: 0;
+  }
+}
+
+/* Horizontal */
+
+.button-group--horizontal {
+  > .button {
+    float: left;
+  }
+  > .button:first-child:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  > .button:last-child:not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  > .button:not(:first-child):not(:last-child) {
+    border-radius: 0;
+  }
+  > .button + .button {
+    margin-left: -1px;
+  }
+}
+
+/* Vertical */
+
+.button-group--vertical {
+  > .button {
+    clear: both;
+    width: 100%;
+    border-radius: $base-border-radius;
+    &:hover {
+      z-index: 2;
+    }
+  }
+  > .button:first-child:not(:last-child) {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  > .button:last-child:not(:first-child) {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  > .button:not(:first-child):not(:last-child) {
+    border-radius: 0;
+  }
+  > .button + .button {
+    margin-top: -1px;
+  }
+}

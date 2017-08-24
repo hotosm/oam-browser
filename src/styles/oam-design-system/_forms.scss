@@ -1,0 +1,351 @@
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+
+.form {
+  > *:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.form__control {
+  display: block;
+  width: 100%;
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: $base-font-color;
+  background: #fff;
+  border: 0;
+  border-radius: $base-border-radius;
+  font-family: inherit;
+  box-shadow: inset 0 3px 0 0 rgba($base-color, 0.08), inset 0 0 0 1px rgba($base-color, 0.16);
+
+  /* Placeholder */
+  &::placeholder {
+    opacity: 0.64;
+  }
+
+  /* States */
+  &[disabled] {
+    @extend .disabled;
+  }
+
+  &[readonly] {
+    cursor: text;
+    opacity: 0.64;
+  }
+
+  &:focus {
+    outline: 0;
+    box-shadow: inset 0 3px 0 0 rgba($base-color, 0.08), inset 0 0 0 1px rgba($base-color, 0.32);
+  }
+
+  /* Animation */
+  transition: all 0.24s ease 0s;
+  transform: translateZ(0);
+}
+
+/* Select */
+
+select.form__control {
+  box-shadow: inset 0 -3px 0 0 rgba($base-color, 0.08), inset 0 0 0 1px rgba($base-color, 0.16);
+  cursor: pointer;
+}
+
+/* Textarea */
+
+textarea.form__control {
+  height: auto;
+  resize: vertical;
+}
+
+
+/* Form control size modifiers
+   ========================================================================== */
+
+/* Small (24px) */
+
+.form__control--small {
+  padding: 0.125rem 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  height: 1.5rem;
+}
+
+/* Medium (32px)
+   Default
+*/
+
+.form__control--medium {
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  height: 2rem;
+}
+
+/* Large (40px) */
+
+.form__control--large {
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  height: 2.5rem;
+}
+
+/* XLarge (48px) */
+
+.form__control--xlarge {
+  padding: 0.5rem 0.75rem;
+  font-size: 1.25rem;
+  line-height: 2rem;
+  height: 3rem;
+}
+
+
+/* Form groups
+   ========================================================================== */
+
+.form__group {
+  margin-bottom: $global-spacing;
+  @extend .clearfix;
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+}
+
+
+/* Input groups
+   ========================================================================== */
+
+.form__input-group {
+  position: relative;
+  display: table;
+  border-collapse: separate;
+  width: 100%;
+}
+
+.form__input-group-button:first-child > .button,
+.form__input-group-button:first-child > .button-group {
+  z-index: 2;
+  margin-right: -1px;
+}
+
+.form__input-group-button:last-child > .button,
+.form__input-group-button:last-child > .button-group {
+  z-index: 2;
+  margin-left: -1px;
+}
+
+.form__input-group .form__control:first-child,
+.form__input-group-button:first-child > .button,
+.form__input-group-button:first-child > .button-group > .button,
+.form__input-group-button:first-child > .dropdown-toggle,
+.form__input-group-button:last-child > .button-group:not(:last-child) > .button {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.form__input-group .form__control:last-child,
+.form__input-group-button:first-child > .button-group:not(:first-child) > .button,
+.form__input-group-button:first-child > .button:not(:first-child),
+.form__input-group-button:last-child > .button,
+.form__input-group-button:last-child > .button-group > .button {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form__input-group .form__control {
+  position: relative;
+  float: left;
+  width: 100%;
+  margin-bottom: 0;
+  &:focus {
+    z-index: 2;
+  }
+}
+
+.form__input-group-button {
+  position: relative;
+  font-size: 0;
+  width: 1%;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.form__input-group .form__control,
+.form__input-group-button {
+  display: table-cell;
+}
+
+
+/* Form fieldsets
+   ========================================================================== */
+
+.form__fieldset {
+  padding: 0 0 ($global-spacing * 1.5) 0;
+  margin: 0 0 ($global-spacing * 1.5) 0;
+  border: 0;
+  position: relative;
+  box-shadow: inset 0 -1px 0 0 $base-alpha-color;
+
+  &:last-child {
+    padding-bottom: 0;
+    box-shadow: none;
+  }
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.form__legend {
+  @extend .heading-alt;
+  display: block;
+  width: 100%;
+  border: 0;
+  margin: 0 0 $global-spacing 0;
+  padding: 0;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+
+/* Form labels
+   ========================================================================== */
+
+label[for] {
+  cursor: pointer;
+}
+
+.form__label {
+  display: block;
+  font-weight: $base-font-bold;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0 0 ($global-spacing / 2) 0;
+}
+
+
+/* Form options (radios and checkboxes)
+   ========================================================================== */
+
+.form__option {
+  position: relative;
+  display: inline-block;
+  margin-bottom: $global-spacing;
+  font-size: 1rem;
+  line-height: 1.5;
+  cursor: pointer;
+  padding-left: $global-spacing * 1.25;
+  input {
+    position: absolute;
+    top: $global-spacing / 4;
+    left: 0;
+  }
+}
+
+.form__option:not(.form__option--inline) {
+  display: table; // Hack-ish. Please fix me.
+}
+
+.form__option + .form__option {
+  margin-top: - $global-spacing / 2;
+}
+
+/* Form option inline modifier */
+
+.form__option--inline {
+  display: inline-block;
+}
+
+.form__option--inline + .form__option--inline {
+  margin-left: $global-spacing;
+}
+
+
+/* Form custom options modifiers (radios and checkboxes)
+   ========================================================================== */
+
+.form__option--custom-radio,
+.form__option--custom-checkbox {
+  padding-left: $global-spacing * 2;
+
+  input {
+    @extend .visually-hidden;
+  }
+
+  .form__option__ui {
+    position: absolute;
+    top: 0;
+    left: 0;;
+    height: 1.5rem;
+    width: 1.5rem;
+    box-shadow: inset 0 3px 0 0 rgba($base-color, 0.08), inset 0 0 0 1px rgba($base-color, 0.16);
+    background: #fff;
+    transition: all 0.24s ease 0s;
+
+    &:before {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: all 0.16s ease 0s;
+    }
+  }
+
+  &:focus,
+  &:active {
+    .form__option__ui {
+      box-shadow: inset 0 3px 0 0 rgba($base-color, 0.08), inset 0 0 0 1px rgba($base-color, 0.32);
+    }
+  }
+
+  input:checked ~ .form__option__ui:before {
+    opacity: 1;
+  }
+}
+
+.form__option--custom-radio {
+  .form__option__ui {
+    &, &:before {
+      border-radius: $full-border-radius;
+    }
+
+    &:before {
+      content: "";
+      height: 0.5rem;
+      width: 0.5rem;
+      background: rgba($base-color, 0.80);
+    }
+  }
+}
+
+.form__option--custom-checkbox {
+  .form__option__ui {
+    &, &:before {
+      border-radius: $base-border-radius;
+    }
+
+    &:before {
+      @extend %oam-ds-icon-sm-tick;
+      color: rgba($base-color, 0.80);
+    }
+  }
+}
+
+/* Form misc
+   ========================================================================== */
+
+.form__help {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: rgba($base-font-color, 0.64);
+  margin-top: $global-spacing / 2;
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+}

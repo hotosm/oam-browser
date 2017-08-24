@@ -1,0 +1,662 @@
+/* ==========================================================================
+   Icon font: OAM DS Icons
+   ========================================================================== */
+
+/**
+ * Designed by Development Seed
+ * https://developmentseed.org/
+ *
+ * Generated with collecticons-processor on April 4, 2017
+ * http://collecticons.io/
+ */
+
+
+@font-face {
+  font-family: "OAM DS Icons";
+  src: url(data:application/font-woff;charset=utf-8;base64,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) format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+%oam-ds-icon,
+[class^="oam-ds-icon-"],
+[class*=" oam-ds-icon-"] {
+  speak: none;
+  font-family: "OAM DS Icons";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better font rendering */
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+%oam-ds-icon-arrow-down {
+  @extend %oam-ds-icon;
+  content: "\EA01"
+}
+.oam-ds-icon-arrow-down:before {
+  content: "\EA01"
+}
+
+%oam-ds-icon-arrow-left {
+  @extend %oam-ds-icon;
+  content: "\EA02"
+}
+.oam-ds-icon-arrow-left:before {
+  content: "\EA02"
+}
+
+%oam-ds-icon-arrow-loop {
+  @extend %oam-ds-icon;
+  content: "\EA03"
+}
+.oam-ds-icon-arrow-loop:before {
+  content: "\EA03"
+}
+
+%oam-ds-icon-arrow-right {
+  @extend %oam-ds-icon;
+  content: "\EA04"
+}
+.oam-ds-icon-arrow-right:before {
+  content: "\EA04"
+}
+
+%oam-ds-icon-arrow-spin-clockwise {
+  @extend %oam-ds-icon;
+  content: "\EA05"
+}
+.oam-ds-icon-arrow-spin-clockwise:before {
+  content: "\EA05"
+}
+
+%oam-ds-icon-arrow-up {
+  @extend %oam-ds-icon;
+  content: "\EA06"
+}
+.oam-ds-icon-arrow-up:before {
+  content: "\EA06"
+}
+
+%oam-ds-icon-calendar {
+  @extend %oam-ds-icon;
+  content: "\EA07"
+}
+.oam-ds-icon-calendar:before {
+  content: "\EA07"
+}
+
+%oam-ds-icon-chevron-down {
+  @extend %oam-ds-icon;
+  content: "\EA08"
+}
+.oam-ds-icon-chevron-down:before {
+  content: "\EA08"
+}
+
+%oam-ds-icon-chevron-left {
+  @extend %oam-ds-icon;
+  content: "\EA09"
+}
+.oam-ds-icon-chevron-left:before {
+  content: "\EA09"
+}
+
+%oam-ds-icon-chevron-right {
+  @extend %oam-ds-icon;
+  content: "\EA0A"
+}
+.oam-ds-icon-chevron-right:before {
+  content: "\EA0A"
+}
+
+%oam-ds-icon-chevron-step-backward {
+  @extend %oam-ds-icon;
+  content: "\EA0B"
+}
+.oam-ds-icon-chevron-step-backward:before {
+  content: "\EA0B"
+}
+
+%oam-ds-icon-chevron-step-forward {
+  @extend %oam-ds-icon;
+  content: "\EA0C"
+}
+.oam-ds-icon-chevron-step-forward:before {
+  content: "\EA0C"
+}
+
+%oam-ds-icon-chevron-up {
+  @extend %oam-ds-icon;
+  content: "\EA0D"
+}
+.oam-ds-icon-chevron-up:before {
+  content: "\EA0D"
+}
+
+%oam-ds-icon-circle-exclamation {
+  @extend %oam-ds-icon;
+  content: "\EA0E"
+}
+.oam-ds-icon-circle-exclamation:before {
+  content: "\EA0E"
+}
+
+%oam-ds-icon-circle-information {
+  @extend %oam-ds-icon;
+  content: "\EA0F"
+}
+.oam-ds-icon-circle-information:before {
+  content: "\EA0F"
+}
+
+%oam-ds-icon-circle-question {
+  @extend %oam-ds-icon;
+  content: "\EA10"
+}
+.oam-ds-icon-circle-question:before {
+  content: "\EA10"
+}
+
+%oam-ds-icon-circle-tick {
+  @extend %oam-ds-icon;
+  content: "\EA11"
+}
+.oam-ds-icon-circle-tick:before {
+  content: "\EA11"
+}
+
+%oam-ds-icon-circle-xmark {
+  @extend %oam-ds-icon;
+  content: "\EA12"
+}
+.oam-ds-icon-circle-xmark:before {
+  content: "\EA12"
+}
+
+%oam-ds-icon-clipboard-list {
+  @extend %oam-ds-icon;
+  content: "\EA13"
+}
+.oam-ds-icon-clipboard-list:before {
+  content: "\EA13"
+}
+
+%oam-ds-icon-clock-back {
+  @extend %oam-ds-icon;
+  content: "\EA14"
+}
+.oam-ds-icon-clock-back:before {
+  content: "\EA14"
+}
+
+%oam-ds-icon-clock {
+  @extend %oam-ds-icon;
+  content: "\EA15"
+}
+.oam-ds-icon-clock:before {
+  content: "\EA15"
+}
+
+%oam-ds-icon-cog {
+  @extend %oam-ds-icon;
+  content: "\EA16"
+}
+.oam-ds-icon-cog:before {
+  content: "\EA16"
+}
+
+%oam-ds-icon-compass {
+  @extend %oam-ds-icon;
+  content: "\EA17"
+}
+.oam-ds-icon-compass:before {
+  content: "\EA17"
+}
+
+%oam-ds-icon-crosshair-2 {
+  @extend %oam-ds-icon;
+  content: "\EA18"
+}
+.oam-ds-icon-crosshair-2:before {
+  content: "\EA18"
+}
+
+%oam-ds-icon-disc-xmark {
+  @extend %oam-ds-icon;
+  content: "\EA19"
+}
+.oam-ds-icon-disc-xmark:before {
+  content: "\EA19"
+}
+
+%oam-ds-icon-download {
+  @extend %oam-ds-icon;
+  content: "\EA1A"
+}
+.oam-ds-icon-download:before {
+  content: "\EA1A"
+}
+
+%oam-ds-icon-ellipsis-horizontal {
+  @extend %oam-ds-icon;
+  content: "\EA1B"
+}
+.oam-ds-icon-ellipsis-horizontal:before {
+  content: "\EA1B"
+}
+
+%oam-ds-icon-ellipsis-vertical {
+  @extend %oam-ds-icon;
+  content: "\EA1C"
+}
+.oam-ds-icon-ellipsis-vertical:before {
+  content: "\EA1C"
+}
+
+%oam-ds-icon-envelope {
+  @extend %oam-ds-icon;
+  content: "\EA1D"
+}
+.oam-ds-icon-envelope:before {
+  content: "\EA1D"
+}
+
+%oam-ds-icon-facebook {
+  @extend %oam-ds-icon;
+  content: "\EA1E"
+}
+.oam-ds-icon-facebook:before {
+  content: "\EA1E"
+}
+
+%oam-ds-icon-github {
+  @extend %oam-ds-icon;
+  content: "\EA1F"
+}
+.oam-ds-icon-github:before {
+  content: "\EA1F"
+}
+
+%oam-ds-icon-globe {
+  @extend %oam-ds-icon;
+  content: "\EA20"
+}
+.oam-ds-icon-globe:before {
+  content: "\EA20"
+}
+
+%oam-ds-icon-google-plus {
+  @extend %oam-ds-icon;
+  content: "\EA21"
+}
+.oam-ds-icon-google-plus:before {
+  content: "\EA21"
+}
+
+%oam-ds-icon-grid-3x3 {
+  @extend %oam-ds-icon;
+  content: "\EA22"
+}
+.oam-ds-icon-grid-3x3:before {
+  content: "\EA22"
+}
+
+%oam-ds-icon-hamburger-menu {
+  @extend %oam-ds-icon;
+  content: "\EA23"
+}
+.oam-ds-icon-hamburger-menu:before {
+  content: "\EA23"
+}
+
+%oam-ds-icon-house {
+  @extend %oam-ds-icon;
+  content: "\EA24"
+}
+.oam-ds-icon-house:before {
+  content: "\EA24"
+}
+
+%oam-ds-icon-id-editor {
+  @extend %oam-ds-icon;
+  content: "\EA25"
+}
+.oam-ds-icon-id-editor:before {
+  content: "\EA25"
+}
+
+%oam-ds-icon-layers {
+  @extend %oam-ds-icon;
+  content: "\EA26"
+}
+.oam-ds-icon-layers:before {
+  content: "\EA26"
+}
+
+%oam-ds-icon-link {
+  @extend %oam-ds-icon;
+  content: "\EA27"
+}
+.oam-ds-icon-link:before {
+  content: "\EA27"
+}
+
+%oam-ds-icon-list {
+  @extend %oam-ds-icon;
+  content: "\EA28"
+}
+.oam-ds-icon-list:before {
+  content: "\EA28"
+}
+
+%oam-ds-icon-location {
+  @extend %oam-ds-icon;
+  content: "\EA29"
+}
+.oam-ds-icon-location:before {
+  content: "\EA29"
+}
+
+%oam-ds-icon-magnifier-left {
+  @extend %oam-ds-icon;
+  content: "\EA2A"
+}
+.oam-ds-icon-magnifier-left:before {
+  content: "\EA2A"
+}
+
+%oam-ds-icon-magnifier-right {
+  @extend %oam-ds-icon;
+  content: "\EA2B"
+}
+.oam-ds-icon-magnifier-right:before {
+  content: "\EA2B"
+}
+
+%oam-ds-icon-map {
+  @extend %oam-ds-icon;
+  content: "\EA2C"
+}
+.oam-ds-icon-map:before {
+  content: "\EA2C"
+}
+
+%oam-ds-icon-marker {
+  @extend %oam-ds-icon;
+  content: "\EA2D"
+}
+.oam-ds-icon-marker:before {
+  content: "\EA2D"
+}
+
+%oam-ds-icon-minus {
+  @extend %oam-ds-icon;
+  content: "\EA2E"
+}
+.oam-ds-icon-minus:before {
+  content: "\EA2E"
+}
+
+%oam-ds-icon-pencil {
+  @extend %oam-ds-icon;
+  content: "\EA2F"
+}
+.oam-ds-icon-pencil:before {
+  content: "\EA2F"
+}
+
+%oam-ds-icon-picture {
+  @extend %oam-ds-icon;
+  content: "\EA30"
+}
+.oam-ds-icon-picture:before {
+  content: "\EA30"
+}
+
+%oam-ds-icon-plus {
+  @extend %oam-ds-icon;
+  content: "\EA31"
+}
+.oam-ds-icon-plus:before {
+  content: "\EA31"
+}
+
+%oam-ds-icon-pop-up {
+  @extend %oam-ds-icon;
+  content: "\EA32"
+}
+.oam-ds-icon-pop-up:before {
+  content: "\EA32"
+}
+
+%oam-ds-icon-share {
+  @extend %oam-ds-icon;
+  content: "\EA33"
+}
+.oam-ds-icon-share:before {
+  content: "\EA33"
+}
+
+%oam-ds-icon-sliders-horizontal {
+  @extend %oam-ds-icon;
+  content: "\EA34"
+}
+.oam-ds-icon-sliders-horizontal:before {
+  content: "\EA34"
+}
+
+%oam-ds-icon-sm-chevron-down {
+  @extend %oam-ds-icon;
+  content: "\EA35"
+}
+.oam-ds-icon-sm-chevron-down:before {
+  content: "\EA35"
+}
+
+%oam-ds-icon-sm-chevron-left {
+  @extend %oam-ds-icon;
+  content: "\EA36"
+}
+.oam-ds-icon-sm-chevron-left:before {
+  content: "\EA36"
+}
+
+%oam-ds-icon-sm-chevron-right {
+  @extend %oam-ds-icon;
+  content: "\EA37"
+}
+.oam-ds-icon-sm-chevron-right:before {
+  content: "\EA37"
+}
+
+%oam-ds-icon-sm-chevron-up {
+  @extend %oam-ds-icon;
+  content: "\EA38"
+}
+.oam-ds-icon-sm-chevron-up:before {
+  content: "\EA38"
+}
+
+%oam-ds-icon-sm-minus {
+  @extend %oam-ds-icon;
+  content: "\EA39"
+}
+.oam-ds-icon-sm-minus:before {
+  content: "\EA39"
+}
+
+%oam-ds-icon-sm-plus {
+  @extend %oam-ds-icon;
+  content: "\EA3A"
+}
+.oam-ds-icon-sm-plus:before {
+  content: "\EA3A"
+}
+
+%oam-ds-icon-sm-tick {
+  @extend %oam-ds-icon;
+  content: "\EA3B"
+}
+.oam-ds-icon-sm-tick:before {
+  content: "\EA3B"
+}
+
+%oam-ds-icon-sm-triangle-down {
+  @extend %oam-ds-icon;
+  content: "\EA3C"
+}
+.oam-ds-icon-sm-triangle-down:before {
+  content: "\EA3C"
+}
+
+%oam-ds-icon-sm-triangle-left {
+  @extend %oam-ds-icon;
+  content: "\EA3D"
+}
+.oam-ds-icon-sm-triangle-left:before {
+  content: "\EA3D"
+}
+
+%oam-ds-icon-sm-triangle-right {
+  @extend %oam-ds-icon;
+  content: "\EA3E"
+}
+.oam-ds-icon-sm-triangle-right:before {
+  content: "\EA3E"
+}
+
+%oam-ds-icon-sm-triangle-up {
+  @extend %oam-ds-icon;
+  content: "\EA3F"
+}
+.oam-ds-icon-sm-triangle-up:before {
+  content: "\EA3F"
+}
+
+%oam-ds-icon-sm-xmark {
+  @extend %oam-ds-icon;
+  content: "\EA40"
+}
+.oam-ds-icon-sm-xmark:before {
+  content: "\EA40"
+}
+
+%oam-ds-icon-sort-asc {
+  @extend %oam-ds-icon;
+  content: "\EA41"
+}
+.oam-ds-icon-sort-asc:before {
+  content: "\EA41"
+}
+
+%oam-ds-icon-sort-desc {
+  @extend %oam-ds-icon;
+  content: "\EA42"
+}
+.oam-ds-icon-sort-desc:before {
+  content: "\EA42"
+}
+
+%oam-ds-icon-sort-none {
+  @extend %oam-ds-icon;
+  content: "\EA43"
+}
+.oam-ds-icon-sort-none:before {
+  content: "\EA43"
+}
+
+%oam-ds-icon-sort {
+  @extend %oam-ds-icon;
+  content: "\EA44"
+}
+.oam-ds-icon-sort:before {
+  content: "\EA44"
+}
+
+%oam-ds-icon-tick {
+  @extend %oam-ds-icon;
+  content: "\EA45"
+}
+.oam-ds-icon-tick:before {
+  content: "\EA45"
+}
+
+%oam-ds-icon-trash-bin {
+  @extend %oam-ds-icon;
+  content: "\EA46"
+}
+.oam-ds-icon-trash-bin:before {
+  content: "\EA46"
+}
+
+%oam-ds-icon-triangle-down {
+  @extend %oam-ds-icon;
+  content: "\EA47"
+}
+.oam-ds-icon-triangle-down:before {
+  content: "\EA47"
+}
+
+%oam-ds-icon-triangle-left {
+  @extend %oam-ds-icon;
+  content: "\EA48"
+}
+.oam-ds-icon-triangle-left:before {
+  content: "\EA48"
+}
+
+%oam-ds-icon-triangle-right {
+  @extend %oam-ds-icon;
+  content: "\EA49"
+}
+.oam-ds-icon-triangle-right:before {
+  content: "\EA49"
+}
+
+%oam-ds-icon-triangle-up {
+  @extend %oam-ds-icon;
+  content: "\EA4A"
+}
+.oam-ds-icon-triangle-up:before {
+  content: "\EA4A"
+}
+
+%oam-ds-icon-twitter {
+  @extend %oam-ds-icon;
+  content: "\EA4B"
+}
+.oam-ds-icon-twitter:before {
+  content: "\EA4B"
+}
+
+%oam-ds-icon-upload {
+  @extend %oam-ds-icon;
+  content: "\EA4C"
+}
+.oam-ds-icon-upload:before {
+  content: "\EA4C"
+}
+
+%oam-ds-icon-user {
+  @extend %oam-ds-icon;
+  content: "\EA4D"
+}
+.oam-ds-icon-user:before {
+  content: "\EA4D"
+}
+
+%oam-ds-icon-xmark {
+  @extend %oam-ds-icon;
+  content: "\EA4E"
+}
+.oam-ds-icon-xmark:before {
+  content: "\EA4E"
+}

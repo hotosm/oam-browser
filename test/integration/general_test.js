@@ -33,7 +33,7 @@ function logIn() {
     $("#pass").setValue("oamtestpassword");
     browser.click("#loginbutton");
   }
-  expect(browser.waitForVisible("a=Logout")).to.be.true;
+  expect(browser.waitForVisible("a=Logout")).to.eq(true);
 }
 
 // Use the following instead once IE Edge supports cookie and localStorage deletion.

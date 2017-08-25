@@ -22,7 +22,7 @@ env:
 jobs:
   include:
     - stage: "Specs :factory:"
-      before_script: ./.build_scripts/lint.sh
+      before_script: yarn lint
       script: yarn test
 
     - &integration-test

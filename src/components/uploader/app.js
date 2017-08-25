@@ -1,11 +1,13 @@
-var React = require("react/addons");
-var Reflux = require("reflux");
-var Router = require("react-router");
-var RouteHandler = Router.RouteHandler;
-var AppActions = require("../actions/actions");
-var Notifications = require("./notifications");
+import React from "react/addons";
+import Reflux from "reflux";
+import createReactClass from "create-react-class";
+import Router from "react-router";
+import AppActions from "actions/actions";
+import Notifications from "components/uploader/notifications";
 
-module.exports = createReactClass({
+let RouteHandler = Router.RouteHandler;
+
+export default createReactClass({
   displayName: "App",
 
   mixins: [

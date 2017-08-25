@@ -5,7 +5,6 @@
 // https://sites.google.com/a/chromium.org/chromedriver/
 // https://github.com/mozilla/geckodriver
 
-"use strict";
 const _ = require("lodash");
 const defaultConf = require("./wdio.default.conf.js").config;
 

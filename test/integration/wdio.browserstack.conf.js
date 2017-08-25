@@ -1,5 +1,3 @@
-"use strict";
-
 const os = require("os");
 const _ = require("lodash");
 const defaultConf = require("./wdio.default.conf.js").config;

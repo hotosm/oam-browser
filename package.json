@@ -11,7 +11,7 @@
     "name": "Humanitarian Open Street Map Team",
     "url": "https://hotosm.org"
   },
-  "license": "BSD 3-Clause",
+  "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/hotosm/oam-browser/issues"
   },
@@ -23,6 +23,7 @@
     "start-js": "NODE_PATH=src react-scripts start",
     "start": "run-p watch-css start-js",
     "build": "yarn build-css && react-scripts build",
+    "lint": "eslint .",
     "test": "NODE_ENV=test NODE_PATH=src mocha --opts test/specs/mocha.opts test/specs"
   },
   "devDependencies": {

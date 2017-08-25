@@ -1,40 +1,42 @@
-import _ from 'lodash';
-import React from 'react';
-import Autocomplete from 'react-autocomplete';
+import _ from "lodash";
+import React from "react";
+import Autocomplete from "react-autocomplete";
 
-import actions from 'actions/actions';
-import utils from 'utils/utils';
+import actions from "actions/actions";
+import utils from "utils/utils";
 
 export default class SearchBox extends React.Component {
   state = {
     geocoderResults: [],
-    value: '',
+    value: "",
     isOpen: false
   };
 
-  getGeocoderResults = (event) => {
+  getGeocoderResults = event => {
     event.preventDefault();
     this.setState({
-      geocoderResults: [{ text: 'Loading...' }],
+      geocoderResults: [{ text: "Loading..." }],
       isOpen: true
     });
     utils.queryGeocoder(this.state.value, response => {
       if (response.features.length === 0) {
-        response.features = [{
-          text: 'Nothing found'
-        }];
+        response.features = [
+          {
+            text: "Nothing found"
+          }
+        ];
       }
       this.setState({ geocoderResults: response.features });
     });
-  }
+  };
 
   gotoSelection = (_value, result) => {
     this.setState({
-      value: '',
+      value: "",
       geocoderResults: [],
       isOpen: false
     });
-    if (_.has(result, 'bbox')) {
+    if (_.has(result, "bbox")) {
       const bounds = [
         [result.bbox[1], result.bbox[0]],
         [result.bbox[3], result.bbox[2]]
@@ -43,29 +45,29 @@ export default class SearchBox extends React.Component {
     } else {
       actions.moveToCoords(result.center);
     }
-  }
+  };
 
-  onMyLocationClick = (e) => {
+  onMyLocationClick = e => {
     e.preventDefault();
     actions.requestMyLocation();
-  }
+  };
 
-  render () {
+  render() {
     return (
-      <form className='form global-search' onSubmit={this.getGeocoderResults}>
-        <label className='form__label' htmlFor='global-search__input'>
+      <form className="form global-search" onSubmit={this.getGeocoderResults}>
+        <label className="form__label" htmlFor="global-search__input">
           Search
         </label>
-        <div className='form__input-group'>
+        <div className="form__input-group">
           <Autocomplete
             inputProps={{
-              className: 'form__control form__control--medium',
-              name: 'Geo search',
-              id: 'global-search__input',
-              placeholder: 'Enter search or coords',
-              type: 'search'
+              className: "form__control form__control--medium",
+              name: "Geo search",
+              id: "global-search__input",
+              placeholder: "Enter search or coords",
+              type: "search"
             }}
-            ref='autocomplete'
+            ref="autocomplete"
             items={this.state.geocoderResults}
             getItemValue={item => item.text}
             value={this.state.value}
@@ -74,29 +76,28 @@ export default class SearchBox extends React.Component {
             onSelect={this.gotoSelection}
             onSubmit={this.getGeocoderResults}
             wrapperStyle={{}}
-            renderItem={(item, isHighlighted) => (
+            renderItem={(item, isHighlighted) =>
               <div
                 key={item.abbr}
-                className={'autocomplete__menu-item ' + (isHighlighted ? 'is-highlighted' : '')}
+                className={
+                  "autocomplete__menu-item " +
+                  (isHighlighted ? "is-highlighted" : "")
+                }
               >
                 {item.text}
-              </div>
-            )}
+              </div>}
           />
           {navigator.geolocation
             ? <a
-                title='Take me to my location'
-                className='global-search__button-location'
+                title="Take me to my location"
+                className="global-search__button-location"
                 onClick={this.onMyLocationClick}
               >
-                <span>
-                  My location
-                </span>
+                <span>My location</span>
               </a>
-              : null
-          }
-          <span className='form__input-group-button'>
-            <button className='global-search__button-go' type='submit'>
+            : null}
+          <span className="form__input-group-button">
+            <button className="global-search__button-go" type="submit">
               <span>Search</span>
             </button>
           </span>

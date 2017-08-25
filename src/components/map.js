@@ -1,29 +1,29 @@
 /* global L */
 
-import React from 'react';
-import { hashHistory } from 'react-router';
-import PropTypes from 'prop-types';
-import createReactClass from 'create-react-class';
-import Reflux from 'reflux';
-import _ from 'lodash';
-import $ from 'jquery';
-import tilebelt from 'tilebelt';
-import centroid from 'turf-centroid';
-import inside from 'turf-inside';
-import overlaps from 'turf-overlaps';
+import React from "react";
+import { hashHistory } from "react-router";
+import PropTypes from "prop-types";
+import createReactClass from "create-react-class";
+import Reflux from "reflux";
+import _ from "lodash";
+import $ from "jquery";
+import tilebelt from "tilebelt";
+import centroid from "turf-centroid";
+import inside from "turf-inside";
+import overlaps from "turf-overlaps";
 
-import actions from 'actions/actions';
-import config from 'config';
-import utils from 'utils/utils';
-import mapStore from 'stores/map_store';
-import DSZoom from 'utils/ds_zoom';
+import actions from "actions/actions";
+import config from "config";
+import utils from "utils/utils";
+import mapStore from "stores/map_store";
+import DSZoom from "utils/ds_zoom";
 
-require('mapbox.js');
+require("mapbox.js");
 
 L.mapbox.accessToken = config.map.mapbox.accessToken;
 
 export default createReactClass({
-  displayName: 'Map',
+  displayName: "Map",
 
   propTypes: {
     query: PropTypes.object,
@@ -35,14 +35,14 @@ export default createReactClass({
   },
 
   mixins: [
-    Reflux.listenTo(actions.resultOver, 'onResultOver'),
-    Reflux.listenTo(actions.resultOut, 'onResultOut'),
-    Reflux.listenTo(actions.resultSelected, 'onResultSelected'),
-    Reflux.listenTo(actions.selectPreview, 'onSelectPreview'),
-    Reflux.listenTo(actions.fitToBounds, 'onFitToBounds'),
-    Reflux.listenTo(actions.moveToCoords, 'onMoveToCoords'),
-    Reflux.listenTo(actions.requestMyLocation, 'onRequestMyLocation'),
-    Reflux.listenTo(actions.setBaseLayer, 'onChangeBaseLayer')
+    Reflux.listenTo(actions.resultOver, "onResultOver"),
+    Reflux.listenTo(actions.resultOut, "onResultOut"),
+    Reflux.listenTo(actions.resultSelected, "onResultSelected"),
+    Reflux.listenTo(actions.selectPreview, "onSelectPreview"),
+    Reflux.listenTo(actions.fitToBounds, "onFitToBounds"),
+    Reflux.listenTo(actions.moveToCoords, "onMoveToCoords"),
+    Reflux.listenTo(actions.requestMyLocation, "onRequestMyLocation"),
+    Reflux.listenTo(actions.setBaseLayer, "onChangeBaseLayer")
   ],
 
   map: null,
@@ -64,20 +64,20 @@ export default createReactClass({
   // Current active base layer.
   baseLayer: null,
 
-  onSelectPreview: function (what) {
+  onSelectPreview: function(what) {
     this.updateSelectedItemImageFootprint(what);
   },
 
-  componentWillReceiveProps: function (nextProps) {
+  componentWillReceiveProps: function(nextProps) {
     this.requireMapViewUpdate = this.props.map.view !== nextProps.map.view;
     this.requireSelectedItemUpdate =
-      _.get(this.props.selectedItem, '_id', null) !==
-      _.get(nextProps.selectedItem, '_id', null);
+      _.get(this.props.selectedItem, "_id", null) !==
+      _.get(nextProps.selectedItem, "_id", null);
   },
 
   // Lifecycle method.
   // Called once as soon as the component has a DOM representation.
-  componentDidMount: function () {
+  componentDidMount: function() {
     this.map = L.mapbox.map(this.refs.mapContainer, null, {
       zoomControl: false,
       minZoom: config.map.minZoom,
@@ -97,21 +97,21 @@ export default createReactClass({
     var credits = L.control.attribution().addTo(this.map);
     credits.addAttribution(
       '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © ' +
-      '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> | ' +
-      '<a href="#" data-hook="map:issue">Report an issue with this map</a>'
+        '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> | ' +
+        '<a href="#" data-hook="map:issue">Report an issue with this map</a>'
     );
 
     let mapIssueTrigger = this.refs.mapContainer.querySelector(
       '[data-hook="map:issue"]'
     );
-    mapIssueTrigger.addEventListener('click', this.onMapIssueReport);
+    mapIssueTrigger.addEventListener("click", this.onMapIssueReport);
 
     // Custom zoom control.
     var zoomCtrl = new DSZoom({
-      position: 'bottomleft',
-      containerClasses: 'zoom-controls',
-      zoomInClasses: 'button-zoom button-zoom--in',
-      zoomOutClasses: 'button-zoom button-zoom--out'
+      position: "bottomleft",
+      containerClasses: "zoom-controls",
+      zoomInClasses: "button-zoom button-zoom--in",
+      zoomOutClasses: "button-zoom button-zoom--out"
     });
     this.map.addControl(zoomCtrl);
 
@@ -124,9 +124,9 @@ export default createReactClass({
     }).addTo(this.map);
     this.mapSelectedSquareLayer = L.geoJson(null).addTo(this.map);
 
-    this.mapGridLayer.on('mouseover', this.onGridSqrOver);
-    this.mapGridLayer.on('mouseout', this.onGridSqrOut);
-    this.mapGridLayer.on('click', this.onGridSqrClick);
+    this.mapGridLayer.on("mouseover", this.onGridSqrOver);
+    this.mapGridLayer.on("mouseout", this.onGridSqrOut);
+    this.mapGridLayer.on("click", this.onGridSqrClick);
 
     // Map position from path.
     var mapString = this.stringToMapView(this.props.map.view);
@@ -134,7 +134,7 @@ export default createReactClass({
     var zoom = mapString.zoom;
     this.map.setView(view, zoom);
 
-    this.map.on('moveend', this.onMapMoveend);
+    this.map.on("moveend", this.onMapMoveend);
 
     this.updateGrid();
     this.updateSelectedSquare();
@@ -142,7 +142,7 @@ export default createReactClass({
 
   // Lifecycle method.
   // Called when the component gets updated.
-  componentDidUpdate: function (prevProps, prevState) {
+  componentDidUpdate: function(prevProps, prevState) {
     // Is there a need to update the map view.
     if (this.requireMapViewUpdate) {
       var routerMap = this.stringToMapView(this.props.map.view);
@@ -152,33 +152,33 @@ export default createReactClass({
     this.updateSelectedSquare();
 
     if (this.requireSelectedItemUpdate) {
-      this.updateSelectedItemImageFootprint({ type: 'thumbnail' });
+      this.updateSelectedItemImageFootprint({ type: "thumbnail" });
     }
   },
 
-  componentWillUnmount: function () {
+  componentWillUnmount: function() {
     let mapIssueTrigger = this.refs.mapContainer.querySelector(
       '[data-hook="map:issue"]'
     );
-    mapIssueTrigger.removeEventListener('click', this.onMapIssueReport);
+    mapIssueTrigger.removeEventListener("click", this.onMapIssueReport);
   },
 
   // Lifecycle method.
-  render: function () {
+  render: function() {
     return (
       <div>
-        <div id='map' ref='mapContainer' />
+        <div id="map" ref="mapContainer" />
       </div>
     );
   },
 
-  onMapIssueReport: function (e) {
+  onMapIssueReport: function(e) {
     e.preventDefault();
-    actions.openModal('feedback');
+    actions.openModal("feedback");
   },
 
   // Map event
-  onMapMoveend: function (e) {
+  onMapMoveend: function(e) {
     var path = this.mapViewToString();
     if (this.props.selectedSquareQuadkey) {
       path += `/${this.props.selectedSquareQuadkey}`;
@@ -191,10 +191,10 @@ export default createReactClass({
   },
 
   // Map event
-  onGridSqrOver: function (e) {
+  onGridSqrOver: function(e) {
     // On mouseover add gs-highlight.
     if (!this.getSqrQuadKey() && e.layer.feature.properties.count > 0) {
-      L.DomUtil.addClass(e.layer._path, 'gs-highlight');
+      L.DomUtil.addClass(e.layer._path, "gs-highlight");
       // Open popup on square center.
       var sqrCenter = centroid(e.layer.feature).geometry.coordinates;
       e.layer.openPopup([sqrCenter[1], sqrCenter[0]]);
@@ -202,14 +202,14 @@ export default createReactClass({
   },
 
   // Map event
-  onGridSqrOut: function (e) {
+  onGridSqrOut: function(e) {
     // On mouseover remove gs-highlight.
-    L.DomUtil.removeClass(e.layer._path, 'gs-highlight');
+    L.DomUtil.removeClass(e.layer._path, "gs-highlight");
     e.layer.closePopup();
   },
 
   // Map event
-  onGridSqrClick: function (e) {
+  onGridSqrClick: function(e) {
     // console.log('onGridSqrClick', e);
     // Ensure that the popup doesn't open.
     e.layer.closePopup();
@@ -234,7 +234,7 @@ export default createReactClass({
   },
 
   // Actions listener.
-  onFitToBounds: function (bounds) {
+  onFitToBounds: function(bounds) {
     if (bounds) {
       this.map.fitBounds(bounds);
       this.onMapMoveend();
@@ -242,7 +242,7 @@ export default createReactClass({
   },
 
   // Actions listener.
-  onMoveToCoords: function (coords) {
+  onMoveToCoords: function(coords) {
     const center = [coords[1], coords[0]];
     const zoom = 16;
     this.map.setView(center, zoom);
@@ -250,11 +250,11 @@ export default createReactClass({
   },
 
   // Actions listener.
-  onChangeBaseLayer: function () {
+  onChangeBaseLayer: function() {
     let layer = mapStore.getBaseLayer();
     this.refs.mapContainer.className = this.refs.mapContainer.className.replace(
       /\bbase-layer--\S*/,
-      ''
+      ""
     );
     this.refs.mapContainer.classList.add(`base-layer--${layer.id}`);
     if (this.baseLayer) {
@@ -265,7 +265,7 @@ export default createReactClass({
   },
 
   // Actions listener.
-  onRequestMyLocation: function () {
+  onRequestMyLocation: function() {
     navigator.geolocation.getCurrentPosition(
       position => {
         let { longitude, latitude } = position.coords;
@@ -273,93 +273,93 @@ export default createReactClass({
         hashHistory.push({ pathname: `/${mapView}`, query: this.props.query });
       },
       err => {
-        console.warn('my location error', err);
+        console.warn("my location error", err);
       }
     );
   },
 
   // Action listener for when mouse enters a result in the results modal
-  onResultOver: function (feature) {
+  onResultOver: function(feature) {
     var f = utils.getPolygonFeature(feature.geojson.coordinates);
     this.mapOverFootprintLayer.clearLayers().addData(f);
-    this.mapOverFootprintLayer.eachLayer(function (l) {
-      L.DomUtil.addClass(l._path, 'g-footprint');
+    this.mapOverFootprintLayer.eachLayer(function(l) {
+      L.DomUtil.addClass(l._path, "g-footprint");
     });
   },
 
   // Action listener for when the mouse leaves a result in the results modal
-  onResultOut: function () {
+  onResultOut: function() {
     this.mapOverFootprintLayer.clearLayers();
   },
 
   // Action listener for when a result in the results modal is clicked
-  onResultSelected: function (result) {
+  onResultSelected: function(result) {
     this.onResultOut();
     let { map, selectedSquareQuadkey } = result;
     let path = `${map.view}/${selectedSquareQuadkey}/${result.data._id}`;
     hashHistory.push({ pathname: path, query: result.query });
   },
 
-  updateGrid: function () {
+  updateGrid: function() {
     var _this = this;
     this.mapGridLayer.clearLayers();
 
     // Recompute grid based on current map view (bounds + zoom).
-    var bounds = this.map.getBounds().toBBoxString().split(',').map(Number);
+    var bounds = this.map.getBounds().toBBoxString().split(",").map(Number);
     var gridData = this.computeGrid(this.map.getZoom(), bounds);
 
     // Stick a 'count' property onto each grid square, based on the number of
     // footprints that intersect with the square.
     // console.time('aggregate on grid');
-    gridData.features.forEach(function (gridSquare) {
+    gridData.features.forEach(function(gridSquare) {
       var featureCenter = centroid(gridSquare);
       // The footprints with bboxes that intersect with this grid square.
       // Get all the footprints inside the current square.
       var foots = mapStore.getFootprintsInSquare(gridSquare);
       // Filter with whatever filters are set.
       foots = foots
-        .filter(function (foot) {
+        .filter(function(foot) {
           var filter = _this.props.filterParams;
           var prop = foot.feature.properties;
 
           // Data type.
-          if (filter.dataType !== 'all' && !prop.tms) {
+          if (filter.dataType !== "all" && !prop.tms) {
             return false;
           }
 
           // Resolution.
           switch (filter.resolution) {
             // >=5
-            case 'low':
+            case "low":
               if (prop.gsd < 5) {
                 return false;
               }
               break;
             // <5 && >=1
-            case 'medium':
+            case "medium":
               if (prop.gsd >= 5 || prop.gsd < 1) {
                 return false;
               }
               break;
             // < 1
-            case 'high':
+            case "high":
               if (prop.gsd >= 1) {
                 return false;
               }
               break;
             default:
-              // Let all imagery of any resolution through to be tested against
-              // the filters below.
+            // Let all imagery of any resolution through to be tested against
+            // the filters below.
           }
 
           // Date.
-          if (filter.date !== 'all') {
+          if (filter.date !== "all") {
             var d = new Date();
-            if (filter.date === 'week') {
+            if (filter.date === "week") {
               d.setDate(d.getDate() - 7);
-            } else if (filter.date === 'month') {
+            } else if (filter.date === "month") {
               d.setMonth(d.getMonth() - 1);
-            } else if (filter.date === 'year') {
+            } else if (filter.date === "year") {
               d.setFullYear(d.getFullYear() - 1);
             }
 
@@ -372,7 +372,7 @@ export default createReactClass({
         })
         // Filter to ensure that the footprint is really inside the square
         // an not just its bounding box.
-        .filter(function (foot) {
+        .filter(function(foot) {
           var footprint = foot.feature;
           var footprintCenter = centroid(footprint);
           return (
@@ -386,41 +386,41 @@ export default createReactClass({
 
     // Color the grid accordingly.
     this.mapGridLayer.addData(gridData);
-    this.mapGridLayer.eachLayer(function (l) {
-      var elClasses = ['gs'];
+    this.mapGridLayer.eachLayer(function(l) {
+      var elClasses = ["gs"];
 
       // Is there a square selected?
       // When there is a square selected, gs-inactive to everything.
       if (_this.getSqrQuadKey()) {
-        elClasses.push('gs-inactive');
+        elClasses.push("gs-inactive");
       } else {
         // Gradation.
         if (l.feature.properties.count >= 50) {
-          elClasses.push('gs-density-high');
+          elClasses.push("gs-density-high");
         } else if (l.feature.properties.count >= 20) {
-          elClasses.push('gs-density-medhigh');
+          elClasses.push("gs-density-medhigh");
         } else if (l.feature.properties.count >= 5) {
-          elClasses.push('gs-density-med');
+          elClasses.push("gs-density-med");
         } else if (l.feature.properties.count > 0) {
-          elClasses.push('gs-density-low');
+          elClasses.push("gs-density-low");
         }
       }
 
       // Add all classes.
-      L.DomUtil.addClass(l._path, elClasses.join(' '));
+      L.DomUtil.addClass(l._path, elClasses.join(" "));
 
       var p = L.popup({
         autoPan: false,
         closeButton: false,
         offset: L.point(0, 10),
-        className: 'gs-tooltip-count'
+        className: "gs-tooltip-count"
       }).setContent(l.feature.properties.count.toString());
 
       l.bindPopup(p);
     });
   },
 
-  updateSelectedSquare: function () {
+  updateSelectedSquare: function() {
     // Clear the selected square layer.
     this.mapSelectedSquareLayer.clearLayers();
     // If there is a selected square add it to its own layer.
@@ -430,8 +430,8 @@ export default createReactClass({
       var coords = utils.coordsFromQuadkey(qk);
       var f = utils.getPolygonFeature(coords);
 
-      this.mapSelectedSquareLayer.addData(f).eachLayer(function (l) {
-        L.DomUtil.addClass(l._path, 'gs-active gs');
+      this.mapSelectedSquareLayer.addData(f).eachLayer(function(l) {
+        L.DomUtil.addClass(l._path, "gs-active gs");
       });
     }
   },
@@ -439,7 +439,7 @@ export default createReactClass({
   // When zoomed in to a layer that accepts high zoom levels and that
   // layer is removed, we need to zoom back out to the default max
   // zoom, but still remain centred on the same coord.
-  correctOverZoom: function () {
+  correctOverZoom: function() {
     this.map.options.maxZoom = config.map.maxZoom;
     if (this.map.getZoom() > config.map.maxZoom) {
       this.map.setZoom(config.map.maxZoom);
@@ -447,7 +447,7 @@ export default createReactClass({
     }
   },
 
-  updateSelectedItemImageFootprint: function (previewOptions) {
+  updateSelectedItemImageFootprint: function(previewOptions) {
     this.disableSelectedSquare = false;
     if (this.map.hasLayer(this.mapOverImageLayer)) {
       this.map.removeLayer(this.mapOverImageLayer);
@@ -456,21 +456,22 @@ export default createReactClass({
     }
     if (this.props.selectedItem) {
       var item = this.props.selectedItem;
-      if (previewOptions.type === 'tms') {
+      if (previewOptions.type === "tms") {
         // We can preview the main tms and the custom ones as well.
         // When previewing the main tms the index property won't be set.
         // We're not doing any validation here because the action call is
         // controlled.
-        let tmsUrl = previewOptions.index === undefined
-          ? item.properties.tms
-          : item.custom_tms[previewOptions.index];
-        tmsUrl = tmsUrl.replace('{zoom}', '{z}');
+        let tmsUrl =
+          previewOptions.index === undefined
+            ? item.properties.tms
+            : item.custom_tms[previewOptions.index];
+        tmsUrl = tmsUrl.replace("{zoom}", "{z}");
 
         this.disableSelectedSquare = true;
         const layerMaxZoom = this.getLayerMaxZoom(item.properties.tms);
         this.map.options.maxZoom = layerMaxZoom;
         this.mapOverImageLayer = L.tileLayer(tmsUrl, { maxZoom: layerMaxZoom });
-      } else if (previewOptions.type === 'thumbnail') {
+      } else if (previewOptions.type === "thumbnail") {
         var imageBounds = [
           [item.bbox[1], item.bbox[0]],
           [item.bbox[3], item.bbox[2]]
@@ -494,12 +495,12 @@ export default createReactClass({
   //       This will prevent the need for;
   //       1. Hacking the `tms` field to get the base tileJSON URI.
   //       2. Making a blocking synchronous XHR call.
-  getLayerMaxZoom: function (tmsURI) {
+  getLayerMaxZoom: function(tmsURI) {
     const tileJSONURI = tmsURI
-      .replace(/\/\{z\}\/\{x\}\/\{y\}.*/, '')
-      .replace('http://', 'https://');
+      .replace(/\/\{z\}\/\{x\}\/\{y\}.*/, "")
+      .replace("http://", "https://");
     let maxZoom;
-    $.get({url: tileJSONURI, async: false}).success((data) => {
+    $.get({ url: tileJSONURI, async: false }).success(data => {
       maxZoom = data.maxzoom;
     });
     return maxZoom;
@@ -507,7 +508,7 @@ export default createReactClass({
 
   // Helper functions
 
-  getSqrQuadKey: function () {
+  getSqrQuadKey: function() {
     return this.props.selectedSquareQuadkey;
   },
 
@@ -517,7 +518,7 @@ export default createReactClass({
    * @param {number} zoom
    * @param {Array} bounds [minx, miny, maxx, maxy]
    */
-  computeGrid: function (zoom, bounds) {
+  computeGrid: function(zoom, bounds) {
     // We'll use tilebelt to make pseudo-tiles at a zoom three levels higher
     // than the given zoom. This means that for each actual map tile, there will
     // be 4^3 = 64 grid squares.
@@ -530,11 +531,11 @@ export default createReactClass({
       for (var y = ll[1]; y >= ur[1]; y--) {
         var tile = [x, y, zoom];
         var feature = {
-          type: 'Feature',
+          type: "Feature",
           properties: {
             _quadKey: tilebelt.tileToQuadkey(tile),
             id: boxes.length,
-            tile: tile.join('/')
+            tile: tile.join("/")
           },
           geometry: tilebelt.tileToGeoJSON(tile)
         };
@@ -542,7 +543,7 @@ export default createReactClass({
       }
     }
     return {
-      type: 'FeatureCollection',
+      type: "FeatureCollection",
       features: boxes
     };
   },
@@ -552,7 +553,7 @@ export default createReactClass({
    *
    * @return string
    */
-  mapViewToString: function () {
+  mapViewToString: function() {
     var center = this.map.getCenter();
     var zoom = Math.round(this.map.getZoom());
     return utils.getMapViewString(center.lng, center.lat, zoom);
@@ -566,8 +567,8 @@ export default createReactClass({
    *   string to convert
    * @return object
    */
-  stringToMapView: function (string) {
-    var data = string.split(',');
+  stringToMapView: function(string) {
+    var data = string.split(",");
     return {
       lng: data[0],
       lat: data[1],
@@ -575,4 +576,3 @@ export default createReactClass({
     };
   }
 });
-

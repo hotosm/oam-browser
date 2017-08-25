@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from "lodash";
 /*
  * App configuration.
  *
@@ -21,10 +21,10 @@ import _ from 'lodash';
 // Manually requiring each file, rather than globing, is easier on node.js
 // when running tests.
 var configurations = {
-  local: require('./config/local.js'),
-  test: require('./config/test.js'),
-  staging: require('./config/staging.js'),
-  production: require('./config/production.js')
+  local: require("./config/local.js"),
+  test: require("./config/test.js"),
+  staging: require("./config/staging.js"),
+  production: require("./config/production.js")
 };
 
 var config;
@@ -37,17 +37,17 @@ if (_.isEmpty(configurations.local)) {
   config = configurations.local;
 }
 
-if (process.env.NODE_ENV === 'test' || process.env.TRAVIS === 'true') {
+if (process.env.NODE_ENV === "test" || process.env.TRAVIS === "true") {
   config = configurations.test;
 }
 
 // Set all staging config
-if (process.env.NODE_ENV === 'staging') {
+if (process.env.NODE_ENV === "staging") {
   config = configurations.staging;
 }
 
 // Set all production config
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === "production") {
   config = configurations.production;
 }
 
@@ -55,7 +55,7 @@ if (process.env.NODE_ENV === 'production') {
 // TODO: Explicitly declare each environment's config. Defaulting to production
 //   could be dangerous.
 for (var p in configurations.production) {
-  if (typeof config[p] === 'undefined') {
+  if (typeof config[p] === "undefined") {
     config[p] = configurations.production[p];
   }
 }

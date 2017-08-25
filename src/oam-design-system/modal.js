@@ -1,9 +1,9 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import PropTypes from "prop-types";
+import React from "react";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 class ModalParent extends React.Component {
-  static displayName = 'Modal';
+  static displayName = "Modal";
 
   static propTypes = {
     id: PropTypes.string.isRequired,
@@ -12,14 +12,16 @@ class ModalParent extends React.Component {
     onOverlayClick: PropTypes.func,
     onCloseClick: PropTypes.func,
 
-    children: function (props, propName, componentName) {
-      let types = ['ModalHeader', 'ModalBody', 'ModalFooter'];
-      let typesRequired = ['ModalHeader', 'ModalBody'];
+    children: function(props, propName, componentName) {
+      let types = ["ModalHeader", "ModalBody", "ModalFooter"];
+      let typesRequired = ["ModalHeader", "ModalBody"];
       let children = React.Children.toArray(props[propName]);
 
       let c = children.length;
       if (c === 0 || c > 3) {
-        return new Error(`${componentName} should have at least a child but no more than 3`);
+        return new Error(
+          `${componentName} should have at least a child but no more than 3`
+        );
       }
 
       let components = {};
@@ -28,19 +30,27 @@ class ModalParent extends React.Component {
         let o = children[i];
         let name = o.type.displayName || o.type;
         if (types.indexOf(name) === -1) {
-          return new Error(`${componentName} children should be of the following types: ${types.join(', ')}`);
+          return new Error(
+            `${componentName} children should be of the following types: ${types.join(
+              ", "
+            )}`
+          );
         }
         if (!components[name]) {
           components[name] = 0;
         }
         if (++components[name] > 1) {
-          return new Error(`${componentName} should have only one instance of: ${name}`);
+          return new Error(
+            `${componentName} should have only one instance of: ${name}`
+          );
         }
       }
 
       for (let i = 0; i < typesRequired.length; i++) {
         if (!components[typesRequired[i]]) {
-          return new Error(`${componentName} should have a ${typesRequired[i]}`);
+          return new Error(
+            `${componentName} should have a ${typesRequired[i]}`
+          );
         }
       }
     }
@@ -49,15 +59,15 @@ class ModalParent extends React.Component {
   static defaultProps = {
     revealed: false,
 
-    onOverlayClick: function (e) {
-      if (process.env.NODE_ENV !== 'production') {
-        console.warn('Modal', 'onOverlayClick handler not implemented');
+    onOverlayClick: function(e) {
+      if (process.env.NODE_ENV !== "production") {
+        console.warn("Modal", "onOverlayClick handler not implemented");
       }
     },
 
-    onCloseClick: function (e) {
-      if (process.env.NODE_ENV !== 'production') {
-        console.warn('Modal', 'onCloseClick handler not implemented');
+    onCloseClick: function(e) {
+      if (process.env.NODE_ENV !== "production") {
+        console.warn("Modal", "onCloseClick handler not implemented");
       }
     }
   };
@@ -76,12 +86,12 @@ class ModalParent extends React.Component {
   //   };
   // },
 
-  toggleBodyClass = (revealed) => {
-    let bd = document.getElementsByTagName('body')[0];
+  toggleBodyClass = revealed => {
+    let bd = document.getElementsByTagName("body")[0];
     if (revealed) {
-      bd.classList.add('unscrollable-y');
+      bd.classList.add("unscrollable-y");
     } else {
-      bd.classList.remove('unscrollable-y');
+      bd.classList.remove("unscrollable-y");
     }
   };
 
@@ -97,7 +107,7 @@ class ModalParent extends React.Component {
     this.toggleBodyClass(false);
   };
 
-  onOverlayClick = (e) => {
+  onOverlayClick = e => {
     // Prevent children from triggering this.
     if (e.target === e.currentTarget) {
       // Overlay click is disabled.
@@ -105,12 +115,12 @@ class ModalParent extends React.Component {
     }
   };
 
-  onCloseClick = (e) => {
+  onCloseClick = e => {
     e.preventDefault();
     this.props.onCloseClick.call(this, e);
   };
 
-  getChild = (name) => {
+  getChild = name => {
     let c = null;
     React.Children.forEach(this.props.children, o => {
       if (!c && o.type.displayName === name) {
@@ -122,36 +132,46 @@ class ModalParent extends React.Component {
   };
 
   render() {
-    var klasses = ['modal'];
+    var klasses = ["modal"];
     if (this.props.className) {
       klasses.push(this.props.className);
     }
 
     return (
       <ReactCSSTransitionGroup
-        component='div'
-        transitionName='modal'
+        component="div"
+        transitionName="modal"
         transitionEnterTimeout={300}
-        transitionLeaveTimeout={300} >
-
-        {this.props.revealed ? (
-          <section className={klasses.join(' ')} key={'modal-' + this.props.id} onClick={this.onOverlayClick} id={this.props.id}>
-            <div className='modal__inner'>
-              {this.getChild('ModalHeader')}
-              {this.getChild('ModalBody')}
-              {this.getChild('ModalFooter')}
-            </div>
-            <button className='modal__button-dismiss' title='Close' onClick={this.onCloseClick}><span>Dismiss</span></button>
-          </section>
-        ) : null}
-
+        transitionLeaveTimeout={300}
+      >
+        {this.props.revealed
+          ? <section
+              className={klasses.join(" ")}
+              key={"modal-" + this.props.id}
+              onClick={this.onOverlayClick}
+              id={this.props.id}
+            >
+              <div className="modal__inner">
+                {this.getChild("ModalHeader")}
+                {this.getChild("ModalBody")}
+                {this.getChild("ModalFooter")}
+              </div>
+              <button
+                className="modal__button-dismiss"
+                title="Close"
+                onClick={this.onCloseClick}
+              >
+                <span>Dismiss</span>
+              </button>
+            </section>
+          : null}
       </ReactCSSTransitionGroup>
     );
   }
 }
 
 class ModalHeader extends React.Component {
-  static displayName = 'ModalHeader';
+  static displayName = "ModalHeader";
 
   static propTypes = {
     children: PropTypes.node
@@ -159,7 +179,7 @@ class ModalHeader extends React.Component {
 
   render() {
     return (
-      <header className='modal__header'>
+      <header className="modal__header">
         {this.props.children}
       </header>
     );
@@ -167,7 +187,7 @@ class ModalHeader extends React.Component {
 }
 
 class ModalBody extends React.Component {
-  static displayName = 'ModalBody';
+  static displayName = "ModalBody";
 
   static propTypes = {
     children: PropTypes.node
@@ -175,7 +195,7 @@ class ModalBody extends React.Component {
 
   render() {
     return (
-      <div className='modal__body'>
+      <div className="modal__body">
         {this.props.children}
       </div>
     );
@@ -183,7 +203,7 @@ class ModalBody extends React.Component {
 }
 
 class ModalFooter extends React.Component {
-  static displayName = 'ModalFooter';
+  static displayName = "ModalFooter";
 
   static propTypes = {
     children: PropTypes.node
@@ -191,7 +211,7 @@ class ModalFooter extends React.Component {
 
   render() {
     return (
-      <footer className='modal__footer'>
+      <footer className="modal__footer">
         {this.props.children}
       </footer>
     );

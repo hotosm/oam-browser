@@ -1,9 +1,9 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import Clipboard from 'clipboard';
+import PropTypes from "prop-types";
+import React from "react";
+import Clipboard from "clipboard";
 
 export default class extends React.Component {
-  static displayName = 'ZcButton';
+  static displayName = "ZcButton";
 
   static propTypes = {
     onCopy: PropTypes.func.isRequired,
@@ -13,9 +13,9 @@ export default class extends React.Component {
   };
 
   static defaultProps = {
-    title: '',
-    className: 'drop__menu-item clipboard',
-    text: ''
+    title: "",
+    className: "drop__menu-item clipboard",
+    text: ""
   };
 
   clipboard = null;
@@ -32,13 +32,22 @@ export default class extends React.Component {
     this.clipboard.destroy();
   }
 
-  onCopyClick = (e) => {
+  onCopyClick = e => {
     e.preventDefault();
   };
 
   render() {
     return (
-      <a ref='el' title={this.props.title} className={this.props.className} onClick={this.onCopyClick}><span>{this.props.text}</span></a>
+      <a
+        ref="el"
+        title={this.props.title}
+        className={this.props.className}
+        onClick={this.onCopyClick}
+      >
+        <span>
+          {this.props.text}
+        </span>
+      </a>
     );
   }
 }

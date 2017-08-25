@@ -4,8 +4,8 @@
 // So let's plan to refactor it out.
 
 let jQuery = {};
-if (typeof window !== 'undefined') {
-  jQuery = require('jquery');
+if (typeof window !== "undefined") {
+  jQuery = require("jquery");
 }
 
 module.exports = jQuery;

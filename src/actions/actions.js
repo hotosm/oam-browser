@@ -1,50 +1,50 @@
-var Reflux = require('reflux');
+var Reflux = require("reflux");
 
 module.exports = Reflux.createActions({
-  'selectedBbox': {},
+  selectedBbox: {},
 
-  'latestImageryLoaded': {},
+  latestImageryLoaded: {},
 
-  'footprintsLoaded': {},
+  footprintsLoaded: {},
 
   // Filter actios
-  'setDateFilter': {
-    shouldEmit: function (val) {
-      return [ 'all', 'week', 'month', 'year' ].indexOf(val) >= 0;
+  setDateFilter: {
+    shouldEmit: function(val) {
+      return ["all", "week", "month", "year"].indexOf(val) >= 0;
     }
   },
-  'setResolutionFilter': {
-    shouldEmit: function (val) {
-      return [ 'all', 'low', 'medium', 'high' ].indexOf(val) >= 0;
+  setResolutionFilter: {
+    shouldEmit: function(val) {
+      return ["all", "low", "medium", "high"].indexOf(val) >= 0;
     }
   },
-  'setDataTypeFilter': {
-    shouldEmit: function (val) {
-      return [ 'all', 'service' ].indexOf(val) >= 0;
+  setDataTypeFilter: {
+    shouldEmit: function(val) {
+      return ["all", "service"].indexOf(val) >= 0;
     }
   },
 
   // Results pane related actions.
-  'resultOver': {},
-  'resultOut': {},
-  'resultSelected': {},
+  resultOver: {},
+  resultOut: {},
+  resultSelected: {},
 
   // openModal(which)
-  'openModal': {},
+  openModal: {},
 
-  'fitToBounds': {},
-  'moveToCoords': {},
+  fitToBounds: {},
+  moveToCoords: {},
 
-  'requestMyLocation': {},
+  requestMyLocation: {},
 
-  'selectPreview': {},
+  selectPreview: {},
 
-  'setBaseLayer': {},
+  setBaseLayer: {},
 
-  'showNotification': {},
-  'clearNotification': {},
-  'clearNotificationAfter': {},
+  showNotification: {},
+  clearNotification: {},
+  clearNotificationAfter: {},
 
-  'userLogOut': {},
-  'userLogIn': {}
+  userLogOut: {},
+  userLogIn: {}
 });

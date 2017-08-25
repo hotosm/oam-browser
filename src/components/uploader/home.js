@@ -1,16 +1,16 @@
-import url from 'url';
-import React from 'react';
-import createReactClass from 'create-react-class';
-import ValidationMixin from 'react-validation-mixin';
-import Joi from 'joi';
-import nets from 'nets';
-import Scene from 'components/uploader/scene';
-import AppActions from 'actions/actions';
-import imageryValidations from 'components/shared/imagery_validations';
-import $ from 'jquery';
-import _ from 'lodash';
+import url from "url";
+import React from "react";
+import createReactClass from "create-react-class";
+import ValidationMixin from "react-validation-mixin";
+import Joi from "joi";
+import nets from "nets";
+import Scene from "components/uploader/scene";
+import AppActions from "actions/actions";
+import imageryValidations from "components/shared/imagery_validations";
+import $ from "jquery";
+import _ from "lodash";
 
-import config from 'config';
+import config from "config";
 const apiUrl = config.catalog.url;
 
 // Sanity note:
@@ -26,30 +26,28 @@ const apiUrl = config.catalog.url;
 // It's still an antipattern, but I know what I'm doing! :)
 
 export default createReactClass({
-  displayName: 'Home',
+  displayName: "Home",
 
   mixins: [ValidationMixin],
 
   validatorTypes: {
     scenes: Joi.array().items(
       Joi.object().keys(
-        _.assign(
-          imageryValidations, {
-            'img-loc': Joi.array()
-              .min(1)
-              .items(
-                Joi.object().keys({
-                  url: Joi.string().uri().required().label('Imagery url'),
-                  origin: Joi.string().required().label('Imagery file origin'),
-                  file: Joi.label('File').when('origin', {
-                    is: 'upload',
-                    then: Joi.object().required()
-                  })
+        _.assign(imageryValidations, {
+          "img-loc": Joi.array()
+            .min(1)
+            .items(
+              Joi.object().keys({
+                url: Joi.string().uri().required().label("Imagery url"),
+                origin: Joi.string().required().label("Imagery file origin"),
+                file: Joi.label("File").when("origin", {
+                  is: "upload",
+                  then: Joi.object().required()
                 })
-              )
-              .label('Imagery location')
-          }
-        )
+              })
+            )
+            .label("Imagery location")
+        })
       )
     )
   },
@@ -57,22 +55,22 @@ export default createReactClass({
   // Store entered values to these values in order to prepopulate the form on the next visit
   fieldsToPrepopulate: {
     scene: [
-      'title',
-      'platform-type',
-      'sensor',
-      'date-start',
-      'dte-end',
-      'tile-url',
-      'provider',
-      'contact-type',
-      'contact-name',
-      'contact-email',
-      'license',
-      'tags'
+      "title",
+      "platform-type",
+      "sensor",
+      "date-start",
+      "dte-end",
+      "tile-url",
+      "provider",
+      "contact-type",
+      "contact-name",
+      "contact-email",
+      "license",
+      "tags"
     ]
   },
 
-  getInitialState: function () {
+  getInitialState: function() {
     return {
       loading: false,
       // Form properties.
@@ -80,11 +78,11 @@ export default createReactClass({
       uploadActive: false,
       uploadProgress: 0,
       uploadError: false,
-      uploadStatus: ''
+      uploadStatus: ""
     };
   },
 
-  getSceneDataTemplate: function () {
+  getSceneDataTemplate: function() {
     var midnight = new Date();
     midnight.setMilliseconds(0);
     midnight.setSeconds(0);
@@ -93,85 +91,85 @@ export default createReactClass({
     var now = new Date();
 
     let defaults = {
-      'title': '',
-      'platform-type': 'satellite',
-      'sensor': '',
-      'date-start': midnight.toISOString(),
-      'date-end': now.toISOString(),
-      'img-loc': [],
-      'tile-url': '',
-      'provider': '',
-      'contact-type': 'uploader',
-      'contact-name': '',
-      'contact-email': '',
-      'license': 'CC-BY 4.0',
-      'tags': ''
+      title: "",
+      "platform-type": "satellite",
+      sensor: "",
+      "date-start": midnight.toISOString(),
+      "date-end": now.toISOString(),
+      "img-loc": [],
+      "tile-url": "",
+      provider: "",
+      "contact-type": "uploader",
+      "contact-name": "",
+      "contact-email": "",
+      license: "CC-BY 4.0",
+      tags: ""
     };
 
     // Merge in any fields from a previous upload
     defaults = _.defaults(
-      JSON.parse(localStorage.getItem('upload-form-fields')) || {},
+      JSON.parse(localStorage.getItem("upload-form-fields")) || {},
       defaults
     );
 
     return defaults;
   },
 
-  getSceneImgLocTemplate: function () {
+  getSceneImgLocTemplate: function() {
     return {
-      url: '',
-      origin: ''
+      url: "",
+      origin: ""
     };
   },
 
-  addScene: function () {
+  addScene: function() {
     var scenes = this.state.scenes;
     scenes.push(this.getSceneDataTemplate());
     this.setState({ scenes: scenes });
   },
 
-  removeScene: function (sceneIndex) {
+  removeScene: function(sceneIndex) {
     var scenes = this.state.scenes;
     scenes.splice(sceneIndex, 1);
     this.setState({ scenes: scenes });
   },
 
-  addImageryLocationToScene: function (sceneIndex, origin) {
+  addImageryLocationToScene: function(sceneIndex, origin) {
     let scenes = this.state.scenes;
     let tmp = this.getSceneImgLocTemplate();
     tmp.origin = origin;
-    scenes[sceneIndex]['img-loc'].push(tmp);
+    scenes[sceneIndex]["img-loc"].push(tmp);
     this.setState({ scenes: scenes });
   },
 
-  removeImageryLocatioFromScene: function (sceneIndex, imgLocIndex) {
+  removeImageryLocatioFromScene: function(sceneIndex, imgLocIndex) {
     var scenes = this.state.scenes;
-    scenes[sceneIndex]['img-loc'].splice(imgLocIndex, 1);
+    scenes[sceneIndex]["img-loc"].splice(imgLocIndex, 1);
     this.setState({ scenes: scenes });
   },
 
-  onSceneValueChange: function (sceneIndex, fieldName, fieldValue) {
+  onSceneValueChange: function(sceneIndex, fieldName, fieldValue) {
     var scenes = this.state.scenes;
     scenes[sceneIndex][fieldName] = fieldValue;
     this.setState({ scenes: scenes });
   },
 
-  onValueChange: function (event) {
+  onValueChange: function(event) {
     var data = {};
     data[event.target.name] = event.target.value;
     this.setState(data);
   },
 
-  resetForm: function () {
+  resetForm: function() {
     this.setState({
       scenes: [this.getSceneDataTemplate()]
     });
   },
 
-  uploadFile: function (file, callback) {
-    fetch(url.resolve(apiUrl, '/uploads/url'), {
-      method: 'POST',
-      credentials: 'include',
+  uploadFile: function(file, callback) {
+    fetch(url.resolve(apiUrl, "/uploads/url"), {
+      method: "POST",
+      credentials: "include",
       body: JSON.stringify({
         name: file.newName,
         type: file.data.type
@@ -181,14 +179,14 @@ export default createReactClass({
       .then(data => {
         let presignedUrl = data.results.url;
         $.ajax({
-          xhr: function () {
+          xhr: function() {
             let xhr = new window.XMLHttpRequest();
             xhr.upload.addEventListener(
-              'progress',
-              function (evt) {
+              "progress",
+              function(evt) {
                 if (evt.lengthComputable) {
                   return callback(null, {
-                    type: 'progress',
+                    type: "progress",
                     fileName: file.newName,
                     val: evt.loaded
                   });
@@ -202,18 +200,18 @@ export default createReactClass({
           data: file.data,
           processData: false,
           contentType: file.data.type,
-          type: 'PUT',
+          type: "PUT",
           error: err => {
             return callback(err);
           },
           beforeSend: () => {
             return callback(null, {
-              type: 'beforeSend'
+              type: "beforeSend"
             });
           },
           success: data => {
             return callback(null, {
-              type: 'success',
+              type: "success",
               val: data
             });
           }
@@ -221,7 +219,7 @@ export default createReactClass({
       });
   },
 
-  onSubmit: function (event) {
+  onSubmit: function(event) {
     event.preventDefault();
 
     // Warning... Controlled HACK.
@@ -232,10 +230,10 @@ export default createReactClass({
     this.state.errors = {}; // eslint-disable-line
 
     this.validate(
-      function (error, validationErrors) {
+      function(error, validationErrors) {
         if (error) {
           console.log(validationErrors);
-          AppActions.showNotification('alert', 'Form contains errors!');
+          AppActions.showNotification("alert", "Form contains errors!");
           this.scrollToError();
         } else {
           if (this.state.loading) {
@@ -257,35 +255,35 @@ export default createReactClass({
           // 5 - Reset form when success. -- this.resetForm();
 
           var data = {
-            scenes: this.state.scenes.map(function (scene) {
+            scenes: this.state.scenes.map(function(scene) {
               var contact = null;
-              if (scene['contact-type'] === 'other') {
+              if (scene["contact-type"] === "other") {
                 contact = {
-                  name: scene['contact-name'],
-                  email: scene['contact-email']
+                  name: scene["contact-name"],
+                  email: scene["contact-email"]
                 };
               }
 
-              var tms = scene['tile-url'].trim();
+              var tms = scene["tile-url"].trim();
               tms = tms.length === 0 ? undefined : tms;
 
               // Generate random filenames, to avoid collisions at the API
               const randomizeName = filename => {
-                const ext = filename.substr(filename.lastIndexOf('.'));
-                const basename = filename.replace(ext, '');
+                const ext = filename.substr(filename.lastIndexOf("."));
+                const basename = filename.replace(ext, "");
                 const randStr = Math.random().toString(36).substring(5);
                 return `${basename}-${randStr}${ext}`;
               };
               let files = [];
               let urls = [];
-              scene['img-loc'].forEach(o => {
+              scene["img-loc"].forEach(o => {
                 if (o.file) {
                   const name = randomizeName(o.file.name);
                   files.push({ newName: name, data: o.file });
                   urls.unshift(
-                    'https://s3.amazonaws.com/' +
+                    "https://s3.amazonaws.com/" +
                       config.uploadBucket +
-                      '/' +
+                      "/" +
                       name
                   );
                 } else {
@@ -297,10 +295,10 @@ export default createReactClass({
                 contact: contact,
                 title: scene.title,
                 provider: scene.provider,
-                platform: scene['platform-type'],
+                platform: scene["platform-type"],
                 sensor: scene.sensor,
-                acquisition_start: scene['date-start'],
-                acquisition_end: scene['date-end'],
+                acquisition_start: scene["date-start"],
+                acquisition_end: scene["date-end"],
                 tms: tms,
                 license: scene.license,
                 tags: scene.tags,
@@ -312,7 +310,10 @@ export default createReactClass({
 
           // Use the values from the first dataset/scene to save for prepopulation of
           // future uploads
-          localStorage.setItem('upload-form-fields', JSON.stringify(this.state.scenes[0]));
+          localStorage.setItem(
+            "upload-form-fields",
+            JSON.stringify(this.state.scenes[0])
+          );
 
           // Gather list of files to upload
           let uploads = [];
@@ -339,19 +340,19 @@ export default createReactClass({
               progressStats[file.data.name] = 0;
               this.uploadFile(file, (err, result) => {
                 if (err) {
-                  console.log('error', err);
+                  console.log("error", err);
                   this.setState({
                     uploadError: true,
                     uploadActive: false,
                     loading: false
                   });
                   AppActions.showNotification(
-                    'alert',
+                    "alert",
                     <span>There was a problem uploading the files.</span>
                   );
                   return;
                 }
-                if (result.type === 'progress') {
+                if (result.type === "progress") {
                   const { fileName, val } = result;
                   // Update progress stats.
                   progressStats[fileName] = val;
@@ -363,7 +364,7 @@ export default createReactClass({
                   let percentComplete = totalBytesComplete / totalBytes * 100;
                   let percentDisplay = Math.round(percentComplete);
 
-                  let uploadStatus = '';
+                  let uploadStatus = "";
                   if (totalFiles === 1) {
                     uploadStatus = `Uploading image (${percentDisplay}%)...`;
                   } else {
@@ -373,15 +374,16 @@ export default createReactClass({
                     uploadProgress: percentComplete,
                     uploadStatus: uploadStatus
                   });
-                } else if (result.type === 'beforeSend') {
+                } else if (result.type === "beforeSend") {
                   this.setState({ uploadError: false, uploadActive: true });
                 } else if (
-                  result.type === 'success' && this.state.uploadProgress >= 100
+                  result.type === "success" &&
+                  this.state.uploadProgress >= 100
                 ) {
                   this.setState({
                     uploadError: false,
                     uploadActive: false,
-                    uploadStatus: 'Upload complete!'
+                    uploadStatus: "Upload complete!"
                   });
                   this.submitData(data);
                 }
@@ -393,20 +395,20 @@ export default createReactClass({
     );
   },
 
-  submitData: function (data) {
+  submitData: function(data) {
     nets(
       {
-        url: url.resolve(apiUrl, '/uploads'),
-        method: 'POST',
+        url: url.resolve(apiUrl, "/uploads"),
+        method: "POST",
         body: JSON.stringify(data),
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
         withCredentials: true
       },
-      function (err, resp, body) {
+      function(err, resp, body) {
         if (err) {
-          console.error('error', err);
+          console.error("error", err);
         }
         this.setState({ loading: false });
 
@@ -414,11 +416,11 @@ export default createReactClass({
           var id = JSON.parse(body.toString()).results.upload;
 
           AppActions.showNotification(
-            'success',
+            "success",
             <span>
-              Your upload request was successfully submitted and is being processed.
-              {' '}
-              <a href={'#/upload/status/' + id}>Check upload status.</a>
+              Your upload request was successfully submitted and is being
+              processed.{" "}
+              <a href={"#/upload/status/" + id}>Check upload status.</a>
             </span>
           );
         } else {
@@ -426,37 +428,37 @@ export default createReactClass({
           if (resp.statusCode === 401) {
             message = <span>You are not logged in.</span>;
           } else {
-            message = (
-              <span>
-                There was a problem with the request.
-              </span>
-            );
+            message = <span>There was a problem with the request.</span>;
           }
 
-          AppActions.showNotification('alert', message);
+          AppActions.showNotification("alert", message);
         }
       }.bind(this)
     );
   },
 
-  scrollToError: function () {
-    var topPos = $('.message-alert').first().offset().top;
-    $('html').animate({ scrollTop: topPos - 50 });
+  scrollToError: function() {
+    var topPos = $(".message-alert").first().offset().top;
+    $("html").animate({ scrollTop: topPos - 50 });
   },
 
-  renderErrorMessage: function (message) {
-    message = message || '';
+  renderErrorMessage: function(message) {
+    message = message || "";
     if (message.trim().length === 0) {
       return null;
     }
 
-    return <p className='message message-alert'>{message}</p>;
+    return (
+      <p className="message message-alert">
+        {message}
+      </p>
+    );
   },
 
-  renderScene: function (data, index) {
+  renderScene: function(data, index) {
     return (
       <Scene
-        type={'uploader'}
+        type={"uploader"}
         key={index}
         total={this.state.scenes.length}
         index={index}
@@ -472,87 +474,83 @@ export default createReactClass({
     );
   },
 
-  render: function () {
+  render: function() {
     return (
       <div>
-        <section className='panel upload-panel'>
-          <header className='panel-header'>
-            <div className='panel-headline'>
-              <h1 className='panel-title'>Upload Imagery</h1>
+        <section className="panel upload-panel">
+          <header className="panel-header">
+            <div className="panel-headline">
+              <h1 className="panel-title">Upload Imagery</h1>
             </div>
           </header>
-          <div className='panel-body'>
-            <div className='meter'>
+          <div className="panel-body">
+            <div className="meter">
               <span />
             </div>
 
-            <form id='upload-form' className='form-horizontal'>
-              <div className='meter'>
+            <form id="upload-form" className="form-horizontal">
+              <div className="meter">
                 <span />
               </div>
 
               {this.state.scenes.map(this.renderScene)}
 
-              <div className='form-extra-actions'>
+              <div className="form-extra-actions">
                 <button
-                  type='button'
-                  className='bttn-add-scene'
+                  type="button"
+                  className="bttn-add-scene"
                   onClick={this.addScene}
-                  title='Add new dataset'
+                  title="Add new dataset"
                 >
                   <span>New dataset</span>
                 </button>
               </div>
 
-              <div className='form-note'>
+              <div className="form-note">
                 <p>
-                  By submitting imagery to OpenAerialMap, you agree to place your imagery into the
-                  {' '}
-                  <a href='https://github.com/openimagerynetwork/oin-register#open-imagery-network'>
+                  By submitting imagery to OpenAerialMap, you agree to place
+                  your imagery into the{" "}
+                  <a href="https://github.com/openimagerynetwork/oin-register#open-imagery-network">
                     Open Imagery Network (OIN)
                   </a>
-                  . All imagery contained in OIN is licensed
-                  {' '}
-                  <a href='https://creativecommons.org/licenses/by/4.0/'>
+                  . All imagery contained in OIN is licensed{" "}
+                  <a href="https://creativecommons.org/licenses/by/4.0/">
                     CC-BY 4.0
                   </a>
-                  , with attribution as contributors of Open Imagery Network. All imagery is available to be traced in OpenStreetMap.
+                  , with attribution as contributors of Open Imagery Network.
+                  All imagery is available to be traced in OpenStreetMap.
                 </p>
               </div>
 
-              <div className='form-actions'>
+              <div className="form-actions">
                 <button
-                  type='submit'
-                  className='bttn-submit'
+                  type="submit"
+                  className="bttn-submit"
                   onClick={this.onSubmit}
                 >
                   <span>Submit</span>
                 </button>
                 <div
-                  id='upload-progress'
-                  className={this.state.uploadActive ? '' : 'upload-inactive'}
+                  id="upload-progress"
+                  className={this.state.uploadActive ? "" : "upload-inactive"}
                 >
-                  <div className='meter'>
-                    <span style={{ width: this.state.uploadProgress + '%' }} />
+                  <div className="meter">
+                    <span style={{ width: this.state.uploadProgress + "%" }} />
                   </div>
-                  <span className='upload-status'>
+                  <span className="upload-status">
                     {this.state.uploadStatus}
                   </span>
                 </div>
               </div>
-
             </form>
-
           </div>
-          <footer className='panel-footer' />
+          <footer className="panel-footer" />
         </section>
 
         {this.state.loading
-          ? <p className='loading revealed'>Loading</p>
+          ? <p className="loading revealed">Loading</p>
           : null}
-
       </div>
     );
   }
 });
-

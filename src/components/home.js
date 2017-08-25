@@ -1,21 +1,21 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import createReactClass from 'create-react-class';
-import Reflux from 'reflux';
-import _ from 'lodash';
+import PropTypes from "prop-types";
+import React from "react";
+import createReactClass from "create-react-class";
+import Reflux from "reflux";
+import _ from "lodash";
 
-import MapBoxMap from 'components/map';
-import MiniMap from 'components/minimap';
-import ResultsPane from 'components/results_pane';
-import mapStore from 'stores/map_store';
-import searchQueryStore from 'stores/search_query_store';
-import cookie from 'utils/cookie';
-import utils from 'utils/utils';
-import actions from 'actions/actions';
-import config from 'config';
+import MapBoxMap from "components/map";
+import MiniMap from "components/minimap";
+import ResultsPane from "components/results_pane";
+import mapStore from "stores/map_store";
+import searchQueryStore from "stores/search_query_store";
+import cookie from "utils/cookie";
+import utils from "utils/utils";
+import actions from "actions/actions";
+import config from "config";
 
 export default createReactClass({
-  displayName: 'Home',
+  displayName: "Home",
 
   propTypes: {
     params: PropTypes.object,
@@ -23,11 +23,11 @@ export default createReactClass({
   },
 
   mixins: [
-    Reflux.listenTo(searchQueryStore, 'onSearchQueryChanged'),
-    Reflux.listenTo(mapStore, 'onMapStoreData')
+    Reflux.listenTo(searchQueryStore, "onSearchQueryChanged"),
+    Reflux.listenTo(mapStore, "onMapStoreData")
   ],
 
-  getInitialState: function () {
+  getInitialState: function() {
     return {
       results: [],
       loading: mapStore.footprintsWereFecthed(),
@@ -40,19 +40,20 @@ export default createReactClass({
     };
   },
 
-  onMapStoreData: function (what) {
+  onMapStoreData: function(what) {
     var state = _.cloneDeep(this.state);
     state.results = mapStore.getResults();
-    state.loading = what === 'squareData' ? false : mapStore.footprintsWereFecthed();
+    state.loading =
+      what === "squareData" ? false : mapStore.footprintsWereFecthed();
     this.setState(state);
   },
 
   // Action listener
-  onSearchQueryChanged: function (params) {
-    this.setState({filterParams: params});
+  onSearchQueryChanged: function(params) {
+    this.setState({ filterParams: params });
   },
 
-  componentWillMount: function () {
+  componentWillMount: function() {
     var state = _.cloneDeep(this.state);
     // The map parameters form the url take precedence over everything else
     // if they're not present try the cookie.
@@ -63,14 +64,14 @@ export default createReactClass({
     this.setState(state);
   },
 
-  componentWillReceiveProps: function (nextProps) {
+  componentWillReceiveProps: function(nextProps) {
     var state = _.cloneDeep(this.state);
     // Map view.
     var nextMapView = this.getMapViewOrDefault(nextProps.params.map);
     if (this.getMapViewOrDefault(this.props.params.map) !== nextMapView) {
       state.map.view = nextMapView;
       // Map view changed. Store cookie.
-      cookie.create('oam-map-view', state.map.view.replace(/,/g, '|'));
+      cookie.create("oam-map-view", state.map.view.replace(/,/g, "|"));
     }
 
     // Selected Square
@@ -84,7 +85,10 @@ export default createReactClass({
       // Clean the results.
       state.results = [];
     }
-    if (this.props.params.square !== nextProps.params.square && nextProps.params.square) {
+    if (
+      this.props.params.square !== nextProps.params.square &&
+      nextProps.params.square
+    ) {
       // console.log('Home component quadkey changed', nextProps.params.square);
       var bbox = utils.tileBboxFromQuadkey(nextProps.params.square);
       state.loading = true;
@@ -100,19 +104,23 @@ export default createReactClass({
     this.setState(state);
   },
 
-  componentDidMount: function () {
+  componentDidMount: function() {
     if (this.state.selectedSquareQuadkey) {
       var bbox = utils.tileBboxFromQuadkey(this.state.selectedSquareQuadkey);
       actions.selectedBbox(bbox);
     }
   },
 
-  render: function () {
-    var selectedItem = _.find(this.state.results, {_id: this.state.selectedItemId});
+  render: function() {
+    var selectedItem = _.find(this.state.results, {
+      _id: this.state.selectedItemId
+    });
 
     return (
       <div>
-        {this.state.loading ? <p className='loading revealed'>Loading</p> : null}
+        {this.state.loading
+          ? <p className="loading revealed">Loading</p>
+          : null}
 
         <MapBoxMap
           query={this.props.query}
@@ -121,21 +129,24 @@ export default createReactClass({
           selectedSquareQuadkey={this.state.selectedSquareQuadkey}
           selectedItemId={this.state.selectedItemId}
           selectedItem={selectedItem}
-          filterParams={this.state.filterParams} />
+          filterParams={this.state.filterParams}
+        />
 
         <MiniMap
           query={this.props.query}
           selectedSquare={this.props.params.square}
           selectedSquareQuadkey={this.state.selectedSquareQuadkey}
           selectedItemId={this.state.selectedItemId}
-          map={this.state.map} />
+          map={this.state.map}
+        />
 
         <ResultsPane
           query={this.props.query}
           map={this.state.map}
           results={this.state.results}
           selectedItemId={this.state.selectedItemId}
-          selectedSquareQuadkey={this.state.selectedSquareQuadkey} />
+          selectedSquareQuadkey={this.state.selectedSquareQuadkey}
+        />
       </div>
     );
   },
@@ -146,15 +157,17 @@ export default createReactClass({
    *
    * @return mapView
    */
-  getMapViewOrDefault: function (mapView) {
+  getMapViewOrDefault: function(mapView) {
     if (!this.isMapViewValid(mapView)) {
-      var cookieView = cookie.read('oam-map-view');
-      if (cookieView !== 'undefined' && cookieView !== null) {
-        mapView = cookie.read('oam-map-view').replace(/\|/g, ',');
+      var cookieView = cookie.read("oam-map-view");
+      if (cookieView !== "undefined" && cookieView !== null) {
+        mapView = cookie.read("oam-map-view").replace(/\|/g, ",");
       } else {
-        mapView = config.map.initialView.concat(config.map.initialZoom).join(',');
+        mapView = config.map.initialView
+          .concat(config.map.initialZoom)
+          .join(",");
         // Let's correct the cookie value.
-        cookie.create('oam-map-view', mapView.replace(/,/g, '|'));
+        cookie.create("oam-map-view", mapView.replace(/,/g, "|"));
       }
     }
     return mapView;
@@ -163,9 +176,8 @@ export default createReactClass({
   // The router path for the map view is defined on the route like `/:mapview`.
   // So we don't have a 404, we can only check if the URL looks like a map view.
   // TODO: Return an actual 404 page.
-  isMapViewValid: function (mapView) {
-    if (typeof mapView !== 'string') return;
-    return mapView.split(',').length === 3;
+  isMapViewValid: function(mapView) {
+    if (typeof mapView !== "string") return;
+    return mapView.split(",").length === 3;
   }
 });
-

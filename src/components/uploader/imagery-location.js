@@ -1,8 +1,8 @@
-var PropTypes = require('prop-types');
-var React = require('react');
+var PropTypes = require("prop-types");
+var React = require("react");
 
 module.exports = class extends React.Component {
-  static displayName = 'ImageryLocation';
+  static displayName = "ImageryLocation";
 
   static propTypes = {
     onValueChange: PropTypes.func,
@@ -18,11 +18,11 @@ module.exports = class extends React.Component {
     data: PropTypes.object
   };
 
-  getName = (fieldName) => {
+  getName = fieldName => {
     return `${this.props.sceneName}[${this.props.index}][${fieldName}]`;
   };
 
-  getId = (fieldName) => {
+  getId = fieldName => {
     return `${this.props.sceneId}-${this.props.index}-${fieldName}`;
   };
 
@@ -39,8 +39,18 @@ module.exports = class extends React.Component {
   renderRemoveBtn = () => {
     // var classes = 'bttn-remove-imagery' + (this.props.total <= 1 ? ' disabled' : '');
     return (
-      <div className='form-img-actions'>
-        <button type='button' className='bttn-remove-imagery' onClick={this.props.removeImageryLocation.bind(null, this.props.index)} title='Remove dataset'><span>Remove dataset</span></button>
+      <div className="form-img-actions">
+        <button
+          type="button"
+          className="bttn-remove-imagery"
+          onClick={this.props.removeImageryLocation.bind(
+            null,
+            this.props.index
+          )}
+          title="Remove dataset"
+        >
+          <span>Remove dataset</span>
+        </button>
       </div>
     );
   };
@@ -49,50 +59,65 @@ module.exports = class extends React.Component {
     // Just to shorten.
     var i = this.props.index;
     let opts = {};
-    let validationName = this.props.validationName + '.' + i + '.url';
+    let validationName = this.props.validationName + "." + i + ".url";
     switch (this.props.data.origin) {
-      case 'upload':
-        validationName = this.props.validationName + '.' + i + '.file';
+      case "upload":
+        validationName = this.props.validationName + "." + i + ".file";
         opts = {
-          name: this.getName('url'),
-          id: this.getId('url'),
-          onChange: (e) => { this.onChangeFile('upload', e); this.props.handleValidation(validationName)(e); }
+          name: this.getName("url"),
+          id: this.getId("url"),
+          onChange: e => {
+            this.onChangeFile("upload", e);
+            this.props.handleValidation(validationName)(e);
+          }
         };
         return (
           <div>
-            <input type='file' className='' placeholder='Local file' {...opts} />
-            {this.props.renderErrorMessage(this.props.getValidationMessages(validationName)[0])}
+            <input
+              type="file"
+              className=""
+              placeholder="Local file"
+              {...opts}
+            />
+            {this.props.renderErrorMessage(
+              this.props.getValidationMessages(validationName)[0]
+            )}
           </div>
         );
-      case 'manual':
+      case "manual":
         opts = {
-          name: this.getName('url'),
-          id: this.getId('url'),
+          name: this.getName("url"),
+          id: this.getId("url"),
           onBlur: this.props.handleValidation(validationName),
-          onChange: this.onChange.bind(null, 'url'),
+          onChange: this.onChange.bind(null, "url"),
           value: this.props.data.url
         };
         return (
           <div>
-            <input type='url' className='form-control' placeholder='Imagery url' {...opts} />
-            {this.props.renderErrorMessage(this.props.getValidationMessages(validationName)[0])}
+            <input
+              type="url"
+              className="form-control"
+              placeholder="Imagery url"
+              {...opts}
+            />
+            {this.props.renderErrorMessage(
+              this.props.getValidationMessages(validationName)[0]
+            )}
           </div>
         );
-      case 'dropbox':
-      case 'gdrive':
-        if (this.props.data.url === '') {
+      case "dropbox":
+      case "gdrive":
+        if (this.props.data.url === "") {
           return <p>Loading file selector. Please wait...</p>;
         }
 
         opts = {
-          name: this.getName('url'),
-          id: this.getId('url'),
+          name: this.getName("url"),
+          id: this.getId("url"),
           readOnly: true,
           value: this.props.data.url
         };
-        return (
-          <input type='url' className='form-control' {...opts} />
-        );
+        return <input type="url" className="form-control" {...opts} />;
       default:
         return null;
     }
@@ -101,9 +126,9 @@ module.exports = class extends React.Component {
   render() {
     // Just to shorten.
     return (
-      <div className='imagery-location-fieldset'>
+      <div className="imagery-location-fieldset">
         {this.renderRemoveBtn()}
-        <div className='imagery-location'>
+        <div className="imagery-location">
           {this.renderInput()}
         </div>
       </div>

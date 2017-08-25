@@ -8,9 +8,7 @@ exports.config = {
   // NPM script (see https://docs.npmjs.com/cli/run-script) then the current working
   // directory is where your package.json resides, so `wdio` will be called from there.
   //
-  specs: [
-    './test/integration/**/*_test.js'
-  ],
+  specs: ["./test/integration/**/*_test.js"],
   // Patterns to exclude.
   exclude: [],
 
@@ -38,14 +36,16 @@ exports.config = {
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
   // https://docs.saucelabs.com/reference/platforms-configurator
   //
-  capabilities: [{
-    // maxInstances can get overwritten per capability. So if you have an in-house Selenium
-    // grid with only 5 firefox instances available you can make sure that not more than
-    // 5 instances get started at a time.
-    // maxInstances: 5,
+  capabilities: [
+    {
+      // maxInstances can get overwritten per capability. So if you have an in-house Selenium
+      // grid with only 5 firefox instances available you can make sure that not more than
+      // 5 instances get started at a time.
+      // maxInstances: 5,
 
-    browserName: 'chromium'
-  }],
+      browserName: "chromium"
+    }
+  ],
   //
   // ===================
   // Test Configurations
@@ -58,7 +58,7 @@ exports.config = {
   sync: true,
   //
   // Level of logging verbosity: silent | verbose | command | data | result | error
-  logLevel: process.env.WD_LOG_LEVEL || 'error',
+  logLevel: process.env.WD_LOG_LEVEL || "error",
   //
   // Enables colors for log output.
   coloredLogs: true,
@@ -68,11 +68,11 @@ exports.config = {
   bail: 0,
   //
   // Saves a screenshot to a given path if a command fails.
-  screenshotPath: './test/integration/error_screenshots/',
+  screenshotPath: "./test/integration/error_screenshots/",
   //
   // Set a base URL in order to shorten url command calls. If your url parameter starts
   // with "/", then the base url gets prepended.
-  baseUrl: process.env.URL || 'http://localhost:3000',
+  baseUrl: process.env.URL || "http://localhost:3000",
   //
   // Default timeout for all waitFor* commands.
   waitforTimeout: 3000,
@@ -113,7 +113,7 @@ exports.config = {
   //
   // Make sure you have the wdio adapter package for the specific framework installed
   // before running any tests.
-  framework: 'mocha',
+  framework: "mocha",
   //
   // Test reporter for stdout.
   // The only one supported by default is 'dot'
@@ -124,10 +124,10 @@ exports.config = {
   // See the full list at http://mochajs.org/
   mochaOpts: {
     timeout: 180000,
-    ui: 'bdd',
+    ui: "bdd",
     grep: process.env.MOCHA_MATCH
   },
-  reporters: ['spec'],
+  reporters: ["spec"],
 
   //
   // =====
@@ -159,12 +159,12 @@ exports.config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that are to be run
    */
-  before: function (capabilities, specs) {
-    var chai = require('chai');
+  before: function(capabilities, specs) {
+    var chai = require("chai");
     global.expect = chai.expect;
     chai.Should();
-    var chaiWebdriver = require('chai-webdriverio').default;
-    chai.use(chaiWebdriver(browser, {defaultWait: 500}));
+    var chaiWebdriver = require("chai-webdriverio").default;
+    chai.use(chaiWebdriver(browser, { defaultWait: 500 }));
   }
   // },
   //

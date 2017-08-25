@@ -1,15 +1,15 @@
 /* global L */
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
-import React from 'react';
+import React from "react";
 
-import Dropdown from 'oam-design-system/dropdown';
-import baseLayers from 'utils/map-layers';
-import actions from 'actions/actions';
-import mapStore from 'stores/map_store';
+import Dropdown from "oam-design-system/dropdown";
+import baseLayers from "utils/map-layers";
+import actions from "actions/actions";
+import mapStore from "stores/map_store";
 
 class MapLayers extends React.Component {
-  static displayName = 'MapLayers';
+  static displayName = "MapLayers";
 
   state = {
     selectedLayer: mapStore.getBaseLayer()
@@ -18,31 +18,32 @@ class MapLayers extends React.Component {
   onLayerSelect = (layer, e) => {
     e.preventDefault();
     actions.setBaseLayer(layer);
-    this.setState({selectedLayer: layer});
+    this.setState({ selectedLayer: layer });
   };
 
   render() {
     return (
       <Dropdown
-        triggerElement='a'
-        triggerClassName='button-layers'
-        triggerActiveClassName='button--active'
-        triggerTitle='Choose map layer'
-        triggerText='Choose map layer'
-        direction='left'
-        className='drop__content--maplayers'
-        alignment='middle'>
-
-          <ul className='drop__menu drop__menu--select map-layers-list'>
-            {baseLayers.map(o => <li key={o.id}>
+        triggerElement="a"
+        triggerClassName="button-layers"
+        triggerActiveClassName="button--active"
+        triggerTitle="Choose map layer"
+        triggerText="Choose map layer"
+        direction="left"
+        className="drop__content--maplayers"
+        alignment="middle"
+      >
+        <ul className="drop__menu drop__menu--select map-layers-list">
+          {baseLayers.map(o =>
+            <li key={o.id}>
               <MapLayerItem
                 selectedLayer={this.state.selectedLayer}
                 layer={o}
                 onLayerSelect={this.onLayerSelect}
               />
-            </li>)}
-          </ul>
-
+            </li>
+          )}
+        </ul>
       </Dropdown>
     );
   }
@@ -51,7 +52,7 @@ class MapLayers extends React.Component {
 // Each Map layer it's its own component because we need to be able to add the
 // actual map on component mount.
 class MapLayerItem extends React.Component {
-  static displayName = 'MapLayerItem';
+  static displayName = "MapLayerItem";
 
   static propTypes = {
     selectedLayer: PropTypes.object,
@@ -62,9 +63,8 @@ class MapLayerItem extends React.Component {
   map = null;
 
   componentDidMount() {
-    this.map = L.mapbox.map(this.refs.map, null, {zoomControl: null});
-    this.map.addLayer(L.tileLayer(this.props.layer.url))
-      .setView([9, 0], 0);
+    this.map = L.mapbox.map(this.refs.map, null, { zoomControl: null });
+    this.map.addLayer(L.tileLayer(this.props.layer.url)).setView([9, 0], 0);
 
     // Disable drag and zoom handlers.
     this.map.dragging.disable();
@@ -82,12 +82,21 @@ class MapLayerItem extends React.Component {
   }
 
   render() {
-    let c = 'drop__menu-item';
-    c += this.props.selectedLayer.id === this.props.layer.id ? ' drop__menu-item--active' : '';
+    let c = "drop__menu-item";
+    c +=
+      this.props.selectedLayer.id === this.props.layer.id
+        ? " drop__menu-item--active"
+        : "";
     return (
-      <a className={c} onClick={this.props.onLayerSelect.bind(null, this.props.layer)} data-hook='dropdown:close'>
-        <div className='map-layers-list__map' ref='map'></div>
-        <span className='map-layers-list__text'>{this.props.layer.name}</span>
+      <a
+        className={c}
+        onClick={this.props.onLayerSelect.bind(null, this.props.layer)}
+        data-hook="dropdown:close"
+      >
+        <div className="map-layers-list__map" ref="map" />
+        <span className="map-layers-list__text">
+          {this.props.layer.name}
+        </span>
       </a>
     );
   }

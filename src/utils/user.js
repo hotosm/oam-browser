@@ -1,8 +1,8 @@
-import actions from '../actions/actions';
-import userStore from '../stores/user_store';
+import actions from "../actions/actions";
+import userStore from "../stores/user_store";
 
 export default {
-  setup: function (_nextState, replace) {
+  setup: function(_nextState, replace) {
     if (userStore.isLoggedIn()) {
       actions.userLogIn();
     } else if (userStore.isFirstCheckSinceSuccessfulOauth()) {
@@ -10,15 +10,15 @@ export default {
     }
   },
 
-  routeRequiresAuth: function (_nextState, replace) {
+  routeRequiresAuth: function(_nextState, replace) {
     if (!userStore.isLoggedIn()) {
       // TODO: Redirect to referrer
-      replace('/');
-      actions.showNotification('alert', 'You must be logged in.');
+      replace("/");
+      actions.showNotification("alert", "You must be logged in.");
     }
   },
 
-  logOut: function (e) {
+  logOut: function(e) {
     e.preventDefault();
     actions.userLogOut();
   }

@@ -1,8 +1,8 @@
-var PropTypes = require('prop-types');
-var React = require('react');
+var PropTypes = require("prop-types");
+var React = require("react");
 
 class Notifications extends React.Component {
-  static displayName = 'Notifications';
+  static displayName = "Notifications";
 
   static propTypes = {
     type: PropTypes.string,
@@ -10,7 +10,7 @@ class Notifications extends React.Component {
     children: PropTypes.node
   };
 
-  dismissNotification = (e) => {
+  dismissNotification = e => {
     e.preventDefault();
     this.props.onNotificationDismiss();
   };
@@ -20,14 +20,17 @@ class Notifications extends React.Component {
       return null;
     }
 
-    var classes = 'notification notification-' + this.props.type;
+    var classes = "notification notification-" + this.props.type;
     return (
-      <div className={classes} role='alert'>
-        <p>{this.props.children}</p>
+      <div className={classes} role="alert">
+        <p>
+          {this.props.children}
+        </p>
         <a
-          className='notification-dismiss'
-          title='Dismiss notification'
-          onClick={this.dismissNotification}>
+          className="notification-dismiss"
+          title="Dismiss notification"
+          onClick={this.dismissNotification}
+        >
           <span>Dismiss</span>
         </a>
       </div>

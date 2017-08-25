@@ -1,16 +1,16 @@
-import centroid from 'turf-centroid';
-import extent from 'turf-extent';
-import tilebelt from 'tilebelt';
-import parse from 'wellknown';
-import config from '../config';
-import $ from '../deprecate/jquery';
+import centroid from "turf-centroid";
+import extent from "turf-extent";
+import tilebelt from "tilebelt";
+import parse from "wellknown";
+import config from "../config";
+import $ from "../deprecate/jquery";
 
 export default {
   // Use image metadata to construct OAM Browser URL describing the map view,
   // associated grid tile. Image ID is not available since it has not been indexed,
   // by the Catalog yet
   // adapted from "https://github.com/hotosm/openaerialmap.org/blob/master/app/assets/scripts/main.js#L36-L50
-  imageUri: function (imgData) {
+  imageUri: function(imgData) {
     const previewZoom = 10;
     // Use turf to calculate the center of the image
     const footprint = parse(imgData.footprint);
@@ -20,7 +20,7 @@ export default {
     // * a square at zoom Z is the same as a map tile at zoom Z+3 (previewZoom)
     const tile = tilebelt.pointToTile(center[0], center[1], previewZoom + 3);
     const quadKey = tilebelt.tileToQuadkey(tile);
-    const mapView = center[0] + ',' + center[1] + ',' + previewZoom;
+    const mapView = center[0] + "," + center[1] + "," + previewZoom;
     // Return OAM Browser URL including map view, tile, and image id
     return `#/${mapView}/${quadKey}/`;
   },
@@ -34,27 +34,25 @@ export default {
    *
    * @return Array with coordinates [lng, lat]
    */
-  strToCoods: function (str) {
+  strToCoods: function(str) {
     if (!str) {
       return null;
     }
-    var regExp = new RegExp('^(-?[0-9]{1,2}.[0-9]+),(-?[0-9]{1,2}.[0-9]+)$');
+    var regExp = new RegExp("^(-?[0-9]{1,2}.[0-9]+),(-?[0-9]{1,2}.[0-9]+)$");
     var res = str.match(regExp);
 
-    if (!res ||
-      res[1] > 180 || res[1] < -180 ||
-      res[2] > 90 || res[2] < -90) {
+    if (!res || res[1] > 180 || res[1] < -180 || res[2] > 90 || res[2] < -90) {
       return null;
     }
 
     return [parseFloat(res[1]), parseFloat(res[2])];
   },
 
-  getPolygonFeature: function (coords) {
+  getPolygonFeature: function(coords) {
     return {
-      type: 'Feature',
+      type: "Feature",
       geometry: {
-        type: 'Polygon',
+        type: "Polygon",
         coordinates: coords
       }
     };
@@ -65,30 +63,30 @@ export default {
    * @param  float gsd in meters
    * @return string
    */
-  gsdToUnit: function (gsd) {
-    var unit = 'm';
+  gsdToUnit: function(gsd) {
+    var unit = "m";
     // If it's less than 1m, convert to cm so it displays more nicely
     if (gsd < 1) {
-      unit = 'cm';
+      unit = "cm";
       gsd *= 100;
     }
 
-    return Math.round(gsd) + ' ' + unit;
+    return Math.round(gsd) + " " + unit;
   },
 
-  quadkeyFromCoords: function (lng, lat, zoom) {
+  quadkeyFromCoords: function(lng, lat, zoom) {
     // A square at zoom Z is the same as a map tile at zoom Z+3
     var tile = tilebelt.pointToTile(lng, lat, zoom + 3);
     return tilebelt.tileToQuadkey(tile);
   },
 
-  coordsFromQuadkey: function (quadkey) {
+  coordsFromQuadkey: function(quadkey) {
     var tile = tilebelt.quadkeyToTile(quadkey);
     var geoJSONTile = tilebelt.tileToGeoJSON(tile);
     return geoJSONTile.coordinates;
   },
 
-  tileCenterFromCoords: function (lng, lat, zoom) {
+  tileCenterFromCoords: function(lng, lat, zoom) {
     // A square at zoom Z is the same as a map tile at zoom Z+3
     var tile = tilebelt.pointToTile(lng, lat, zoom + 3);
     var geoJSONTile = tilebelt.tileToGeoJSON(tile);
@@ -100,21 +98,25 @@ export default {
     ];
   },
 
-  tileCenterFromQuadkey: function (quadKey) {
+  tileCenterFromQuadkey: function(quadKey) {
     var tile = tilebelt.quadkeyToTile(quadKey);
     var geoJSONTile = tilebelt.tileToGeoJSON(tile);
     return centroid(geoJSONTile);
   },
 
-  tileBboxFromQuadkey: function (quadKey) {
+  tileBboxFromQuadkey: function(quadKey) {
     var tile = tilebelt.quadkeyToTile(quadKey);
     var geoJSONTile = tilebelt.tileToGeoJSON(tile);
-    return extent({ type: 'Feature', geometry: geoJSONTile });
+    return extent({ type: "Feature", geometry: geoJSONTile });
   },
 
-  queryGeocoder: function (query, successCb, errorCb) {
-    var uri = 'https://api.tiles.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(query) + '.json' +
-    '?access_token=' + config.map.mapbox.accessToken;
+  queryGeocoder: function(query, successCb, errorCb) {
+    var uri =
+      "https://api.tiles.mapbox.com/geocoding/v5/mapbox.places/" +
+      encodeURIComponent(query) +
+      ".json" +
+      "?access_token=" +
+      config.map.mapbox.accessToken;
     var req = $.get(uri);
 
     if (successCb) {
@@ -128,22 +130,22 @@ export default {
     return req;
   },
 
-  getMapViewString: function (lng, lat, zoom) {
-    return [lng, lat, zoom].join(',');
+  getMapViewString: function(lng, lat, zoom) {
+    return [lng, lat, zoom].join(",");
   },
 
-  wrap: function (feature) {
+  wrap: function(feature) {
     return {
       type: feature.type,
       properties: feature.properties,
       geometry: {
         type: feature.geometry.type,
-        coordinates: [ feature.geometry.coordinates[0].map(this.wrapPoint) ]
+        coordinates: [feature.geometry.coordinates[0].map(this.wrapPoint)]
       }
     };
   },
 
-  wrapPoint: function (pt) {
+  wrapPoint: function(pt) {
     pt = [pt[0], pt[1]];
     while (pt[0] < -180) {
       pt[0] += 360;
@@ -155,4 +157,4 @@ export default {
 
     return pt;
   }
-}
+};

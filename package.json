@@ -19,13 +19,14 @@
   "scripts": {
     "postinstall": "[ -f src/config/local.js ] || echo 'module.exports = {};' > src/config/local.js",
     "build-css": "./contrib/build-css.sh",
-    "watch-css": "npm run build-css && npm run build-css -- --watch --recursive",
+    "watch-css": "yarn build-css && yarn build-css -- --watch --recursive",
     "start-js": "NODE_PATH=src react-scripts start",
-    "start": "npm-run-all -p watch-css start-js",
-    "build": "npm run build-css && react-scripts build",
-    "test": "mocha --opts test/specs/mocha.opts test/specs"
+    "start": "run-p watch-css start-js",
+    "build": "yarn build-css && react-scripts build",
+    "test": "NODE_ENV=test NODE_PATH=src mocha --opts test/specs/mocha.opts test/specs"
   },
   "devDependencies": {
+    "babel-preset-react-app": "^3.0.2",
     "chai": "^3.5.0",
     "chai-webdriverio": "^0.3.0",
     "enzyme": "^2.8.2",
@@ -34,13 +35,13 @@
     "node-bourbon": "^4.2.8",
     "node-neat": "^1.7.2",
     "node-sass-chokidar": "^0.0.3",
-    "npm-run-all": "^4.0.2",
     "react-addons-test-utils": "^15.5.1",
     "react-test-renderer": "^15.5.4",
     "wdio-browserstack-service": "^0.1.11",
     "wdio-mocha-framework": "^0.5.10",
     "wdio-spec-reporter": "^0.1.0",
-    "webdriverio": "^4.7.1"
+    "webdriverio": "^4.7.1",
+    "yarn-run-all": "^3.1.1"
   },
   "dependencies": {
     "clipboard": "^1.5.10",
@@ -72,5 +73,10 @@
     "turf-inside": "^1.1.4",
     "turf-overlaps": "^1.0.3",
     "wellknown": "^0.5.0"
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
   }
 }

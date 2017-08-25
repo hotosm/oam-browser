@@ -9,12 +9,8 @@ services:
 env:
   global:
     - NODE_ENV=test
-    - DEPLOY_BRANCH=master
-    - STAGING_BRANCH=develop
     - BSTACK_USER=thomasbuckleyhou1
     - FACEBOOK_APP_ID=228592690987600
-    # Github HTTPS push token for production Github pages deploy
-    - secure: fZv+ikPPQFtFe6Trfj4dptPGwVS6tgzwv1L/omCtjan+EmM6soYzUjXb+TCOXhcU0D8fJZIPDpbjFE/p5VQYpeXV7YSPbkSy5/vvRy67NQPLsWcyraRpe8fwc/r/fgGEyDnFVlm0Qwd7AFU8xy0Zl3R5McUljUHVG/WXwiXhttM=
     # OAM ENV
     - secure: xzQ/kTbycCCR7IV9izc22se8j9vRO2F8XfVlNk78SpfytUVbupLfTdbfCBjxxY8L97Xv2WOS+FMIschb8slYUQqrFUY1AmstHap8mVbp/02lTNOovAuc3oYXi5R11DqaFNVs1jfmTeNdkqYIx79pIEqFyszBYca9RGZJFFeiw98=
     - secure: eaZ4CZUipVZVdjb1q/HYyVsgWuIt+w1/dD4bV4wGTVfse5Ho6enwY2kyLYCtuj/MqRyReuDAzjxU56fwnvuaPtp/pE57b7wxv6WgC0Gmqpn/WbASZ08cXlGxamq/M45OaTeRmuzo1lbo82/TGyW6StK8bEGkoCVH+Nao6UgFJXA=
@@ -27,7 +23,7 @@ jobs:
   include:
     - stage: "Specs :factory:"
       before_script: ./.build_scripts/lint.sh
-      script: npm test
+      script: yarn test
 
     - &integration-test
       stage: "Integration against Catalog API versions :earth_asia:"
@@ -47,17 +43,8 @@ jobs:
       env: CATALOG_API_VERSION=latest BROWSER=edge
 
     - stage: "Deploy :rocket:"
-      script: true
+      script: true #noop
       deploy:
-        # Only for production branch: deploys to Github pages
-        - provider: script
-          skip_cleanup: true
-          script:
-            - .build_scripts/build.sh
-            - .build_scripts/deploy.sh
-          on:
-            branch: "${DEPLOY_BRANCH}"
-
         # Only for staging branch: deploys to s3
         - provider: s3
           access_key_id: AKIAIQZ7AFVTXS64KG4A
@@ -70,14 +57,14 @@ jobs:
           acl: public_read
           on:
             repo: hotosm/oam-browser
-            branch: "${STAGING_BRANCH}"
+            branch: develop
 
   allow_failures:
     # TODO: Edge just has a problem with entering text into the
     # autocomplete.
     - <<: *integration-test
       env: CATALOG_API_VERSION=pinned BROWSER=edge
-    # Latest (bleeding edge) is always allowed. It's just here to give
+    # Latest (bleeding edge) is always allowed to fail. It's just here to give
     # developers forewarning about any upstream breaking change they
     # might introduce.
     - <<: *integration-test

@@ -3,8 +3,8 @@ import React from 'react';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
 
-import ResultsPane from './scripts/components/results_pane';
-import ResultsList from './scripts/components/results_list';
+import ResultsPane from 'components/results_pane';
+import ResultsList from 'components/results_list';
 import { resultsPane } from './fixtures/component_defaults.js';
 
 describe('<ResultsPane />', () => {

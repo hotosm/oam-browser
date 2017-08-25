@@ -1,5 +1,7 @@
 import { hashHistory } from 'react-router';
+import PropTypes from 'prop-types';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import Keys from 'react-keybinding';
 import _ from 'lodash';
 import Dropdown from 'oam-design-system/dropdown';
@@ -8,15 +10,15 @@ import ResultsList from 'components/results_list';
 import ResultsItem from 'components/results_item';
 import actions from 'actions/actions';
 
-export default React.createClass({
+export default createReactClass({
   displayName: 'ResultsPane',
 
   propTypes: {
-    query: React.PropTypes.object,
-    map: React.PropTypes.object,
-    results: React.PropTypes.array,
-    selectedItemId: React.PropTypes.string,
-    selectedSquareQuadkey: React.PropTypes.string
+    query: PropTypes.object,
+    map: PropTypes.object,
+    results: PropTypes.array,
+    selectedItemId: PropTypes.string,
+    selectedSquareQuadkey: PropTypes.string
   },
 
   mixins: [

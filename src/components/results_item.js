@@ -1,5 +1,7 @@
 import { hashHistory } from 'react-router';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import qs from 'querystring';
 import $ from '../deprecate/jquery';
 import centroid from 'turf-centroid';
@@ -11,15 +13,15 @@ import actions from 'actions/actions';
 import ZcButton from 'components/shared/zc_button';
 import utils from 'utils/utils';
 
-export default React.createClass({
+export default createReactClass({
   displayName: 'ResultsItem',
 
   propTypes: {
-    query: React.PropTypes.object,
-    map: React.PropTypes.object,
-    selectedSquareQuadkey: React.PropTypes.string,
-    pagination: React.PropTypes.object,
-    data: React.PropTypes.object
+    query: PropTypes.object,
+    map: PropTypes.object,
+    selectedSquareQuadkey: PropTypes.string,
+    pagination: PropTypes.object,
+    data: PropTypes.object
   },
 
   mixins: [
@@ -132,7 +134,16 @@ export default React.createClass({
           message: (
             <div>
               <p>Could not connect to JOSM via Remote Control.</p>
-              <p>Is JOSM configured to allow <a href='https://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl' target='_blank'>remote control</a>?</p>
+              <p>
+                Is JOSM configured to allow
+                <a
+                  href='https://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl'
+                  target='_blank'
+                  rel="noopener noreferrer"
+                >
+                  remote control
+                </a>?
+              </p>
             </div>
           )
         });
@@ -289,13 +300,12 @@ export default React.createClass({
         <footer className='pane-footer'>
           <ul className='single-pager'>
             <li className='view-all'>
-              <a href='#' onClick={this.viewAllResults} title='View all results'>
+              <a onClick={this.viewAllResults} title='View all results'>
                 <span>All</span>
               </a>
             </li>
             <li className='view-prev'>
               <a
-                href='#'
                 onClick={this.prevResult}
                 className={this.props.pagination.prevId ? '' : 'disabled'}
                 title='View previous result'>
@@ -304,7 +314,6 @@ export default React.createClass({
             </li>
             <li className='view-next'>
               <a
-                href='#'
                 onClick={this.nextResult}
                 className={this.props.pagination.nextId ? '' : 'disabled'}
                 title='View next result'>

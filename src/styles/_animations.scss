@@ -6,19 +6,19 @@
 /* Results panel
    ========================================================================== */
 
-@include keyframes(results-panel-reveal) {
+@keyframes(results-panel-reveal) {
   0% {
     opacity: 0;
     top: 50%;
     right: 50%;
     bottom: auto;
-    @include transform(translate(50%, -50%) scale(0));
+    transform: translate(50%, -50%) scale(0);
   }
   50% {
     opacity: 1;
   }
   100% {
-    @include transform(translate(0, 0) scale(1));
+    transform: translate(0, 0) scale(1);
   }
 }
 
@@ -27,7 +27,7 @@
    ========================================================================== */
 
 
-@include keyframes(splash-bg) {
+@keyframes(splash-bg) {
   from {
     background-size: 400% 400%;
   }
@@ -40,7 +40,7 @@
 /* Spin clockwise (used in loading)
    ========================================================================== */
 
-@include keyframes(spin-c) {
-  from { @include transform(rotate(0deg)); }
-    to { @include transform(rotate(360deg)); }
+@keyframes(spin-c) {
+  from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }

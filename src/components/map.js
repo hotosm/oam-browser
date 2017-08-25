@@ -1,7 +1,9 @@
 /* global L */
 
-import { hashHistory } from 'react-router';
 import React from 'react';
+import { hashHistory } from 'react-router';
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
 import _ from 'lodash';
 import $ from 'jquery';
@@ -20,16 +22,16 @@ require('mapbox.js');
 
 L.mapbox.accessToken = config.map.mapbox.accessToken;
 
-export default React.createClass({
+export default createReactClass({
   displayName: 'Map',
 
   propTypes: {
-    query: React.PropTypes.object,
-    map: React.PropTypes.object,
-    selectedSquareQuadkey: React.PropTypes.string,
-    selectedItemId: React.PropTypes.string,
-    selectedItem: React.PropTypes.object,
-    filterParams: React.PropTypes.object
+    query: PropTypes.object,
+    map: PropTypes.object,
+    selectedSquareQuadkey: PropTypes.string,
+    selectedItemId: PropTypes.string,
+    selectedItem: PropTypes.object,
+    filterParams: PropTypes.object
   },
 
   mixins: [
@@ -345,6 +347,9 @@ export default React.createClass({
                 return false;
               }
               break;
+            default:
+              // Let all imagery of any resolution through to be tested against
+              // the filters below.
           }
 
           // Date.
@@ -413,8 +418,6 @@ export default React.createClass({
 
       l.bindPopup(p);
     });
-
-    // console.groupEnd('updateGrid');
   },
 
   updateSelectedSquare: function () {

@@ -44,7 +44,7 @@
   fill: $primary-color;
   stroke: rgba($base-color, 0.08);
   stroke-width: 1;
-  @include transition(all 0.2s ease 0s);
+  transition: all 0.2s ease 0s;
 
   // Style cell shading according to layer
   .base-layer--oam-base & {

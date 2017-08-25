@@ -16,7 +16,7 @@
 
   /* Animation */
 
-  @include animation(results-panel-reveal 0.24s ease 0s 1);
+  animation: results-panel-reveal 0.24s ease 0s 1;
 }
 
 .results-hub,
@@ -208,7 +208,7 @@
     right: 0;
     background-size: cover;
     display: block;
-    @include filter(blur(0.5rem));
+    filter: blur(0.5rem);
     opacity: 0.24;
   }
 }
@@ -431,7 +431,7 @@
     &:after {
       left: auto;
       right: 0;
-      @include transform(translate(0, 0));
+      transform: translate(0, 0);
     }
   }
 }
@@ -509,7 +509,7 @@ $card-padding: 0.5rem;
       top: 50%;
       left: 50%;
       display: block;
-      @include transform(translate(-50%, -50%));
+      transform: translate(-50%, -50%);
       width: 120%;
       height: auto;
     }

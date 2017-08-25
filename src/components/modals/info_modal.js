@@ -1,4 +1,5 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
 import Keys from 'react-keybinding';
 import Modal from 'oam-design-system/modal';
@@ -7,7 +8,7 @@ import actions from 'actions/actions';
 
 var { ModalParent, ModalHeader, ModalBody, ModalFooter } = Modal;
 
-var InfoModal = React.createClass({
+var InfoModal = createReactClass({
   displayName: 'InfoModal',
 
   mixins: [

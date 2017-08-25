@@ -4,6 +4,7 @@ bower_components
 .sass-cache
 src/styles/*.css
 .bundle
+build
 bundle
 test/integration/error_screenshots
 lib-cov

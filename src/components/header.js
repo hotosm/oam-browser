@@ -1,4 +1,6 @@
+import PropTypes from 'prop-types';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
 import { hashHistory } from 'react-router';
 import Keys from 'react-keybinding';
@@ -18,14 +20,14 @@ import SearchBox from 'components/search_box';
 
 import logo from 'images/oam-logo-h-pos.svg';
 
-export default React.createClass({
+export default createReactClass({
   displayName: 'Header',
 
   propTypes: {
-    query: React.PropTypes.object,
-    routes: React.PropTypes.array,
-    location: React.PropTypes.object,
-    params: React.PropTypes.object
+    query: PropTypes.object,
+    routes: PropTypes.array,
+    location: PropTypes.object,
+    params: PropTypes.object
   },
 
   mixins: [
@@ -146,7 +148,7 @@ export default React.createClass({
             </h1>
           </div>
 
-          <nav className='page__prime-nav' role='navigation'>
+          <nav className='page__prime-nav'>
             { this.isMap()
               ? <div className='nav-block-prime'>
                   <SearchBox />
@@ -159,7 +161,6 @@ export default React.createClass({
                     </li>
                     <li>
                       <a
-                        href='#'
                         onClick={this.onBrowseLatestClick}
                         className='button-latest'
                         title='Go to the latest imagery'
@@ -182,6 +183,7 @@ export default React.createClass({
                       <img
                         className="profile_pic"
                         src={userStore.storage.user.profile_pic_uri}
+                        alt="Profile"
                       />
                       <a href="#/account">Account</a> |&nbsp;
                       <a onClick={actions.userLogOut}>Logout</a>

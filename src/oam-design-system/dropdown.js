@@ -1,25 +1,36 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import TetherComponent from 'react-tether';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
-export default React.createClass({
-  displayName: 'Dropdown',
+export default class extends React.Component {
+  static displayName = 'Dropdown';
 
-  propTypes: {
-    triggerElement: React.PropTypes.oneOf(['a', 'button']),
-    triggerClassName: React.PropTypes.string,
-    triggerActiveClassName: React.PropTypes.string,
-    triggerTitle: React.PropTypes.string,
-    triggerText: React.PropTypes.string.isRequired,
+  static propTypes = {
+    triggerElement: PropTypes.oneOf(['a', 'button']),
+    triggerClassName: PropTypes.string,
+    triggerActiveClassName: PropTypes.string,
+    triggerTitle: PropTypes.string,
+    triggerText: PropTypes.string.isRequired,
 
-    direction: React.PropTypes.oneOf(['up', 'down', 'left', 'right']),
-    alignment: React.PropTypes.oneOf(['left', 'center', 'right', 'middle']),
+    direction: PropTypes.oneOf(['up', 'down', 'left', 'right']),
+    alignment: PropTypes.oneOf(['left', 'center', 'right', 'middle']),
 
-    className: React.PropTypes.string,
-    children: React.PropTypes.node
-  },
+    className: PropTypes.string,
+    children: PropTypes.node
+  };
 
-  _bodyListener: function (e) {
+  static defaultProps = {
+    triggerElement: 'button',
+    direction: 'down',
+    alignment: 'center'
+  };
+
+  state = {
+    open: false
+  };
+
+  _bodyListener = (e) => {
     // Get the dropdown that is a parent of the clicked element. If any.
     let theSelf = e.target;
     if (theSelf.tagName === 'BODY' ||
@@ -56,52 +67,38 @@ export default React.createClass({
     if (theSelf !== this.refs.dropdown) {
       this.close();
     }
-  },
-
-  getDefaultProps: function () {
-    return {
-      triggerElement: 'button',
-      direction: 'down',
-      alignment: 'center'
-    };
-  },
-
-  getInitialState: function () {
-    return {
-      open: false
-    };
-  },
+  };
 
   // Lifecycle method.
   // Called once as soon as the component has a DOM representation.
-  componentDidMount: function () {
+  componentDidMount() {
     window.addEventListener('click', this._bodyListener);
-  },
+  }
 
   // Lifecycle method.
   // Called once as soon as the component has a DOM representation.
-  componentWillUnmount: function () {
+  componentWillUnmount() {
     window.removeEventListener('click', this._bodyListener);
-  },
+  }
 
-  _toggleDropdown: function (e) {
+  _toggleDropdown = (e) => {
     e.preventDefault();
     this.toggle();
-  },
+  };
 
-  toggle: function () {
+  toggle = () => {
     this.setState({ open: !this.state.open });
-  },
+  };
 
-  open: function () {
+  open = () => {
     this.setState({ open: true });
-  },
+  };
 
-  close: function () {
+  close = () => {
     this.setState({ open: false });
-  },
+  };
 
-  render: function () {
+  render() {
     // Base and additional classes for the trigger and the content.
     var klasses = ['drop__content', 'drop__content--react', `drop-trans--${this.props.direction}`];
     var triggerKlasses = ['drop__toggle'];
@@ -143,6 +140,8 @@ export default React.createClass({
         tetherAttachment = `${this.props.alignment} right`;
         tetherTargetAttachment = `${this.props.alignment} left`;
         break;
+      default:
+        console.error('Unknown Dropdown direction');
     }
 
     if (this.state.open && this.props.triggerActiveClassName) {
@@ -180,4 +179,4 @@ export default React.createClass({
       </TetherComponent>
     );
   }
-});
+}

@@ -1,41 +1,41 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import actions from 'actions/actions';
 import utils from 'utils/utils';
 
-var ResultsListItem = React.createClass({
-  displayName: 'ResultsListItem',
+class ResultsListItem extends React.Component {
+  static displayName = 'ResultsListItem';
 
-  propTypes: {
-    query: React.PropTypes.object,
-    map: React.PropTypes.object,
-    selectedSquareQuadkey: React.PropTypes.string,
-    data: React.PropTypes.object
-  },
+  static propTypes = {
+    query: PropTypes.object,
+    map: PropTypes.object,
+    selectedSquareQuadkey: PropTypes.string,
+    data: PropTypes.object
+  };
 
-  onClick: function (e) {
+  onClick = (e) => {
     e.preventDefault();
     actions.resultSelected(this.props);
-  },
+  };
 
-  onOver: function (e) {
+  onOver = (e) => {
     e.preventDefault();
     actions.resultOver(this.props.data);
-  },
+  };
 
-  onOut: function (e) {
+  onOut = (e) => {
     e.preventDefault();
     actions.resultOut(this.props.data);
-  },
+  };
 
-  render: function () {
+  render() {
     var d = this.props.data;
 
     return (
       <li>
         <article className='card card-result-entry'>
           <a
-            href='#'
             onClick={this.onClick}
             onMouseOver={this.onOver}
             onMouseOut={this.onOut}
@@ -73,19 +73,19 @@ var ResultsListItem = React.createClass({
       </li>
     );
   }
-});
+}
 
-var ResultsList = React.createClass({
-  displayName: 'ResultsList',
+class ResultsList extends React.Component {
+  static displayName = 'ResultsList';
 
-  propTypes: {
-    query: React.PropTypes.object,
-    map: React.PropTypes.object,
-    selectedSquareQuadkey: React.PropTypes.string,
-    results: React.PropTypes.array
-  },
+  static propTypes = {
+    query: PropTypes.object,
+    map: PropTypes.object,
+    selectedSquareQuadkey: PropTypes.string,
+    results: PropTypes.array
+  };
 
-  render: function () {
+  render() {
     var square = this.props.selectedSquareQuadkey;
 
     var numRes = this.props.results.length;
@@ -118,6 +118,6 @@ var ResultsList = React.createClass({
       </section>
     );
   }
-});
+}
 
 export default ResultsList;

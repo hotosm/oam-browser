@@ -83,8 +83,8 @@
   padding: 1rem 2.5rem 1rem 4rem;
   color: #fff;
   @extend .antialiased;
-  @include transition(all 0.24s ease 0s);
-  @include transform(translateZ(0));
+  transition: all 0.24s ease 0s;
+  transform: translateZ(0);
   overflow: hidden;
   z-index: 9999;
   &:before {
@@ -99,7 +99,7 @@
     border-radius: $base-border-radius 0 0 $base-border-radius;
     font-size: 1.5rem;
     vertical-align: middle;
-    @include transform(translate(0, -50%));
+    transform: translate(0, -50%);
   }
   &.notification-success:before {
     background: rgba($success-color, 0.92);
@@ -195,7 +195,7 @@
   line-height: 1.25rem;
   background: tint($base-color, 80%);
   color: $base-font-color;
-  @include animation(fade-in 0.32s ease 0s 1);
+  animation: fade-in 0.32s ease 0s 1;
   &.message-alert {
     background: tint($danger-color, 80%);
     color: $danger-color;
@@ -219,13 +219,13 @@
 
   opacity: 0;
   visibility: hidden;
-  @include transform(scale(0));
-  @include transition(all 0.24s ease 0s);
+  transform: scale(0);
+  transition: all 0.24s ease 0s;
 
   &.revealed {
     opacity: 1;
     visibility: visible;
-    @include transform(scale(1));
+    transform: scale(1);
   }
 
   &:before {
@@ -236,18 +236,18 @@
     height: 2rem;
     line-height: 1;
     margin: 0 auto 0.5rem auto;
-    @include animation(spin-c 1s linear 0s infinite);
+    animation: spin-c 1s linear 0s infinite;
   }
 }
 
 /* ANIMATIONS */
 
-@include keyframes(spin-c) {
-  from { @include transform(rotate(0deg)); }
-    to { @include transform(rotate(360deg)); }
+@keyframes(spin-c) {
+  from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
-@include keyframes(fade-in) {
+@keyframes(fade-in) {
   from {
     opacity: 0;
   }

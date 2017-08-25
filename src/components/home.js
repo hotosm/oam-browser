@@ -1,4 +1,6 @@
+import PropTypes from 'prop-types';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
 import _ from 'lodash';
 
@@ -12,12 +14,12 @@ import utils from 'utils/utils';
 import actions from 'actions/actions';
 import config from 'config';
 
-export default React.createClass({
+export default createReactClass({
   displayName: 'Home',
 
   propTypes: {
-    params: React.PropTypes.object,
-    query: React.PropTypes.object
+    params: PropTypes.object,
+    query: PropTypes.object
   },
 
   mixins: [

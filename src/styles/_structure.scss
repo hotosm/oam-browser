@@ -320,18 +320,18 @@
   }
 
   &__headline {
-    @include col(12/12);
+    @include column(12/12);
 
     > *:last-child {
       margin-bottom: 0;
     }
 
     @include media(medium-up) {
-      @include col(10/12);
+      @include column(10/12);
     }
 
     @include media(large-up) {
-      @include col(8/12);
+      @include column(8/12);
     }
   }
 
@@ -394,7 +394,7 @@
   }
 
   &__main-content {
-    @include col(12/12);
+    @include column(12/12);
 
     > *:last-child {
       margin-bottom: 0;
@@ -409,11 +409,11 @@
 .page--article {
   .layout__main-content {
     @include media(medium-up) {
-      @include col(10/12, $offset: 1/12);
+      @include column(10/12, $offset: 1/12);
     }
 
     @include media(large-up) {
-      @include col(8/12, $offset: 2/12);
+      @include column(8/12, $offset: 2/12);
     }
   }
 }
@@ -453,10 +453,10 @@
 
 .map-layers-list {
   .drop__menu-item {
-    @include display(flex);
-    @include justify-content(flex-start);
-    @include align-items(center);
-    @include flex-wrap(nowrap);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
 
     &--active:after {
       top: 50%;
@@ -465,7 +465,7 @@
   }
 
   &__map {
-    @include flex(0 0 auto);
+    flex: 0 0 auto;
     height: 2rem;
     width: 2rem;
     margin-right: 0.5rem;

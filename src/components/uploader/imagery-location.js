@@ -1,50 +1,51 @@
+var PropTypes = require('prop-types');
 var React = require('react');
 
-module.exports = React.createClass({
-  displayName: 'ImageryLocation',
+module.exports = class extends React.Component {
+  static displayName = 'ImageryLocation';
 
-  propTypes: {
-    onValueChange: React.PropTypes.func,
-    removeImageryLocation: React.PropTypes.func,
-    renderErrorMessage: React.PropTypes.func,
-    getValidationMessages: React.PropTypes.func,
-    handleValidation: React.PropTypes.func,
-    sceneName: React.PropTypes.string,
-    sceneId: React.PropTypes.string,
-    index: React.PropTypes.number,
-    validationName: React.PropTypes.string,
-    total: React.PropTypes.number,
-    data: React.PropTypes.object
-  },
+  static propTypes = {
+    onValueChange: PropTypes.func,
+    removeImageryLocation: PropTypes.func,
+    renderErrorMessage: PropTypes.func,
+    getValidationMessages: PropTypes.func,
+    handleValidation: PropTypes.func,
+    sceneName: PropTypes.string,
+    sceneId: PropTypes.string,
+    index: PropTypes.number,
+    validationName: PropTypes.string,
+    total: PropTypes.number,
+    data: PropTypes.object
+  };
 
-  getName: function (fieldName) {
+  getName = (fieldName) => {
     return `${this.props.sceneName}[${this.props.index}][${fieldName}]`;
-  },
+  };
 
-  getId: function (fieldName) {
+  getId = (fieldName) => {
     return `${this.props.sceneId}-${this.props.index}-${fieldName}`;
-  },
+  };
 
-  onChange: function (fieldName, e) {
+  onChange = (fieldName, e) => {
     // fieldIndex, fieldName, fieldValue
     this.props.onValueChange(this.props.index, fieldName, e.target.value);
-  },
+  };
 
-  onChangeFile: function (fieldName, e) {
+  onChangeFile = (fieldName, e) => {
     // fieldIndex, fieldName, fieldValue
     this.props.onValueChange(this.props.index, fieldName, e.target.files[0]);
-  },
+  };
 
-  renderRemoveBtn: function () {
+  renderRemoveBtn = () => {
     // var classes = 'bttn-remove-imagery' + (this.props.total <= 1 ? ' disabled' : '');
     return (
       <div className='form-img-actions'>
         <button type='button' className='bttn-remove-imagery' onClick={this.props.removeImageryLocation.bind(null, this.props.index)} title='Remove dataset'><span>Remove dataset</span></button>
       </div>
     );
-  },
+  };
 
-  renderInput: function () {
+  renderInput = () => {
     // Just to shorten.
     var i = this.props.index;
     let opts = {};
@@ -95,9 +96,9 @@ module.exports = React.createClass({
       default:
         return null;
     }
-  },
+  };
 
-  render: function () {
+  render() {
     // Just to shorten.
     return (
       <div className='imagery-location-fieldset'>
@@ -108,4 +109,4 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+};

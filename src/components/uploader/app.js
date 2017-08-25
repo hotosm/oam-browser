@@ -5,7 +5,7 @@ var RouteHandler = Router.RouteHandler;
 var AppActions = require('../actions/actions');
 var Notifications = require('./notifications');
 
-module.exports = React.createClass({
+module.exports = createReactClass({
   displayName: 'App',
 
   mixins: [

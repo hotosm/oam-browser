@@ -1,5 +1,7 @@
 import { hashHistory } from 'react-router';
+import PropTypes from 'prop-types';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
 import Dropdown from 'oam-design-system/dropdown';
 
@@ -8,12 +10,12 @@ import searchQueryStore from 'stores/search_query_store';
 import cookie from 'utils/cookie';
 import config from 'config.js';
 
-export default React.createClass({
+export default createReactClass({
   displayName: 'Filters',
 
   propTypes: {
-    query: React.PropTypes.object,
-    params: React.PropTypes.object
+    query: PropTypes.object,
+    params: PropTypes.object
   },
 
   mixins: [

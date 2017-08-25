@@ -1,6 +1,9 @@
+import { hashHistory } from 'react-router';
+
 /* global L */
 
-import { hashHistory } from 'react-router';
+import PropTypes from 'prop-types';
+
 import React from 'react';
 
 import utils from 'utils/utils';
@@ -8,29 +11,28 @@ import mapLayers from 'utils/map-layers';
 
 require('mapbox.js');
 
-export default React.createClass({
-  displayName: 'MiniMap',
+export default class extends React.Component {
+  static displayName = 'MiniMap';
 
-  propTypes: {
-    query: React.PropTypes.object,
-    map: React.PropTypes.object,
-    selectedSquare: React.PropTypes.string,
-    selectedSquareQuadkey: React.PropTypes.string,
-    selectedItemId: React.PropTypes.string
-  },
+  static propTypes = {
+    query: PropTypes.object,
+    map: PropTypes.object,
+    selectedSquare: PropTypes.string,
+    selectedSquareQuadkey: PropTypes.string,
+    selectedItemId: PropTypes.string
+  };
 
-  map: null,
-
-  targetLines: null,
+  map = null;
+  targetLines = null;
 
   // Lifecycle method.
-  shouldComponentUpdate: function (nextProps, nextState) {
+  shouldComponentUpdate(nextProps, nextState) {
     return nextProps.selectedSquare !== this.props.selectedSquare;
-  },
+  }
 
   // Lifecycle method.
   // Called once as soon as the component has a DOM representation.
-  componentDidMount: function () {
+  componentDidMount() {
     // console.log('componentDidMount MiniMap');
 
     this.map = L.mapbox.map(this.refs.mapContainer, null, {
@@ -56,20 +58,20 @@ export default React.createClass({
     this.map.on('click', this.onMapClick);
 
     this.setCrosshair();
-  },
+  }
 
   // Lifecycle method.
   // Called when the component gets updated.
-  componentDidUpdate: function (/* prevProps, prevState */) {
+  componentDidUpdate() /* prevProps, prevState */{
     this.setCrosshair();
-  },
+  }
 
-  render: function () {
+  render() {
     return (<div id='minimap' ref='mapContainer'></div>);
-  },
+  }
 
   // Map event.
-  onMapClick: function (e) {
+  onMapClick = (e) => {
     var zoom = this.props.map.view.split(',')[2];
     var path = utils.getMapViewString(e.latlng.lng, e.latlng.lat, zoom);
     if (this.props.selectedSquareQuadkey) {
@@ -80,9 +82,9 @@ export default React.createClass({
     }
 
     hashHistory.push({pathname: path, query: this.props.query});
-  },
+  };
 
-  setCrosshair: function () {
+  setCrosshair = () => {
     if (this.props.selectedSquare) {
       var center = utils.tileCenterFromQuadkey(this.props.selectedSquare).geometry.coordinates;
       this.targetLines.setLatLngs([
@@ -98,6 +100,6 @@ export default React.createClass({
     } else {
       this.targetLines.clearLayers();
     }
-  }
-});
+  };
+}
 

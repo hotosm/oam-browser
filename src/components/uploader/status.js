@@ -1,5 +1,7 @@
 import { Router } from 'react-router';
+import PropTypes from 'prop-types';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import moment from 'moment';
 import util from 'util';
 import url from 'url';
@@ -15,12 +17,12 @@ function dateFormat (date) {
   return moment(date).format('YYYY-M-D [at] H:mm');
 }
 
-export default React.createClass({
+export default createReactClass({
   displayName: 'Status',
 
   propTypes: {
-    params: React.PropTypes.object,
-    query: React.PropTypes.object
+    params: PropTypes.object,
+    query: PropTypes.object
   },
 
   mixins: [Router.State],

@@ -14,7 +14,7 @@
   line-height: 1.25rem;
   background: tint($base-color, 80%);
   color: $base-font-color;
-  @include animation(fade-in 0.32s ease 0s 1);
+  animation: fade-in 0.32s ease 0s 1;
   &--alert {
     background: tint($danger-color, 80%);
     color: $danger-color;

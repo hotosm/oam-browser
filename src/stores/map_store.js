@@ -46,21 +46,16 @@ export default Reflux.createStore({
   queryFootprints: function () {
     var _this = this;
 
-    // console.time('fetch footprints');
     $.get(config.catalog.url + '/meta?limit=99999')
       .success(function (data) {
-        // console.timeEnd('fetch footprints');
         var footprintsFeature = _this.parseFootprints(data.results);
 
-        // console.time('index footprints');
         var tree = rbush(9);
         tree.load(footprintsFeature.features.map(function (feat) {
           var item = feat.geometry.bbox;
           item.feature = feat;
           return item;
         }));
-        // console.timeEnd('index footprints');
-        // Done.
         _this.storage.footprintsTree = tree;
         _this.trigger('footprints');
       });
@@ -105,7 +100,6 @@ export default Reflux.createStore({
   queryData: function () {
     var parameters = searchQueryStore.getParameters();
     var _this = this;
-    // console.log('mapstore queryData', parameters);
 
     // hit API and broadcast result
     var resolutionFilter = {
@@ -136,28 +130,21 @@ export default Reflux.createStore({
 
     // Calculate bbox;
     var bbox = this.storage.selectedBbox.join(',');
-    // console.log('selected feature bbox', bbox);
 
     var params = _.assign({
       limit: 4000,
       bbox: bbox
     }, resolutionFilter, dateFilter, typeFilter);
 
-    // console.log('search:', params);
     var strParams = qs.stringify(params);
     if (strParams === this.storage.prevSearchParams) {
-      // console.log('search params did not change. Api call aborted.');
       _this.trigger('squareData');
       return;
-    } else {
-      // console.log('prev params', this.storage.prevSearchParams);
-      // console.log('curr params', strParams);
     }
     this.storage.prevSearchParams = strParams;
 
     $.get(config.catalog.url + '/meta?' + strParams)
       .success(function (data) {
-        // console.log('api catalog results:', data);
         _this.storage.results = data.results;
         _this.trigger('squareData');
       });

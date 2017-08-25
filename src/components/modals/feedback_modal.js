@@ -1,4 +1,6 @@
+import PropTypes from 'prop-types';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
 import Keys from 'react-keybinding';
 import serialize from 'form-serialize';
@@ -11,11 +13,11 @@ import actions from 'actions/actions';
 
 var { ModalParent, ModalHeader, ModalBody } = Modal;
 
-export default React.createClass({
+export default createReactClass({
   displayName: 'FeedbackModal',
 
   propTypes: {
-    revealed: React.PropTypes.bool
+    revealed: PropTypes.bool
   },
 
   mixins: [

@@ -1,4 +1,6 @@
+import PropTypes from 'prop-types';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import utils from '../utils/utils';
 
 import $ from 'jquery';
@@ -6,12 +8,12 @@ import config from 'config';
 
 const apiUrl = config.catalog.url;
 
-export default React.createClass({
+export default createReactClass({
   displayName: 'Account',
 
   propTypes: {
-    params: React.PropTypes.object,
-    query: React.PropTypes.object
+    params: PropTypes.object,
+    query: PropTypes.object
   },
 
   mixins: [
@@ -91,6 +93,7 @@ export default React.createClass({
             className="profile_pic"
             src={this.state.user.profile_pic_uri}
             width="100"
+            alt="Profile"
           />
           {this.state.user.name}
         </h1>
@@ -98,7 +101,7 @@ export default React.createClass({
           { this.state.user.images.length > 0
             ? this.state.user.images.map((image, i) =>
                 <li className="account__images-upload">
-                  <img src={image.properties.thumbnail} width="100" key={i} />
+                  <img src={image.properties.thumbnail} width="100" key={i} alt="Imagery thumbnail" />
                   <ul>
                     <strong>{image.title}</strong>
                     <li>Uploaded: {image.uploaded_at}</li>

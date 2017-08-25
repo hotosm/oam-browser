@@ -62,7 +62,10 @@ function submitImagery (imageryUri, title = 'Test imagery') {
 
 function waitForImageryProcessing () {
   let status = '';
-  browser.waitForVisible('a=Check upload status.');
+  // The file has to upload from the local machine, it is small but let's
+  // give a few seconds in case there's a slow connection (like when you're
+  // writing tests over your phone's 3G connection :/)
+  browser.waitForVisible('a=Check upload status.', 10000);
   browser.click('a=Check upload status.');
   browser.waitForVisible('h2=Status upload');
   for (var i = 0; i < 100; i++) {

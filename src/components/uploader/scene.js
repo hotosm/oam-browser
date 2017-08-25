@@ -5,6 +5,9 @@
 // Continuing to use the term scene for variables and functions
 
 
+import PropTypes from 'prop-types';
+
+
 import React from 'react';
 import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 import moment from 'moment';
@@ -15,47 +18,47 @@ import gDrive from 'utils/google';
 
 momentLocalizer(moment);
 
-export default React.createClass({
-  displayName: 'Scene',
+export default class extends React.Component {
+  static displayName = 'Scene';
+
+  static propTypes = {
+    onValueChange: PropTypes.func,
+    removeScene: PropTypes.func,
+    renderErrorMessage: PropTypes.func,
+    getValidationMessages: PropTypes.func,
+    handleValidation: PropTypes.func,
+
+    addImageryLocationToScene: PropTypes.func,
+    removeImageryLocatioFromScene: PropTypes.func,
+
+    type: PropTypes.string,
+    index: PropTypes.number,
+    total: PropTypes.number,
+    data: PropTypes.object
+  };
 
   // Only allow a start date chage to trigger an end date change once
-  firstStartDateChange: true,
+  firstStartDateChange = true;
 
-  propTypes: {
-    onValueChange: React.PropTypes.func,
-    removeScene: React.PropTypes.func,
-    renderErrorMessage: React.PropTypes.func,
-    getValidationMessages: React.PropTypes.func,
-    handleValidation: React.PropTypes.func,
-
-    addImageryLocationToScene: React.PropTypes.func,
-    removeImageryLocatioFromScene: React.PropTypes.func,
-
-    type: React.PropTypes.string,
-    index: React.PropTypes.number,
-    total: React.PropTypes.number,
-    data: React.PropTypes.object
-  },
-
-  getName: function (fieldName) {
+  getName = (fieldName) => {
     return 'scene[' + this.props.index + '][' + fieldName + ']';
-  },
+  };
 
-  getId: function (fieldName) {
+  getId = (fieldName) => {
     return 'scene-' + this.props.index + '-' + fieldName;
-  },
+  };
 
-  getRadioName: function (fieldName) {
+  getRadioName = (fieldName) => {
     return this.getName(fieldName) + '[]';
-  },
+  };
 
-  onChange: function (e) {
+  onChange = (e) => {
     var pieces = e.target.name.match(/scene\[([0-9]+)\]\[([a-z0-9-]+)\]/);
     // sceneIndex, fieldName, fieldValue
     this.props.onValueChange(pieces[1], pieces[2], e.target.value);
-  },
+  };
 
-  onDateChange: function (field, date, dateString) {
+  onDateChange = (field, date, dateString) => {
     var val = date === null ? null : date.toISOString();
     this.props.onValueChange(this.props.index, field, val);
     // Try to be helpful by syncing the end date to the start date
@@ -66,9 +69,9 @@ export default React.createClass({
       this.props.onValueChange(this.props.index, 'date-end', date.toISOString());
       this.firstStartDateChange = false;
     }
-  },
+  };
 
-  onImgLocValueChange: function (fieldIndex, fieldName, fieldValue) {
+  onImgLocValueChange = (fieldIndex, fieldName, fieldValue) => {
     // Update the imagery location array and then use onValueChange
     // function to send the new values to parent.
     let vals = this.props.data['img-loc'];
@@ -82,17 +85,17 @@ export default React.createClass({
     }
     // sceneIndex, fieldName, fieldValue
     this.props.onValueChange(this.props.index, 'img-loc', vals);
-  },
+  };
 
-  addImageryLocation: function (origin) {
+  addImageryLocation = (origin) => {
     this.props.addImageryLocationToScene(this.props.index, origin);
-  },
+  };
 
-  removeImageryLocation: function (locIndex) {
+  removeImageryLocation = (locIndex) => {
     this.props.removeImageryLocatioFromScene(this.props.index, locIndex);
-  },
+  };
 
-  importDropboxClick: function () {
+  importDropboxClick = () => {
     this.addImageryLocation('dropbox');
     let imgLocIndex = this.props.data['img-loc'].length - 1;
     // Next tick.
@@ -123,9 +126,9 @@ export default React.createClass({
         multiselect: true
       });
     }, 1);
-  },
+  };
 
-  importGDriveClick: function () {
+  importGDriveClick = () => {
     this.addImageryLocation('gdrive');
     let imgLocIndex = this.props.data['img-loc'].length - 1;
     // Next tick.
@@ -164,21 +167,21 @@ Please check the instructions on how to use files from Google Drive.
           this.removeImageryLocation(imgLocIndex);
         });
     }, 1);
-  },
+  };
 
-  getValueForDate: function (field) {
+  getValueForDate = (field) => {
     return this.props.data[field] === null ? null : new Date(this.props.data[field]);
-  },
+  };
 
-  dateOrUndefined: function (field) {
+  dateOrUndefined = (field) => {
     // When getting the value for min/max, if we don't want to set one
     // we need to use undefined.
     // Using null results in the date being the epoch time.
     var val = this.getValueForDate(field);
     return val === null ? undefined : val;
-  },
+  };
 
-  renderRemoveBtn: function () {
+  renderRemoveBtn = () => {
     var classes = 'bttn-remove-scene' + (this.props.total <= 1 ? ' disabled' : '');
     return (
       <div className='form-fieldset-actions'>
@@ -191,9 +194,9 @@ Please check the instructions on how to use files from Google Drive.
         </button>
       </div>
     );
-  },
+  };
 
-  renderImagerySource: function (i) {
+  renderImagerySource = (i) => {
     return (
       <div className='form-group'>
         <label className='form-label'>Imagery location</label>
@@ -254,9 +257,9 @@ Please check the instructions on how to use files from Google Drive.
         </div>
       </div>
     );
-  },
+  };
 
-  renderContact: function () {
+  renderContact = () => {
     const isOther = this.props.data['contact-type'] === 'other';
     const isUploader = this.props.type === 'uploader';
 
@@ -299,9 +302,9 @@ Please check the instructions on how to use files from Google Drive.
         {this.props.renderErrorMessage(this.props.getValidationMessages('scenes.' + i + '.contact-email')[0])}
       </div>
     );
-  },
+  };
 
-  render: function () {
+  render() {
     // Just to shorten.
     var i = this.props.index;
 
@@ -543,4 +546,4 @@ Please check the instructions on how to use files from Google Drive.
       </fieldset>
     );
   }
-});
+}

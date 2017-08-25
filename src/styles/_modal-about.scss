@@ -15,8 +15,8 @@
 
   @include media(medium-up) {
     .prose {
-      @include columns(3);
-      @include column-gap(2rem);
+      columns: 3;
+      column-gap: 2rem;
       .prose-block {
         -webkit-column-break-inside: avoid; /* Chrome, Safari, Opera */
           page-break-inside: avoid; /* Firefox */

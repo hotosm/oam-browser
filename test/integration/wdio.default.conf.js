@@ -12,9 +12,8 @@ exports.config = {
     './test/integration/**/*_test.js'
   ],
   // Patterns to exclude.
-  exclude: [
-    './test/integration/.setup.js'
-  ],
+  exclude: [],
+
   //
   // ============
   // Capabilities
@@ -124,7 +123,6 @@ exports.config = {
   // Options to be passed to Mocha.
   // See the full list at http://mochajs.org/
   mochaOpts: {
-    require: './test/integration/.setup.js',
     timeout: 180000,
     ui: 'bdd',
     grep: process.env.MOCHA_MATCH

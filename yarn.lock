@@ -3936,9 +3936,9 @@ items@2.x.x:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/items/-/items-2.1.1.tgz#8bd16d9c83b19529de5aea321acaada78364a198"
 
-jeet@6.1.2:
-  version "6.1.2"
-  resolved "https://registry.yarnpkg.com/jeet/-/jeet-6.1.2.tgz#5d90f54df9cb953a89d79fadaabf509a87e19291"
+jeet@^7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/jeet/-/jeet-7.1.0.tgz#4aeaa0a939306b29607de8fcfa96967d9305a752"
 
 jest-changed-files@^20.0.3:
   version "20.0.3"
@@ -4949,7 +4949,7 @@ no-case@^2.2.0:
   dependencies:
     lower-case "^1.1.1"
 
-node-bourbon@^4.2.3:
+node-bourbon@^4.2.3, node-bourbon@^4.2.8:
   version "4.2.8"
   resolved "https://registry.yarnpkg.com/node-bourbon/-/node-bourbon-4.2.8.tgz#e444f1f09434ab7650ea318c28e2e103d3f942cd"
   dependencies:
@@ -5016,7 +5016,7 @@ node-libs-browser@^2.0.0:
     util "^0.10.3"
     vm-browserify "0.0.4"
 
-node-neat@^1.7.2:
+node-neat@^1.9.0:
   version "1.7.2"
   resolved "https://registry.yarnpkg.com/node-neat/-/node-neat-1.7.2.tgz#38472910b815e261b8b1b99ba519994465a15c21"
   dependencies:

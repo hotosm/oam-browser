@@ -85,7 +85,6 @@ export default class SearchBox extends React.Component {
           />
           {navigator.geolocation
             ? <a
-                href='#'
                 title='Take me to my location'
                 className='global-search__button-location'
                 onClick={this.onMyLocationClick}

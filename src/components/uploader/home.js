@@ -1,5 +1,6 @@
 import url from 'url';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import ValidationMixin from 'react-validation-mixin';
 import Joi from 'joi';
 import nets from 'nets';
@@ -24,7 +25,7 @@ const apiUrl = config.catalog.url;
 // ALWAYS calling setState after one of these changes, it's not a problem.
 // It's still an antipattern, but I know what I'm doing! :)
 
-export default React.createClass({
+export default createReactClass({
   displayName: 'Home',
 
   mixins: [ValidationMixin],

@@ -1,4 +1,6 @@
+import PropTypes from 'prop-types';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import Reflux from 'reflux';
 
 import MessageModal from 'components/modals/message_modal';
@@ -7,7 +9,7 @@ import FeedbackModal from 'components/modals/feedback_modal';
 import Header from 'components/header';
 import actions from 'actions/actions';
 
-export default React.createClass({
+export default createReactClass({
   displayName: 'App',
 
   mixins: [
@@ -17,10 +19,10 @@ export default React.createClass({
   ],
 
   propTypes: {
-    params: React.PropTypes.object,
-    routes: React.PropTypes.array,
-    location: React.PropTypes.object,
-    children: React.PropTypes.object
+    params: PropTypes.object,
+    routes: PropTypes.array,
+    location: PropTypes.object,
+    children: PropTypes.object
   },
 
   componentWillMount: function () {

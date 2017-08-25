@@ -1,5 +1,7 @@
 
+import PropTypes from 'prop-types';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import ValidationMixin from 'react-validation-mixin';
 import Joi from 'joi';
 import $ from 'jquery';
@@ -12,7 +14,7 @@ import AppActions from 'actions/actions';
 
 const apiUrl = config.catalog.url;
 
-export default React.createClass({
+export default createReactClass({
   displayName: 'ImageryEdit',
 
   apiPath: function () {
@@ -22,7 +24,7 @@ export default React.createClass({
   mixins: [ValidationMixin],
 
   propTypes: {
-    params: React.PropTypes.object
+    params: PropTypes.object
   },
 
   validatorTypes: {

@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import utils from "utils/utils";
 import mapLayers from "utils/map-layers";
 
-require("mapbox.js");
+import "mapbox.js";
 
 export default class extends React.Component {
   static displayName = "MiniMap";

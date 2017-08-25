@@ -2,7 +2,6 @@ src/config/local.js
 node_modules
 bower_components
 .sass-cache
-src/styles/*.css
 .bundle
 build
 bundle

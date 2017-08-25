@@ -1,5 +1,5 @@
 /* global L */
-require("mapbox.js");
+import "mapbox.js";
 
 // ===========================================
 //
@@ -8,7 +8,7 @@ require("mapbox.js");
 //
 // ===========================================
 
-var DSZoom = L.Control.extend({
+export default L.Control.extend({
   options: {
     position: "topleft",
     containerClasses: "",
@@ -100,5 +100,3 @@ var DSZoom = L.Control.extend({
     }
   }
 });
-
-module.exports = DSZoom;

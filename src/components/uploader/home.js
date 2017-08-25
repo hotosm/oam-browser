@@ -2,7 +2,7 @@ import url from "url";
 import React from "react";
 import createReactClass from "create-react-class";
 import ValidationMixin from "react-validation-mixin";
-import Joi from "joi";
+import Joi from "joi-browser";
 import nets from "nets";
 import Scene from "components/uploader/scene";
 import AppActions from "actions/actions";

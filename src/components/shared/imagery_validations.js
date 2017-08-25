@@ -1,4 +1,4 @@
-var Joi = require("joi");
+var Joi = require("joi-browser");
 
 module.exports = {
   title: Joi.string().min(1).required().label("Title"),

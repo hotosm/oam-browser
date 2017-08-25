@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import createReactClass from "create-react-class";
 import ValidationMixin from "react-validation-mixin";
-import Joi from "joi";
+import Joi from "joi-browser";
 import $ from "jquery";
 import _ from "lodash";
 

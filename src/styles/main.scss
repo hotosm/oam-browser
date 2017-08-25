@@ -9,13 +9,13 @@
  * Bourbon for extended SASS functionality:
  * http://bourbon.io/
  */
-@import "bourbon";
+@import "bourbon/bourbon";
 
 /**
  * Jeet, a grid system designed for humans:
  * http://jeet.gs/
  */
-@import "jeet";
+@import "jeet/jeet";
 
 @import "oam-design-system";
 
@@ -34,7 +34,7 @@
 // These came from the oam-uploader repo when the uploader form
 // was in a separate repo.
 // TODO: Explore merging and consolodating.
-@import "neat";
+@import "neat/neat";
 @import "uploader/neat-addons";
 @import "uploader/variables";
 @import "uploader/mixins";

@@ -53,7 +53,7 @@ jobs:
           bucket: hotosm-oam-staging
           region: us-east-1
           skip_cleanup: true
-          local_dir: dist
+          local_dir: build
           acl: public_read
           on:
             repo: hotosm/oam-browser

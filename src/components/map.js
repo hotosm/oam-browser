@@ -18,7 +18,7 @@ import utils from "utils/utils";
 import mapStore from "stores/map_store";
 import DSZoom from "utils/ds_zoom";
 
-require("mapbox.js");
+import "mapbox.js";
 
 L.mapbox.accessToken = config.map.mapbox.accessToken;
 

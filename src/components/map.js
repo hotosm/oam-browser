@@ -138,6 +138,7 @@ export default createReactClass({
 
     this.updateGrid();
     this.updateSelectedSquare();
+    utils.delayedMapContainerResize(this.map);
   },
 
   // Lifecycle method.
@@ -165,11 +166,7 @@ export default createReactClass({
 
   // Lifecycle method.
   render: function() {
-    return (
-      <div>
-        <div id="map" ref="mapContainer" />
-      </div>
-    );
+    return <div id="map" ref="mapContainer" style={{ position: "absolute" }} />;
   },
 
   onMapIssueReport: function(e) {
@@ -310,7 +307,6 @@ export default createReactClass({
 
     // Stick a 'count' property onto each grid square, based on the number of
     // footprints that intersect with the square.
-    // console.time('aggregate on grid');
     gridData.features.forEach(function(gridSquare) {
       var featureCenter = centroid(gridSquare);
       // The footprints with bboxes that intersect with this grid square.

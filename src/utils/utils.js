@@ -156,5 +156,16 @@ export default {
     }
 
     return pt;
+  },
+
+  // Hack. For some reason Leaflet doesn't get the full size of the
+  // the map container and so doesn't fill in the map. Maybe there
+  // is a transition effect that provides a smaller value at Leaflet's
+  // init, so setting a timeout to re-measure makes the map fill up with
+  // tiles.
+  delayedMapContainerResize: function(map) {
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 1000);
   }
 };

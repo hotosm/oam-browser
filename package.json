@@ -20,7 +20,8 @@
     "postinstall": "[ -f src/config/local.js ] || echo 'module.exports = {};' > src/config/local.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "lint": "eslint .",
+    "analyze": "source-map-explorer build/static/js/main.*",
+    "lint": "eslint --ignore-pattern src/joi.js --ignore-pattern styles/ src/ test/",
     "test": "NODE_ENV=test NODE_PATH=src mocha --opts test/specs/mocha.opts test/specs"
   },
   "devDependencies": {
@@ -38,6 +39,7 @@
     "prettier": "^1.5.3",
     "react-addons-test-utils": "^15.5.1",
     "react-test-renderer": "^15.5.4",
+    "source-map-explorer": "^1.4.0",
     "wdio-browserstack-service": "^0.1.11",
     "wdio-mocha-framework": "^0.5.10",
     "wdio-spec-reporter": "^0.1.0",
@@ -50,7 +52,7 @@
     "jquery": "^2.1.4",
     "lodash": "^3.8.0",
     "lodash.defaultsdeep": "^4.3.5",
-    "mapbox.js": "^2.1.9",
+    "mapbox.js": "^2.4.0",
     "moment": "^2.10.6",
     "nets": "^3.1.0",
     "pretty-bytes": "^2.0.1",

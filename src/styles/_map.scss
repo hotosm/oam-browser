@@ -60,7 +60,6 @@
   &.gs-active {
     fill-opacity: 0.64;
     fill: $secondary-color;
-    pointer-events: none;
   }
 }
 
@@ -101,6 +100,7 @@
     padding: 0;
     background: none;
     box-shadow: none;
+    pointer-events: none;
   }
   .leaflet-popup-content {
     @extend .antialiased;

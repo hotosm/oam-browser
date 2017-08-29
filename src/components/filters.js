@@ -59,7 +59,7 @@ export default createReactClass({
     if (!mapView) {
       var cookieView = cookie.read("oam-map-view");
       if (cookieView !== "undefined") {
-        mapView = cookie.read("oam-map-view").replace(/|/g, ",");
+        mapView = cookie.read("oam-map-view").replace(/\|/g, ",");
       } else {
         mapView = config.map.initialView
           .concat(config.map.initialZoom)

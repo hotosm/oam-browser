@@ -31,8 +31,6 @@ export default class extends React.Component {
   // Lifecycle method.
   // Called once as soon as the component has a DOM representation.
   componentDidMount() {
-    // console.log('componentDidMount MiniMap');
-
     this.map = L.mapbox
       .map(this.refs.mapContainer, null, {
         center: [0, 0],
@@ -58,16 +56,19 @@ export default class extends React.Component {
     this.map.on("click", this.onMapClick);
 
     this.setCrosshair();
+    utils.delayedMapContainerResize(this.map);
   }
 
   // Lifecycle method.
   // Called when the component gets updated.
-  componentDidUpdate() /* prevProps, prevState */ {
+  componentDidUpdate(/* prevProps, prevState */) {
     this.setCrosshair();
   }
 
   render() {
-    return <div id="minimap" ref="mapContainer" />;
+    return (
+      <div id="minimap" ref="mapContainer" style={{ position: "absolute" }} />
+    );
   }
 
   // Map event.

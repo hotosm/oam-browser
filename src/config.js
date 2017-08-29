@@ -37,17 +37,22 @@ if (_.isEmpty(configurations.local)) {
   config = configurations.local;
 }
 
-if (process.env.NODE_ENV === "test" || process.env.TRAVIS === "true") {
+if (
+  process.env.NODE_ENV === "test" ||
+  process.env.REACT_APP_OAM_ENV === "test"
+) {
   config = configurations.test;
 }
 
 // Set all staging config
-if (process.env.NODE_ENV === "staging") {
+if (process.env.REACT_APP_OAM_ENV === "staging") {
   config = configurations.staging;
 }
 
 // Set all production config
-if (process.env.NODE_ENV === "production") {
+// Create React App hardcodes NODE_ENV so we need another marker to make sure
+// the `config.js` correctly loads the correct config.
+if (process.env.REACT_APP_OAM_ENV === "production") {
   config = configurations.production;
 }
 

@@ -9,6 +9,7 @@ services:
 env:
   global:
     - NODE_ENV=test
+    - OAM_ENV=test
     - BSTACK_USER=thomasbuckleyhou1
     - FACEBOOK_APP_ID=228592690987600
     # OAM ENV

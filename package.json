@@ -61,7 +61,7 @@
     "react-addons-css-transition-group": "^15.1.0",
     "react-autocomplete": "^1.5.0",
     "react-dom": "^15.6.1",
-    "react-keybinding": "git+https://github.com/gregeinfrank/react-keybinding.git#d733a47",
+    "react-keybinding": "^3.0.0",
     "react-router": "^2.4.0",
     "react-tether": "^0.5.7",
     "react-validation-mixin": "^4.2.0",

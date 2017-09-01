@@ -3,7 +3,6 @@ import React from "react";
 import createReactClass from "create-react-class";
 import Reflux from "reflux";
 import { hashHistory } from "react-router";
-import Keys from "react-keybinding";
 import $ from "jquery";
 import centroid from "turf-centroid";
 import Dropdown from "oam-design-system/dropdown";
@@ -30,18 +29,7 @@ export default createReactClass({
     params: PropTypes.object
   },
 
-  mixins: [Keys, Reflux.listenTo(userStore, "onUserStoreData")],
-
-  keybindings: {
-    i: function() {
-      actions.openModal("info");
-    },
-    s: function() {
-      // By delaying the focus some millis we prevent the 's' from being
-      // typed in the search box.
-      setTimeout(() => this.refs.geocoder.focus(), 10);
-    }
-  },
+  mixins: [Reflux.listenTo(userStore, "onUserStoreData")],
 
   getInitialState: function() {
     return {
@@ -100,13 +88,7 @@ export default createReactClass({
   },
 
   isMap: function() {
-    // If we're on a specific coordinate location.
-    const isLocation =
-      this.props.routes[this.props.routes.length - 1].name === "map";
-    // If we're on the homepage.
-    const isHome = this.props.location.pathname === "/";
-    // Is this the main map view?
-    return isLocation || isHome;
+    return utils.isOnMainMap(this.props);
   },
 
   render: function() {

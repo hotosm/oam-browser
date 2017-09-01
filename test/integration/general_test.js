@@ -22,7 +22,7 @@ function finishLoading() {
 }
 
 function logIn() {
-  browser.url("/");
+  browser.url("#/");
   browser.click("a=Facebook");
   if (browser.getUrl().match(/facebook.com/)) {
     // Note that if you change the user, you will need to manually
@@ -33,7 +33,7 @@ function logIn() {
     $("#pass").setValue("oamtestpassword");
     browser.click("#loginbutton");
   }
-  expect(browser.waitForVisible("a=Logout", 10000)).to.eq(true);
+  expect(browser.waitForVisible("a=Logout")).to.eq(true);
 }
 
 // Use the following instead once IE Edge supports cookie and localStorage deletion.
@@ -42,7 +42,7 @@ function logIn() {
 // browser.deleteCookie();
 // browser.localStorage('DELETE');
 function logOut() {
-  browser.url("/");
+  browser.url("#/");
   if ($("a=Logout").isExisting()) {
     browser.click("a=Logout");
   }

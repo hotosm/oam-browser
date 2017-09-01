@@ -162,6 +162,13 @@ export default createReactClass({
       '[data-hook="map:issue"]'
     );
     mapIssueTrigger.removeEventListener("click", this.onMapIssueReport);
+
+    // On non-map pages that are navigated to after having viewed the map, then
+    // there could be weird behaviour where this `moveend` event was still
+    // listening. So for instance a browser resize on say the `/upload` page
+    // would trigger a redirect to the map so it could be recentered! This was a
+    // difficult bug to discover.
+    this.map.removeEventListener("moveend");
   },
 
   // Lifecycle method.

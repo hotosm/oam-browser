@@ -167,5 +167,16 @@ export default {
     setTimeout(() => {
       map.invalidateSize();
     }, 1000);
+  },
+
+  // Check if we're currently viewing the map.
+  // Expects `props` to contain both the `location` and `routes` properties.
+  isOnMainMap: function(props) {
+    // If we're on a specific coordinate location.
+    const isLocation = props.routes[props.routes.length - 1].name === "map";
+    // If we're on the homepage.
+    const isHome = props.location.pathname === "/";
+    // Is this the main map view?
+    return isLocation || isHome;
   }
 };

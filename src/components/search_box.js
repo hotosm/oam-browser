@@ -18,15 +18,15 @@ export default class SearchBox extends React.Component {
       geocoderResults: [{ text: "Loading..." }],
       isOpen: true
     });
-    utils.queryGeocoder(this.state.value, response => {
-      if (response.features.length === 0) {
-        response.features = [
+    utils.queryGeocoder(this.state.value).then(data => {
+      if (data.features.length === 0) {
+        data.features = [
           {
             text: "Nothing found"
           }
         ];
       }
-      this.setState({ geocoderResults: response.features });
+      this.setState({ geocoderResults: data.features });
     });
   };
 

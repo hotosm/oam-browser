@@ -3,21 +3,18 @@ import React from "react";
 import createReactClass from "create-react-class";
 import ValidationMixin from "react-validation-mixin";
 import Joi from "joi-browser";
-import $ from "jquery";
 import _ from "lodash";
 
+import api from "utils/api";
 import Scene from "components/uploader/scene";
 import imageryValidations from "components/shared/imagery_validations";
-import config from "config";
 import AppActions from "actions/actions";
-
-const apiUrl = config.catalog.url;
 
 export default createReactClass({
   displayName: "ImageryEdit",
 
   apiPath: function() {
-    return apiUrl + "/meta/" + this.props.params.id;
+    return "/meta/" + this.props.params.id;
   },
 
   mixins: [ValidationMixin],
@@ -60,12 +57,10 @@ export default createReactClass({
   },
 
   fetchImageryData: function() {
-    $.get({
-      url: this.apiPath(),
-      xhrFields: {
-        withCredentials: true
-      }
-    }).done(response => {
+    api({
+      uri: this.apiPath(),
+      auth: true
+    }).then(response => {
       const imagery = this.convertDBMetaToFormFields(response.results);
       this.setState({
         loading: false,
@@ -76,14 +71,12 @@ export default createReactClass({
 
   submitImageryData: function() {
     this.setState({ loading: true });
-    $.ajax({
-      url: this.apiPath(),
+    api({
+      uri: this.apiPath(),
+      auth: true,
       method: "PUT",
-      xhrFields: {
-        withCredentials: true
-      },
-      data: this.convertFormFieldsToDBMeta(this.state.scenes[0])
-    }).done(response => {
+      body: this.convertFormFieldsToDBMeta(this.state.scenes[0])
+    }).then(response => {
       AppActions.showNotification("success", "Imagery updated.");
       this.setState({ loading: false });
     });

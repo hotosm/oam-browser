@@ -1,17 +1,14 @@
-import url from "url";
 import React from "react";
 import createReactClass from "create-react-class";
 import ValidationMixin from "react-validation-mixin";
 import Joi from "joi-browser";
-import nets from "nets";
 import Scene from "components/uploader/scene";
 import AppActions from "actions/actions";
 import imageryValidations from "components/shared/imagery_validations";
-import $ from "jquery";
 import _ from "lodash";
 
 import config from "config";
-const apiUrl = config.catalog.url;
+import api from "utils/api";
 
 // Sanity note:
 // There are some places where the component state is being altered directly.
@@ -167,56 +164,49 @@ export default createReactClass({
   },
 
   uploadFile: function(file, callback) {
-    fetch(url.resolve(apiUrl, "/uploads/url"), {
+    api({
+      uri: "/uploads/url",
+      auth: true,
       method: "POST",
-      credentials: "include",
-      body: JSON.stringify({
+      body: {
         name: file.newName,
         type: file.data.type
-      })
-    })
-      .then(response => response.json())
-      .then(data => {
-        let presignedUrl = data.results.url;
-        $.ajax({
-          xhr: function() {
-            let xhr = new window.XMLHttpRequest();
-            xhr.upload.addEventListener(
-              "progress",
-              function(evt) {
-                if (evt.lengthComputable) {
-                  return callback(null, {
-                    type: "progress",
-                    fileName: file.newName,
-                    val: evt.loaded
-                  });
-                }
-              },
-              false
-            );
-            return xhr;
-          },
-          url: presignedUrl,
-          data: file.data,
-          processData: false,
-          contentType: file.data.type,
-          type: "PUT",
-          error: err => {
-            return callback(err);
-          },
-          beforeSend: () => {
-            return callback(null, {
-              type: "beforeSend"
-            });
-          },
-          success: data => {
-            return callback(null, {
-              type: "success",
-              val: data
-            });
-          }
-        });
+      }
+    }).then(data => {
+      callback(null, {
+        type: "beforeSend"
       });
+      this.xhrUploadToS3(data.results.url, file, callback);
+    });
+  },
+
+  xhrUploadToS3: function(presignedUrl, file, callback) {
+    let xhr = new window.XMLHttpRequest();
+    xhr.upload.addEventListener(
+      "progress",
+      function(evt) {
+        if (evt.lengthComputable) {
+          return callback(null, {
+            type: "progress",
+            fileName: file.newName,
+            val: evt.loaded
+          });
+        }
+      },
+      false
+    );
+    xhr.addEventListener("error", e => {
+      callback(e);
+    });
+    xhr.addEventListener("load", e => {
+      callback(null, {
+        type: "success",
+        val: e
+      });
+    });
+    xhr.responseType = "text";
+    xhr.open("PUT", presignedUrl, true);
+    xhr.send(file.data);
   },
 
   onSubmit: function(event) {
@@ -234,7 +224,6 @@ export default createReactClass({
         if (error) {
           console.log(validationErrors);
           AppActions.showNotification("alert", "Form contains errors!");
-          this.scrollToError();
         } else {
           if (this.state.loading) {
             // Submit already in process.
@@ -396,50 +385,23 @@ export default createReactClass({
   },
 
   submitData: function(data) {
-    nets(
-      {
-        url: url.resolve(apiUrl, "/uploads"),
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json"
-        },
-        withCredentials: true
-      },
-      function(err, resp, body) {
-        if (err) {
-          console.error("error", err);
-        }
-        this.setState({ loading: false });
+    api({
+      uri: "/uploads",
+      auth: true,
+      method: "POST",
+      body: data
+    }).then(data => {
+      this.setState({ loading: false });
+      var id = data.results.upload;
 
-        if (resp.statusCode >= 200 && resp.statusCode < 400) {
-          var id = JSON.parse(body.toString()).results.upload;
-
-          AppActions.showNotification(
-            "success",
-            <span>
-              Your upload request was successfully submitted and is being
-              processed.{" "}
-              <a href={"#/upload/status/" + id}>Check upload status.</a>
-            </span>
-          );
-        } else {
-          var message = null;
-          if (resp.statusCode === 401) {
-            message = <span>You are not logged in.</span>;
-          } else {
-            message = <span>There was a problem with the request.</span>;
-          }
-
-          AppActions.showNotification("alert", message);
-        }
-      }.bind(this)
-    );
-  },
-
-  scrollToError: function() {
-    var topPos = $(".message-alert").first().offset().top;
-    $("html").animate({ scrollTop: topPos - 50 });
+      AppActions.showNotification(
+        "success",
+        <span>
+          Your upload request was successfully submitted and is being processed.{" "}
+          <a href={"#/upload/status/" + id}>Check upload status.</a>
+        </span>
+      );
+    });
   },
 
   renderErrorMessage: function(message) {

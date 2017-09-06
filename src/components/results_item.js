@@ -3,7 +3,6 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import qs from "querystring";
-import $ from "../deprecate/jquery";
 import centroid from "turf-centroid";
 import Keys from "react-keybinding";
 import Dropdown from "oam-design-system/dropdown";
@@ -107,7 +106,7 @@ export default createReactClass({
         : "http://127.0.0.1:8111";
     // Reference:
     // http://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl#load_and_zoom
-    $.get(
+    fetch(
       urlPrefix +
         "/load_and_zoom?" +
         qs.stringify({
@@ -118,11 +117,16 @@ export default createReactClass({
           source: source
         })
     )
-      .success(function(data) {
+      .then(response => {
+        if (!response.ok)
+          return Promise.reject(new Error(`HTTP Error ${response.status}`));
+        return response.json();
+      })
+      .then(function(data) {
         // Reference:
         // http://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl#imagery
         // Note: `url` needs to be the last parameter.
-        $.get(
+        fetch(
           urlPrefix +
             "/imagery?" +
             qs.stringify({
@@ -131,15 +135,21 @@ export default createReactClass({
             }) +
             "&url=" +
             tmsUrl
-        ).success(function() {
-          // all good!
-          actions.openModal("message", {
-            title: "Success",
-            message: <p>This scene has been loaded into JOSM.</p>
+        )
+          .then(response => {
+            if (!response.ok)
+              return Promise.reject(new Error(`HTTP Error ${response.status}`));
+            return response.json();
+          })
+          .success(function() {
+            // all good!
+            actions.openModal("message", {
+              title: "Success",
+              message: <p>This scene has been loaded into JOSM.</p>
+            });
           });
-        });
       })
-      .fail(function(err) {
+      .catch(function(err) {
         console.error(err);
         actions.openModal("message", {
           title: "Error",

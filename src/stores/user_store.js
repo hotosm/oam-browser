@@ -1,9 +1,10 @@
-import $ from "deprecate/jquery";
 import Reflux from "reflux";
 
 import config from "config";
 import cookie from "utils/cookie";
 import { hashHistory } from "react-router";
+
+import api from "utils/api";
 import actions from "actions/actions";
 
 export default Reflux.createStore({
@@ -41,12 +42,10 @@ export default Reflux.createStore({
   },
 
   getUserDetails: function() {
-    $.get({
-      url: config.catalog.url + "/user",
-      xhrFields: {
-        withCredentials: true
-      }
-    }).done(response => {
+    api({
+      uri: "/user",
+      auth: true
+    }).then(response => {
       this.saveUserLocally(response.results);
       this.logIn();
     });

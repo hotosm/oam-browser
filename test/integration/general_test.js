@@ -64,13 +64,11 @@ function waitForImageryProcessing() {
   // writing tests over your phone's 3G connection :/)
   browser.waitForVisible("a=Check upload status.", 10000);
   browser.click("a=Check upload status.");
-  browser.waitForVisible("h2=Status upload");
-  for (var i = 0; i < 100; i++) {
-    browser.waitForVisible("p.status");
-    status = browser.getText("p.status").toLowerCase();
+  browser.waitForVisible(".status");
+  for (var i = 0; i < 1000; i++) {
+    status = browser.getText(".status").toLowerCase();
     if (status !== "pending" && status !== "processing") return status;
-    browser.pause(1000);
-    browser.refresh();
+    browser.pause(500);
   }
   return false;
 }
@@ -188,7 +186,7 @@ describe("Imagery", function() {
       expect("a=View image").to.be.there();
     });
 
-    it("should list a users's images", () => {
+    it("should list a user's images", () => {
       const title = Math.random().toString(36).slice(2);
       submitImagery(everest, title);
       browser.click("a=Logout");

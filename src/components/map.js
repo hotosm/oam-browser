@@ -6,7 +6,6 @@ import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
 import Reflux from "reflux";
 import _ from "lodash";
-import $ from "jquery";
 import tilebelt from "tilebelt";
 import centroid from "turf-centroid";
 import inside from "turf-inside";
@@ -214,7 +213,6 @@ export default createReactClass({
 
   // Map event
   onGridSqrClick: function(e) {
-    // console.log('onGridSqrClick', e);
     // Ensure that the popup doesn't open.
     e.layer.closePopup();
 
@@ -471,9 +469,13 @@ export default createReactClass({
         tmsUrl = tmsUrl.replace("{zoom}", "{z}");
 
         this.disableSelectedSquare = true;
-        const layerMaxZoom = this.getLayerMaxZoom(item.properties.tms);
-        this.map.options.maxZoom = layerMaxZoom;
-        this.mapOverImageLayer = L.tileLayer(tmsUrl, { maxZoom: layerMaxZoom });
+        this.getLayerMaxZoom(item.properties.tms).then(data => {
+          this.map.options.maxZoom = data.layerMaxZoom;
+          this.mapOverImageLayer = L.tileLayer(tmsUrl, {
+            maxZoom: this.map.options.maxZoom
+          });
+          this.updateSelectedSquare();
+        });
       } else if (previewOptions.type === "thumbnail") {
         var imageBounds = [
           [item.bbox[1], item.bbox[0]],
@@ -497,16 +499,15 @@ export default createReactClass({
   // TODO: Add layer's tileJSON, or relevant portions thereof, to oin-meta-generator.
   //       This will prevent the need for;
   //       1. Hacking the `tms` field to get the base tileJSON URI.
-  //       2. Making a blocking synchronous XHR call.
   getLayerMaxZoom: function(tmsURI) {
     const tileJSONURI = tmsURI
       .replace(/\/\{z\}\/\{x\}\/\{y\}.*/, "")
       .replace("http://", "https://");
-    let maxZoom;
-    $.get({ url: tileJSONURI, async: false }).success(data => {
-      maxZoom = data.maxzoom;
+    return fetch(tileJSONURI).then(response => {
+      if (!response.ok)
+        return Promise.reject(new Error(`HTTP Error ${response.status}`));
+      return response.json();
     });
-    return maxZoom;
   },
 
   // Helper functions

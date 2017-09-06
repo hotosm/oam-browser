@@ -1,14 +1,13 @@
 import qs from "querystring";
 import Reflux from "reflux";
 import _ from "lodash";
-import $ from "jquery";
 import extent from "turf-extent";
 import rbush from "rbush";
 
-import actions from "../actions/actions";
-import searchQueryStore from "./search_query_store";
-import config from "../config";
-import baseLayers from "../utils/map-layers";
+import actions from "actions/actions";
+import searchQueryStore from "stores/search_query_store";
+import baseLayers from "utils/map-layers";
+import api from "utils/api";
 
 export default Reflux.createStore({
   storage: {
@@ -33,23 +32,22 @@ export default Reflux.createStore({
     this.storage.baseLayer = layer;
   },
 
+  // TODO: Is this necessary? Can we not just make the single API requests for
+  //       footprints and scim the latest image from that API request?
   queryLatestImagery: function() {
-    var _this = this;
-
-    $.get(
-      config.catalog.url + "/meta?order_by=acquisition_end&sort=desc&limit=1"
-    ).success(function(data) {
-      _this.storage.latestImagery = data.results[0];
+    api({
+      uri: "/meta?order_by=acquisition_end&sort=desc&limit=1"
+    }).then(data => {
+      this.storage.latestImagery = data.results[0];
       actions.latestImageryLoaded();
     });
   },
 
+  // TODO: Need to watch out here that the API response doesn't become
+  //       problematically large.
   queryFootprints: function() {
-    var _this = this;
-
-    $.get(config.catalog.url + "/meta?limit=99999").success(function(data) {
-      var footprintsFeature = _this.parseFootprints(data.results);
-
+    api({ uri: "/meta?limit=99999" }).then(data => {
+      var footprintsFeature = this.parseFootprints(data.results);
       var tree = rbush(9);
       tree.load(
         footprintsFeature.features.map(function(feat) {
@@ -58,8 +56,8 @@ export default Reflux.createStore({
           return item;
         })
       );
-      _this.storage.footprintsTree = tree;
-      _this.trigger("footprints");
+      this.storage.footprintsTree = tree;
+      this.trigger("footprints");
     });
   },
 
@@ -101,7 +99,6 @@ export default Reflux.createStore({
    */
   queryData: function() {
     var parameters = searchQueryStore.getParameters();
-    var _this = this;
 
     // hit API and broadcast result
     var resolutionFilter = {
@@ -148,14 +145,14 @@ export default Reflux.createStore({
 
     var strParams = qs.stringify(params);
     if (strParams === this.storage.prevSearchParams) {
-      _this.trigger("squareData");
+      this.trigger("squareData");
       return;
     }
     this.storage.prevSearchParams = strParams;
 
-    $.get(config.catalog.url + "/meta?" + strParams).success(function(data) {
-      _this.storage.results = data.results;
-      _this.trigger("squareData");
+    api({ uri: `/meta?${strParams}` }).then(data => {
+      this.storage.results = data.results;
+      this.trigger("squareData");
     });
   },
 

@@ -5,7 +5,7 @@ import Reflux from "reflux";
 import Keys from "react-keybinding";
 import serialize from "form-serialize";
 import config from "config";
-import $ from "jquery";
+
 import _ from "lodash";
 import Modal from "oam-design-system/modal";
 
@@ -105,24 +105,24 @@ export default createReactClass({
         response: null
       });
 
-      $.ajax({
-        dataType: "jsonp",
-        url: config.feedbackSubmissionURL,
-        data: serial
-      })
-        .always(() => {
-          this.setState({ lockSubmit: false });
-        })
-        .done(() => {
+      fetch(config.feedbackSubmissionURL)
+        .then(response => response.text())
+        .then(responseText => {
+          const match = responseText.match(/\?\((.*)\);/);
+          if (!match) throw new Error("invalid JSONP response");
           this.setState({
-            response: "Your feedback has been submitted. Thank you."
+            response: "Your feedback has been submitted. Thank you.",
+            lockSubmit: false
           });
           form.reset();
         })
-        .fail(() => {
+        .catch(error => {
           this.setState({
-            response: "There was a problem during submission. Please try again."
+            response:
+              "There was a problem during submission. Please try again.",
+            lockSubmit: false
           });
+          this.setState({ lockSubmit: false });
         });
     }
   },

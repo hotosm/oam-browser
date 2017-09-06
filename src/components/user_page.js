@@ -1,12 +1,9 @@
 import PropTypes from "prop-types";
 import React from "react";
 import createReactClass from "create-react-class";
-import utils from "../utils/utils";
 
-import $ from "jquery";
-import config from "config";
-
-const apiUrl = config.catalog.url;
+import utils from "utils/utils";
+import api from "utils/api";
 
 export default createReactClass({
   displayName: "Account",
@@ -55,12 +52,10 @@ export default createReactClass({
     if (this.requestedUser !== "current") {
       userPath = "/" + this.requestedUser;
     }
-    $.get({
-      url: apiUrl + "/user" + userPath,
-      xhrFields: {
-        withCredentials: true
-      }
-    }).done(response => {
+    api({
+      uri: "/user" + userPath,
+      auth: true
+    }).then(response => {
       this.setState({
         user: response.results,
         loading: false
@@ -72,13 +67,11 @@ export default createReactClass({
     this.setState({
       loading: true
     });
-    $.ajax({
-      url: apiUrl + "/meta/" + id,
+    api({
+      uri: "/meta/" + id,
       method: "DELETE",
-      xhrFields: {
-        withCredentials: true
-      }
-    }).done(response => {
+      auth: true
+    }).then(response => {
       this.fetchUserData();
     });
   },

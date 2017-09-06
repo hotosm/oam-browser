@@ -3,7 +3,6 @@ import extent from "turf-extent";
 import tilebelt from "tilebelt";
 import parse from "wellknown";
 import config from "../config";
-import $ from "../deprecate/jquery";
 
 export default {
   // Use image metadata to construct OAM Browser URL describing the map view,
@@ -110,24 +109,18 @@ export default {
     return extent({ type: "Feature", geometry: geoJSONTile });
   },
 
-  queryGeocoder: function(query, successCb, errorCb) {
+  queryGeocoder: function(query) {
     var uri =
       "https://api.tiles.mapbox.com/geocoding/v5/mapbox.places/" +
       encodeURIComponent(query) +
       ".json" +
       "?access_token=" +
       config.map.mapbox.accessToken;
-    var req = $.get(uri);
-
-    if (successCb) {
-      req = req.success(successCb);
-    }
-
-    if (errorCb) {
-      req = req.error(errorCb);
-    }
-
-    return req;
+    return fetch(uri).then(response => {
+      if (!response.ok)
+        return Promise.reject(new Error(`HTTP Error ${response.status}`));
+      return response.json();
+    });
   },
 
   getMapViewString: function(lng, lat, zoom) {

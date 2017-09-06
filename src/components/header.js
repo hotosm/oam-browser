@@ -3,7 +3,6 @@ import React from "react";
 import createReactClass from "create-react-class";
 import Reflux from "reflux";
 import { hashHistory } from "react-router";
-import $ from "jquery";
 import centroid from "turf-centroid";
 import Dropdown from "oam-design-system/dropdown";
 
@@ -51,12 +50,17 @@ export default createReactClass({
   },
 
   fetchOAMHealth: function() {
-    var _this = this;
-    $.get(config.oamStatus).success(function(data) {
-      _this.setState({
-        oamHealth: data.health
+    fetch(config.oamStatus)
+      .then(response => {
+        if (!response.ok)
+          return Promise.reject(new Error(`HTTP Error ${response.status}`));
+        return response.json();
+      })
+      .then(data => {
+        this.setState({
+          oamHealth: data.health
+        });
       });
-    });
   },
 
   feedbackClickHandler: function(e) {

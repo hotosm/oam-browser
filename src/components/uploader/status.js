@@ -3,14 +3,10 @@ import PropTypes from "prop-types";
 import React from "react";
 import createReactClass from "create-react-class";
 import moment from "moment";
+
 import util from "util";
-import url from "url";
-import nets from "nets";
-import config from "config";
-
 import utils from "utils/utils";
-
-const apiUrl = config.catalog.url;
+import api from "utils/api";
 
 function dateFormat(date) {
   // http://momentjs.com/docs/#/displaying/
@@ -29,43 +25,60 @@ export default createReactClass({
 
   getInitialState: function() {
     return {
-      loading: true
+      pauseProcessingChecks: false,
+      loading: true,
+      data: {
+        scenes: [{ images: [{ status: "initial" }] }]
+      }
     };
   },
 
-  componentWillMount: function() {
-    var id = this.props.params.id;
-    nets(
-      url.resolve(apiUrl, "/uploads/" + id),
-      function(err, resp, body) {
-        if (err) {
-          return this.setState({
-            loading: false,
-            errored: true,
-            message: err.message,
-            data: err
-          });
-        }
+  componentDidMount: function() {
+    this.watchProcessingStatus();
+  },
 
-        try {
-          var data = JSON.parse(body.toString());
-          this.setState({
-            loading: false,
-            errored: resp.statusCode < 200 || resp.statusCode >= 400,
-            message: "API responded with " + resp.statusCode,
-            data: data.results
-          });
-        } catch (err) {
-          console.error(err);
-          return this.setState({
-            loading: false,
-            errored: true,
-            message:
-              "Error parsing API response; statusCode: " + resp.statusCode,
-            data: "" + body
-          });
-        }
-      }.bind(this)
+  componentWillUnmount: function() {
+    this.setState({ pauseProcessingChecks: true });
+  },
+
+  watchProcessingStatus: function() {
+    if (this.state.pauseProcessingChecks) return;
+    this.checkProcessingStatus(() => {
+      if (this.isProcessingStopped()) return;
+      setTimeout(this.watchProcessingStatus, 500);
+    });
+  },
+
+  checkProcessingStatus: function(callback) {
+    api({ uri: "/uploads/" + this.props.params.id })
+      .then(data => {
+        this.setState({
+          loading: false,
+          message: "Imagery processed.",
+          data: data.results
+        });
+        callback();
+      })
+      .catch(err => {
+        this.setState({
+          loading: false,
+          errored: true,
+          message: "There was an error getting the imagery status.",
+          data: err
+        });
+        callback();
+      });
+  },
+
+  isProcessingStopped: function() {
+    return (
+      this.state.data.scenes.filter(scene => {
+        return (
+          scene.images.filter(image => {
+            return image.status === "initial" || image.status === "processing";
+          }).length > 0
+        );
+      }).length === 0
     );
   },
 
@@ -179,9 +192,17 @@ export default createReactClass({
         <h2 className="image-block-title">
           Image {i}
         </h2>
-        <p className={"status" + status}>
+        <div className={"status" + status}>
           {imgStatusMatrix[image.status]}
-        </p>
+          {image.status === "initial" || image.status === "processing"
+            ? <div className="sk-folding-cube">
+                <div className="sk-cube1 sk-cube" />
+                <div className="sk-cube2 sk-cube" />
+                <div className="sk-cube4 sk-cube" />
+                <div className="sk-cube3 sk-cube" />
+              </div>
+            : ""}
+        </div>
         <dl className="status-details">
           <dt>Started</dt>
           <dd>

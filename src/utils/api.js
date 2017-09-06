@@ -10,7 +10,7 @@ function handleResponse(response) {
     if (response.status === 204) return null;
     return response.json();
   }
-  var err = new Error(response.statusText);
+  let err = new Error(response.statusText);
   err.response = response;
   throw err;
 }

@@ -1,4 +1,3 @@
-import { hashHistory } from "react-router";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
@@ -17,6 +16,7 @@ export default createReactClass({
 
   propTypes: {
     query: PropTypes.object,
+    params: PropTypes.object,
     map: PropTypes.object,
     selectedSquareQuadkey: PropTypes.string,
     pagination: PropTypes.object,
@@ -58,33 +58,22 @@ export default createReactClass({
     this.setState({ selectedPreview: selected });
   },
 
-  prevResult: function(e) {
-    if (e) {
-      e.preventDefault();
-    }
-    let { map, selectedSquareQuadkey } = this.props;
-    let path = `${map.view}/${this.props.pagination
-      .prevId}/${selectedSquareQuadkey}`;
-    hashHistory.push({ pathname: path, query: this.props.query });
+  prevResult: function() {
+    utils.pushURI(this.props, {
+      image: this.props.pagination.prevId
+    });
   },
 
   viewAllResults: function(e) {
-    if (e) {
-      e.preventDefault();
-    }
-    let { map, selectedSquareQuadkey } = this.props;
-    let path = `${map.view}/0/${selectedSquareQuadkey}`;
-    hashHistory.push({ pathname: path, query: this.props.query });
+    utils.pushURI(this.props, {
+      image: null
+    });
   },
 
   nextResult: function(e) {
-    if (e) {
-      e.preventDefault();
-    }
-    let { map, selectedSquareQuadkey } = this.props;
-    let path = `${map.view}/${this.props.pagination
-      .nextId}/${selectedSquareQuadkey}`;
-    hashHistory.push({ pathname: path, query: this.props.query });
+    utils.pushURI(this.props, {
+      image: this.props.pagination.nextId
+    });
   },
 
   onCopy: function(key, trigger) {

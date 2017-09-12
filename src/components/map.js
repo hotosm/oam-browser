@@ -1,7 +1,6 @@
 /* global L */
 
 import React from "react";
-import { hashHistory } from "react-router";
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
 import Reflux from "reflux";
@@ -183,15 +182,7 @@ export default createReactClass({
 
   // Map event
   onMapMoveend: function(e) {
-    var path = this.mapViewToString();
-    if (this.props.params.item_id) {
-      path += `/${this.props.params.item_id}`;
-    }
-    if (this.props.params.square) {
-      path += `/${this.props.params.square}`;
-    }
-
-    hashHistory.replace({ pathname: path, query: this.props.query });
+    utils.pushURI(this.props, { map: this.mapViewToString() });
   },
 
   // Map event
@@ -219,18 +210,17 @@ export default createReactClass({
 
     if (this.props.selectedSquareQuadkey) {
       // There is a square selected. Unselect.
-      hashHistory.push({
-        pathname: `/${this.props.map.view}`,
-        query: this.props.query
+      utils.pushURI(this.props, {
+        square: null
       });
     } else if (e.layer.feature.properties.count) {
       var quadKey = e.layer.feature.properties._quadKey;
       var z = Math.round(this.map.getZoom());
       var squareCenter = centroid(e.layer.feature).geometry.coordinates;
       var mapView = utils.getMapViewString(squareCenter[0], squareCenter[1], z);
-      hashHistory.push({
-        pathname: `/${mapView}/0/${quadKey}`,
-        query: this.props.query
+      utils.pushURI(this.props, {
+        map: mapView,
+        square: quadKey
       });
     }
   },
@@ -272,7 +262,9 @@ export default createReactClass({
       position => {
         let { longitude, latitude } = position.coords;
         let mapView = utils.getMapViewString(longitude, latitude, 15);
-        hashHistory.push({ pathname: `/${mapView}`, query: this.props.query });
+        utils.pushURI(this.props, {
+          map: mapView
+        });
       },
       err => {
         console.warn("my location error", err);
@@ -296,13 +288,10 @@ export default createReactClass({
 
   // Action listener for when a result in the results modal is clicked
   onResultSelected: function(result) {
-    let { map, selectedSquareQuadkey } = result;
-    let path = `${map.view}/${result.data._id}`;
     this.onResultOut();
-    if (selectedSquareQuadkey) {
-      path = `${path}/${selectedSquareQuadkey}`;
-    }
-    hashHistory.push({ pathname: path, query: result.query });
+    utils.pushURI(this.props, {
+      image: result.data._id
+    });
   },
 
   updateGrid: function() {
@@ -555,25 +544,15 @@ export default createReactClass({
     };
   },
 
-  /**
-   * Converts the map view (coords + zoom) to use on the path.
-   *
-   * @return string
-   */
+  // Converts the map view (coords + zoom) to use on the path.
   mapViewToString: function() {
     var center = this.map.getCenter();
     var zoom = Math.round(this.map.getZoom());
     return utils.getMapViewString(center.lng, center.lat, zoom);
   },
 
-  /**
-   * Converts a path string like 60.359564131824214,4.010009765624999,6
-   * to a readable object
-   *
-   * @param  String
-   *   string to convert
-   * @return object
-   */
+  // Converts a path string like 60.359564131824214,4.010009765624999,6
+  // to a readable object.
   stringToMapView: function(string) {
     var data = string.split(",");
     return {

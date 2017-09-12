@@ -12,9 +12,9 @@ import api from "utils/api";
 export default Reflux.createStore({
   storage: {
     prevSearchParams: "",
-    results: [],
+    squareResults: [],
     sqrSelected: null,
-    latestImagery: null,
+    latestImagery: [],
     footprintsTree: null,
     baseLayer: baseLayers[0]
   },
@@ -89,7 +89,7 @@ export default Reflux.createStore({
     return this.storage.footprintsTree.search(extent(sqrFeature));
   },
 
-  footprintsWereFecthed: function() {
+  footprintsWereFetched: function() {
     return this.storage.footprintsTree === null;
   },
 
@@ -145,14 +145,14 @@ export default Reflux.createStore({
 
     var strParams = qs.stringify(params);
     if (strParams === this.storage.prevSearchParams) {
-      this.trigger("squareData");
+      this.trigger("square-results");
       return;
     }
     this.storage.prevSearchParams = strParams;
 
     api({ uri: `/meta?${strParams}` }).then(data => {
-      this.storage.results = data.results;
-      this.trigger("squareData");
+      this.storage.squareResults = data.results;
+      this.trigger("square-results");
     });
   },
 
@@ -168,8 +168,8 @@ export default Reflux.createStore({
   },
 
   // Returns the stored results, such as from clicking on a grid.
-  getResults: function() {
-    return this.storage.results;
+  getSquareResults: function() {
+    return this.storage.squareResults;
   },
 
   // Returns the base layer currently selected.

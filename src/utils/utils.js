@@ -1,8 +1,10 @@
+import { hashHistory } from "react-router";
 import centroid from "turf-centroid";
 import extent from "turf-extent";
 import tilebelt from "tilebelt";
 import parse from "wellknown";
-import config from "../config";
+
+import config from "config";
 
 export default {
   // Use image metadata to construct OAM Browser URL describing the map view,
@@ -166,10 +168,42 @@ export default {
   // Expects `props` to contain both the `location` and `routes` properties.
   isOnMainMap: function(props) {
     // If we're on a specific coordinate location.
-    const isLocation = props.routes[props.routes.length - 1].name === "map";
+    const isMapLocation = props.params.map;
     // If we're on the homepage.
     const isHome = props.location.pathname === "/";
     // Is this the main map view?
-    return isLocation || isHome;
+    return isMapLocation || isHome;
+  },
+
+  // Canonical means to transition to complex URIs
+  pushURI: function(props, parts) {
+    parts = Object.assign(
+      {
+        map: props.params.map,
+        square: props.params.square_id,
+        user: props.params.user_id,
+        image: props.params.image_id,
+        latest: props.params.latest_id
+      },
+      parts
+    );
+
+    let path = `/${parts.map}`;
+
+    // 'Latest' are the selection of recently uploaded images
+    let isLatest = parts.latest || (!parts.square && !parts.user);
+
+    if (isLatest && parts.image) {
+      path += "/latest";
+    } else if (parts.square) {
+      path += `/square/${parts.square}`;
+    } else if (parts.user) {
+      path += `/user/${parts.user}`;
+    }
+    if (parts.image) {
+      path += `/${parts.image}`;
+    }
+
+    hashHistory.replace({ pathname: path, query: props.query });
   }
 };

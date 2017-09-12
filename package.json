@@ -55,6 +55,7 @@
     "lodash.defaultsdeep": "^4.3.5",
     "mapbox.js": "^2.4.0",
     "moment": "^2.10.6",
+    "nprogress": "^0.2.0",
     "pretty-bytes": "^2.0.1",
     "rbush": "^1.4.1",
     "react": "^15.6.1",

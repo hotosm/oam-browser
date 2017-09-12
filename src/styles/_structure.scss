@@ -139,7 +139,8 @@
 /* Navigation: App + Meta */
 
 .app-menu,
-.meta-menu {
+.meta-menu,
+.main-menu {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -173,7 +174,7 @@
 .button-info {
   @extend .button, .button--achromic, .button--text-hidden, .drop__toggle;
   &:before {
-    @extend %oam-ds-icon-circle-information;
+    @extend %oam-ds-icon-hamburger-menu;
   }
 }
 
@@ -193,7 +194,7 @@
 
 .main-menu {
   position: fixed;
-  left: $sidebar-width - 50;
+  right: 1rem;
   top: 1rem;
 }
 
@@ -369,6 +370,7 @@
   }
 
   &__body {
+    min-height: 500px;
     padding: {
       top: $global-spacing * 2;
       bottom: $global-spacing * 2;

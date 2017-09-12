@@ -15,6 +15,7 @@ export default createReactClass({
 
   propTypes: {
     query: PropTypes.object,
+    params: PropTypes.object,
     map: PropTypes.object,
     results: PropTypes.array,
     selectedItemId: PropTypes.string,
@@ -73,6 +74,7 @@ export default createReactClass({
       resultsPane = (
         <ResultsItem
           query={this.props.query}
+          params={this.props.params}
           map={this.props.map}
           selectedSquareQuadkey={this.props.selectedSquareQuadkey}
           data={this.currentResult}
@@ -83,6 +85,7 @@ export default createReactClass({
       resultsPane = (
         <ResultsList
           query={this.props.query}
+          params={this.props.params}
           map={this.props.map}
           selectedSquareQuadkey={this.props.selectedSquareQuadkey}
           results={this.props.results}
@@ -92,6 +95,7 @@ export default createReactClass({
       resultsPane = (
         <ResultsList
           query={this.props.query}
+          params={this.props.params}
           map={this.props.map}
           results={this.props.results}
         />

@@ -2,15 +2,14 @@ import PropTypes from "prop-types";
 import React from "react";
 import createReactClass from "create-react-class";
 import Reflux from "reflux";
-import Dropdown from "oam-design-system/dropdown";
 
 import actions from "actions/actions";
 import Filters from "components/filters";
 import utils from "utils/utils";
-import User from "utils/user";
-import config from "config";
+
 import userStore from "stores/user_store";
 import MapLayers from "components/map-layers";
+import MainMenu from "components/main_menu";
 import SearchBox from "components/search_box";
 
 import logo from "images/oam-logo-h-pos.svg";
@@ -42,22 +41,8 @@ export default createReactClass({
   onUserStoreData: function(_triggered) {
     this.setState({
       user: userStore.storage.user,
-      userLoggedIn: userStore.isLoggedIn()
+      isUserLoggedIn: userStore.isLoggedIn()
     });
-  },
-
-  fetchOAMHealth: function() {
-    fetch(config.oamStatus)
-      .then(response => {
-        if (!response.ok)
-          return Promise.reject(new Error(`HTTP Error ${response.status}`));
-        return response.json();
-      })
-      .then(data => {
-        this.setState({
-          oamHealth: data.health
-        });
-      });
   },
 
   feedbackClickHandler: function(e) {
@@ -66,11 +51,7 @@ export default createReactClass({
   },
 
   componentWillMount: function() {
-    User.setup();
-  },
-
-  componentDidMount: function() {
-    this.fetchOAMHealth();
+    
   },
 
   isMap: function() {
@@ -78,21 +59,6 @@ export default createReactClass({
   },
 
   render: function() {
-    var oamHealthClass = "drop__menu-item status-item ";
-    switch (this.state.oamHealth) {
-      case "green":
-        oamHealthClass += "status-item--up";
-        break;
-      case "yellow":
-        oamHealthClass += "status-item--meh";
-        break;
-      case "red":
-        oamHealthClass += "status-item--down";
-        break;
-      default:
-        oamHealthClass += "status-item--unknown";
-    }
-
     return (
       <header className="page__header" role="banner">
         <div className="inner">
@@ -111,119 +77,26 @@ export default createReactClass({
                 </a>
               </span>
             </h1>
-            <div className="main-menu">
-              <Dropdown
-                triggerElement="a"
-                triggerClassName="button-info"
-                triggerActiveClassName="button--active"
-                triggerTitle="Info"
-                triggerText="Info"
-                direction="down"
-                alignment="right"
-              >
-                <ul className="drop__menu info-menu" role="menu">
-                  <li>
-                    <a
-                      className="drop__menu-item"
-                      href="http://openaerialmap.org/about"
-                      title="Learn more"
-                      data-hook="dropdown:close"
-                    >
-                      <span>About</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      className="drop__menu-item"
-                      href="http://docs.openaerialmap.org/browser/getting-started/"
-                      title="Go to User Guide"
-                    >
-                      <span>Help</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      className="drop__menu-item"
-                      href="#modal-feedback"
-                      title="Leave feedback"
-                      data-hook="dropdown:close"
-                      onClick={this.feedbackClickHandler}
-                    >
-                      <span>Feedback</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      className="drop__menu-item"
-                      href="mailto:info@openaerialmap.org"
-                      title="Get in touch"
-                    >
-                      <span>Contact</span>{" "}
-                      <small>info@openaerialmap.org</small>
-                    </a>
-                  </li>
-                </ul>
-                <ul className="drop__menu info-menu" role="menu">
-                  <li>
-                    <a
-                      href="https://status.openaerialmap.org/"
-                      className={oamHealthClass}
-                      title="Go to OAM Status"
-                    >
-                      <span>Status</span>
-                    </a>
-                  </li>
-                </ul>
-              </Dropdown>
-            </div>
+            <MainMenu />
           </div>
-
-          <nav className="page__prime-nav">
-            <div className="nav-block-prime">
-              <SearchBox />
-              <ul className="app-menu">
-                <li>
-                  <Filters
-                    params={this.props.params}
-                    query={this.props.query}
-                  />
-                </li>
-                <li className="map-layers">
-                  <MapLayers />
-                </li>
-              </ul>
-            </div>
-            <div className="nav-block-sec">
-              <ul className="meta-menu">
-                <li>
-                  {this.state.userLoggedIn
-                    ? <div>
-                        <img
-                          className="profile_pic"
-                          src={userStore.storage.user.profile_pic_uri}
-                          alt="Profile"
-                        />
-                        <a href="#/account">Account</a> |&nbsp;
-                        <a onClick={actions.userLogOut}>Logout</a>
-                      </div>
-                    : <div className="oauth-logins">
-                        <a href={userStore.facebookLoginUri}>Facebook</a>{" "}
-                        |&nbsp;
-                        <a href={userStore.googleLoginUri}>Google</a>
-                      </div>}
-                </li>
-                <li>
-                  <a
-                    href="#/upload"
-                    className="button-upload"
-                    title="Go to OAM Uploader"
-                  >
-                    <span>Upload</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </nav>
+          {this.isMap()
+            ? <nav className="page__prime-nav">
+                <div className="nav-block-prime">
+                  <SearchBox />
+                  <ul className="app-menu">
+                    <li>
+                      <Filters
+                        params={this.props.params}
+                        query={this.props.query}
+                      />
+                    </li>
+                    <li className="map-layers">
+                      <MapLayers />
+                    </li>
+                  </ul>
+                </div>
+              </nav>
+            : null}
         </div>
       </header>
     );

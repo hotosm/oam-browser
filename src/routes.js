@@ -20,7 +20,6 @@ export default (
         component={UserPage}
         onEnter={User.routeRequiresAuth.bind(User)}
       />
-      <Route name="user" path="/user/:id" component={UserPage} />
       <Route
         name="imagery"
         path="/imagery/:id/edit"
@@ -40,8 +39,12 @@ export default (
         onEnter={User.routeRequiresAuth.bind(User)}
       />
       <Route name="map" path="/:map" component={Home}>
-        <Route name="item" path=":item_id" component={Home}>
-          <Route name="results" path=":square" component={Home} />
+        <Route name="latest" path="latest/:image_id" />
+        <Route name="user" path="user/:user_id">
+          <Route name="image" path=":image_id" />
+        </Route>
+        <Route name="square" path="square/:square_id">
+          <Route name="image" path=":image_id" />
         </Route>
       </Route>
     </Route>

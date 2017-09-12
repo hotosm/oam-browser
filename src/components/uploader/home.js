@@ -20,7 +20,6 @@ import api from "utils/api";
 //   },
 // The solution would be to clone the state every time, but since we're
 // ALWAYS calling setState after one of these changes, it's not a problem.
-// It's still an antipattern, but I know what I'm doing! :)
 
 export default createReactClass({
   displayName: "Home",

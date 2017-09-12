@@ -24,13 +24,12 @@ export default createReactClass({
 
   mixins: [
     Reflux.listenTo(searchQueryStore, "onSearchQueryChanged"),
-    Reflux.listenTo(mapStore, "onMapStoreData")
+    Reflux.listenTo(mapStore, "loadImagery")
   ],
 
   getInitialState: function() {
     return {
       results: [],
-      loading: mapStore.footprintsWereFecthed(),
       map: {
         view: null
       },
@@ -40,18 +39,21 @@ export default createReactClass({
     };
   },
 
-  onMapStoreData: function(what) {
-    var state = _.cloneDeep(this.state);
-    if (
-      mapStore.getResults().length === 0 &&
-      this.props.params.item_id === null
-    ) {
-      state.results = mapStore.getLatestImagery();
-    } else {
-      state.results = mapStore.getResults();
+  getImagery: function() {
+    if (!this.props.params.user_id && !this.props.params.square_id) {
+      return mapStore.getLatestImagery();
     }
-    state.loading =
-      what === "squareData" ? false : mapStore.footprintsWereFecthed();
+    if (this.props.params.square_id) {
+      return mapStore.getSquareResults();
+    }
+    if (this.props.params.user_id) {
+      return mapStore.getUserImages();
+    }
+  },
+
+  loadImagery: function(_what) {
+    var state = _.cloneDeep(this.state);
+    state.results = this.getImagery();
     this.setState(state);
   },
 
@@ -62,22 +64,22 @@ export default createReactClass({
 
   componentWillMount: function() {
     var state = _.cloneDeep(this.state);
+    state.results = this.getImagery();
+
     // The map parameters form the url take precedence over everything else
     // if they're not present try the cookie.
     state.map.view = this.getMapViewOrDefault(this.props.params.map);
 
-    state.selectedSquareQuadkey = this.props.params.square;
-    state.selectedItemId = this.props.params.item_id;
-
-    // TODO: This is hacky, Find a better way to manage grid square selection without
-    // a selected item.
-    if (this.props.params.item_id === "0") state.selectedItemId = null;
+    state.selectedSquareQuadkey = this.props.params.square_id;
+    state.selectedItemId = this.props.params.image_id;
 
     this.setState(state);
   },
 
   componentWillReceiveProps: function(nextProps) {
     var state = _.cloneDeep(this.state);
+    state.results = this.getImagery();
+
     // Map view.
     var nextMapView = this.getMapViewOrDefault(nextProps.params.map);
     if (this.getMapViewOrDefault(this.props.params.map) !== nextMapView) {
@@ -87,34 +89,19 @@ export default createReactClass({
     }
 
     // Selected Square
-    if (this.props.params.square !== nextProps.params.square) {
-      state.selectedSquareQuadkey = nextProps.params.square;
-    }
-    // If the square was set and it's not anymore means that the results
-    // have been dismissed.
-    if (this.props.params.square && !nextProps.params.square) {
-      // Clean the results.
-      state.results = mapStore.getLatestImagery();
-    }
-    if (
-      this.props.params.square !== nextProps.params.square &&
-      nextProps.params.square
-    ) {
-      var bbox = utils.tileBboxFromQuadkey(nextProps.params.square);
-      state.loading = true;
-      actions.selectedBbox(bbox);
+    if (this.props.params.square_id !== nextProps.params.square_id) {
+      state.selectedSquareQuadkey = nextProps.params.square_id;
+      if (state.selectedSquareQuadkey) {
+        var bbox = utils.tileBboxFromQuadkey(state.selectedSquareQuadkey);
+        actions.selectedBbox(bbox);
+      }
     }
 
-    // Selected Square
-    if (this.props.params.item_id !== nextProps.params.item_id) {
-      state.selectedItemId = nextProps.params.item_id;
-
-      // TODO: This is hacky, Find a better way to manage grid square selection without
-      // a selected item.
-      if (nextProps.params.item_id === "0") state.selectedItemId = null;
+    // Selected image
+    if (this.props.params.image_id !== nextProps.params.image_id) {
+      state.selectedItemId = nextProps.params.image_id;
     }
 
-    // Set State
     this.setState(state);
   },
 
@@ -132,10 +119,6 @@ export default createReactClass({
 
     return (
       <div>
-        {this.state.loading
-          ? <p className="loading revealed">Loading</p>
-          : null}
-
         <div className="sidebar-content">
           <p className="oam-blurb">
             OpenAerialMap (OAM) is a set of tools for searching, sharing, and
@@ -144,6 +127,7 @@ export default createReactClass({
           </p>
           <ResultsPane
             query={this.props.query}
+            params={this.props.params}
             map={this.state.map}
             results={this.state.results}
             selectedItemId={this.state.selectedItemId}

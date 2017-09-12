@@ -89,8 +89,13 @@ export default createReactClass({
         />
       );
     } else {
-      // No results, no pane.
-      return null;
+      resultsPane = (
+        <ResultsList
+          query={this.props.query}
+          map={this.props.map}
+          results={this.props.results}
+        />
+      );
     }
     return (
       <div id="results-pane" className="pane">

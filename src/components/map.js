@@ -172,7 +172,8 @@ export default createReactClass({
 
   // Lifecycle method.
   render: function() {
-    return <div id="map" ref="mapContainer" style={{ position: "absolute" }} />;
+    // TODO: Styling here is a hack, try upgrading mapbox.js
+    return <div id="map" ref="mapContainer" style={{ position: "fixed" }} />;
   },
 
   onMapIssueReport: function(e) {
@@ -183,11 +184,11 @@ export default createReactClass({
   // Map event
   onMapMoveend: function(e) {
     var path = this.mapViewToString();
-    if (this.props.selectedSquareQuadkey) {
-      path += `/${this.props.selectedSquareQuadkey}`;
+    if (this.props.params.item_id) {
+      path += `/${this.props.params.item_id}`;
     }
-    if (this.props.selectedItemId) {
-      path += `/${this.props.selectedItemId}`;
+    if (this.props.params.square) {
+      path += `/${this.props.params.square}`;
     }
 
     hashHistory.replace({ pathname: path, query: this.props.query });
@@ -219,17 +220,16 @@ export default createReactClass({
     if (this.props.selectedSquareQuadkey) {
       // There is a square selected. Unselect.
       hashHistory.push({
-        pathname: `/${this.props.map.iew}`,
+        pathname: `/${this.props.map.view}`,
         query: this.props.query
       });
     } else if (e.layer.feature.properties.count) {
-      // console.log('onGridSqrClick', 'No square selected. SELECTING');
       var quadKey = e.layer.feature.properties._quadKey;
       var z = Math.round(this.map.getZoom());
       var squareCenter = centroid(e.layer.feature).geometry.coordinates;
       var mapView = utils.getMapViewString(squareCenter[0], squareCenter[1], z);
       hashHistory.push({
-        pathname: `/${mapView}/${quadKey}`,
+        pathname: `/${mapView}/0/${quadKey}`,
         query: this.props.query
       });
     }
@@ -296,9 +296,12 @@ export default createReactClass({
 
   // Action listener for when a result in the results modal is clicked
   onResultSelected: function(result) {
-    this.onResultOut();
     let { map, selectedSquareQuadkey } = result;
-    let path = `${map.view}/${selectedSquareQuadkey}/${result.data._id}`;
+    let path = `${map.view}/${result.data._id}`;
+    this.onResultOut();
+    if (selectedSquareQuadkey) {
+      path = `${path}/${selectedSquareQuadkey}`;
+    }
     hashHistory.push({ pathname: path, query: result.query });
   },
 

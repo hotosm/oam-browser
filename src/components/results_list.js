@@ -110,12 +110,16 @@ class ResultsList extends React.Component {
     return (
       <section className="results-hub">
         <header className="pane-header">
-          <h1
-            className="pane-title"
-            title={"Available imagery for square with quadKey " + square}
-          >
-            Available Imagery
-          </h1>
+          {this.props.selectedSquareQuadkey
+            ? <h1
+                className="pane-title"
+                title={"Available imagery for square with quadKey " + square}
+              >
+                Available Imagery Within Grid Square
+              </h1>
+            : <h1 className="pane-title" title={"Latest Imagery"}>
+                Latest Imagery
+              </h1>}
           <p className="pane-subtitle">
             {numRes} results
           </p>

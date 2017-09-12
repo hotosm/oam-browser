@@ -3,8 +3,6 @@ var Reflux = require("reflux");
 module.exports = Reflux.createActions({
   selectedBbox: {},
 
-  latestImageryLoaded: {},
-
   footprintsLoaded: {},
 
   // Filter actios

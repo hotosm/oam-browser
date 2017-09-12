@@ -36,10 +36,10 @@ export default Reflux.createStore({
   //       footprints and scim the latest image from that API request?
   queryLatestImagery: function() {
     api({
-      uri: "/meta?order_by=acquisition_end&sort=desc&limit=1"
+      uri: "/meta?order_by=acquisition_end&sort=desc&limit=3"
     }).then(data => {
-      this.storage.latestImagery = data.results[0];
-      actions.latestImageryLoaded();
+      this.storage.latestImagery = data.results;
+      this.trigger("latest-imagery");
     });
   },
 
@@ -162,26 +162,17 @@ export default Reflux.createStore({
     this.queryData();
   },
 
-  /**
-   * Returns the latest imagery's coordinates.
-   * @return Feature or null
-   */
+  // Return the latest images that has been uploaded by all users.
   getLatestImagery: function() {
     return this.storage.latestImagery;
   },
 
-  /**
-   * Returns the stored results.
-   * @return Array or null
-   */
+  // Returns the stored results, such as from clicking on a grid.
   getResults: function() {
     return this.storage.results;
   },
 
-  /**
-   * Returns the base layer currently selected.
-   * @return Object
-   */
+  // Returns the base layer currently selected.
   getBaseLayer: function() {
     return this.storage.baseLayer;
   }

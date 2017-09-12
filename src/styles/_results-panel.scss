@@ -2,32 +2,10 @@
    Results panel
    ========================================================================== */
 
-#results-pane {
-  position: absolute;
-  top: 4rem;
-  right: 1rem;
-  bottom: 1rem;
-  z-index: 2000;
-  width: 24rem;
-  padding: 1rem;
-  background: tint($base-color, 92%);
-  box-shadow: 0 0 0 1px $base-alpha-color, 0 2px 6px 2px rgba($base-color, 0.24);
-  border-radius: $base-border-radius;
-
-  /* Animation */
-
-  animation: results-panel-reveal 0.24s ease 0s 1;
-}
-
-.results-hub,
-.results-single {
-  margin: -1rem;
-}
+#results-pane {}
 
 .pane-top-control {
-  position: absolute;
-  top: 0.75rem;
-  z-index: 30;
+  float: right;
   span {
     @extend .visually-hidden;
   }
@@ -42,7 +20,6 @@
 
 .pane-more {
   @extend .pane-top-control;
-  right: 4.5rem;
   &:before {
     @extend %oam-ds-icon-ellipsis-vertical;
   }
@@ -50,7 +27,6 @@
 
 .pane-zoom-to-fit {
   @extend .pane-top-control;
-  right: 2.5rem;
   &:before {
     @extend %oam-ds-icon-crosshair-2;
   }
@@ -58,7 +34,6 @@
 
 .pane-dismiss {
   @extend .pane-top-control;
-  right: 0.5rem;
   &:before {
     @extend %oam-ds-icon-sm-xmark;
   }
@@ -74,8 +49,6 @@
 }
 
 .pane-header {
-  position: relative;
-  padding: 1rem;
   background: #fff;
   border-radius: $base-border-radius $base-border-radius 0 0;
   z-index: 20;
@@ -108,11 +81,6 @@
 }
 
 .pane-footer {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 20;
   background: #fff;
   border-radius: 0 0 $base-border-radius $base-border-radius;
   min-height: 1rem;
@@ -120,9 +88,6 @@
     padding: 1rem;
   }
   &:before {
-    position: absolute;
-    top: -1px;
-    left: 0;
     width: 100%;
     height: 1px;
     background: $base-alpha-color;
@@ -130,25 +95,9 @@
   }
 }
 
-.pane-body {
-  position: absolute;
-  top: 4.75rem;
-  left: 0;
-  right: 0;
-  overflow-y: scroll;
-  z-index: 10;
-  .results-hub & {
-    bottom: 1rem;
-  }
-  .results-single & {
-    bottom: 3rem;
-  }
-}
+.pane-body {}
 
-.pane-body-inner {
-  padding: 1rem;
-  overflow: hidden;
-}
+.pane-body-inner {}
 
 .results-list {
   list-style: none;
@@ -169,20 +118,14 @@
 }
 
 .single-media {
-  position: relative;
   text-align: center;
   background: tint($base-color, 80%);
   margin: -1rem -1rem 1rem -1rem;
   height: 16rem;
-  line-height: 16rem;
   font-size: 0;
   vertical-align: middle;
-  overflow: hidden;
   padding: 1rem;
   &:after {
-    position: absolute;
-    bottom: 0;
-    left: 0;
     width: 100%;
     height: 1px;
     background: $base-alpha-color;
@@ -190,26 +133,12 @@
     z-index: 3;
   }
   img {
-    position: relative;
-    z-index: 2;
     max-width: 100%;
     max-height: 100%;
     display: inline-block;
     box-shadow: 0 2px 12px 2px rgba($base-color, 0.24);
     border-radius: $base-border-radius / 2;
     vertical-align: middle;
-  }
-  .blur-media {
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background-size: cover;
-    display: block;
-    filter: blur(0.5rem);
-    opacity: 0.24;
   }
 }
 
@@ -269,11 +198,6 @@
 
 .preview-options {
   @extend .clearfix;
-  position: absolute;
-  top: $global-spacing / 2;
-  left: 50%;
-  transform: translate(-50%, 0);
-  z-index: 80;
   width: auto;
   pointer-events: none;
   white-space: nowrap;
@@ -505,9 +429,6 @@ $card-padding: 0.5rem;
       border-radius: $base-border-radius $base-border-radius 0 0;
     }
     img {
-      position: absolute;
-      top: 50%;
-      left: 50%;
       display: block;
       transform: translate(-50%, -50%);
       width: 120%;

@@ -63,8 +63,8 @@ export default createReactClass({
       e.preventDefault();
     }
     let { map, selectedSquareQuadkey } = this.props;
-    let path = `${map.view}/${selectedSquareQuadkey}/${this.props.pagination
-      .prevId}`;
+    let path = `${map.view}/${this.props.pagination
+      .prevId}/${selectedSquareQuadkey}`;
     hashHistory.push({ pathname: path, query: this.props.query });
   },
 
@@ -73,7 +73,7 @@ export default createReactClass({
       e.preventDefault();
     }
     let { map, selectedSquareQuadkey } = this.props;
-    let path = `${map.view}/${selectedSquareQuadkey}`;
+    let path = `${map.view}/0/${selectedSquareQuadkey}`;
     hashHistory.push({ pathname: path, query: this.props.query });
   },
 
@@ -82,8 +82,8 @@ export default createReactClass({
       e.preventDefault();
     }
     let { map, selectedSquareQuadkey } = this.props;
-    let path = `${map.view}/${selectedSquareQuadkey}/${this.props.pagination
-      .nextId}`;
+    let path = `${map.view}/${this.props.pagination
+      .nextId}/${selectedSquareQuadkey}`;
     hashHistory.push({ pathname: path, query: this.props.query });
   },
 
@@ -304,10 +304,6 @@ export default createReactClass({
       ? this.renderTmsOptions(d.properties.tms, "main", "down", "center", true)
       : null;
 
-    var blurImage = {
-      backgroundImage: "url(" + d.properties.thumbnail + ")"
-    };
-
     let sp = this.state.selectedPreview;
 
     return (
@@ -328,26 +324,6 @@ export default createReactClass({
         <div className="pane-body">
           <div className="pane-body-inner">
             <div className="single-media">
-              <div className="blur-media" style={blurImage} />
-              <img
-                alt="Result thumbnail"
-                src={
-                  d.properties.thumbnail ||
-                  "assets/graphics/layout/img-placeholder.svg"
-                }
-              />
-            </div>
-            <div className="single-actions">
-              {tmsOptions}
-              <a
-                title="Download image"
-                className="button-download"
-                target="_blank"
-                href={d.uuid}
-              >
-                <span>Download</span>
-              </a>
-
               <div className="preview-options">
                 <h3 className="preview-options__title">Preview</h3>
                 <div
@@ -392,6 +368,24 @@ export default createReactClass({
                   </button>
                 </div>
               </div>
+              <img
+                alt="Result thumbnail"
+                src={
+                  d.properties.thumbnail ||
+                  "assets/graphics/layout/img-placeholder.svg"
+                }
+              />
+            </div>
+            <div className="single-actions">
+              {tmsOptions}
+              <a
+                title="Download image"
+                className="button-download"
+                target="_blank"
+                href={d.uuid}
+              >
+                <span>Download</span>
+              </a>
             </div>
             <dl className="single-details">
               <dt>

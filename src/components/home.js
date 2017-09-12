@@ -42,7 +42,14 @@ export default createReactClass({
 
   onMapStoreData: function(what) {
     var state = _.cloneDeep(this.state);
-    state.results = mapStore.getResults();
+    if (
+      mapStore.getResults().length === 0 &&
+      this.props.params.item_id === null
+    ) {
+      state.results = mapStore.getLatestImagery();
+    } else {
+      state.results = mapStore.getResults();
+    }
     state.loading =
       what === "squareData" ? false : mapStore.footprintsWereFecthed();
     this.setState(state);
@@ -61,6 +68,11 @@ export default createReactClass({
 
     state.selectedSquareQuadkey = this.props.params.square;
     state.selectedItemId = this.props.params.item_id;
+
+    // TODO: This is hacky, Find a better way to manage grid square selection without
+    // a selected item.
+    if (this.props.params.item_id === "0") state.selectedItemId = null;
+
     this.setState(state);
   },
 
@@ -81,15 +93,13 @@ export default createReactClass({
     // If the square was set and it's not anymore means that the results
     // have been dismissed.
     if (this.props.params.square && !nextProps.params.square) {
-      // console.log('componentWillReceiveProps -- results pane was dismissed');
       // Clean the results.
-      state.results = [];
+      state.results = mapStore.getLatestImagery();
     }
     if (
       this.props.params.square !== nextProps.params.square &&
       nextProps.params.square
     ) {
-      // console.log('Home component quadkey changed', nextProps.params.square);
       var bbox = utils.tileBboxFromQuadkey(nextProps.params.square);
       state.loading = true;
       actions.selectedBbox(bbox);
@@ -98,6 +108,10 @@ export default createReactClass({
     // Selected Square
     if (this.props.params.item_id !== nextProps.params.item_id) {
       state.selectedItemId = nextProps.params.item_id;
+
+      // TODO: This is hacky, Find a better way to manage grid square selection without
+      // a selected item.
+      if (nextProps.params.item_id === "0") state.selectedItemId = null;
     }
 
     // Set State
@@ -122,6 +136,21 @@ export default createReactClass({
           ? <p className="loading revealed">Loading</p>
           : null}
 
+        <div className="sidebar-content">
+          <p className="oam-blurb">
+            OpenAerialMap (OAM) is a set of tools for searching, sharing, and
+            using openly licensed satellite and unmanned aerial vehicle (UAV)
+            imagery.
+          </p>
+          <ResultsPane
+            query={this.props.query}
+            map={this.state.map}
+            results={this.state.results}
+            selectedItemId={this.state.selectedItemId}
+            selectedSquareQuadkey={this.state.selectedSquareQuadkey}
+          />
+        </div>
+
         <MapBoxMap
           query={this.props.query}
           params={this.props.params}
@@ -138,14 +167,6 @@ export default createReactClass({
           selectedSquareQuadkey={this.state.selectedSquareQuadkey}
           selectedItemId={this.state.selectedItemId}
           map={this.state.map}
-        />
-
-        <ResultsPane
-          query={this.props.query}
-          map={this.state.map}
-          results={this.state.results}
-          selectedItemId={this.state.selectedItemId}
-          selectedSquareQuadkey={this.state.selectedSquareQuadkey}
         />
       </div>
     );

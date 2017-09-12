@@ -35,14 +35,9 @@
 .page__headline {
   position: absolute;
   top: 1rem;
-  left: 21rem;
+  left: 1rem;
   z-index: 10;
   transition: all 0.64s ease 0s;
-
-  @include media(large-up) {
-    left: 50%;
-    transform: translate(-50%, 0);
-  }
 }
 
 .page__title {
@@ -72,7 +67,7 @@
 }
 
 .nav-block-prime {
-  left: 1rem;
+  left: $sidebar-width + 16px;
 }
 
 .nav-block-sec {
@@ -194,6 +189,12 @@
   &:before {
     @extend %oam-ds-icon-clock-back;
   }
+}
+
+.main-menu {
+  position: fixed;
+  left: $sidebar-width - 50;
+  top: 1rem;
 }
 
 .info-menu small {
@@ -437,8 +438,16 @@
   }
 }
 
-/* Map layers
-   ========================================================================== */
+// Left-hand sidebar
+// ==========================================================================
+.sidebar-content {
+  width: $sidebar-width;
+  padding: 1rem;
+  padding-top: 4rem;
+}
+
+// Map layers
+// ==========================================================================
 
 .map-layers {
   position: absolute;

@@ -40,8 +40,8 @@ export default (
         onEnter={User.routeRequiresAuth.bind(User)}
       />
       <Route name="map" path="/:map" component={Home}>
-        <Route name="results" path=":square" component={Home}>
-          <Route name="item" path=":item_id" component={Home} />
+        <Route name="item" path=":item_id" component={Home}>
+          <Route name="results" path=":square" component={Home} />
         </Route>
       </Route>
     </Route>

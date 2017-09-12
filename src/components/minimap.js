@@ -67,7 +67,8 @@ export default class extends React.Component {
 
   render() {
     return (
-      <div id="minimap" ref="mapContainer" style={{ position: "absolute" }} />
+      // TODO: Styling here is a hack, try upgrading mapbox.js
+      <div id="minimap" ref="mapContainer" style={{ position: "fixed" }} />
     );
   }
 

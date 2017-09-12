@@ -88,20 +88,11 @@ export default createReactClass({
 
         <main className="page__body" role="main">
           <section className="layout layout--app">
-            <header className="layout__header">
-              <div className="inner">
-                <div className="layout__headline">
-                  <h1 className="layout__title">Browse</h1>
-                </div>
-              </div>
-            </header>
             <div className="layout__body">
-              <div className="inner">
                 {React.cloneElement(this.props.children, {
                   params: params,
                   query: query
                 })}
-              </div>
             </div>
           </section>
         </main>

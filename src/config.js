@@ -18,7 +18,7 @@ import _ from "lodash";
  *      polluting the repo.
  */
 
-// Manually requiring each file, rather than globing, is easier on node.js
+// Manually requiring each file, rather than globbing, is easier on node.js
 // when running tests.
 var configurations = {
   local: require("./config/local.js"),

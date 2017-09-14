@@ -1,7 +1,6 @@
 import centroid from "turf-centroid";
 import extent from "turf-extent";
 import tilebelt from "tilebelt";
-import parse from "wellknown";
 import config from "../config";
 
 export default {
@@ -12,8 +11,7 @@ export default {
   imageUri: function(imgData) {
     const previewZoom = 10;
     // Use turf to calculate the center of the image
-    const footprint = parse(imgData.footprint);
-    const center = centroid(footprint).geometry.coordinates;
+    const center = centroid(imgData.geojson).geometry.coordinates;
 
     // Calculate the tile quadkey for the image using Mapbox tilebelt
     // * a square at zoom Z is the same as a map tile at zoom Z+3 (previewZoom)

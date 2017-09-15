@@ -26,7 +26,6 @@ export default createReactClass({
   getInitialState: function() {
     return {
       pauseProcessingChecks: false,
-      loading: true,
       data: {
         scenes: [{ images: [{ status: "initial" }] }]
       }
@@ -45,7 +44,7 @@ export default createReactClass({
     if (this.state.pauseProcessingChecks) return;
     this.checkProcessingStatus(() => {
       if (this.isProcessingStopped()) return;
-      setTimeout(this.watchProcessingStatus, 500);
+      setTimeout(this.watchProcessingStatus, 1000);
     });
   },
 
@@ -53,7 +52,6 @@ export default createReactClass({
     api({ uri: "/uploads/" + this.props.params.id })
       .then(data => {
         this.setState({
-          loading: false,
           message: "Imagery processed.",
           data: data.results
         });
@@ -61,7 +59,6 @@ export default createReactClass({
       })
       .catch(err => {
         this.setState({
-          loading: false,
           errored: true,
           message: "There was an error getting the imagery status.",
           data: err
@@ -80,6 +77,11 @@ export default createReactClass({
         );
       }).length === 0
     );
+  },
+
+  gotoImage: function(e, image) {
+    e.preventDefault();
+    utils.imageUri(image);
   },
 
   renderScene: function(scene) {
@@ -151,14 +153,11 @@ export default createReactClass({
       );
     });
     if (image.status === "finished") {
-      var imgData = image.metadata;
-      var url = utils.imageUri(imgData);
-
       status = "status-success";
       messages.unshift(
         <li>
           <a
-            href={url}
+            onClick={e => this.gotoImage(e, image.metadata)}
             title="View image on OpenAerialMap"
             className="bttn-view-image"
           >
@@ -230,14 +229,6 @@ export default createReactClass({
   },
 
   render: function() {
-    if (this.state.loading) {
-      return (
-        <div>
-          <h1>Loading...</h1>
-        </div>
-      );
-    }
-
     if (this.state.errored) {
       return (
         <div className="intro-block">

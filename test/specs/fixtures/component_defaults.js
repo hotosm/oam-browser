@@ -2,6 +2,7 @@ export let resultsPane = {
   query: {},
   map: {},
   results: [{ _id: "1" }],
+  params: {},
   selectedItemId: "1",
   selectedSquareQuadkey: ""
 };

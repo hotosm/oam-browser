@@ -1,6 +1,8 @@
 import Reflux from "reflux";
 import NProgress from "nprogress";
 
+NProgress.configure({ showSpinner: false });
+
 export default Reflux.createStore({
   storage: {
     activeFetches: []

@@ -50,10 +50,6 @@ export default createReactClass({
     actions.openModal("feedback");
   },
 
-  componentWillMount: function() {
-    
-  },
-
   isMap: function() {
     return utils.isOnMainMap(this.props);
   },

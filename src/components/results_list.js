@@ -1,107 +1,85 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-import actions from "actions/actions";
-import utils from "utils/utils";
+import ResultsListCard from "components/results_list_card";
+import mapStore from "stores/map_store";
 
-class ResultsListItem extends React.Component {
-  static displayName = "ResultsListItem";
-
-  static propTypes = {
-    query: PropTypes.object,
-    map: PropTypes.object,
-    selectedSquareQuadkey: PropTypes.string,
-    data: PropTypes.object
-  };
-
-  onClick = e => {
-    e.preventDefault();
-    actions.resultSelected(this.props);
-  };
-
-  onOver = e => {
-    e.preventDefault();
-    actions.resultOver(this.props.data);
-  };
-
-  onOut = e => {
-    e.preventDefault();
-    actions.resultOut(this.props.data);
-  };
-
-  render() {
-    var d = this.props.data;
-
-    return (
-      <li>
-        <article className="card card-result-entry">
-          <a
-            onClick={this.onClick}
-            onMouseOver={this.onOver}
-            onMouseOut={this.onOut}
-          >
-            <header className="card-header">
-              <h1 className="card-title">
-                {d.title}
-              </h1>
-              <div className="card-media">
-                <img
-                  alt="Result thumbnail"
-                  width="768"
-                  height="432"
-                  src={
-                    d.properties.thumbnail ||
-                    "assets/graphics/layout/img-placeholder.svg"
-                  }
-                />
-              </div>
-            </header>
-            <div className="card-body">
-              <dl className="card-details">
-                <dt>Type</dt>
-                <dd>
-                  {d.properties.tms ? "Image + Map Layer" : "Image"}
-                </dd>
-                <dt>Date</dt>
-                <dd>
-                  {d.acquisition_start
-                    ? d.acquisition_start.slice(0, 10)
-                    : "N/A"}
-                </dd>
-                <dt>Res</dt>
-                <dd>
-                  {utils.gsdToUnit(d.gsd)}
-                </dd>
-              </dl>
-            </div>
-          </a>
-        </article>
-      </li>
-    );
-  }
-}
-
-class ResultsList extends React.Component {
+export default class ResultsList extends React.Component {
   static displayName = "ResultsList";
 
   static propTypes = {
     query: PropTypes.object,
+    params: PropTypes.object,
     map: PropTypes.object,
-    selectedSquareQuadkey: PropTypes.string,
     results: PropTypes.array
   };
 
-  render() {
-    var square = this.props.selectedSquareQuadkey;
+  homeBlurb() {
+    return (
+      <span>
+        <p>
+          OpenAerialMap (OAM) is a set of tools for searching, sharing, and
+          using openly licensed satellite and unmanned aerial vehicle (UAV)
+          imagery.
+        </p>
+        <h2>Latest uploads</h2>
+      </span>
+    );
+  }
 
-    var numRes = this.props.results.length;
+  squareBlurb() {
+    return (
+      <span>
+        <h2
+          className="pane-title"
+          title={
+            "Available imagery for square with quadKey " +
+            this.props.params.square
+          }
+        >
+          {this.props.results.length} images within selected grid square
+        </h2>
+      </span>
+    );
+  }
+
+  userBlurb() {
+    let user = mapStore.getImageryOwner();
+    return (
+      <span>
+        <img src={user.profile_pic_uri} alt="Provider's profile" />
+        <h2 className="pane-title" title={"Imagery for user " + user.name}>
+          Imagery for {user.name}
+        </h2>
+      </span>
+    );
+  }
+
+  paneBlurb() {
+    let blurb;
+    if (this.props.params.user_id) {
+      blurb = this.userBlurb();
+    } else if (this.props.params.square_id) {
+      blurb = this.squareBlurb();
+    } else {
+      blurb = this.homeBlurb();
+    }
+    return (
+      <p className="oam-blurb">
+        {blurb}
+      </p>
+    );
+  }
+
+  render() {
+    var square = this.props.params.square_id;
     var results = this.props.results.map(o => {
       return (
-        <ResultsListItem
+        <ResultsListCard
           key={o._id}
           query={this.props.query}
           map={this.props.map}
-          selectedSquareQuadkey={this.props.selectedSquareQuadkey}
+          selectedSquareQuadkey={square}
           data={o}
         />
       );
@@ -110,19 +88,7 @@ class ResultsList extends React.Component {
     return (
       <section className="results-hub">
         <header className="pane-header">
-          {this.props.selectedSquareQuadkey
-            ? <h1
-                className="pane-title"
-                title={"Available imagery for square with quadKey " + square}
-              >
-                Available Imagery Within Grid Square
-              </h1>
-            : <h1 className="pane-title" title={"Latest Imagery"}>
-                Latest Imagery
-              </h1>}
-          <p className="pane-subtitle">
-            {numRes} results
-          </p>
+          {this.paneBlurb()}
         </header>
         <div className="pane-body">
           <div className="pane-body-inner">
@@ -136,5 +102,3 @@ class ResultsList extends React.Component {
     );
   }
 }
-
-export default ResultsList;

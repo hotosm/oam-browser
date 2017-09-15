@@ -1,4 +1,3 @@
-import { hashHistory } from "react-router";
 import PropTypes from "prop-types";
 import React from "react";
 import createReactClass from "create-react-class";
@@ -6,9 +5,11 @@ import Keys from "react-keybinding";
 import _ from "lodash";
 import Dropdown from "oam-design-system/dropdown";
 
+import mapStore from "stores/map_store";
 import ResultsList from "components/results_list";
 import ResultsItem from "components/results_item";
 import actions from "actions/actions";
+import utils from "utils/utils";
 
 export default createReactClass({
   displayName: "ResultsPane",
@@ -24,9 +25,6 @@ export default createReactClass({
 
   mixins: [Keys],
 
-  // Populated only when a single imagery result is selected.
-  currentResult: null,
-
   keybindings: {
     esc: function() {
       if (this.props.results.length === 0) {
@@ -36,8 +34,18 @@ export default createReactClass({
     }
   },
 
+  setupCurrentImage: function() {
+    if (this.props.selectedItemId) {
+      this.currentIndex = _.findIndex(this.props.results, {
+        _id: this.props.selectedItemId
+      });
+      this.currentResult = this.props.results[this.currentIndex];
+    } else {
+      this.currentResult = null;
+    }
+  },
+
   feedbackClickHandler: function(e) {
-    e.preventDefault();
     actions.openModal("feedback");
   },
 
@@ -48,61 +56,28 @@ export default createReactClass({
   },
 
   closeResults: function(e) {
-    if (e) e.preventDefault();
-    hashHistory.push({
-      pathname: this.props.map.view,
-      query: this.props.query
+    e.preventDefault();
+    utils.pushURI(this.props, {
+      image: null
     });
   },
 
-  render: function() {
-    var resultsPane = null;
-    if (this.props.results.length && this.props.selectedItemId) {
-      var i = _.findIndex(this.props.results, {
-        _id: this.props.selectedItemId
-      });
-      this.currentResult = this.props.results[i];
-      var pg = {
-        total: this.props.results.length,
-        current: i + 1,
-        prevId: i > 0 ? this.props.results[i - 1]._id : null,
-        nextId:
-          i < this.props.results.length - 1
-            ? this.props.results[i + 1]._id
-            : null
-      };
-      resultsPane = (
-        <ResultsItem
-          query={this.props.query}
-          params={this.props.params}
-          map={this.props.map}
-          selectedSquareQuadkey={this.props.selectedSquareQuadkey}
-          data={this.currentResult}
-          pagination={pg}
-        />
-      );
-    } else if (this.props.results.length && this.props.selectedSquareQuadkey) {
-      resultsPane = (
-        <ResultsList
-          query={this.props.query}
-          params={this.props.params}
-          map={this.props.map}
-          selectedSquareQuadkey={this.props.selectedSquareQuadkey}
-          results={this.props.results}
-        />
-      );
-    } else {
-      resultsPane = (
-        <ResultsList
-          query={this.props.query}
-          params={this.props.params}
-          map={this.props.map}
-          results={this.props.results}
-        />
-      );
+  // The user may not be nested in the image object, say for displaying
+  // all the image for a particular user - in which case the images
+  // themselves are nested in the user object. So here we decide where to
+  // get the actual user data from.
+  getUserForImage: function(image) {
+    var listOwner = {};
+    if (this.props.params.user_id) {
+      listOwner = mapStore.getImageryOwner();
     }
+    var isUserObjectInImage = typeof image.user === "object";
+    return isUserObjectInImage ? image.user : listOwner;
+  },
+
+  paneMenu: function() {
     return (
-      <div id="results-pane" className="pane">
+      <div>
         <Dropdown
           triggerElement="a"
           triggerClassName="pane-more"
@@ -159,8 +134,7 @@ export default createReactClass({
         <a
           href=""
           onClick={this.zoomToFit}
-          className={`pane-zoom-to-fit ${!this.currentResult &&
-            "visually-hidden"}`}
+          className="pane-zoom-to-fit"
           title="Zoom to fit imagery on screen"
         >
           <span>Zoom To Fit</span>
@@ -174,7 +148,51 @@ export default createReactClass({
         >
           <span>Close</span>
         </a>
+      </div>
+    );
+  },
 
+  render: function() {
+    var resultsPane = null;
+    if (this.props.selectedItemId) {
+      this.setupCurrentImage();
+      var pg = {
+        total: this.props.results.length,
+        current: this.currentIndex + 1,
+        prevId:
+          this.currentIndex > 0
+            ? this.props.results[this.currentIndex - 1]._id
+            : null,
+        nextId:
+          this.currentIndex < this.props.results.length - 1
+            ? this.props.results[this.currentIndex + 1]._id
+            : null
+      };
+      resultsPane = (
+        <ResultsItem
+          query={this.props.query}
+          params={this.props.params}
+          map={this.props.map}
+          selectedSquareQuadkey={this.props.selectedSquareQuadkey}
+          data={this.currentResult}
+          user={this.getUserForImage(this.currentResult)}
+          pagination={pg}
+        />
+      );
+    } else {
+      resultsPane = (
+        <ResultsList
+          query={this.props.query}
+          params={this.props.params}
+          map={this.props.map}
+          selectedSquareQuadkey={this.props.selectedSquareQuadkey}
+          results={this.props.results}
+        />
+      );
+    }
+    return (
+      <div id="results-pane" className="pane">
+        {this.props.params.image_id ? this.paneMenu() : null}
         {resultsPane}
       </div>
     );

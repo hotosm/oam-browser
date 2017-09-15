@@ -17,7 +17,6 @@ export default createReactClass({
 
   getInitialState: function() {
     return {
-      loading: true,
       user: {
         images: []
       }
@@ -41,14 +40,9 @@ export default createReactClass({
     this.fetchUserData();
   },
 
-  // TODO:
-  //   * Refactor into centralised API class
-  //   * Paginate
+  // TODO: Paginate.
   fetchUserData: function() {
     let userPath = "";
-    this.setState({
-      loading: true
-    });
     if (this.requestedUser !== "current") {
       userPath = "/" + this.requestedUser;
     }
@@ -57,16 +51,12 @@ export default createReactClass({
       auth: true
     }).then(response => {
       this.setState({
-        user: response.results,
-        loading: false
+        user: response.results
       });
     });
   },
 
   deleteImagery: function(id) {
-    this.setState({
-      loading: true
-    });
     api({
       uri: "/meta/" + id,
       method: "DELETE",
@@ -76,72 +66,90 @@ export default createReactClass({
     });
   },
 
-  render: function() {
+  yourImages: function() {
     return (
-      <div>
-        <div className="page__content">
-          <h1>
-            <img
-              className="profile_pic"
-              src={this.state.user.profile_pic_uri}
-              width="100"
-              alt="Profile"
-            />
-            {this.state.user.name}
-          </h1>
-          <ul className="account__images">
-            {this.state.user.images.length > 0
-              ? this.state.user.images.map((image, i) =>
-                  <li className="account__images-upload">
-                    <img
-                      src={image.properties.thumbnail}
-                      width="100"
-                      key={i}
-                      alt="Imagery thumbnail"
-                    />
-                    <ul>
-                      <strong>
-                        {image.title}
-                      </strong>
-                      <li>
-                        Uploaded: {image.uploaded_at}
-                      </li>
-                      <li>
-                        Sensor: {image.properties.sensor}
-                      </li>
-                      <li>
-                        Resolution: {image.gsd}m
-                      </li>
-                      <li>
-                        File size: {image.file_size / 1000}k
-                      </li>
-                      <li>
-                        <a href={utils.imageUri(image)}>View</a>
-                        {this.requestedUser === "current"
-                          ? <span>
-                              {" "}|&nbsp;
-                              <a href={"/#/imagery/" + image._id + "/edit"}>
-                                Edit
-                              </a>{" "}
-                              |&nbsp;
-                              <a
-                                onClick={() => this.deleteImagery(image._id)}
-                                className="imagery-delete"
-                              >
-                                Delete
-                              </a>
-                            </span>
-                          : null}
-                      </li>
-                    </ul>
-                  </li>
-                )
-              : <em>No uploaded images yet.</em>}
+      <div className="your-images">
+        <h2>Your Images</h2>
+        <ul className="account__images">
+          {this.state.user.images.length > 0
+            ? this.state.user.images.map((image, i) =>
+                <li className="account__images-upload">
+                  <img
+                    src={image.properties.thumbnail}
+                    width="100"
+                    key={i}
+                    alt="Imagery thumbnail"
+                  />
+                  <ul>
+                    <strong>
+                      {image.title}
+                    </strong>
+                    <li>
+                      Uploaded: {image.uploaded_at}
+                    </li>
+                    <li>
+                      Sensor: {image.properties.sensor}
+                    </li>
+                    <li>
+                      Resolution: {image.gsd}m
+                    </li>
+                    <li>
+                      File size: {image.file_size / 1000}k
+                    </li>
+                    <li>
+                      <a onClick={() => utils.imageUri(image)}>View</a>
+                      {this.requestedUser === "current"
+                        ? <span>
+                            {" "}|&nbsp;
+                            <a href={"/#/imagery/" + image._id + "/edit"}>
+                              Edit
+                            </a>{" "}
+                            |&nbsp;
+                            <a
+                              onClick={() => this.deleteImagery(image._id)}
+                              className="imagery-delete"
+                            >
+                              Delete
+                            </a>
+                          </span>
+                        : null}
+                    </li>
+                  </ul>
+                </li>
+              )
+            : <em>No uploaded images yet.</em>}
+        </ul>
+      </div>
+    );
+  },
+
+  yourProfile: function() {
+    let user = this.state.user;
+    return (
+      <div className="your-profile">
+        <h2>Your Profile</h2>
+        <div className="your-profile__content">
+          <img src={user.profile_pic_uri} width="75" alt="Your profile" />
+          <ul>
+            <li>
+              <strong>
+                {user.name}
+              </strong>
+            </li>
+            <li>
+              {user.contact_email}
+            </li>
           </ul>
         </div>
-        {this.state.loading
-          ? <p className="loading revealed">Loading</p>
-          : null}
+      </div>
+    );
+  },
+
+  render: function() {
+    return (
+      <div className="page__content account-page">
+        {this.yourImages()}
+        {this.yourProfile()}
       </div>
     );
   }

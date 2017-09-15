@@ -12,6 +12,14 @@ global.window = {
 
 // Stub all the Leaflet code
 mockery.registerMock("mapbox.js", {});
+
+// The Youtube-style loader thing
+mockery.registerMock("nprogress", {
+  start: () => {},
+  done: () => {},
+  configure: () => {}
+});
+
 mockery.enable({
   warnOnUnregistered: false
 });

@@ -133,6 +133,8 @@ export default createReactClass({
     this.map.setView(view, zoom);
 
     this.map.on("moveend", this.onMapMoveend);
+    // Ensure there's always a coordinate in the URI
+    if (!this.props.params.map) this.onMapMoveend();
 
     this.updateGrid();
     this.updateSelectedSquare();
@@ -153,6 +155,9 @@ export default createReactClass({
     if (this.requireSelectedItemUpdate) {
       this.updateSelectedItemImageFootprint({ type: "thumbnail" });
     }
+
+    // Ensure there's always a coordinate in the URI
+    if (!this.props.params.map) this.onMapMoveend();
   },
 
   componentWillUnmount: function() {
@@ -220,7 +225,8 @@ export default createReactClass({
       var mapView = utils.getMapViewString(squareCenter[0], squareCenter[1], z);
       utils.pushURI(this.props, {
         map: mapView,
-        square: quadKey
+        square: quadKey,
+        image: null
       });
     }
   },

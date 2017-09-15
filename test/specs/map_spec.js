@@ -26,12 +26,12 @@ describe("The Map", () => {
       if (Object.keys(requests).length === 2) {
         expect(requests).to.include.keys([
           apiBase + "/meta?limit=99999",
-          apiBase + "/meta?order_by=acquisition_end&sort=desc&limit=1"
+          apiBase + "/meta?order_by=acquisition_end&sort=desc&limit=10"
         ]);
         done();
       }
       return { results: [] };
     });
-    let wrapper = loadComponent("components/map", mapBoxMap);
+    loadComponent("components/map", mapBoxMap);
   });
 });

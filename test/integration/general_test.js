@@ -14,15 +14,17 @@ function dropDatabase() {
 }
 
 function waitUntilGone(selector) {
+  // The `true` in the third arg rerverses the test, ie waiting for invisible
   browser.waitForVisible(selector, 300000, true);
 }
 
 function finishLoading() {
-  waitUntilGone(".loading");
+  waitUntilGone("#nprogress");
 }
 
 function logIn() {
   browser.url("#/");
+  browser.click("a=Sign In");
   browser.click("a=Facebook");
   if (browser.getUrl().match(/facebook.com/)) {
     // Note that if you change the user, you will need to manually
@@ -33,7 +35,7 @@ function logIn() {
     $("#pass").setValue("oamtestpassword");
     browser.click("#loginbutton");
   }
-  expect(browser.waitForVisible("a=Logout")).to.eq(true);
+  expect(browser.waitForVisible("a=Upload")).to.eq(true);
 }
 
 // Use the following instead once IE Edge supports cookie and localStorage deletion.
@@ -42,7 +44,7 @@ function logIn() {
 // browser.deleteCookie();
 // browser.localStorage('DELETE');
 function logOut() {
-  browser.url("#/");
+  browser.click("a=Info");
   if ($("a=Logout").isExisting()) {
     browser.click("a=Logout");
   }
@@ -98,6 +100,7 @@ function getImageryResults() {
 // TODO: Mock S3 and clear the local bucket
 beforeEach(() => {
   dropDatabase();
+  browser.url("#/");
   logOut();
 });
 
@@ -107,7 +110,7 @@ describe("Map", function() {
   describe("Basic", function() {
     it("should find imagery over the Himalayas", () => {
       submitImagery(everest);
-      browser.url("/");
+      browser.url("#/");
       $("#global-search__input").setValue(["Mount Everest", "Enter"]);
       waitUntilGone(".autocomplete__menu-item*=Loading...");
       browser.click(".autocomplete__menu-item.is-highlighted");
@@ -132,7 +135,7 @@ describe("User authentication", function() {
     it("should log a user out", () => {
       logIn();
       expect("img.profile_pic").to.be.there();
-      browser.click("a=Logout");
+      logOut();
       expect("img.profile_pic").to.not.be.there();
     });
   });
@@ -189,7 +192,7 @@ describe("Imagery", function() {
     it("should list a user's images", () => {
       const title = Math.random().toString(36).slice(2);
       submitImagery(everest, title);
-      browser.click("a=Logout");
+      logOut();
       browser.url(everestUriCoords);
       finishLoading();
       browser.click("#map");
@@ -197,9 +200,8 @@ describe("Imagery", function() {
       browser.click(".pane-body-inner .results-list li:first-child");
       browser.click("a=Open Graph Test User");
       finishLoading();
-      expect("h1=Open Graph Test User").to.be.there();
-      expect("strong=" + title).to.be.there();
-      expect("li=Sensor: Automated Test Sensor").to.be.there();
+      expect("h2*=Open Graph Test User").to.be.there();
+      expect("dd=" + title).to.be.there();
       expect("a=Delete").to.not.be.there();
     });
   });

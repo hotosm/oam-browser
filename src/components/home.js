@@ -47,14 +47,12 @@ export default createReactClass({
       return mapStore.getSquareResults();
     }
     if (this.props.params.user_id) {
-      return mapStore.getUserImages();
+      return mapStore.getUserImagery();
     }
   },
 
   loadImagery: function(_what) {
-    var state = _.cloneDeep(this.state);
-    state.results = this.getImagery();
-    this.setState(state);
+    this.setState({ results: this.getImagery() });
   },
 
   // Action listener
@@ -64,7 +62,6 @@ export default createReactClass({
 
   componentWillMount: function() {
     var state = _.cloneDeep(this.state);
-    state.results = this.getImagery();
 
     // The map parameters form the url take precedence over everything else
     // if they're not present try the cookie.
@@ -73,12 +70,16 @@ export default createReactClass({
     state.selectedSquareQuadkey = this.props.params.square_id;
     state.selectedItemId = this.props.params.image_id;
 
+    if (this.props.params.user_id) {
+      mapStore.queryUserImagery(this.props.params.user_id);
+    }
+
+    state.results = this.getImagery();
     this.setState(state);
   },
 
   componentWillReceiveProps: function(nextProps) {
     var state = _.cloneDeep(this.state);
-    state.results = this.getImagery();
 
     // Map view.
     var nextMapView = this.getMapViewOrDefault(nextProps.params.map);
@@ -97,11 +98,17 @@ export default createReactClass({
       }
     }
 
+    if (this.props.params.user_id !== nextProps.params.user_id) {
+      if (nextProps.params.user_id)
+        mapStore.queryUserImagery(nextProps.params.user_id);
+    }
+
     // Selected image
     if (this.props.params.image_id !== nextProps.params.image_id) {
       state.selectedItemId = nextProps.params.image_id;
     }
 
+    state.results = this.getImagery();
     this.setState(state);
   },
 
@@ -120,19 +127,16 @@ export default createReactClass({
     return (
       <div>
         <div className="sidebar-content">
-          <p className="oam-blurb">
-            OpenAerialMap (OAM) is a set of tools for searching, sharing, and
-            using openly licensed satellite and unmanned aerial vehicle (UAV)
-            imagery.
-          </p>
-          <ResultsPane
-            query={this.props.query}
-            params={this.props.params}
-            map={this.state.map}
-            results={this.state.results}
-            selectedItemId={this.state.selectedItemId}
-            selectedSquareQuadkey={this.state.selectedSquareQuadkey}
-          />
+          {this.state.results.length
+            ? <ResultsPane
+                query={this.props.query}
+                params={this.props.params}
+                map={this.state.map}
+                results={this.state.results}
+                selectedItemId={this.state.selectedItemId}
+                selectedSquareQuadkey={this.state.selectedSquareQuadkey}
+              />
+            : null}
         </div>
 
         <MapBoxMap

@@ -16,14 +16,16 @@ export default {
     // Use turf to calculate the center of the image
     const footprint = parse(imgData.footprint);
     const center = centroid(footprint).geometry.coordinates;
-
-    // Calculate the tile quadkey for the image using Mapbox tilebelt
-    // * a square at zoom Z is the same as a map tile at zoom Z+3 (previewZoom)
-    const tile = tilebelt.pointToTile(center[0], center[1], previewZoom + 3);
-    const quadKey = tilebelt.tileToQuadkey(tile);
     const mapView = center[0] + "," + center[1] + "," + previewZoom;
-    // Return OAM Browser URL including map view, tile, and image id
-    return `#/${mapView}/${quadKey}/`;
+    this.pushURI(
+      { params: {} },
+      {
+        map: mapView,
+        square: null,
+        user: imgData.user,
+        image: imgData._id
+      }
+    );
   },
 
   /**
@@ -176,6 +178,11 @@ export default {
   },
 
   // Canonical means to transition to complex URIs
+  // You only need to pass the part that you want to change, the rest of
+  // the URL will remain the same.
+  // TODO: Return the path so that all anchor's use `href` rather than
+  //       `onClick()`. So that you can see the URL when you hover over
+  //       the link tag.
   pushURI: function(props, parts) {
     parts = Object.assign(
       {

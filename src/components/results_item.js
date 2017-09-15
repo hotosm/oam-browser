@@ -20,7 +20,8 @@ export default createReactClass({
     map: PropTypes.object,
     selectedSquareQuadkey: PropTypes.string,
     pagination: PropTypes.object,
-    data: PropTypes.object
+    data: PropTypes.object,
+    user: PropTypes.object
   },
 
   mixins: [Keys],
@@ -56,6 +57,15 @@ export default createReactClass({
     }
     actions.selectPreview(what);
     this.setState({ selectedPreview: selected });
+  },
+
+  gotoUsersImages: function(e, user_id) {
+    e.preventDefault();
+    utils.pushURI(this.props, {
+      square: null,
+      user: user_id,
+      image: null
+    });
   },
 
   prevResult: function() {
@@ -288,7 +298,6 @@ export default createReactClass({
   render: function() {
     var d = this.props.data;
     var pagination = this.props.pagination;
-
     var tmsOptions = d.properties.tms
       ? this.renderTmsOptions(d.properties.tms, "main", "down", "center", true)
       : null;
@@ -306,15 +315,18 @@ export default createReactClass({
           >
             {d.title.replace(/\.[a-z]+$/, "")}
           </h1>
-          <p className="pane-subtitle">
-            {pagination.current} of {pagination.total} results
-          </p>
         </header>
         <div className="pane-body">
           <div className="pane-body-inner">
             <div className="single-media">
+              <img
+                alt="Result thumbnail"
+                src={
+                  d.properties.thumbnail ||
+                  "assets/graphics/layout/img-placeholder.svg"
+                }
+              />
               <div className="preview-options">
-                <h3 className="preview-options__title">Preview</h3>
                 <div
                   className="button-group button-group--horizontal preview-options__buttons"
                   role="group"
@@ -357,13 +369,6 @@ export default createReactClass({
                   </button>
                 </div>
               </div>
-              <img
-                alt="Result thumbnail"
-                src={
-                  d.properties.thumbnail ||
-                  "assets/graphics/layout/img-placeholder.svg"
-                }
-              />
             </div>
             <div className="single-actions">
               {tmsOptions}
@@ -419,18 +424,21 @@ export default createReactClass({
               <dd className="cap">
                 {d.provider}
               </dd>
-              {typeof d.user === "undefined"
-                ? null
-                : <span className="user-details">
+              {typeof this.props.user.name !== "undefined"
+                ? <span className="user-details">
                     <dt>
                       <span>User</span>
                     </dt>
                     <dd className="cap">
-                      <a href={`#/user/${d.user._id}`}>
-                        {d.user.name}
+                      <a
+                        onClick={e =>
+                          this.gotoUsersImages(e, this.props.user._id)}
+                      >
+                        {this.props.user.name}
                       </a>
                     </dd>
-                  </span>}
+                  </span>
+                : null}
             </dl>
 
             {d.custom_tms
@@ -480,6 +488,9 @@ export default createReactClass({
               </a>
             </li>
           </ul>
+          <p className="pane-subtitle">
+            {pagination.current} of {pagination.total} results
+          </p>
         </footer>
       </article>
     );

@@ -13,8 +13,10 @@ export default Reflux.createStore({
   storage: {
     prevSearchParams: "",
     squareResults: [],
-    sqrSelected: null,
     latestImagery: [],
+    userImagery: [],
+    imageryOwner: {},
+    sqrSelected: null,
     footprintsTree: null,
     baseLayer: baseLayers[0]
   },
@@ -36,10 +38,20 @@ export default Reflux.createStore({
   //       footprints and scim the latest image from that API request?
   queryLatestImagery: function() {
     api({
-      uri: "/meta?order_by=acquisition_end&sort=desc&limit=3"
+      uri: "/meta?order_by=acquisition_end&sort=desc&limit=10"
     }).then(data => {
       this.storage.latestImagery = data.results;
       this.trigger("latest-imagery");
+    });
+  },
+
+  queryUserImagery: function(user_id) {
+    api({
+      uri: `/user/${user_id}`
+    }).then(data => {
+      this.storage.imageryOwner = data.results;
+      this.storage.userImagery = data.results.images;
+      this.trigger("user-imagery");
     });
   },
 
@@ -165,6 +177,16 @@ export default Reflux.createStore({
   // Return the latest images that has been uploaded by all users.
   getLatestImagery: function() {
     return this.storage.latestImagery;
+  },
+
+  // Return the users associated with a specific user.
+  getUserImagery: function() {
+    return this.storage.userImagery;
+  },
+
+  // Return the user details for current imagery list owner.
+  getImageryOwner: function() {
+    return this.storage.imageryOwner;
   },
 
   // Returns the stored results, such as from clicking on a grid.

@@ -77,7 +77,8 @@
   opacity: 0.64;
   font-size: 0.875rem;
   line-height: 1.25rem;
-  margin: 0;
+  margin-top: 1rem;
+  text-align: center;
 }
 
 .pane-footer {
@@ -119,19 +120,10 @@
 
 .single-media {
   text-align: center;
-  background: tint($base-color, 80%);
-  margin: -1rem -1rem 1rem -1rem;
+  margin: 1rem;
   height: 16rem;
-  font-size: 0;
   vertical-align: middle;
-  padding: 1rem;
-  &:after {
-    width: 100%;
-    height: 1px;
-    background: $base-alpha-color;
-    content: "";
-    z-index: 3;
-  }
+  padding-bottom: 2rem;
   img {
     max-width: 100%;
     max-height: 100%;
@@ -201,8 +193,6 @@
   width: auto;
   pointer-events: none;
   white-space: nowrap;
-  background: rgba(#fff, 0.48);
-  border-radius: $base-border-radius;
   padding: 0.25rem;
 
   .preview-options__title,
@@ -398,9 +388,7 @@
 $card-padding: 0.5rem;
 
 .card {
-  background: #fff;
-  box-shadow: 0 0 0 1px $base-alpha-color;
-  border-radius: $base-border-radius;
+  background: #D1D7D9;
   text-align: left;
   position: relative;
   > a {
@@ -416,23 +404,12 @@ $card-padding: 0.5rem;
   .card-body {
     padding: $card-padding;
   }
-  .card-header + .card-body {
-    margin-top: -$card-padding;
-  }
   .card-media {
-    @extend %base-framed;
-    margin: (-$card-padding) (-$card-padding) 0 (-$card-padding);
     height: 6rem;
-    background: tint($base-color, 96%);
     overflow: hidden;
-    &:before, & {
-      border-radius: $base-border-radius $base-border-radius 0 0;
-    }
+    text-align: center;
     img {
-      display: block;
-      transform: translate(-50%, -50%);
-      width: 120%;
-      height: auto;
+      height: 6rem;
     }
   }
   &.card-result-entry .card-title {
@@ -458,4 +435,14 @@ $card-padding: 0.5rem;
       width: 70%;
     }
   }
+}
+
+.oam-blurb {
+  img {
+    width: 60px;
+    float: left;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+  }
+  overflow: hidden;
 }

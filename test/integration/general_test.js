@@ -196,6 +196,9 @@ describe("Imagery", function() {
       browser.url(everestUriCoords);
       finishLoading();
       browser.click("#map");
+      // Just give the image a few moments to get into the DB. TODO: we shouldn't
+      // have to wait.
+      browser.pause(5000);
       getImageryResults();
       browser.click(".pane-body-inner .results-list li:first-child");
       browser.click("a=Open Graph Test User");

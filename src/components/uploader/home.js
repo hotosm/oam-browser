@@ -437,7 +437,7 @@ export default createReactClass({
 
   render: function() {
     return (
-      <div>
+      <div className="form-wrapper">
         <section className="panel upload-panel">
           <header className="panel-header">
             <div className="panel-headline">

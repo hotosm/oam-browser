@@ -162,12 +162,14 @@ export default class extends React.Component {
             validIndex++;
           });
           if (gDriveErrFiles.length) {
-            alert(`
+            alert(
+              `
 The following files are not publicly available and can't be used:
 - ${gDriveErrFiles.join("\n- ")}
 
 Please check the instructions on how to use files from Google Drive.
-            `);
+            `
+            );
           }
         },
         e => {
@@ -210,9 +212,9 @@ Please check the instructions on how to use files from Google Drive.
 
   renderImagerySource = i => {
     return (
-      <div className="form-group">
-        <label className="form-label">Imagery location</label>
-        <div className="form-control-set">
+      <div className="form__group">
+        <label className="form__label">Imagery location</label>
+        <div className="form__control-set">
           {this.props.data["img-loc"].map((o, imgI) =>
             <ImageryLocation
               key={imgI}
@@ -294,7 +296,10 @@ Please check the instructions on how to use files from Google Drive.
     var i = this.props.index;
     return (
       <div>
-        <label className="form-label none" htmlFor={this.getId("contact-name")}>
+        <label
+          className="form__label none"
+          htmlFor={this.getId("contact-name")}
+        >
           <span className="visually-hidden">Contact name</span>
         </label>
         <input

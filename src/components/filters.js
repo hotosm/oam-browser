@@ -5,6 +5,8 @@ import createReactClass from "create-react-class";
 import Reflux from "reflux";
 import Dropdown from "oam-design-system/dropdown";
 
+import TuneIcon from 'mdi-react/TuneIcon';
+
 import actions from "actions/actions";
 import searchQueryStore from "stores/search_query_store";
 import cookie from "utils/cookie";
@@ -108,29 +110,28 @@ export default createReactClass({
     ].map(filterItem.bind(this, "dataType", this.setDataType));
 
     return (
-      <Dropdown
-        className="drop__content--filters"
-        triggerElement="a"
-        triggerClassName="button-filters"
-        triggerActiveClassName="button--active"
-        triggerTitle="Settings"
-        triggerText="Settings"
-        direction="down"
-        alignment="center"
-      >
-        <h6 className="drop__title">Time</h6>
-        <ul className="drop__menu drop__menu--select" role="menu">
-          {dates}
-        </ul>
-        <h6 className="drop__title">Resolution</h6>
-        <ul className="drop__menu drop__menu--select" role="menu">
-          {resolutions}
-        </ul>
-        <h6 className="drop__title">Data Type</h6>
-        <ul className="drop__menu drop__menu--select" role="menu">
-          {dataTypes}
-        </ul>
-      </Dropdown>
+      <span>
+        <TuneIcon />
+        <Dropdown
+          triggerElement="a"
+          triggerText=""
+          direction="down"
+          alignment="center"
+        >
+          <h6 className="drop__title">Time</h6>
+          <ul className="drop__menu drop__menu--select" role="menu">
+            {dates}
+          </ul>
+          <h6 className="drop__title">Resolution</h6>
+          <ul className="drop__menu drop__menu--select" role="menu">
+            {resolutions}
+          </ul>
+          <h6 className="drop__title">Data Type</h6>
+          <ul className="drop__menu drop__menu--select" role="menu">
+            {dataTypes}
+          </ul>
+        </Dropdown>
+      </span>
     );
   }
 });

@@ -56,43 +56,33 @@ export default createReactClass({
 
   render: function() {
     return (
-      <header className="page__header" role="banner">
-        <div className="inner">
-          <div className="page__headline">
-            <h1 className="page__title">
-              <span className="mast-logo mast-logo--h">
-                <a href="#/" title="Home">
-                  <img
-                    className="mast-logo__image"
-                    src={logo}
-                    width="832"
-                    height="160"
-                    alt="OpenAerialMap logo"
-                  />
-                  <strong className="mast-logo__text">OpenAerialMap</strong>
-                </a>
-              </span>
-            </h1>
-            <MainMenu />
-          </div>
+      <header className="main-header" role="banner">
+        <div className="main-header-wrapper">
+          <a className="main-logo" href="#/" title="Home">
+            <img
+              src={logo}
+              alt="OpenAerialMap logo"
+            />
+          </a>
           {this.isMap()
             ? <nav className="page__prime-nav">
                 <div className="nav-block-prime">
                   <SearchBox />
                   <ul className="app-menu">
-                    <li>
+                    <li className="bttn menu-filters">
                       <Filters
                         params={this.props.params}
                         query={this.props.query}
                       />
                     </li>
-                    <li className="map-layers">
+                    <li className="bttn map-control-layers">
                       <MapLayers />
                     </li>
                   </ul>
                 </div>
               </nav>
             : null}
+          <MainMenu />
         </div>
       </header>
     );

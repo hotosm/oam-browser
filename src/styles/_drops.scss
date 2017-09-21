@@ -10,7 +10,6 @@
 .drop__toggle {
   &--caret {
     &:after {
-      @extend %oam-ds-icon-sm-chevron-down;
       font-size: 1rem;
       line-height: inherit;
       vertical-align: top;
@@ -35,7 +34,7 @@
   line-height: 1.5;
   background: #fff;
   box-shadow: 0 2px 12px 2px $base-alpha-color, 0 0 0 1px $base-alpha-color;
-  border-radius: $base-border-radius;
+  border-radius: $global-radius;
 
   /* Animation */
 
@@ -268,7 +267,6 @@
    ========================================================================== */
 
 .drop__title {
-  @extend .heading-alt;
   font-size: 0.875rem;
   line-height: 1.25rem;
   margin: 0 0 $global-spacing 0 !important;
@@ -318,7 +316,6 @@
     outline: 0;
     font-weight: $base-font-bold;
     &:after {
-      @extend %oam-ds-icon-sm-tick;
       position: absolute;
       z-index: 1;
       top: $global-spacing / 4;
@@ -337,9 +334,7 @@
 .drop__menu--iconified {
   .drop__menu-item {
     padding-left: $global-spacing * 2.75;
-    &:before,
-    > [class^="oam-ds-icon-"],
-    > [class^="collecticons-"] {
+    &:before {
       position: absolute;
       z-index: 1;
       top: $global-spacing / 4;

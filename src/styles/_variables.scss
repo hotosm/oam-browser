@@ -5,16 +5,29 @@
 /* Colors
    ========================================================================== */
 
-$base-color: #1f3b45;                                   // Midnight Blue
-$primary-color: #439ab4;                                // Boston Blue
-$secondary-color: #68c39f;                              // Silver Tree
+$darkBlue: #203C46;
+$teal: #449BB5;
+$green: #449BB5;
 
-$danger-color: #ea4f54;                                 // Mandy
-$success-color: $secondary-color;                       // 
-$warning-color: #f6d55f;                                // Energy Yellow
-$info-color: $primary-color;                            // 
+$grey: #6E8087;
+$grey1: #B1BBBF;
+$grey2: #D1D7D9;
+$grey3: #DEE2E4;
+$grey4: #EFF1F2;
+$grey5: #F4F5F6;
 
-$link-color: $primary-color;
+$white: #FFFFFF;
+$black: #000;
+$base-color: $grey;
+$primary-color: $teal;
+$secondary-color: $green;
+
+$danger-color: #ea4f54;
+$success-color: $secondary-color;
+$warning-color: #f6d55f;
+$info-color: $primary-color;
+
+$link-color: $teal;
 $base-alpha-color: rgba($base-color, 0.12);
 $base-semi-alpha-color: rgba($base-color, 0.08);
 
@@ -24,8 +37,8 @@ $base-semi-alpha-color: rgba($base-color, 0.08);
 
 $root-font-size: 16px;
 
-$base-font-color: tint($base-color, 16%);
-$base-font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$base-font-color: $black;
+$base-font-family: "Yantramanav", "Helvetica Neue", Helvetica, Arial, sans-serif;
 $base-font-style: normal;
 $base-font-light: 300;
 $base-font-regular: 400;
@@ -42,7 +55,8 @@ $code-font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 
 /* Border radius */
 
-$base-border-radius: 0.25rem;
+$global-radius: 2px;
+$base-border-radius: $global-radius;
 $full-border-radius: 60rem;
 
 
@@ -50,7 +64,7 @@ $full-border-radius: 60rem;
    ========================================================================== */
 
 // Size of left-hand sidebar
-$sidebar-width: 500px;
+$sidebar-width: 480px;
 
 /* Sizing */
 
@@ -66,14 +80,10 @@ $row-min-width: 320px;
 $row-max-width: 1280px;
 $jeet-max-width: $row-max-width; // reset jeet.gs max width
 
-/* Media queries */
-
-$xsmall-range: (0, 543px);
-$small-range: (544px, 767px);
-$medium-range: (768px, 991px);
-$large-range: (992px, 1199px);
-$xlarge-range: (1200px);
-
 $screen: "only screen";
 
+$global-spacing: 24px;
+
+$box-shadow-default: 0px 0px 6px 0px rgba(0,0,0,.09);
+$box-shadow-hover: 0px 0px 9px 0px rgba(0,0,0,.15);
 

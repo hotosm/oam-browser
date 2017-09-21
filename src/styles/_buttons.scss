@@ -1,0 +1,58 @@
+.bttn {
+  position: relative;
+  user-select: none;
+  display: inline-block;
+  font-style: normal;
+  text-align: center;
+  white-space: nowrap;
+  border-radius: $global-radius;
+  border: 0;
+  background-image: none;
+  line-height: 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  text-shadow: none;
+  opacity: 1;
+  box-shadow: $box-shadow-default;
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+  a {
+    color: white;
+    display: block;
+    width: 100%;
+    height: 100%;
+    &:hover {
+      opacity: 0.75;
+    }
+  }
+  span {
+    float: left;
+  }
+  .mdi-icon {
+    stroke: white;
+    fill: white;
+    float: right;
+  }
+}
+
+// New buttons
+.bttn-block {
+  display: block;
+  width: 100%;
+}
+
+.bttn-lg {
+  padding: 0.75rem 0.75rem .75rem;
+}
+
+.bttn-primary {
+  background-color: $teal;
+}
+
+.bttn-secondary {
+  background-color: transparent;
+  border: 1px solid $grey2;
+  box-shadow: none;
+  color: $grey;
+}

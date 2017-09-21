@@ -44,25 +44,21 @@
 .alert--success {
   &:before {
     background: rgba($success-color, 0.92);
-    @extend %oam-ds-icon-circle-tick;
   }
 }
 .alert--info {
   &:before {
     background: rgba($info-color, 0.92);
-    @extend %oam-ds-icon-circle-information;
   }
 }
 .alert--warning {
   &:before {
     background: rgba($warning-color, 0.92);
-    @extend %oam-ds-icon-circle-exclamation;
   }
 }
 .alert--danger {
   &:before {
     background: rgba($danger-color, 0.92);
-    @extend %oam-ds-icon-circle-xmark;
   }
 }
 
@@ -85,7 +81,6 @@
    ========================================================================== */
 
 .alert__button-dismiss {
-  @extend .button, .button--small, .button--achromic-unbounded, .button--text-hidden;
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
@@ -93,8 +88,5 @@
   opacity: 0.48;
   &:hover {
     opacity: 1;
-  }
-  &:before {
-    @extend %oam-ds-icon-sm-xmark;
   }
 }

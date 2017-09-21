@@ -7,6 +7,16 @@ import Keys from "react-keybinding";
 import Dropdown from "oam-design-system/dropdown";
 import prettyBytes from "pretty-bytes";
 
+import CloseIcon from "mdi-react/CloseIcon";
+import ImageFilterCenterFocusIcon from "mdi-react/ImageFilterCenterFocusIcon";
+import DotsVerticalIcon from "mdi-react/DotsVerticalIcon";
+import DownloadIcon from "mdi-react/DownloadIcon";
+import CubeUnfoldedIcon from "mdi-react/CubeUnfoldedIcon";
+import ContentCopyIcon from "mdi-react/ContentCopyIcon";
+import OpenInNewIcon from "mdi-react/OpenInNewIcon";
+import ChevronLeftIcon from "mdi-react/ChevronLeftIcon";
+import ChevronRightIcon from "mdi-react/ChevronRightIcon";
+
 import actions from "actions/actions";
 import ZcButton from "components/shared/zc_button";
 import utils from "utils/utils";
@@ -93,16 +103,12 @@ export default createReactClass({
     return this.refs[`tms-url-${key}`].value;
   },
 
-  onOpenJosm: function(dropKey, tmsUrl) {
-    // Close the dropdown.
-    this.refs[`tms-drop-${dropKey}`].close();
-
+  onOpenJosm: function(tmsUrl) {
     var d = this.props.data;
     var source = "OpenAerialMap - " + d.provider + " - " + d.uuid;
-    var urlPrefix =
-      document.location.protocol === "https:"
-        ? "https://127.0.0.1:8112"
-        : "http://127.0.0.1:8111";
+    var urlPrefix = document.location.protocol === "https:"
+      ? "https://127.0.0.1:8112"
+      : "http://127.0.0.1:8111";
     // Reference:
     // http://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl#load_and_zoom
     fetch(
@@ -171,44 +177,34 @@ export default createReactClass({
       });
   },
 
-  renderCopyWMTS: function(dropdownKey) {
-    var wmts = this.props.data.properties.wmts;
-    if (!wmts) {
-      return null;
-    }
-
-    var onCopy = () => {
-      this.refs[`tms-drop-${dropdownKey}`].close();
-      return wmts;
-    };
-
+  renderTmsOptions: function() {
     return (
-      <ul
-        className="drop__menu drop__menu--iconified tms-options-menu"
-        role="menu"
-      >
-        <li>
-          <ZcButton
-            onCopy={onCopy}
-            title="Copy WMTS url"
-            text="Copy WMTS url"
-          />
-        </li>
-      </ul>
+      <span>
+        <ContentCopyIcon /> Copy image URL
+        <div className="actions">
+          {this.props.data.properties.tms
+            ? <ZcButton
+                onCopy={() => this.props.data.properties.tms}
+                title="Copy TMS url"
+                text="TMS"
+              />
+              : null}
+          {" "}|{" "}
+          {this.props.data.properties.wmts
+            ? <ZcButton
+                onCopy={() => this.props.data.properties.wmts}
+                title="Copy WMTS url"
+                text="WMTS"
+              />
+              : null}
+        </div>
+      </span>
     );
   },
 
-  renderTmsOptions: function(
-    tmsUrl,
-    key,
-    direction,
-    aligment,
-    includeMainWMTS
-  ) {
-    var d = this.props.data;
-    // Generate the iD URL:
+  renderOpenInOptions: function() {
     // grab centroid of the footprint
-    var center = centroid(d.geojson).geometry.coordinates;
+    var center = centroid(this.props.data.geojson).geometry.coordinates;
     // cheat by using current zoom level
     var zoom = this.props.map.view.split(",")[2];
     var idUrl =
@@ -217,80 +213,164 @@ export default createReactClass({
       [zoom, center[1], center[0]].join("/") +
       "&" +
       qs.stringify({
-        background: "custom:" + tmsUrl
+        background: "custom:" + this.props.data.properties.tms
       });
-
-    let prevSelectClass =
-      this.state.selectedPreview === `tms-${key}` ? "button--active" : "";
-
     return (
-      <div className="form__group">
-        <label className="form__label" htmlFor="tms-url">
-          TMS url
-        </label>
-        <div className="form__input-group">
-          <input
-            className="form__control form__control--medium"
-            type="text"
-            value={tmsUrl}
-            readOnly
-            ref={`tms-url-${key}`}
-          />
-          <span className="form__input-group-button">
-            <Dropdown
-              className="drop__content--tms-options"
-              triggerElement="button"
-              triggerClassName="button-tms-options"
-              triggerActiveClassName="button--active"
-              triggerTitle="Show options"
-              triggerText="Options"
-              direction={direction}
-              alignment={aligment}
-              ref={`tms-drop-${key}`}
-            >
-              <ul
-                className="drop__menu drop__menu--iconified tms-options-menu"
-                role="menu"
-              >
-                <li>
-                  <a
-                    className="drop__menu-item ide"
-                    href={idUrl}
-                    target="_blank"
-                    title="Open with iD editor"
-                  >
-                    Open with iD editor
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="drop__menu-item josm"
-                    onClick={this.onOpenJosm.bind(null, key, tmsUrl)}
-                    title="Open with JOSM"
-                  >
-                    Open with JOSM
-                  </a>
-                </li>
-                <li>
-                  <ZcButton
-                    onCopy={this.onCopy.bind(null, key)}
-                    title="Copy TMS url"
-                    text="Copy TMS url"
-                  />
-                </li>
-              </ul>
-              {includeMainWMTS && this.renderCopyWMTS(key)}
-            </Dropdown>
-          </span>
+      <span>
+        <OpenInNewIcon /> Open in
+        <div className="actions">
+          <a href={idUrl} target="_blank" title="Open with iD editor">
+            iD editor
+          </a>
+          {" "}|{" "}
+          <a
+            onClick={() => this.onOpenJosm(this.props.data.properties.tms)}
+            title="Open with JOSM"
+          >
+            JOSM
+          </a>
         </div>
-        <button
-          className={"button--tms-preview " + prevSelectClass}
-          type="button"
-          onClick={this.onPreviewSelect.bind(null, { type: "tms", index: key })}
-          title="Preview TMS on map"
+      </span>
+    );
+  },
+
+  paneMenuDropdown: function() {
+    return (
+      <Dropdown
+        triggerElement="a"
+        triggerClassName="pane-more"
+        triggerActiveClassName="button--active"
+        triggerTitle="Share imagery or report a problem"
+        triggerText=""
+        direction="down"
+        alignment="right"
+      >
+        <ul className="drop__menu info-menu" role="menu">
+          <li>
+            <a
+              className="drop__menu-item"
+              href={`https://twitter.com/share?url=${encodeURIComponent(window.location.href)}`}
+              target="_blank"
+              title="Share on twitter"
+              data-hook="dropdown:close"
+            >
+              <span>Share on Twitter</span>
+            </a>
+          </li>
+
+          <li>
+            <a
+              className="drop__menu-item"
+              href={`http://facebook.com/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+              target="_blank"
+              title="Share on Facebook"
+              data-hook="dropdown:close"
+            >
+              <span>Share on Facebook</span>
+            </a>
+          </li>
+        </ul>
+
+        <ul className="drop__menu info-menu" role="menu">
+          <li>
+            <a
+              className="drop__menu-item"
+              title="Report a problem"
+              data-hook="dropdown:close"
+              onClick={this.feedbackClickHandler}
+            >
+              <span>Report a problem</span>
+            </a>
+          </li>
+        </ul>
+      </Dropdown>
+    );
+  },
+
+  paneMenu: function() {
+    return (
+      <div className="pane-menu">
+        <a
+          title="Download raw .tiff image file"
+          className="button-download"
+          target="_blank"
+          href={this.props.data.uuid}
         >
-          <span>preview</span>
-        </button>
+          <DownloadIcon />
+        </a>
+        <a
+          onClick={this.zoomToFit}
+          className="pane-zoom-to-fit"
+          title="Zoom to fit imagery on screen"
+        >
+          <ImageFilterCenterFocusIcon />
+        </a>
+
+        <a
+          onClick={this.closeResults}
+          className="pane-dismiss"
+          title="Exit selection"
+        >
+          <CloseIcon />
+        </a>
+        <span className="pane-menu-dropdown-button">
+          <DotsVerticalIcon />
+          {this.paneMenuDropdown()}
+        </span>
+      </div>
+    );
+  },
+
+  feedbackClickHandler: function(e) {
+    actions.openModal("feedback");
+  },
+
+  zoomToFit: function(e) {
+    e.preventDefault();
+    const bbox = this.props.data.bbox;
+    actions.fitToBounds([[bbox[1], bbox[0]], [bbox[3], bbox[2]]]);
+  },
+
+  closeResults: function(e) {
+    e.preventDefault();
+    utils.pushURI(this.props, {
+      image: null
+    });
+  },
+
+  previewOptions: function() {
+    let sp = this.state.selectedPreview;
+    return (
+      <div className="preview-options">
+        <CubeUnfoldedIcon /> Display as
+        <div className="actions">
+          <button
+            className={
+              "preview-thumbnail " +
+                (sp === "thumbnail" ? "button--active" : "")
+            }
+            type="button"
+            onClick={this.onPreviewSelect.bind(null, {
+              type: "thumbnail"
+            })}
+          >
+            <span>Thumbnail</span>
+          </button>
+          {this.props.data.properties.tms
+            ? <button
+                className={
+                  "preview-tms " +
+                    (sp === "tms" ? "button--active" : "")
+                }
+                type="button"
+                onClick={this.onPreviewSelect.bind(null, {
+                  type: "tms"
+                })}
+              >
+                <span>TMS</span>
+              </button>
+            : null}
+        </div>
       </div>
     );
   },
@@ -298,88 +378,61 @@ export default createReactClass({
   render: function() {
     var d = this.props.data;
     var pagination = this.props.pagination;
-    var tmsOptions = d.properties.tms
-      ? this.renderTmsOptions(d.properties.tms, "main", "down", "center", true)
-      : null;
-
-    let sp = this.state.selectedPreview;
 
     return (
       <article
         className={(d.properties.tms ? "has-tms " : "") + "results-single"}
       >
         <header className="pane-header">
-          <h1
+          <h2
             className="pane-title with-zoom-to-fit"
             title={d.title.replace(/\.[a-z]+$/, "")}
           >
             {d.title.replace(/\.[a-z]+$/, "")}
-          </h1>
+          </h2>
+          {this.props.params.image_id ? this.paneMenu() : null}
         </header>
         <div className="pane-body">
           <div className="pane-body-inner">
             <div className="single-media">
-              <img
-                alt="Result thumbnail"
-                src={
-                  d.properties.thumbnail ||
-                  "assets/graphics/layout/img-placeholder.svg"
-                }
-              />
-              <div className="preview-options">
-                <div
-                  className="button-group button-group--horizontal preview-options__buttons"
-                  role="group"
-                >
-                  <button
-                    className={
-                      "button button--small button--display " +
-                      (sp === "thumbnail" ? "button--active" : "")
-                    }
-                    type="button"
-                    onClick={this.onPreviewSelect.bind(null, {
-                      type: "thumbnail"
-                    })}
-                  >
-                    <span>Thumbnail</span>
-                  </button>
-                  {d.properties.tms
-                    ? <button
-                        className={
-                          "button button--small button--display " +
-                          (sp === "tms" ? "button--active" : "")
-                        }
-                        type="button"
-                        onClick={this.onPreviewSelect.bind(null, {
-                          type: "tms"
-                        })}
-                      >
-                        <span>TMS</span>
-                      </button>
-                    : null}
-                  <button
-                    className={
-                      "button button--small button--display " +
-                      (sp === "none" ? "button--active" : "")
-                    }
-                    type="button"
-                    onClick={this.onPreviewSelect.bind(null, { type: "none" })}
-                  >
-                    <span>None</span>
-                  </button>
-                </div>
+              <span className="user-details">
+                {typeof this.props.user.profile_pic_uri !== "undefined"
+                  ? <img src={this.props.user.profile_pic_uri} alt="Provider" />
+                  : null}
+                <small className="provided_by">
+                  Provided by
+                </small>
+                {typeof this.props.user.name !== "undefined"
+                  ? <a
+                      onClick={e =>
+                        this.gotoUsersImages(e, this.props.user._id)}
+                    >
+                      {this.props.user.name}
+                    </a>
+                  : d.provider}
+              </span>
+              <div className="result-thumbnail">
+                <img
+                  alt="Result thumbnail"
+                  src={
+                    d.properties.thumbnail ||
+                      "assets/graphics/layout/img-placeholder.svg"
+                  }
+                />
               </div>
             </div>
             <div className="single-actions">
-              {tmsOptions}
-              <a
-                title="Download image"
-                className="button-download"
-                target="_blank"
-                href={d.uuid}
-              >
-                <span>Download</span>
-              </a>
+              <ul>
+                <li>
+                  {this.previewOptions()}
+                </li>
+                <li>
+                  {this.renderOpenInOptions()}
+                </li>
+                <li>
+                  {this.renderTmsOptions()}
+                </li>
+              </ul>
             </div>
             <dl className="single-details">
               <dt>
@@ -418,27 +471,6 @@ export default createReactClass({
               <dd className="cap">
                 {d.properties.sensor ? d.properties.sensor : "not available"}
               </dd>
-              <dt>
-                <span>Provider</span>
-              </dt>
-              <dd className="cap">
-                {d.provider}
-              </dd>
-              {typeof this.props.user.name !== "undefined"
-                ? <span className="user-details">
-                    <dt>
-                      <span>User</span>
-                    </dt>
-                    <dd className="cap">
-                      <a
-                        onClick={e =>
-                          this.gotoUsersImages(e, this.props.user._id)}
-                      >
-                        {this.props.user.name}
-                      </a>
-                    </dd>
-                  </span>
-                : null}
             </dl>
 
             {d.custom_tms
@@ -463,34 +495,25 @@ export default createReactClass({
           </div>
         </div>
         <footer className="pane-footer">
-          <ul className="single-pager">
-            <li className="view-all">
-              <a onClick={this.viewAllResults} title="View all results">
-                <span>All</span>
-              </a>
-            </li>
-            <li className="view-prev">
-              <a
-                onClick={this.prevResult}
-                className={this.props.pagination.prevId ? "" : "disabled"}
-                title="View previous result"
-              >
-                <span>Prev</span>
-              </a>
-            </li>
-            <li className="view-next">
-              <a
-                onClick={this.nextResult}
-                className={this.props.pagination.nextId ? "" : "disabled"}
-                title="View next result"
-              >
-                <span>Next</span>
-              </a>
-            </li>
-          </ul>
-          <p className="pane-subtitle">
-            {pagination.current} of {pagination.total} results
-          </p>
+          <div className="single-pager">
+            <a
+              onClick={this.prevResult}
+              className={this.props.pagination.prevId ? "" : "disabled"}
+              title="View previous result"
+            >
+              <ChevronLeftIcon />
+            </a>
+            <span className="pane-subtitle">
+              {pagination.current} of {pagination.total} results
+            </span>
+            <a
+              onClick={this.nextResult}
+              className={this.props.pagination.nextId ? "" : "disabled"}
+              title="View next result"
+            >
+              <ChevronRightIcon />
+            </a>
+          </div>
         </footer>
       </article>
     );

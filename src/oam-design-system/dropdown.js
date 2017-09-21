@@ -164,8 +164,7 @@ export default class extends React.Component {
         targetAttachment={tetherTargetAttachment}
         constraints={[
           {
-            to: "scrollParent",
-            attachment: "together"
+            to: "scrollParent"
           }
         ]}
       >

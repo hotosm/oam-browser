@@ -1,0 +1,233 @@
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  width: $sidebar-width;
+  box-shadow: $box-shadow-default;
+}
+
+#sidebar-body {
+  flex: 1 0 auto;
+  background-color: $grey4;
+}
+
+#sidebar-header {
+  margin: 0 1rem;
+}
+
+.pane-header {
+  padding: 0 1rem;
+  h2 {
+    @extend .clearfix;
+    width: 345px;
+    text-overflow: ellipsis;
+    float: left;
+    margin-top: 0;
+  }
+  .pane-menu {
+    float: right;
+  }
+  @extend .clearfix;
+}
+
+.pane-menu-dropdown-button {
+  position: relative;
+  .pane-more {
+    display: block;
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    left: 0;
+    top: -11px;
+  }
+}
+
+.oam-blurb {
+  img {
+    width: 60px;
+    float: left;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+  }
+  h2 {
+    margin-bottom: 0;
+  }
+  overflow: hidden;
+}
+
+.results-list {
+  padding: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  list-style-type: none;
+  margin-bottom: 0;
+}
+
+.card {
+  background-color: $grey2;
+  box-shadow: $box-shadow-default;
+  border-radius: $global-radius;
+  margin-bottom: 16px;
+  > a:hover {
+    opacity: 1;
+  }
+  &:hover {
+    background-color: #C7CED1;
+    box-shadow: $box-shadow-hover;
+  }
+}
+
+.card-result-entry {
+  width: 216px;
+}
+
+.card-header {
+  padding: 10px;
+  border-bottom: 1px solid $grey1;
+  .card-title {
+    font-size: 0.8125rem;
+    color: $grey;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  dd {
+    margin: 0;
+  }
+}
+
+.card-details {
+  font-size: .875rem;
+  line-height: 1.25;
+  a {
+    color: $teal;
+    text-decoration: underline;
+  }
+  span {
+    color: $grey;
+  }
+  .card-date, .card-resolution {
+    display: inline;
+  }
+}
+
+.card-media {
+  height: 163px;
+  width: 216px;
+  padding: 0 8px;
+  img {
+    height: 163px;
+    width: 200px;
+    object-fit: contain;
+  }
+}
+
+#results-pane {
+  margin-top: 65px;
+  .mdi-icon {
+    margin-bottom: -6px;
+  }
+}
+
+.single-media {
+  border-radius: $global-radius;
+  background-color: $grey2;
+  margin: 0 1rem;
+  .user-details {
+    border-bottom: 1px solid $grey1;
+    display: block;
+    padding: 10px;
+    img {
+      float: left;
+      margin-right: 4px;
+    }
+    .provided_by {
+      display: block;
+      text-transform: uppercase;
+      color: grey;
+    }
+  }
+  .result-thumbnail {
+    text-align: center;
+    min-height: 100px;
+    img {
+      max-width: 100%;
+      max-height: 250px;
+      margin-bottom: -8px;
+    }
+  }
+}
+
+.single-actions {
+  margin-top: 1rem;
+  padding: 0 1rem;
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid $grey2;
+  }
+  .actions {
+    float: right;
+    button {
+      border: none;
+      cursor: pointer;
+    }
+    .button--active {
+      background-color: $teal;
+      color: white;
+    }
+  }
+  .preview-options {
+    .preview-thumbnail {
+      border-top-left-radius: $global-radius;
+      border-bottom-left-radius: $global-radius;
+    }
+    .preview-tms {
+      border-top-right-radius: $global-radius;
+      border-bottom-right-radius: $global-radius;
+    }
+  }
+}
+
+.single-details {
+  background-color: $grey2;
+  padding: 0 1rem;
+  line-height: 1.25rem;
+  @extend .clearfix;
+  dt, dd {
+    float: left;
+    margin: 0;
+    padding: 1rem 0;
+    box-shadow: inset 0 1px 0 0 $base-alpha-color;
+    &:first-of-type {
+      box-shadow: none;
+    }
+  }
+  dt {
+    width: 32%;
+    text-transform: uppercase;
+    color: $grey;
+    font-size: 0.8rem;
+    clear: left;
+  }
+  dd {
+    width: 68%;
+    text-align: right;
+  }
+}
+
+.single-pager {
+  text-align: center;
+  margin-bottom: 2rem;
+  .mdi-icon {
+    transform: scale(2);
+  }
+}
+

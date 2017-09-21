@@ -16,20 +16,20 @@ export default class ResultsList extends React.Component {
 
   homeBlurb() {
     return (
-      <span>
+      <div>
         <p>
           OpenAerialMap (OAM) is a set of tools for searching, sharing, and
           using openly licensed satellite and unmanned aerial vehicle (UAV)
           imagery.
         </p>
         <h2>Latest uploads</h2>
-      </span>
+      </div>
     );
   }
 
   squareBlurb() {
     return (
-      <span>
+      <div>
         <h2
           className="pane-title"
           title={
@@ -39,19 +39,19 @@ export default class ResultsList extends React.Component {
         >
           {this.props.results.length} images within selected grid square
         </h2>
-      </span>
+      </div>
     );
   }
 
   userBlurb() {
     let user = mapStore.getImageryOwner();
     return (
-      <span>
+      <div>
         <img src={user.profile_pic_uri} alt="Provider's profile" />
         <h2 className="pane-title" title={"Imagery for user " + user.name}>
           Imagery for {user.name}
         </h2>
-      </span>
+      </div>
     );
   }
 
@@ -65,9 +65,9 @@ export default class ResultsList extends React.Component {
       blurb = this.homeBlurb();
     }
     return (
-      <p className="oam-blurb">
+      <div className="oam-blurb">
         {blurb}
-      </p>
+      </div>
     );
   }
 
@@ -78,6 +78,7 @@ export default class ResultsList extends React.Component {
         <ResultsListCard
           key={o._id}
           query={this.props.query}
+          params={this.props.params}
           map={this.props.map}
           selectedSquareQuadkey={square}
           data={o}
@@ -87,15 +88,13 @@ export default class ResultsList extends React.Component {
 
     return (
       <section className="results-hub">
-        <header className="pane-header">
+        <header id="sidebar-header">
           {this.paneBlurb()}
         </header>
-        <div className="pane-body">
-          <div className="pane-body-inner">
-            <ol className="results-list">
-              {results}
-            </ol>
-          </div>
+        <div id="sidebar-body">
+          <ol className="results-list">
+            {results}
+          </ol>
         </div>
         <footer className="pane-footer" />
       </section>

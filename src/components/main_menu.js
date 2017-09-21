@@ -2,6 +2,10 @@ import React from "react";
 import createReactClass from "create-react-class";
 import Reflux from "reflux";
 
+import MenuIcon from 'mdi-react/MenuIcon';
+import LoginIcon from 'mdi-react/LoginIcon';
+import UploadIcon from 'mdi-react/UploadIcon';
+
 import config from "config";
 import actions from "actions/actions";
 import Dropdown from "oam-design-system/dropdown";
@@ -75,9 +79,8 @@ export default createReactClass({
     let oamHealthClass = this.getOAMHealthClass();
 
     return (
-      <div>
         <ul className="main-menu">
-          <li>
+          <li className="bttn menu-signin-upload">
             {this.state.isUserLoggedIn
               ? <a
                   href="#/upload"
@@ -85,36 +88,32 @@ export default createReactClass({
                   title="Go to OAM Uploader"
                 >
                   <span>Upload</span>
+                  <UploadIcon />
                 </a>
               : <a
-                  className="button-upload"
                   onClick={this.onLoginClick}
                   title="Sign In"
                 >
                   <span>Sign In</span>
+                  <LoginIcon />
                 </a>}
           </li>
 
-          <li>
+          <li className="menu-profile_pic">
             {this.state.isUserLoggedIn
-              ? <div>
-                  <a href="#/account">
-                    <img
-                      className="profile_pic"
-                      src={this.state.user.profile_pic_uri}
-                      alt="Profile"
-                    />
-                  </a>
-                </div>
+              ? <a href="#/account">
+                  <img
+                    src={this.state.user.profile_pic_uri}
+                    alt="Profile"
+                  />
+                </a>
               : null}
           </li>
-          <li>
+          <li className="bttn menu-dropdown">
+            <MenuIcon />
             <Dropdown
               triggerElement="a"
-              triggerClassName="button-info"
-              triggerActiveClassName="button--active"
-              triggerTitle="Info"
-              triggerText="Info"
+              triggerText=""
               direction="down"
               alignment="right"
             >
@@ -196,7 +195,6 @@ export default createReactClass({
             </Dropdown>
           </li>
         </ul>
-      </div>
     );
   }
 });

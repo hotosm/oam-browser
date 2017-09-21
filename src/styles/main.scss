@@ -1,50 +1,28 @@
-/* ==========================================================================
-   Main
-   ========================================================================== */
-
-/* Libraries
-   ========================================================================== */
+/**
+ * Normalize.css, a modern, HTML5-ready alternative to CSS resets:
+ * http://necolas.github.io/normalize.css/
+ */
+@import "normalize";
 
 /**
- * Bourbon for extended SASS functionality:
- * http://bourbon.io/
+ * Kenneth Ormandy's OpenType features—ligatures, kerning, and more—to Normalize.css:
+ * https://github.com/kennethormandy/normalize-opentype.css
  */
-@import "bourbon/bourbon";
+@import "normalize-opentype";
 
-/**
- * Jeet, a grid system designed for humans:
- * http://jeet.gs/
- */
-@import "jeet/jeet";
-
+// The blue loading progress bar that runs across the top like on github.com
 @import "nprogress/nprogress";
 
-@import "oam-design-system";
-
-// Structure and content
-@import "skins";
-@import "animations";
+@import "variables";
+@import "functions";
+@import "mixins";
+@import "base";
+@import "buttons";
+@import "drops";
+@import "alerts";
+@import "modals";
 @import "structure";
+@import "helpers";
 @import "map";
-@import "results-panel";
-@import "modal-about";
-@import "modal-welcome";
-@import "modal-feedback";
-@import "misc";
+@import "sidebar";
 @import "users";
-
-// These came from the oam-uploader repo when the uploader form
-// was in a separate repo.
-// TODO: Explore merging and consolodating.
-@import "neat/neat";
-@import "uploader/neat-addons";
-@import "uploader/variables";
-@import "uploader/mixins";
-@import "uploader/base";
-@import "uploader/panels";
-@import "uploader/buttons";
-@import "uploader/forms";
-@import "uploader/overlays";
-@import "uploader/upload-progress";
-@import "uploader/react-widgets";
-

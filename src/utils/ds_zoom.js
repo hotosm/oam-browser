@@ -14,8 +14,8 @@ export default L.Control.extend({
     containerClasses: "",
     zoomInClasses: "",
     zoomOutClasses: "",
-    zoomInText: "<span>Zoom in</span>",
-    zoomOutText: "<span>Zoom out</span>"
+    zoomInText: "<span>+</span>",
+    zoomOutText: "<span>-</span>"
   },
 
   onAdd: function(map) {

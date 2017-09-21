@@ -2,6 +2,9 @@ import _ from "lodash";
 import React from "react";
 import Autocomplete from "react-autocomplete";
 
+import CrosshairsGpsIcon from 'mdi-react/CrosshairsGpsIcon';
+import MagnifyIcon from 'mdi-react/MagnifyIcon';
+
 import actions from "actions/actions";
 import utils from "utils/utils";
 
@@ -87,20 +90,16 @@ export default class SearchBox extends React.Component {
                 {item.text}
               </div>}
           />
+          <MagnifyIcon className="search-submit" />
           {navigator.geolocation
             ? <a
                 title="Take me to my location"
-                className="global-search__button-location"
+                className="bttn map-control-location"
                 onClick={this.onMyLocationClick}
               >
-                <span>My location</span>
+                <CrosshairsGpsIcon />
               </a>
             : null}
-          <span className="form__input-group-button">
-            <button className="global-search__button-go" type="submit">
-              <span>Search</span>
-            </button>
-          </span>
         </div>
       </form>
     );

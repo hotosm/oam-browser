@@ -75,14 +75,6 @@ a:active {
   @extend .clearfix;
   padding-left: $global-spacing;
   padding-right: $global-spacing;
-  @include media(small-up) {
-    padding-left: $global-spacing * 2;
-    padding-right: $global-spacing * 2;
-  }
-  @include media(xlarge-up) {
-    padding-left: $global-spacing * 4;
-    padding-right: $global-spacing * 4;
-  }
   &--centered {
     max-width: $row-max-width;
     margin-left: auto;
@@ -114,6 +106,9 @@ input, select, textarea {
   margin: 0;
 }
 
+input, button {
+  border: 1px solid $grey2;
+}
 
 /* Tables
    ========================================================================== */

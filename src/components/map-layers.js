@@ -1,7 +1,8 @@
 /* global L */
 import PropTypes from "prop-types";
-
 import React from "react";
+
+import LayersIcon from 'mdi-react/LayersIcon';
 
 import Dropdown from "oam-design-system/dropdown";
 import baseLayers from "utils/map-layers";
@@ -23,28 +24,28 @@ class MapLayers extends React.Component {
 
   render() {
     return (
-      <Dropdown
-        triggerElement="a"
-        triggerClassName="button-layers"
-        triggerActiveClassName="button--active"
-        triggerTitle="Choose map layer"
-        triggerText="Choose map layer"
-        direction="left"
-        className="drop__content--maplayers"
-        alignment="middle"
-      >
-        <ul className="drop__menu drop__menu--select map-layers-list">
-          {baseLayers.map(o =>
-            <li key={o.id}>
-              <MapLayerItem
-                selectedLayer={this.state.selectedLayer}
-                layer={o}
-                onLayerSelect={this.onLayerSelect}
-              />
-            </li>
-          )}
-        </ul>
-      </Dropdown>
+      <span className="bttn map-menu-layers">
+        <LayersIcon />
+        <Dropdown
+          triggerElement="a"
+          triggerText=""
+          direction="left"
+          className="drop__content--maplayers"
+          alignment="middle"
+        >
+          <ul className="drop__menu drop__menu--select map-layers-list">
+            {baseLayers.map(o =>
+              <li key={o.id}>
+                <MapLayerItem
+                  selectedLayer={this.state.selectedLayer}
+                  layer={o}
+                  onLayerSelect={this.onLayerSelect}
+                />
+              </li>
+            )}
+          </ul>
+        </Dropdown>
+      </span>
     );
   }
 }

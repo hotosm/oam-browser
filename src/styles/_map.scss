@@ -9,27 +9,8 @@
   left: $sidebar-width;
   bottom: 0;
   right: 0;
+  border-left: 1px solid $grey2;
 }
-
-.leaflet-bottom.leaflet-left {
-  top: auto;
-  bottom: 50%;
-  left: 1rem;
-  transform: translate(0, 50%);
-}
-
-.zoom-controls {
-  @extend .button-group, .button-group--vertical;
-  margin: 0 !important;
-}
-
-.button-zoom {
-  @extend .button, .button--achromic, .button--text-hidden;
-
-  &--in:before { @extend %oam-ds-icon-plus; }
-  &--out:before { @extend %oam-ds-icon-minus; }
-}
-
 
 /* Grid
    ========================================================================== */

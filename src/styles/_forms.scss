@@ -89,6 +89,14 @@ fieldset {
   padding: 32px 0;
   border-bottom: 1px solid $grey2;
   margin-bottom: 32px;
+  a {
+    @extend .clearfix;
+    padding: 5px;
+  }
+  .mdi-icon {
+    stroke: black;
+    fill: black;
+  }
 }
 
 .form-fieldset-actions {
@@ -96,4 +104,25 @@ fieldset {
   .disabled {
     display: none;
   }
+}
+
+// TODO: Why is the widget taking up the whole width?
+//       And wrapped in a border?
+.rw-widget.rw-state-focus,
+.rw-widget.rw-state:hover {
+  border: 1px solid $grey2;
+}
+.rw-combo-box {
+  border: 0;
+}
+
+.imagery-location-import {
+  .bttn {
+    padding: 5px;
+    margin-right: 4px;
+  }
+}
+
+.message-alert {
+  color: red;
 }

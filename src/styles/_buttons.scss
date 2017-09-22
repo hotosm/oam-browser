@@ -17,6 +17,8 @@
   text-decoration: none;
   color: white;
   cursor: pointer;
+  background-color: $darkBlue;
+  vertical-align: top;
   a {
     color: white;
     display: block;
@@ -32,7 +34,6 @@
   .mdi-icon {
     stroke: white;
     fill: white;
-    float: right;
   }
 }
 
@@ -59,4 +60,17 @@
   border: 1px solid $grey2;
   box-shadow: none;
   color: $grey;
+}
+
+.bttn-submit {
+  @extend .clearfix;
+  text-align: center;
+}
+
+.bttn-icon {
+  @extend .clearfix;
+  .mdi-icon {
+    float: right;
+    margin-left: 3px;
+  }
 }

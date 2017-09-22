@@ -90,3 +90,16 @@
     opacity: 1;
   }
 }
+
+/* Floating notifications
+   ========================================================================== */
+
+.notification {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  width: 15rem;
+  padding: 1rem;
+  border-radius: $global-radius;
+  background-color: rgba($grey1, 0.8);
+}

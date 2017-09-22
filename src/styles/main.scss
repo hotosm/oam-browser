@@ -7,8 +7,21 @@
 // The blue loading progress bar that runs across the top like on github.com
 @import "nprogress/nprogress";
 
-//@import "react-widgets/scss/react-widgets";
+// Sass for React Widgets datepicker
+// We need to include everything by hand because CRA doesn't pick up
+// the paths. Also including them by hand means we can exclude uneeded
+// files.
+$rw-font-path: "react-widgets/fonts";
+$rw-img-path: "react-widgets/img";
+@import "react-widgets/scss/variables";
+@import "react-widgets/scss/bootstrap-theme";
+@import "react-widgets/scss/mixins";
+@import "react-widgets/scss/normalize";
+@import "react-widgets/scss/icons";
+@import "react-widgets/scss/core";
+@import "react-widgets/scss/datepicker";
 
+// Site-specific Sass
 @import "variables";
 @import "functions";
 @import "mixins";

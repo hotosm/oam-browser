@@ -11,6 +11,10 @@ import moment from "moment";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
 
 import DeleteIcon from "mdi-react/DeleteIcon";
+import FileIcon from "mdi-react/FileIcon";
+import LinkVariantIcon from "mdi-react/LinkVariantIcon";
+import DropboxIcon from "mdi-react/DropboxIcon";
+import GoogleDriveIcon from "mdi-react/GoogleDriveIcon";
 
 import ImageryLocation from "components/uploader/imagery-location";
 import gDrive from "utils/google";
@@ -233,38 +237,42 @@ Please check the instructions on how to use files from Google Drive.
             />
           )}
           <div className="imagery-location-import">
-            <button
+            <a
               type="button"
-              className="bttn-imagery-upload"
+              className="bttn bttn-primary bttn-icon"
               onClick={() => this.addImageryLocation("upload")}
               title="Upload file directly"
             >
+              <FileIcon />
               <span>Local File</span>
-            </button>
-            <button
+            </a>
+            <a
               type="button"
-              className="bttn-imagery-manual"
+              className="bttn bttn-primary bttn-icon"
               onClick={() => this.addImageryLocation("manual")}
               title="Write url"
             >
+              <LinkVariantIcon />
               <span>Url</span>
-            </button>
-            <button
+            </a>
+            <a
               type="button"
-              className="bttn-imagery-dropbox"
+              className="bttn bttn-primary bttn-icon"
               onClick={this.importDropboxClick}
               title="Import file from dropbox"
             >
+              <DropboxIcon />
               <span>Dropbox</span>
-            </button>
-            <button
+            </a>
+            <a
               type="button"
-              className="bttn-imagery-gdrive"
+              className="bttn bttn-primary bttn-icon"
               onClick={this.importGDriveClick}
               title="Import file from Google Drive"
             >
+              <GoogleDriveIcon />
               <span>Drive</span>
-            </button>
+            </a>
             {this.props.renderErrorMessage(
               this.props.getValidationMessages("scenes." + i + ".img-loc")[0]
             )}

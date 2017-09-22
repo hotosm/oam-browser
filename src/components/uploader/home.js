@@ -7,6 +7,8 @@ import AppActions from "actions/actions";
 import imageryValidations from "components/shared/imagery_validations";
 import _ from "lodash";
 
+import PlusIcon from "mdi-react/PlusIcon";
+
 import config from "config";
 import api from "utils/api";
 
@@ -457,14 +459,15 @@ export default createReactClass({
               {this.state.scenes.map(this.renderScene)}
 
               <div className="form-extra-actions">
-                <button
+                <a
                   type="button"
-                  className="bttn-add-scene"
+                  className="bttn bttn-secondary bttn-block bttn-icon"
                   onClick={this.addScene}
                   title="Add new dataset"
                 >
                   <span>New dataset</span>
-                </button>
+                  <PlusIcon />
+                </a>
               </div>
 
               <div className="form-note">
@@ -484,13 +487,13 @@ export default createReactClass({
               </div>
 
               <div className="form-actions">
-                <button
+                <a
                   type="submit"
-                  className="bttn-submit"
+                  className="bttn bttn-lg bttn-block bttn-submit"
                   onClick={this.onSubmit}
                 >
-                  <span>Submit</span>
-                </button>
+                  Submit
+                </a>
                 <div
                   id="upload-progress"
                   className={this.state.uploadActive ? "" : "upload-inactive"}

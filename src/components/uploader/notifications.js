@@ -1,7 +1,9 @@
-var PropTypes = require("prop-types");
-var React = require("react");
+import PropTypes from "prop-types";
+import React from "react";
 
-class Notifications extends React.Component {
+import CloseIcon from "mdi-react/CloseIcon";
+
+export default class Notifications extends React.Component {
   static displayName = "Notifications";
 
   static propTypes = {
@@ -31,11 +33,9 @@ class Notifications extends React.Component {
           title="Dismiss notification"
           onClick={this.dismissNotification}
         >
-          <span>Dismiss</span>
+          <CloseIcon />
         </a>
       </div>
     );
   }
 }
-
-module.exports = Notifications;

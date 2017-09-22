@@ -510,10 +510,6 @@ export default createReactClass({
           </div>
           <footer className="panel-footer" />
         </section>
-
-        {this.state.loading
-          ? <p className="loading revealed">Loading</p>
-          : null}
       </div>
     );
   }

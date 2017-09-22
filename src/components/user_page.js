@@ -2,6 +2,8 @@ import PropTypes from "prop-types";
 import React from "react";
 import createReactClass from "create-react-class";
 
+import ChevronRightIcon from "mdi-react/ChevronRightIcon";
+
 import utils from "utils/utils";
 import api from "utils/api";
 
@@ -73,13 +75,18 @@ export default createReactClass({
         <ul className="account__images">
           {this.state.user.images.length > 0
             ? this.state.user.images.map((image, i) =>
-                <li className="account__images-upload">
-                  <img
-                    src={image.properties.thumbnail}
-                    width="100"
-                    key={i}
-                    alt="Imagery thumbnail"
-                  />
+              <li className="account__images-upload">
+                <div className="images-thumbnail">
+                  <a onClick={() => utils.imageUri(image)}>
+                    <img
+                      src={image.properties.thumbnail}
+                      width="100"
+                      key={i}
+                      alt="Imagery thumbnail"
+                    />
+                  </a>
+                </div>
+                <div className="images-body">
                   <ul>
                     <strong>
                       {image.title}
@@ -97,10 +104,8 @@ export default createReactClass({
                       File size: {image.file_size / 1000}k
                     </li>
                     <li>
-                      <a onClick={() => utils.imageUri(image)}>View</a>
                       {this.requestedUser === "current"
                         ? <span>
-                            {" "}|&nbsp;
                             <a href={"/#/imagery/" + image._id + "/edit"}>
                               Edit
                             </a>{" "}
@@ -115,6 +120,7 @@ export default createReactClass({
                         : null}
                     </li>
                   </ul>
+                </div>
                 </li>
               )
             : <em>No uploaded images yet.</em>}
@@ -129,17 +135,27 @@ export default createReactClass({
       <div className="your-profile">
         <h2>Your Profile</h2>
         <div className="your-profile__content">
-          <img src={user.profile_pic_uri} width="75" alt="Your profile" />
-          <ul>
-            <li>
-              <strong>
-                {user.name}
-              </strong>
-            </li>
-            <li>
-              {user.contact_email}
-            </li>
-          </ul>
+          <div className="your-profile__body">
+            <img src={user.profile_pic_uri} width="75" alt="Your profile" />
+            <ul>
+              <li>
+                <strong>
+                  {user.name}
+                </strong>
+              </li>
+              <li>
+                {user.contact_email}
+              </li>
+            </ul>
+          </div>
+          <div style={{clear: 'both'}}></div>
+          <a
+            href={`#/0/user/${user._id}`}
+            className="view-your-profile"
+          >
+            View your profile
+            <ChevronRightIcon />
+          </a>
         </div>
       </div>
     );

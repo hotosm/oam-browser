@@ -1,7 +1,9 @@
-var PropTypes = require("prop-types");
-var React = require("react");
+import PropTypes from "prop-types";
+import React from "react";
 
-module.exports = class extends React.Component {
+import DeleteIcon from "mdi-react/DeleteIcon";
+
+export default class extends React.Component {
   static displayName = "ImageryLocation";
 
   static propTypes = {
@@ -40,7 +42,7 @@ module.exports = class extends React.Component {
     // var classes = 'bttn-remove-imagery' + (this.props.total <= 1 ? ' disabled' : '');
     return (
       <div className="form-img-actions">
-        <button
+        <a
           type="button"
           className="bttn-remove-imagery"
           onClick={this.props.removeImageryLocation.bind(
@@ -49,8 +51,8 @@ module.exports = class extends React.Component {
           )}
           title="Remove dataset"
         >
-          <span>Remove dataset</span>
-        </button>
+          <DeleteIcon />
+        </a>
       </div>
     );
   };

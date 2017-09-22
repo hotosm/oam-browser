@@ -103,3 +103,9 @@
   border-radius: $global-radius;
   background-color: rgba($grey1, 0.8);
 }
+
+.notification-dismiss {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}

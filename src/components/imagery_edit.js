@@ -157,7 +157,7 @@ export default createReactClass({
 
   render: function() {
     return (
-      <div className="imagery-editor">
+      <div className="imagery-editor form-wrapper">
         <section className="panel upload-panel">
           <header className="panel-header">
             <div className="panel-headline">
@@ -178,22 +178,18 @@ export default createReactClass({
               />
 
               <div className="form-actions">
-                <button
+                <a
                   type="submit"
-                  className="bttn-submit"
+                  className="bttn bttn-lg bttn-block bttn-submit"
                   onClick={this.onSubmit}
                 >
-                  <span>Submit</span>
-                </button>
+                  Submit
+                </a>
               </div>
             </form>
           </div>
           <footer className="panel-footer" />
         </section>
-
-        {this.state.loading
-          ? <p className="loading revealed">Loading</p>
-          : null}
       </div>
     );
   }

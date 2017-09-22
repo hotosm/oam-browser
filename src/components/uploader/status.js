@@ -191,17 +191,6 @@ export default createReactClass({
         <h2 className="image-block-title">
           Image {i}
         </h2>
-        <div className={"status" + status}>
-          {imgStatusMatrix[image.status]}
-          {image.status === "initial" || image.status === "processing"
-            ? <div className="sk-folding-cube">
-                <div className="sk-cube1 sk-cube" />
-                <div className="sk-cube2 sk-cube" />
-                <div className="sk-cube4 sk-cube" />
-                <div className="sk-cube3 sk-cube" />
-              </div>
-            : ""}
-        </div>
         <dl className="status-details">
           <dt>Started</dt>
           <dd>
@@ -217,6 +206,20 @@ export default createReactClass({
                 </dd>
               ]
             : ""}
+          <dt>Status</dt>
+          <dd>
+            <div className={"status " + status}>
+              {imgStatusMatrix[image.status]}
+              {image.status === "initial" || image.status === "processing"
+                ? <div className="sk-folding-cube">
+                    <div className="sk-cube1 sk-cube" />
+                    <div className="sk-cube2 sk-cube" />
+                    <div className="sk-cube4 sk-cube" />
+                    <div className="sk-cube3 sk-cube" />
+                  </div>
+                : ""}
+            </div>
+          </dd>
           <dt>Info</dt>
           <dd className="info-detail">
             <ul>
@@ -243,32 +246,9 @@ export default createReactClass({
       );
     }
 
-    var data = this.state.data;
-
     return (
       <div>
-        <div className="intro-block">
-          <h2>Status upload</h2>
-        </div>
-
-        <section className="panel status-panel">
-          <header className="panel-header">
-            <div className="panel-headline">
-              <h1 className="panel-title">General</h1>
-            </div>
-          </header>
-          <div className="panel-body">
-            <dl className="status-details">
-              <dt>Date</dt>
-              <dd>
-                {dateFormat(data.createdAt)}
-              </dd>
-            </dl>
-          </div>
-          <footer className="panel-footer" />
-        </section>
-
-        {data.scenes.map(
+        {this.state.data.scenes.map(
           function(scene) {
             return this.renderScene(scene);
           }.bind(this)

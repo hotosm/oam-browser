@@ -270,6 +270,7 @@
   font-size: 0.875rem;
   line-height: 1.25rem;
   margin: 0 0 $global-spacing 0 !important;
+  text-align: center;
 }
 
 
@@ -281,7 +282,7 @@
   list-style: none;
   margin: (-$global-spacing) (-$global-spacing) $global-spacing (-$global-spacing);
   box-shadow: 0 1px 0 0 $base-alpha-color;
-  padding: ($global-spacing / 2) 0;
+  padding: ($global-spacing / 4) 0;
   max-width: 16rem;
   font-weight: $base-font-regular;
 
@@ -293,7 +294,7 @@
   .drop__menu-item {
     position: relative;
     display: block;
-    padding: 0.25rem 1rem;
+    padding: 0.1rem 1rem;
     color: inherit;
     transition: all 0.16s ease 0s;
     &:hover,

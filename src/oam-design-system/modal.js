@@ -2,6 +2,8 @@ import PropTypes from "prop-types";
 import React from "react";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
+import CloseIcon from "mdi-react/CloseIcon";
+
 class ModalParent extends React.Component {
   static displayName = "Modal";
 
@@ -10,7 +12,6 @@ class ModalParent extends React.Component {
     revealed: PropTypes.bool,
     className: PropTypes.string,
     onOverlayClick: PropTypes.func,
-    onCloseClick: PropTypes.func,
 
     children: function(props, propName, componentName) {
       let types = ["ModalHeader", "ModalBody", "ModalFooter"];
@@ -72,20 +73,6 @@ class ModalParent extends React.Component {
     }
   };
 
-  // closeModal: function () {
-  //   this.setState({ revealed: false });
-  // },
-
-  // openModal: function () {
-  //   this.setState({ revealed: true });
-  // },
-
-  // getInitialState: function () {
-  //   return {
-  //     revealed: this.props.revealed
-  //   };
-  // },
-
   toggleBodyClass = revealed => {
     let bd = document.getElementsByTagName("body")[0];
     if (revealed) {
@@ -105,19 +92,6 @@ class ModalParent extends React.Component {
 
   componentWillUnount = () => {
     this.toggleBodyClass(false);
-  };
-
-  onOverlayClick = e => {
-    // Prevent children from triggering this.
-    if (e.target === e.currentTarget) {
-      // Overlay click is disabled.
-      // this.props.onOverlayClick.call(this, e);
-    }
-  };
-
-  onCloseClick = e => {
-    e.preventDefault();
-    this.props.onCloseClick.call(this, e);
   };
 
   getChild = name => {
@@ -156,13 +130,6 @@ class ModalParent extends React.Component {
                 {this.getChild("ModalBody")}
                 {this.getChild("ModalFooter")}
               </div>
-              <button
-                className="modal__button-dismiss"
-                title="Close"
-                onClick={this.onCloseClick}
-              >
-                <span>Dismiss</span>
-              </button>
             </section>
           : null}
       </ReactCSSTransitionGroup>
@@ -174,12 +141,25 @@ class ModalHeader extends React.Component {
   static displayName = "ModalHeader";
 
   static propTypes = {
-    children: PropTypes.node
+    children: PropTypes.node,
+    onCloseClick: PropTypes.func
+  };
+
+  onCloseClick = e => {
+    e.preventDefault();
+    this.props.onCloseClick.call(this, e);
   };
 
   render() {
     return (
       <header className="modal__header">
+        <a
+          className="modal__button-dismiss"
+          title="Close"
+          onClick={this.onCloseClick}
+        >
+          <CloseIcon />
+        </a>
         {this.props.children}
       </header>
     );

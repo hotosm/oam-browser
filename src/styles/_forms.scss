@@ -1,0 +1,99 @@
+fieldset {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid $grey2;
+  margin: 0;
+  padding: 0;
+}
+
+.panel-title {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid $grey2;
+}
+
+.form-wrapper {
+  max-width: 560px;
+  padding: 32px;
+  margin: 100px auto 32px;
+  background-color: $grey5;
+  h1 {
+    font-size: 1.5rem;
+    margin-top: 0;
+  }
+}
+
+.form-control, input[type=text] {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  padding: 0.5rem 0.5rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: $base-font-color;
+  background: #fff;
+  border: 1px solid $grey2;
+  border-radius: $global-radius;
+  font-family: inherit;
+  &::placeholder {
+    color: $grey2;
+  }
+}
+
+.form-group {
+  margin-bottom: $global-spacing;
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.form-options-set {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: $grey3;
+  padding: $global-spacing / 2;
+  .radio {
+    margin-right: 16px;
+    input {
+      margin-right: 4px;
+    }
+  }
+}
+
+.form-label {
+  color: $grey;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0 0 ($global-spacing / 2) 0;
+}
+
+.form-help {
+  font-size: .875rem;
+  color: $grey1;
+  margin: 0 0 ($global-spacing / 3) 0;
+}
+
+.form-note {
+  font-size: .875rem;
+  color: $grey1;
+  line-height: 1.4;
+  margin-bottom: $global-spacing;
+  a {
+    color: $teal;
+    text-decoration: none;
+  }
+}
+
+.form-extra-actions {
+  padding: 32px 0;
+  border-bottom: 1px solid $grey2;
+  margin-bottom: 32px;
+}
+
+.form-fieldset-actions {
+  text-align: right;
+  .disabled {
+    display: none;
+  }
+}

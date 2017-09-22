@@ -67,24 +67,8 @@ a:active {
   transform: translate(0, 1px);
 }
 
-
-/* Rows
-   ========================================================================== */
-
-.row {
-  @extend .clearfix;
-  padding-left: $global-spacing;
-  padding-right: $global-spacing;
-  &--centered {
-    max-width: $row-max-width;
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-
-
 /* Buttons
-   ========================================================================== */
+s   ========================================================================== */
 
 /**
  * iOS "clickable elements" fix for role="button":
@@ -120,4 +104,11 @@ input, button {
 table {
   border-collapse: collapse;
   border-spacing: 0;
+}
+
+/* Misc
+   ========================================================================== */
+
+h1, h2 {
+  font-weight: 500;
 }

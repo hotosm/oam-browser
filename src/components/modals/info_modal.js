@@ -44,10 +44,9 @@ var InfoModal = createReactClass({
       <ModalParent
         id="modal-about"
         className="modal--large"
-        onCloseClick={this.closeModal}
         revealed={this.state.revealed}
       >
-        <ModalHeader>
+        <ModalHeader onCloseClick={this.closeModal}>
           <div className="modal__headline">
             <h1 className="modal__title">About</h1>
           </div>

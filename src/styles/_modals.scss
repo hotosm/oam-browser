@@ -9,7 +9,7 @@
 
 .modal {
   text-align: center;
-  background: radial-gradient(ellipse at center, white, rgba(white, 0.88) 100%);
+  background-color: rgba(white, 0.7);
   position: fixed;
   top: 0;
   bottom: 0;
@@ -35,13 +35,14 @@
   */
 
 .modal__inner {
-  @extend .row;
   position: relative;
   display: inline-block;
   vertical-align: middle;
   margin: ($global-spacing * 2) 0;
   text-align: left;
   max-width: 48rem;
+  background-color: white;
+  padding: 0 2rem 2rem 2rem;
 
   > *:last-child {
     margin-bottom: 0;
@@ -233,4 +234,47 @@
 
 .form__response {
   margin-left: 1rem;
+}
+
+#modal-login {
+  .modal__button-dismiss {
+    top: 20px;
+    right: 15px;
+  }
+  .modal__header {
+    border-bottom: 1px solid $grey2;
+    padding: 1rem 2rem 2rem 0;
+    padding-bottom: 7px;
+    margin-bottom: 0rem;
+    &::after {
+      display: none;
+    }
+  }
+  .modal__inner {
+    padding: 0;
+    max-width: 500px;
+    vertical-align: middle;
+    transform: translate(0, -25%);
+  }
+  .modal__body {
+    padding: 2rem;
+    padding-top: 1rem;
+    text-align: center;
+    small {
+      font-size: 0.75rem;
+    }
+    .oauth-logins {
+      a {
+        display: inline-block;
+        margin-top: 1rem;
+        width: 9rem;
+        padding: 8px;
+        border: 1px solid $grey3;
+        border-radius: $global-radius;
+      }
+      > a:first-child {
+        margin-right: 1rem;
+      }
+    }
+  }
 }

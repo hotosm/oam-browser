@@ -38,17 +38,14 @@ $base-semi-alpha-color: rgba($base-color, 0.08);
 $root-font-size: 16px;
 
 $base-font-color: $black;
-$base-font-family: "Yantramanav", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$base-font-family: "Yantramanav", sans-serif;
 $base-font-style: normal;
-$base-font-light: 300;
-$base-font-regular: 400;
-$base-font-bold: 700;
+$base-font-light: 400;
+$base-font-regular: 500;
+$base-font-bold: 600;
 $base-font-weight: $base-font-light;
 $base-font-size: 1rem;
 $base-line-height: 1.5;
-
-$code-font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-
 
 /* Decoration
    ========================================================================== */

@@ -126,9 +126,6 @@
 
 #results-pane {
   margin-top: 65px;
-  .mdi-icon {
-    margin-bottom: -6px;
-  }
 }
 
 .single-media {
@@ -140,8 +137,9 @@
     display: block;
     padding: 10px;
     img {
+      width: 35px;
       float: left;
-      margin-right: 4px;
+      margin-right: 10px;
     }
     .provided_by {
       display: block;

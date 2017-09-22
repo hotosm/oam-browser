@@ -4,6 +4,10 @@ import createReactClass from "create-react-class";
 import Reflux from "reflux";
 import Keys from "react-keybinding";
 
+import FacebookBoxIcon from "mdi-react/FacebookBoxIcon";
+import GoogleIcon from "mdi-react/GoogleIcon";
+
+import logo from "images/oam-logo-h-pos.svg";
 import Modal from "oam-design-system/modal";
 import actions from "actions/actions";
 import userStore from "stores/user_store";
@@ -50,22 +54,26 @@ export default createReactClass({
       <ModalParent
         id="modal-login"
         className="modal--large"
-        onCloseClick={this.closeModal}
         revealed={this.state.revealed}
       >
-        <ModalHeader>
-          <div className="modal__headline">
-            <h1 className="modal__title">Sign In</h1>
-            <p className="modal__subtitle">
-              Login with your Facebook or Google identities. We will never post
-              anything on your behalf.
-            </p>
-          </div>
+        <ModalHeader onCloseClick={this.closeModal}>
+          <img
+            src={logo}
+            alt="OpenAerialMap logo"
+          />
         </ModalHeader>
         <ModalBody>
+          <small className="modal__subtitle">
+            Sign in with your Facebook or Google identities. We will never post
+            anything on your behalf.
+          </small>
           <div className="oauth-logins">
-            <a href={userStore.facebookLoginUri}>Facebook</a> |&nbsp;
-            <a href={userStore.googleLoginUri}>Google</a>
+            <a href={userStore.facebookLoginUri}>
+              <FacebookBoxIcon />
+            </a>
+            <a href={userStore.googleLoginUri}>
+              <GoogleIcon />
+            </a>
           </div>
         </ModalBody>
       </ModalParent>

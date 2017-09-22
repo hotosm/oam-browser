@@ -50,10 +50,9 @@ export default createReactClass({
       <ModalParent
         id="modal-message"
         className="modal--large"
-        onCloseClick={this.closeModal}
         revealed={this.state.revealed}
       >
-        <ModalHeader>
+        <ModalHeader onCloseClick={this.closeModal}>
           <div className="modal__headline">
             <h1 className="modal__title">
               {this.state.title}

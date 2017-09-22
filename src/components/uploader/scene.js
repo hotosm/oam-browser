@@ -5,11 +5,12 @@
 // Continuing to use the term scene for variables and functions
 
 import PropTypes from "prop-types";
-
 import React from "react";
 import DateTimePicker from "react-widgets/lib/DateTimePicker";
 import moment from "moment";
 import momentLocalizer from "react-widgets/lib/localizers/moment";
+
+import DeleteIcon from "mdi-react/DeleteIcon";
 
 import ImageryLocation from "components/uploader/imagery-location";
 import gDrive from "utils/google";
@@ -198,14 +199,14 @@ Please check the instructions on how to use files from Google Drive.
       "bttn-remove-scene" + (this.props.total <= 1 ? " disabled" : "");
     return (
       <div className="form-fieldset-actions">
-        <button
+        <a
           type="button"
           className={classes}
           onClick={this.props.removeScene.bind(null, this.props.index)}
           title="Remove dataset"
         >
-          <span>Remove dataset</span>
-        </button>
+          <DeleteIcon />
+        </a>
       </div>
     );
   };
@@ -213,7 +214,7 @@ Please check the instructions on how to use files from Google Drive.
   renderImagerySource = i => {
     return (
       <div className="form__group">
-        <label className="form__label">Imagery location</label>
+        <label className="form-label">Imagery location</label>
         <div className="form__control-set">
           {this.props.data["img-loc"].map((o, imgI) =>
             <ImageryLocation
@@ -344,9 +345,6 @@ Please check the instructions on how to use files from Google Drive.
 
     return (
       <fieldset className="form-fieldset scene">
-        <legend className="form-legend">
-          Dataset {i > 0 ? i + 1 : ""}
-        </legend>
         {this.props.type === "uploader" ? this.renderRemoveBtn() : null}
         <div className="form-group">
           <label className="form-label" htmlFor={this.getId("title")}>

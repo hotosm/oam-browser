@@ -46,11 +46,15 @@ export default class ResultsList extends React.Component {
   userBlurb() {
     let user = mapStore.getImageryOwner();
     return (
-      <div>
-        <img src={user.profile_pic_uri} alt="Provider's profile" />
-        <h2 className="pane-title" title={"Imagery for user " + user.name}>
-          Imagery for {user.name}
-        </h2>
+      <div className="profile">
+        <div className="profile-pic-wrapper">
+          <img src={user.profile_pic_uri} alt="Provider's profile" />
+        </div>
+        <div className="profile-details">
+          <h2 className="pane-title" title={"Imagery for user " + user.name}>
+            {user.name}
+          </h2>
+        </div>
       </div>
     );
   }

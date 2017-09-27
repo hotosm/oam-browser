@@ -237,3 +237,28 @@
     transform: scale(2);
   }
 }
+
+.profile {
+  display: flex;
+  align-items: center;
+  margin-top: 32px;
+  .pane-title {
+    font-size: 2rem;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    margin-top: 0px;
+  }
+}
+
+.profile-pic-wrapper {
+  width: 80px;
+  height: 80px;
+  border: 1px solid $grey3;
+  margin-right: 12px;
+  overflow: hidden;
+  img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+  }
+}

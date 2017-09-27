@@ -6,6 +6,7 @@ $menu-unit: 40px;
     width: 100%;
     z-index: 10;
     height: 0;
+    position: fixed;
   }
 }
 
@@ -46,8 +47,8 @@ $menu-unit: 40px;
     left: 0;
   }
   .mdi-icon {
-    stroke: black;
-    fill: black;
+    stroke: $grey;
+    fill: $grey;
   }
 }
 
@@ -66,8 +67,8 @@ $menu-unit: 40px;
     left: 0;
   }
   .mdi-icon {
-    stroke: black;
-    fill: black;
+    stroke: $grey;
+    fill: $grey;
     padding: 3px;
   }
 }

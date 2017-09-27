@@ -6,7 +6,6 @@ $menu-unit: 40px;
     width: 100%;
     z-index: 10;
     height: 0;
-    position: fixed;
   }
 }
 
@@ -76,7 +75,7 @@ $menu-unit: 40px;
 .menu-filters {
   position: absolute;
   top: 0;
-  left: 280px;
+  left: 328px;
 }
 
 .menu-signin-upload {

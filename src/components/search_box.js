@@ -67,7 +67,7 @@ export default class SearchBox extends React.Component {
               className: "form__control form__control--medium",
               name: "Geo search",
               id: "global-search__input",
-              placeholder: "Enter search or coords",
+              placeholder: "Search location or coordinates",
               type: "search"
             }}
             ref="autocomplete"

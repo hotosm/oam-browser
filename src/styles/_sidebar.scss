@@ -42,6 +42,10 @@
 }
 
 .oam-blurb {
+  font-size: 1.375rem;
+  line-height: 1.3;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
   img {
     width: 60px;
     float: left;
@@ -49,9 +53,9 @@
     margin-bottom: 1rem;
   }
   h2 {
+    font-size: 1.125rem;
     margin-bottom: 0;
   }
-  overflow: hidden;
 }
 
 .results-list {
@@ -84,10 +88,11 @@
 .card-header {
   padding: 10px;
   border-bottom: 1px solid $grey1;
+  line-height: 1.2;
   .card-title {
     font-size: 0.8125rem;
     color: $grey;
-    margin-top: 1px;
+    margin-top: 0px;
     margin-bottom: 1px;
     white-space: nowrap;
     overflow: hidden;
@@ -95,14 +100,18 @@
   }
   dd {
     margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
 .card-details {
   font-size: .875rem;
   line-height: 1.25;
+  margin: 0;
   a {
-    color: $teal;
+    color: $black;
     text-decoration: underline;
   }
   span {
@@ -228,4 +237,3 @@
     transform: scale(2);
   }
 }
-

@@ -17,7 +17,7 @@ $grey4: #EFF1F2;
 $grey5: #F4F5F6;
 
 $white: #FFFFFF;
-$black: #000;
+$black: $darkBlue;
 $base-color: $grey;
 $primary-color: $teal;
 $secondary-color: $green;
@@ -83,4 +83,3 @@ $global-spacing: 24px;
 
 $box-shadow-default: 0px 0px 6px 0px rgba(0,0,0,.09);
 $box-shadow-hover: 0px 0px 9px 0px rgba(0,0,0,.15);
-

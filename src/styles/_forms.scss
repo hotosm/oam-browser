@@ -23,7 +23,7 @@ fieldset {
   }
 }
 
-.form-control, input[type=text] {
+.formcontrol, .form__control, input[type=text] {
   display: block;
   width: 100%;
   max-width: 100%;
@@ -36,7 +36,7 @@ fieldset {
   border-radius: $global-radius;
   font-family: inherit;
   &::placeholder {
-    color: $grey2;
+    color: $grey;
   }
 }
 
@@ -127,3 +127,29 @@ fieldset {
   color: red;
 }
 
+.global-search {
+  box-shadow: $box-shadow-default;
+  .form__input-group {
+    .form__control {
+      width: 320px;
+      height: 40px;
+      padding: 2px 10px 0;
+      border: none;
+    }
+  }
+  .form__label {
+    border: 0 none;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px
+  }
+  .search-submit {
+    position: absolute;
+    top: 10px;
+    right: 10px
+  }
+}

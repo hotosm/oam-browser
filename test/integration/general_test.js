@@ -1,9 +1,11 @@
 const { spawnSync } = require("child_process");
+
+const retryCount = process.env.CI === "true" ? 3 : 0;
 const dbName = "oam-api-test";
 const everest =
   "https://github.com/openimagerynetwork/oin-meta-generator/blob/master/" +
   "test/fixtures/everest-utm.gtiff?raw=true";
-const everestUriCoords = "#/86.92655592750047,27.98899065877948,12";
+const everestUriCoords = "#/86.92655592750047,27.98899065877948,16";
 
 function dropDatabase() {
   const child = spawnSync("mongo", [dbName, "--eval", "db.dropDatabase()"]);
@@ -25,7 +27,8 @@ function finishLoading() {
 function logIn() {
   browser.url("#/");
   browser.click("a=Sign In");
-  browser.click("a=Facebook");
+  browser.waitForVisible(".facebook_login");
+  browser.click(".facebook_login");
   if (browser.getUrl().match(/facebook.com/)) {
     // Note that if you change the user, you will need to manually
     // step in at the point where you accept authorisation of the app.
@@ -44,7 +47,9 @@ function logIn() {
 // browser.deleteCookie();
 // browser.localStorage('DELETE');
 function logOut() {
-  browser.click("a=Info");
+  browser.keys('Escape');
+  browser.pause(500);
+  browser.click("a.menu_dropdown_button");
   if ($("a=Logout").isExisting()) {
     browser.click("a=Logout");
   }
@@ -55,7 +60,7 @@ function submitImagery(imageryUri, title = "Test imagery") {
   browser.url("#/upload");
   fillInUploadForm(title);
   inputRemoteImageryUri(imageryUri);
-  browser.click("button=Submit");
+  browser.click("a=Submit");
   return waitForImageryProcessing();
 }
 
@@ -82,7 +87,7 @@ function fillInUploadForm(title) {
 }
 
 function inputRemoteImageryUri(imageryUri) {
-  browser.click("button=Url");
+  browser.click("a=Url");
   $("#scene-0-img-loc-0-url").setValue(imageryUri);
   // The URL button is pretty sensitive, sometimes you press
   // it and 2 inputs appear.
@@ -92,7 +97,7 @@ function inputRemoteImageryUri(imageryUri) {
 }
 
 function getImageryResults() {
-  const resultsSelector = ".pane-body-inner .results-list li";
+  const resultsSelector = ".results-list li";
   browser.waitForExist(resultsSelector);
   return $$(resultsSelector);
 }
@@ -105,7 +110,7 @@ beforeEach(() => {
 });
 
 describe("Map", function() {
-  this.retries(3); // this requires function() not ()=>
+  this.retries(retryCount); // this requires function() not ()=>
 
   describe("Basic", function() {
     it("should find imagery over the Himalayas", () => {
@@ -124,19 +129,19 @@ describe("Map", function() {
 });
 
 describe("User authentication", function() {
-  this.retries(3); // this requires function() not ()=>
+  this.retries(retryCount); // this requires function() not ()=>
 
   describe("Logging in and out", function() {
     it("should log a user in with Facebook", () => {
       logIn();
-      expect("img.profile_pic").to.be.there();
+      expect(".menu-profile_pic img").to.be.there();
     });
 
     it("should log a user out", () => {
       logIn();
-      expect("img.profile_pic").to.be.there();
+      expect(".menu-profile_pic img").to.be.there();
       logOut();
-      expect("img.profile_pic").to.not.be.there();
+      expect(".menu-profile_pic img").to.not.be.there();
     });
   });
 
@@ -159,7 +164,7 @@ describe("User authentication", function() {
 });
 
 describe("Imagery", function() {
-  this.retries(1); // this requires function() not ()=>
+  this.retries(retryCount); // this requires function() not ()=>
 
   describe("Basic imagery submission", function() {
     it("should submit imagery", () => {
@@ -167,8 +172,8 @@ describe("Imagery", function() {
       submitImagery(everest, title);
       browser.click("a=View image");
       getImageryResults();
-      browser.click(".pane-body-inner .results-list li:first-child");
-      expect("h1=" + title).to.be.there();
+      browser.click(".results-list li:first-child");
+      expect("h2=" + title).to.be.there();
       const src = $(".single-media img").getAttribute("src");
       expect(src).to.match(/_thumb/);
       // TODO: In order to test the actual TMS we need to fire up the dynamic tiler locally
@@ -182,9 +187,9 @@ describe("Imagery", function() {
       logIn();
       browser.url("#/upload");
       fillInUploadForm(title);
-      browser.click("button=Local File");
+      browser.click("a=Local File");
       browser.chooseFile("#scene-0-img-loc-0-url", localPath);
-      browser.click("button=Submit");
+      browser.click("a=Submit");
       waitForImageryProcessing();
       expect("a=View image").to.be.there();
     });
@@ -200,11 +205,11 @@ describe("Imagery", function() {
       // have to wait.
       browser.pause(5000);
       getImageryResults();
-      browser.click(".pane-body-inner .results-list li:first-child");
+      browser.click(".results-list li:first-child");
       browser.click("a=Open Graph Test User");
       finishLoading();
       expect("h2*=Open Graph Test User").to.be.there();
-      expect("dd=" + title).to.be.there();
+      expect("h2=" + title).to.be.there();
       expect("a=Delete").to.not.be.there();
     });
   });
@@ -242,7 +247,7 @@ describe("Imagery", function() {
       browser.click("a=Edit");
       finishLoading();
       $("#scene-0-title").setValue("A different title");
-      browser.click("button=Submit");
+      browser.click("a=Submit");
       finishLoading();
       browser.url("#/account");
       finishLoading();

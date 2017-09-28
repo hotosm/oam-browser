@@ -113,6 +113,7 @@ export default createReactClass({
             <MenuIcon />
             <Dropdown
               triggerElement="a"
+              triggerClassName="menu_dropdown_button"
               triggerText=""
               direction="down"
               alignment="right"

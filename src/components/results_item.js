@@ -46,6 +46,12 @@ export default createReactClass({
       if (this.props.pagination.nextId) {
         this.nextResult(null);
       }
+    },
+    esc: function() {
+      if (this.props.results.length === 0) {
+        return;
+      }
+      this.closeResults();
     }
   },
 

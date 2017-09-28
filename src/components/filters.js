@@ -5,7 +5,7 @@ import createReactClass from "create-react-class";
 import Reflux from "reflux";
 import Dropdown from "oam-design-system/dropdown";
 
-import TuneIcon from 'mdi-react/TuneIcon';
+import TuneIcon from "mdi-react/TuneIcon";
 
 import actions from "actions/actions";
 import searchQueryStore from "stores/search_query_store";

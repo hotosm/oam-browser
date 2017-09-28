@@ -59,10 +59,7 @@ export default createReactClass({
       <header className="main-header" role="banner">
         <div className="main-header-wrapper">
           <a className="main-logo" href="#/" title="Home">
-            <img
-              src={logo}
-              alt="OpenAerialMap logo"
-            />
+            <img src={logo} alt="OpenAerialMap logo" />
           </a>
           {this.isMap()
             ? <nav className="page__prime-nav">

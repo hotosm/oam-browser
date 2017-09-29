@@ -406,10 +406,6 @@ export default createReactClass({
           <div className="pane-body-inner">
             <div className="single-media">
               <span className="user-details">
-                {typeof this.props.user.profile_pic_uri !== "undefined"
-                  ? <img src={this.props.user.profile_pic_uri} alt="Provider" />
-                  : null}
-                <small className="provided_by">Provided by</small>
                 {typeof this.props.user.name !== "undefined"
                   ? <a
                       onClick={e =>

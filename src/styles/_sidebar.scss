@@ -148,12 +148,14 @@
       padding: 10px;
       border-bottom: 1px solid $grey1;
       color: $black;
+      font-size: 1.125rem;
       font-weight: 500;
     }
     .profile-pic-wrapper {
       width: 40px;
       height: 40px;
       border: 1px solid $grey1;
+      margin-right: 10px;
       img {
         width: 40px;
         height: 40px;
@@ -162,9 +164,12 @@
     .provided_by {
       display: block;
       text-transform: uppercase;
-      color: grey;
+      color: $grey;
       font-weight: 400;
       font-size: .75rem;
+      line-height: .7;
+      padding-top: 7px;
+      opacity: .75;
     }
   }
   .result-thumbnail {
@@ -216,7 +221,7 @@
     }
   }
   .mdi-icon {
-    stroke: transparent;
+    stroke: none;
     fill: $grey;
     margin-right: 4px;
   }
@@ -257,7 +262,7 @@
   margin-bottom: 2rem;
   .mdi-icon {
     transform: scale(2);
-    stroke: $grey;
+    stroke: none;
     fill: $grey;
   }
 }

@@ -34,10 +34,10 @@ $menu-unit: 40px;
 
 .menu-dropdown,
 .menu-filters {
-  border: 1px solid $grey1;
   background-color: white;
   height: $menu-unit;
-  padding: 6px;
+  padding: 8px;
+  border-radius: $global-radius;
   a {
     width: $menu-unit;
     height: $menu-unit;
@@ -47,7 +47,7 @@ $menu-unit: 40px;
     left: 0;
   }
   .mdi-icon {
-    stroke: $grey;
+    stroke: none;
     fill: $grey;
   }
 }
@@ -67,7 +67,7 @@ $menu-unit: 40px;
     left: 0;
   }
   .mdi-icon {
-    stroke: $grey;
+    stroke: none;
     fill: $grey;
     padding: 3px;
   }

@@ -95,7 +95,6 @@ export default createReactClass({
                   title="Sign In"
                 >
                   <span>Sign In</span>
-                  <LoginIcon />
                 </a>}
           </li>
 

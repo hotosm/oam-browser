@@ -64,6 +64,7 @@ export default createReactClass({
               alt="OpenAerialMap logo"
             />
           </a>
+
           {this.isMap()
             ? <nav className="page__prime-nav">
                 <div className="nav-block-prime">

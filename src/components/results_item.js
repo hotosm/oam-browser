@@ -11,7 +11,7 @@ import CloseIcon from "mdi-react/CloseIcon";
 import ImageFilterCenterFocusIcon from "mdi-react/ImageFilterCenterFocusIcon";
 import DotsVerticalIcon from "mdi-react/DotsVerticalIcon";
 import DownloadIcon from "mdi-react/DownloadIcon";
-import CubeUnfoldedIcon from "mdi-react/CubeUnfoldedIcon";
+import ImageFilterIcon from "mdi-react/ImageFilterIcon";
 import ContentCopyIcon from "mdi-react/ContentCopyIcon";
 import OpenInNewIcon from "mdi-react/OpenInNewIcon";
 import ChevronLeftIcon from "mdi-react/ChevronLeftIcon";
@@ -342,7 +342,7 @@ export default createReactClass({
     let sp = this.state.selectedPreview;
     return (
       <div className="preview-options">
-        <CubeUnfoldedIcon /> Display as
+        <ImageFilterIcon /> Display as
         <div className="actions">
           <button
             className={
@@ -396,20 +396,22 @@ export default createReactClass({
           <div className="pane-body-inner">
             <div className="single-media">
               <span className="user-details">
-                {typeof this.props.user.profile_pic_uri !== "undefined"
-                  ? <img src={this.props.user.profile_pic_uri} alt="Provider" />
-                  : null}
-                <small className="provided_by">
-                  Provided by
-                </small>
                 {typeof this.props.user.name !== "undefined"
                   ? <a
                       onClick={e =>
                         this.gotoUsersImages(e, this.props.user._id)}
                     >
-                      {this.props.user.name}
+                      {typeof this.props.user.profile_pic_uri !== "undefined"
+                        ? <div className="profile-pic-wrapper"><img src={this.props.user.profile_pic_uri} alt="Provider" /></div>
+                        : null}
+                      <div>
+                        <small className="provided_by">
+                          Provided by
+                        </small>
+                        {this.props.user.name}
+                      </div>
                     </a>
-                  : d.provider}
+                  : <span>{d.provider}</span>}
               </span>
               <div className="result-thumbnail">
                 <img

@@ -24,7 +24,7 @@ class MapLayers extends React.Component {
 
   render() {
     return (
-      <span className="bttn bttn-secondary map-menu-layers">
+      <span className="bttn-secondary map-menu-layers">
         <LayersIcon />
         <Dropdown
           triggerElement="a"

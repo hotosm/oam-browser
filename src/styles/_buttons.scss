@@ -33,13 +33,6 @@
   span {
     float: left;
   }
-  .mdi-icon {
-    stroke: $white;
-    fill: $white;
-    padding: 3px;
-    margin-left: 1rem;
-    float: right;
-  }
 }
 
 .mdi-icon {
@@ -76,4 +69,11 @@
   @extend .clearfix;
   padding-right: 0;
   padding-left: .25rem;
+  .mdi-icon {
+    stroke: $white;
+    fill: $white;
+    padding: 3px;
+    margin-left: 1rem;
+    float: right;
+  }
 }

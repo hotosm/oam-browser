@@ -101,10 +101,12 @@ export default createReactClass({
           <li className="menu-profile_pic">
             {this.state.isUserLoggedIn
               ? <a href="#/account">
-                  <img
-                    src={this.state.user.profile_pic_uri}
-                    alt="Profile"
-                  />
+                <div className="profile-pic-wrapper">
+                    <img
+                      src={this.state.user.profile_pic_uri}
+                      alt="Profile"
+                    />
+                  </div>
                 </a>
               : null}
           </li>

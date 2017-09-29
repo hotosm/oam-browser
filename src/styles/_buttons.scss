@@ -34,8 +34,11 @@
     float: left;
   }
   .mdi-icon {
-    stroke: white;
-    fill: white;
+    stroke: $white;
+    fill: $white;
+    padding: 3px;
+    margin-left: 1rem;
+    float: right;
   }
 }
 
@@ -71,8 +74,6 @@
 
 .bttn-icon {
   @extend .clearfix;
-  .mdi-icon {
-    float: right;
-    margin-left: 3px;
-  }
+  padding-right: 0;
+  padding-left: .25rem;
 }

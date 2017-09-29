@@ -85,10 +85,18 @@ $menu-unit: 40px;
 }
 
 .menu-profile_pic {
+  .profile-pic-wrapper {
+    width: $menu-unit;
+    height: $menu-unit;
+    background-color: $white;
+    box-shadow: $box-shadow-default;
+    border-radius: $global-radius;
+    overflow: hidden;
+  }
   img {
     width: $menu-unit;
     height: $menu-unit;
-    border-radius: $global-radius;
+    object-fit: cover;
   }
 }
 

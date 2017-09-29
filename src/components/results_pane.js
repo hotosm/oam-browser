@@ -20,17 +20,6 @@ export default createReactClass({
     selectedSquareQuadkey: PropTypes.string
   },
 
-  mixins: [Keys],
-
-  keybindings: {
-    esc: function() {
-      if (this.props.results.length === 0) {
-        return;
-      }
-      this.closeResults();
-    }
-  },
-
   setupCurrentImage: function() {
     if (this.props.selectedItemId) {
       this.currentIndex = _.findIndex(this.props.results, {

@@ -2,8 +2,8 @@ import _ from "lodash";
 import React from "react";
 import Autocomplete from "react-autocomplete";
 
-import CrosshairsGpsIcon from 'mdi-react/CrosshairsGpsIcon';
-import MagnifyIcon from 'mdi-react/MagnifyIcon';
+import CrosshairsGpsIcon from "mdi-react/CrosshairsGpsIcon";
+import MagnifyIcon from "mdi-react/MagnifyIcon";
 
 import actions from "actions/actions";
 import utils from "utils/utils";

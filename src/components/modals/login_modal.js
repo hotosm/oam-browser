@@ -68,10 +68,10 @@ export default createReactClass({
             anything on your behalf.
           </small>
           <div className="oauth-logins">
-            <a href={userStore.facebookLoginUri}>
+            <a href={userStore.facebookLoginUri} className="facebook_login">
               <FacebookBoxIcon />
             </a>
-            <a href={userStore.googleLoginUri}>
+            <a href={userStore.googleLoginUri} className="google_login">
               <GoogleIcon />
             </a>
           </div>

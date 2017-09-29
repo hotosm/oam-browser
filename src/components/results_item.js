@@ -46,6 +46,12 @@ export default createReactClass({
       if (this.props.pagination.nextId) {
         this.nextResult(null);
       }
+    },
+    esc: function() {
+      if (this.props.results.length === 0) {
+        return;
+      }
+      this.closeResults();
     }
   },
 
@@ -106,9 +112,10 @@ export default createReactClass({
   onOpenJosm: function(tmsUrl) {
     var d = this.props.data;
     var source = "OpenAerialMap - " + d.provider + " - " + d.uuid;
-    var urlPrefix = document.location.protocol === "https:"
-      ? "https://127.0.0.1:8112"
-      : "http://127.0.0.1:8111";
+    var urlPrefix =
+      document.location.protocol === "https:"
+        ? "https://127.0.0.1:8112"
+        : "http://127.0.0.1:8111";
     // Reference:
     // http://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl#load_and_zoom
     fetch(
@@ -188,15 +195,15 @@ export default createReactClass({
                 title="Copy TMS url"
                 text="TMS"
               />
-              : null}
-          {" "}|{" "}
+            : null}{" "}
+          |{" "}
           {this.props.data.properties.wmts
             ? <ZcButton
                 onCopy={() => this.props.data.properties.wmts}
                 title="Copy WMTS url"
                 text="WMTS"
               />
-              : null}
+            : null}
         </div>
       </span>
     );
@@ -221,8 +228,8 @@ export default createReactClass({
         <div className="actions">
           <a href={idUrl} target="_blank" title="Open with iD editor">
             iD editor
-          </a>
-          {" "}|{" "}
+          </a>{" "}
+          |{" "}
           <a
             onClick={() => this.onOpenJosm(this.props.data.properties.tms)}
             title="Open with JOSM"
@@ -249,7 +256,9 @@ export default createReactClass({
           <li>
             <a
               className="drop__menu-item"
-              href={`https://twitter.com/share?url=${encodeURIComponent(window.location.href)}`}
+              href={`https://twitter.com/share?url=${encodeURIComponent(
+                window.location.href
+              )}`}
               target="_blank"
               title="Share on twitter"
               data-hook="dropdown:close"
@@ -261,7 +270,9 @@ export default createReactClass({
           <li>
             <a
               className="drop__menu-item"
-              href={`http://facebook.com/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+              href={`http://facebook.com/sharer.php?u=${encodeURIComponent(
+                window.location.href
+              )}`}
               target="_blank"
               title="Share on Facebook"
               data-hook="dropdown:close"
@@ -347,7 +358,7 @@ export default createReactClass({
           <button
             className={
               "preview-thumbnail " +
-                (sp === "thumbnail" ? "button--active" : "")
+              (sp === "thumbnail" ? "button--active" : "")
             }
             type="button"
             onClick={this.onPreviewSelect.bind(null, {
@@ -359,8 +370,7 @@ export default createReactClass({
           {this.props.data.properties.tms
             ? <button
                 className={
-                  "preview-tms " +
-                    (sp === "tms" ? "button--active" : "")
+                  "preview-tms " + (sp === "tms" ? "button--active" : "")
                 }
                 type="button"
                 onClick={this.onPreviewSelect.bind(null, {
@@ -396,6 +406,10 @@ export default createReactClass({
           <div className="pane-body-inner">
             <div className="single-media">
               <span className="user-details">
+                {typeof this.props.user.profile_pic_uri !== "undefined"
+                  ? <img src={this.props.user.profile_pic_uri} alt="Provider" />
+                  : null}
+                <small className="provided_by">Provided by</small>
                 {typeof this.props.user.name !== "undefined"
                   ? <a
                       onClick={e =>
@@ -418,7 +432,7 @@ export default createReactClass({
                   alt="Result thumbnail"
                   src={
                     d.properties.thumbnail ||
-                      "assets/graphics/layout/img-placeholder.svg"
+                    "assets/graphics/layout/img-placeholder.svg"
                   }
                 />
               </div>

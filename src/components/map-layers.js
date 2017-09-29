@@ -2,7 +2,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-import LayersIcon from 'mdi-react/LayersIcon';
+import LayersIcon from "mdi-react/LayersIcon";
 
 import Dropdown from "oam-design-system/dropdown";
 import baseLayers from "utils/map-layers";

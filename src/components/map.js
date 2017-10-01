@@ -106,7 +106,7 @@ export default createReactClass({
 
     // Custom zoom control.
     var zoomCtrl = new DSZoom({
-      position: "bottomleft",
+      position: "bottomright",
       containerClasses: "zoom-controls",
       zoomInClasses: "button-zoom button-zoom--in",
       zoomOutClasses: "button-zoom button-zoom--out"

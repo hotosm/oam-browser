@@ -29,9 +29,8 @@ class MapLayers extends React.Component {
         <Dropdown
           triggerElement="a"
           triggerText=""
-          direction="left"
           className="drop__content--maplayers"
-          alignment="middle"
+          alignment="top"
         >
           <ul className="drop__menu drop__menu--select map-layers-list">
             {baseLayers.map(o =>

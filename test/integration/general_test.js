@@ -7,6 +7,8 @@ const everest =
   "test/fixtures/everest-utm.gtiff?raw=true";
 const everestUriCoords = "#/86.92655592750047,27.98899065877948,16";
 
+console.log(`Failing tests will be retried ${retryCount} times`);
+
 function dropDatabase() {
   const child = spawnSync("mongo", [dbName, "--eval", "db.dropDatabase()"]);
   if (child.stderr.toString() !== "") {
@@ -176,7 +178,7 @@ describe("Imagery", function() {
       getImageryResults();
       browser.click(".results-list li:first-child");
       expect("h2=" + title).to.be.there();
-      const src = $(".single-media img").getAttribute("src");
+      const src = $(".result-thumbnail img").getAttribute("src");
       expect(src).to.match(/_thumb/);
       // TODO: In order to test the actual TMS we need to fire up the dynamic tiler locally
       // and use visual regression. Looks like there's already a nice wdio extension for

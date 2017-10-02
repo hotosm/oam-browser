@@ -34,10 +34,10 @@ $menu-unit: 40px;
 
 .menu-dropdown,
 .menu-filters {
-  border: 1px solid $grey1;
   background-color: white;
   height: $menu-unit;
-  padding: 6px;
+  padding: 8px;
+  border-radius: $global-radius;
   a {
     width: $menu-unit;
     height: $menu-unit;
@@ -47,29 +47,30 @@ $menu-unit: 40px;
     left: 0;
   }
   .mdi-icon {
-    stroke: $grey;
+    stroke: none;
     fill: $grey;
   }
 }
 
 .map-control-location,
 .map-control-layers {
-  border: 1px solid $grey1;
-  background-color: white;
-  height: 30px;
-  padding: 2px;
+  background-color: $grey2;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
   a {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     display: block;
     position: absolute;
     top: 0;
     left: 0;
   }
   .mdi-icon {
-    stroke: $grey;
+    stroke: none;
     fill: $grey;
-    padding: 3px;
+    padding: 2px;
+    margin: 0 auto;
   }
 }
 
@@ -85,21 +86,31 @@ $menu-unit: 40px;
 }
 
 .menu-profile_pic {
+  .profile-pic-wrapper {
+    width: $menu-unit;
+    height: $menu-unit;
+    background-color: $white;
+    box-shadow: $box-shadow-default;
+    border-radius: $global-radius;
+    overflow: hidden;
+  }
   img {
     width: $menu-unit;
     height: $menu-unit;
-    border-radius: $global-radius;
+    object-fit: cover;
   }
 }
 
 .map-control-location {
   position: absolute;
-  top: 36vh;
+  top: 0;
+  left: 376px;
 }
 
 .map-control-layers {
   position: absolute;
-  top: 40vh;
+  top: 0;
+  left: 424px;
 }
 
 .leaflet-bottom.leaflet-left {
@@ -163,18 +174,42 @@ $menu-unit: 40px;
   }
 }
 
+.leaflet-bottom .leaflet-control.zoom-controls {
+  margin-bottom: 128px;
+}
+
+.leaflet-bottom .leaflet-control.zoom-controls {
+  margin-right: 16px;
+}
+
 .zoom-controls {
   font-size: 25px;
-  width: 30px;
+  width: 40px;
   button {
-    margin-left: 5px;
-    width: 30px;
-    height: 30px;
-    border: 1px solid $grey1;
+    width: 40px;
+    height: 40px;
+    border: none;
     border-radius: $global-radius;
     background-color: white;
+    box-shadow: $box-shadow-default;
+    cursor: pointer;
+    &:hover, &:active, &:focus {
+      box-shadow: $box-shadow-hover;
+      background-color: $grey5;
+      color: $teal;
+    }
+    &.disabled {
+      opacity: 1;
+      background-color: $white;
+      color: $grey2;
+    }
+    span {
+      position: relative;
+      top: -2px;
+    }
   }
   .button-zoom--in {
+    border-bottom: 1px solid $grey4;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }

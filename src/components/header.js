@@ -61,6 +61,7 @@ export default createReactClass({
           <a className="main-logo" href="#/" title="Home">
             <img src={logo} alt="OpenAerialMap logo" />
           </a>
+
           {this.isMap()
             ? <nav className="page__prime-nav">
                 <div className="nav-block-prime">

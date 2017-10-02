@@ -5,7 +5,7 @@ import createReactClass from "create-react-class";
 import Reflux from "reflux";
 import Dropdown from "oam-design-system/dropdown";
 
-import TuneIcon from "mdi-react/TuneIcon";
+import FilterIcon from "mdi-react/FilterVariantIcon";
 
 import actions from "actions/actions";
 import searchQueryStore from "stores/search_query_store";
@@ -111,7 +111,7 @@ export default createReactClass({
 
     return (
       <span>
-        <TuneIcon />
+        <FilterIcon />
         <Dropdown
           triggerElement="a"
           triggerText=""

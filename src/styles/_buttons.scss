@@ -5,6 +5,8 @@
   font-style: normal;
   text-align: center;
   white-space: nowrap;
+  padding-left: .5rem;
+  padding-right: .5rem;
   border-radius: $global-radius;
   border: 0;
   background-image: none;
@@ -30,10 +32,6 @@
   }
   span {
     float: left;
-  }
-  .mdi-icon {
-    stroke: white;
-    fill: white;
   }
 }
 
@@ -69,8 +67,13 @@
 
 .bttn-icon {
   @extend .clearfix;
+  padding-right: 0;
+  padding-left: .25rem;
   .mdi-icon {
+    stroke: $white;
+    fill: $white;
+    padding: 3px;
+    margin-left: 1rem;
     float: right;
-    margin-left: 3px;
   }
 }

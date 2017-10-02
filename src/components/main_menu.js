@@ -80,7 +80,7 @@ export default createReactClass({
 
     return (
       <ul className="main-menu">
-        <li className="bttn bttn-icon menu-signin-upload">
+        <li className="bttn menu-signin-upload">
           {this.state.isUserLoggedIn
             ? <a
                 href="#/upload"
@@ -92,14 +92,15 @@ export default createReactClass({
               </a>
             : <a onClick={this.onLoginClick} title="Sign In">
                 <span>Sign In</span>
-                <LoginIcon />
               </a>}
         </li>
 
         <li className="menu-profile_pic">
           {this.state.isUserLoggedIn
             ? <a href="#/account">
-                <img src={this.state.user.profile_pic_uri} alt="Profile" />
+                <div className="profile-pic-wrapper">
+                  <img src={this.state.user.profile_pic_uri} alt="Profile" />
+                </div>
               </a>
             : null}
         </li>

@@ -24,14 +24,13 @@ class MapLayers extends React.Component {
 
   render() {
     return (
-      <span className="bttn bttn-secondary map-menu-layers">
+      <span className="bttn-secondary map-menu-layers">
         <LayersIcon />
         <Dropdown
           triggerElement="a"
           triggerText=""
-          direction="left"
           className="drop__content--maplayers"
-          alignment="middle"
+          alignment="top"
         >
           <ul className="drop__menu drop__menu--select map-layers-list">
             {baseLayers.map(o =>

@@ -57,10 +57,7 @@ export default createReactClass({
         revealed={this.state.revealed}
       >
         <ModalHeader onCloseClick={this.closeModal}>
-          <img
-            src={logo}
-            alt="OpenAerialMap logo"
-          />
+          <img src={logo} alt="OpenAerialMap logo" />
         </ModalHeader>
         <ModalBody>
           <small className="modal__subtitle">

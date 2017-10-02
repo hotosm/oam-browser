@@ -130,10 +130,8 @@ export default class extends React.Component {
     return (
       <div className="imagery-location-fieldset">
         {this.renderRemoveBtn()}
-        <div className="imagery-location">
-          {this.renderInput()}
-        </div>
+        <div className="imagery-location">{this.renderInput()}</div>
       </div>
     );
   }
-};
+}

@@ -74,11 +74,7 @@ export default class ResultsList extends React.Component {
     } else {
       blurb = this.homeBlurb();
     }
-    return (
-      <div className="oam-blurb">
-        {blurb}
-      </div>
-    );
+    return <div className="oam-blurb">{blurb}</div>;
   }
 
   render() {
@@ -98,13 +94,9 @@ export default class ResultsList extends React.Component {
 
     return (
       <section className="results-hub">
-        <header id="sidebar-header">
-          {this.paneBlurb()}
-        </header>
+        <header id="sidebar-header">{this.paneBlurb()}</header>
         <div id="sidebar-body">
-          <ol className="results-list">
-            {results}
-          </ol>
+          <ol className="results-list">{results}</ol>
         </div>
         <footer className="pane-footer" />
       </section>

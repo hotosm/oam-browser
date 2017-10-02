@@ -79,7 +79,7 @@ export default class SearchBox extends React.Component {
             onSelect={this.gotoSelection}
             onSubmit={this.getGeocoderResults}
             wrapperStyle={{}}
-            renderItem={(item, isHighlighted) =>
+            renderItem={(item, isHighlighted) => (
               <div
                 key={item.abbr}
                 className={
@@ -88,18 +88,19 @@ export default class SearchBox extends React.Component {
                 }
               >
                 {item.text}
-              </div>}
+              </div>
+            )}
           />
           <MagnifyIcon className="search-submit" />
-          {navigator.geolocation
-            ? <a
-                title="Take me to my location"
-                className="bttn map-control-location"
-                onClick={this.onMyLocationClick}
-              >
-                <CrosshairsGpsIcon />
-              </a>
-            : null}
+          {navigator.geolocation ? (
+            <a
+              title="Take me to my location"
+              className="bttn map-control-location"
+              onClick={this.onMyLocationClick}
+            >
+              <CrosshairsGpsIcon />
+            </a>
+          ) : null}
         </div>
       </form>
     );

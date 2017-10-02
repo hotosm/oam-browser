@@ -73,57 +73,49 @@ export default createReactClass({
       <div className="your-images">
         <h2>Your Images</h2>
         <ul className="account__images">
-          {this.state.user.images.length > 0
-            ? this.state.user.images.map((image, i) =>
-                <li className="account__images-upload">
-                  <div className="images-thumbnail">
-                    <a onClick={() => utils.imageUri(image)}>
-                      <img
-                        src={image.properties.thumbnail}
-                        width="100"
-                        key={i}
-                        alt="Imagery thumbnail"
-                      />
-                    </a>
-                  </div>
-                  <div className="images-body">
-                    <ul>
-                      <strong>
-                        {image.title}
-                      </strong>
-                      <li>
-                        Uploaded: {image.uploaded_at}
-                      </li>
-                      <li>
-                        Sensor: {image.properties.sensor}
-                      </li>
-                      <li>
-                        Resolution: {image.gsd}m
-                      </li>
-                      <li>
-                        File size: {image.file_size / 1000}k
-                      </li>
-                      <li>
-                        {this.requestedUser === "current"
-                          ? <span>
-                              <a href={"/#/imagery/" + image._id + "/edit"}>
-                                Edit
-                              </a>{" "}
-                              |&nbsp;
-                              <a
-                                onClick={() => this.deleteImagery(image._id)}
-                                className="imagery-delete"
-                              >
-                                Delete
-                              </a>
-                            </span>
-                          : null}
-                      </li>
-                    </ul>
-                  </div>
-                </li>
-              )
-            : <em>No uploaded images yet.</em>}
+          {this.state.user.images.length > 0 ? (
+            this.state.user.images.map((image, i) => (
+              <li className="account__images-upload">
+                <div className="images-thumbnail">
+                  <a onClick={() => utils.imageUri(image)}>
+                    <img
+                      src={image.properties.thumbnail}
+                      width="100"
+                      key={i}
+                      alt="Imagery thumbnail"
+                    />
+                  </a>
+                </div>
+                <div className="images-body">
+                  <ul>
+                    <strong>{image.title}</strong>
+                    <li>Uploaded: {image.uploaded_at}</li>
+                    <li>Sensor: {image.properties.sensor}</li>
+                    <li>Resolution: {image.gsd}m</li>
+                    <li>File size: {image.file_size / 1000}k</li>
+                    <li>
+                      {this.requestedUser === "current" ? (
+                        <span>
+                          <a href={"/#/imagery/" + image._id + "/edit"}>
+                            Edit
+                          </a>{" "}
+                          |&nbsp;
+                          <a
+                            onClick={() => this.deleteImagery(image._id)}
+                            className="imagery-delete"
+                          >
+                            Delete
+                          </a>
+                        </span>
+                      ) : null}
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            ))
+          ) : (
+            <em>No uploaded images yet.</em>
+          )}
         </ul>
       </div>
     );
@@ -139,21 +131,13 @@ export default createReactClass({
             <img src={user.profile_pic_uri} width="75" alt="Your profile" />
             <ul>
               <li>
-                <strong>
-                  {user.name}
-                </strong>
+                <strong>{user.name}</strong>
               </li>
+              <li>{user.contact_email}</li>
               <li>
-                {user.contact_email}
+                <a href={user.website}>{user.website}</a>
               </li>
-              <li>
-                <a href={user.website}>
-                  {user.website}
-                </a>
-              </li>
-              <li>
-                {user.bio}
-              </li>
+              <li>{user.bio}</li>
             </ul>
           </div>
           <div style={{ clear: "both" }} />

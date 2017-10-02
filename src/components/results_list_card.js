@@ -45,23 +45,21 @@ export default class ResultsListCard extends React.Component {
       <li>
         <article className="card card-result-entry">
           <header className="card-header">
-            <h2 className="card-title">
-              {d.title}
-            </h2>
+            <h2 className="card-title">{d.title}</h2>
             <dl className="card-details">
               <dd className="card-date">
                 {d.acquisition_start ? d.acquisition_start.slice(0, 10) : "N/A"}
               </dd>
               <span> / </span>
-              <dd className="card-resolution">
-                {utils.gsdToUnit(d.gsd)}
-              </dd>
+              <dd className="card-resolution">{utils.gsdToUnit(d.gsd)}</dd>
               <dd className="card-author">
-                {typeof d.user !== "undefined"
-                  ? <a onClick={e => this.gotoUsersImages(e, d.user._id)}>
-                      {d.user.name}
-                    </a>
-                  : d.provider}
+                {typeof d.user !== "undefined" ? (
+                  <a onClick={e => this.gotoUsersImages(e, d.user._id)}>
+                    {d.user.name}
+                  </a>
+                ) : (
+                  d.provider
+                )}
               </dd>
             </dl>
           </header>

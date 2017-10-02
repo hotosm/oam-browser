@@ -44,9 +44,7 @@ export default class extends React.Component {
         className={this.props.className}
         onClick={this.onCopyClick}
       >
-        <span>
-          {this.props.text}
-        </span>
+        <span>{this.props.text}</span>
       </a>
     );
   }

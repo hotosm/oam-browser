@@ -3,7 +3,6 @@ import createReactClass from "create-react-class";
 import Reflux from "reflux";
 
 import MenuIcon from "mdi-react/MenuIcon";
-import LoginIcon from "mdi-react/LoginIcon";
 import UploadIcon from "mdi-react/UploadIcon";
 
 import config from "config";
@@ -81,28 +80,30 @@ export default createReactClass({
     return (
       <ul className="main-menu">
         <li className="bttn menu-signin-upload">
-          {this.state.isUserLoggedIn
-            ? <a
-                href="#/upload"
-                className="button-upload"
-                title="Go to OAM Uploader"
-              >
-                <span>Upload</span>
-                <UploadIcon />
-              </a>
-            : <a onClick={this.onLoginClick} title="Sign In">
-                <span>Sign In</span>
-              </a>}
+          {this.state.isUserLoggedIn ? (
+            <a
+              href="#/upload"
+              className="button-upload"
+              title="Go to OAM Uploader"
+            >
+              <span>Upload</span>
+              <UploadIcon />
+            </a>
+          ) : (
+            <a onClick={this.onLoginClick} title="Sign In">
+              <span>Sign In</span>
+            </a>
+          )}
         </li>
 
         <li className="menu-profile_pic">
-          {this.state.isUserLoggedIn
-            ? <a href="#/account">
-                <div className="profile-pic-wrapper">
-                  <img src={this.state.user.profile_pic_uri} alt="Profile" />
-                </div>
-              </a>
-            : null}
+          {this.state.isUserLoggedIn ? (
+            <a href="#/account">
+              <div className="profile-pic-wrapper">
+                <img src={this.state.user.profile_pic_uri} alt="Profile" />
+              </div>
+            </a>
+          ) : null}
         </li>
         <li className="bttn menu-dropdown">
           <MenuIcon />
@@ -113,29 +114,29 @@ export default createReactClass({
             direction="down"
             alignment="right"
           >
-            {this.state.isUserLoggedIn
-              ? <ul className="drop__menu info-menu" role="menu">
-                  <li>
-                    <a
-                      href="#/account"
-                      className="drop__menu-item"
-                      data-hook="dropdown:close"
-                    >
-                      <span>My Account</span>{" "}
-                      <small>{this.state.user.name}</small>
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      className="drop__menu-item"
-                      onClick={actions.userLogOut}
-                      data-hook="dropdown:close"
-                    >
-                      <span>Logout</span>
-                    </a>
-                  </li>
-                </ul>
-              : null}
+            {this.state.isUserLoggedIn ? (
+              <ul className="drop__menu info-menu" role="menu">
+                <li>
+                  <a
+                    href="#/account"
+                    className="drop__menu-item"
+                    data-hook="dropdown:close"
+                  >
+                    <span>My Account</span>{" "}
+                    <small>{this.state.user.name}</small>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="drop__menu-item"
+                    onClick={actions.userLogOut}
+                    data-hook="dropdown:close"
+                  >
+                    <span>Logout</span>
+                  </a>
+                </li>
+              </ul>
+            ) : null}
             <ul className="drop__menu info-menu" role="menu">
               <li>
                 <a

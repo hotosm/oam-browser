@@ -54,15 +54,11 @@ export default createReactClass({
       >
         <ModalHeader onCloseClick={this.closeModal}>
           <div className="modal__headline">
-            <h1 className="modal__title">
-              {this.state.title}
-            </h1>
+            <h1 className="modal__title">{this.state.title}</h1>
           </div>
         </ModalHeader>
         <ModalBody>
-          <div className="message">
-            {this.state.message}
-          </div>
+          <div className="message">{this.state.message}</div>
         </ModalBody>
       </ModalParent>
     );

@@ -62,24 +62,24 @@ export default createReactClass({
             <img src={logo} alt="OpenAerialMap logo" />
           </a>
 
-          {this.isMap()
-            ? <nav className="page__prime-nav">
-                <div className="nav-block-prime">
-                  <SearchBox />
-                  <ul className="app-menu">
-                    <li className="bttn menu-filters">
-                      <Filters
-                        params={this.props.params}
-                        query={this.props.query}
-                      />
-                    </li>
-                    <li className="bttn map-control-layers">
-                      <MapLayers />
-                    </li>
-                  </ul>
-                </div>
-              </nav>
-            : null}
+          {this.isMap() ? (
+            <nav className="page__prime-nav">
+              <div className="nav-block-prime">
+                <SearchBox />
+                <ul className="app-menu">
+                  <li className="bttn menu-filters">
+                    <Filters
+                      params={this.props.params}
+                      query={this.props.query}
+                    />
+                  </li>
+                  <li className="bttn map-control-layers">
+                    <MapLayers />
+                  </li>
+                </ul>
+              </div>
+            </nav>
+          ) : null}
           <MainMenu />
         </div>
       </header>

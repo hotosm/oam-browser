@@ -25,12 +25,10 @@
     "test": "NODE_ENV=test NODE_PATH=src:test/specs mocha --opts test/specs/mocha.opts test/specs/*_spec.js"
   },
   "devDependencies": {
-    "babel-preset-react-app": "^3.0.2",
     "chai": "^3.5.0",
     "chai-webdriverio": "^0.3.0",
     "custom-react-scripts": "^0.2.0",
     "enzyme": "^2.8.2",
-    "eslint": "^4.7.2",
     "eslint-plugin-prettier": "^2.2.0",
     "fetch-mock": "^5.12.2",
     "mocha": "^3.2.0",

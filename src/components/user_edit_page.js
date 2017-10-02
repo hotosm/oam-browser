@@ -12,24 +12,26 @@ export default createReactClass({
   onSubmit: function(e) {
     e.preventDefault();
     const formData = {
-      name: document.querySelector('#name').value,
-      website: document.querySelector('#website').value,
-      bio: document.querySelector('#bio').value,
-    }
+      name: document.querySelector("#name").value,
+      website: document.querySelector("#website").value,
+      bio: document.querySelector("#bio").value
+    };
     api({
-      uri: '/user',
+      uri: "/user",
       auth: true,
       method: "PUT",
-      body: formData,
-    }).then(response => {
-      userStore.getUserDetails();
-      hashHistory.replace({ pathname: '/account' })
-    }).catch(error => {
-      AppActions.showNotification(
-        "error",
-        "There was a problem updating your profile. Please try again."
-      );
-    });
+      body: formData
+    })
+      .then(response => {
+        userStore.getUserDetails();
+        hashHistory.replace({ pathname: "/account" });
+      })
+      .catch(error => {
+        AppActions.showNotification(
+          "error",
+          "There was a problem updating your profile. Please try again."
+        );
+      });
   },
 
   render: function() {
@@ -43,10 +45,7 @@ export default createReactClass({
           </header>
           <div className="panel-body">
             <form id="profile-form" className="form-horizontal">
-              <label
-                className="form__label none"
-                htmlFor="name"
-              >
+              <label className="form__label none" htmlFor="name">
                 Name
               </label>
               <input
@@ -56,10 +55,7 @@ export default createReactClass({
                 id="name"
                 defaultValue={userStore.storage.user.name}
               />
-              <label
-                className="form__label none"
-                htmlFor="website"
-              >
+              <label className="form__label none" htmlFor="website">
                 Website
               </label>
               <input
@@ -69,10 +65,7 @@ export default createReactClass({
                 id="website"
                 defaultValue={userStore.storage.user.website}
               />
-              <label
-                className="form__label none"
-                htmlFor="bio"
-              >
+              <label className="form__label none" htmlFor="bio">
                 Bio
               </label>
               <textarea

@@ -156,11 +156,11 @@ export default createReactClass({
                   type="text"
                   placeholder="Bruce Wayne"
                 />
-                {this.state.errors.name
-                  ? <p className="message message--alert">
-                      {this.state.errors.name}
-                    </p>
-                  : null}
+                {this.state.errors.name ? (
+                  <p className="message message--alert">
+                    {this.state.errors.name}
+                  </p>
+                ) : null}
               </div>
             </div>
             <div className="form__group">
@@ -178,11 +178,11 @@ export default createReactClass({
                 <p className="form__help">
                   Email is optional, but provide one if you want followup.
                 </p>
-                {this.state.errors.email
-                  ? <p className="message message--alert">
-                      {this.state.errors.email}
-                    </p>
-                  : null}
+                {this.state.errors.email ? (
+                  <p className="message message--alert">
+                    {this.state.errors.email}
+                  </p>
+                ) : null}
               </div>
             </div>
             <div className="form__group">
@@ -201,11 +201,11 @@ export default createReactClass({
                   <option value="contact">Get in touch with OAM team</option>
                   <option value="other">Everything else</option>
                 </select>
-                {this.state.errors.subject
-                  ? <p className="message message--alert">
-                      {this.state.errors.subject}
-                    </p>
-                  : null}
+                {this.state.errors.subject ? (
+                  <p className="message message--alert">
+                    {this.state.errors.subject}
+                  </p>
+                ) : null}
               </div>
             </div>
             <div className="form__group">
@@ -220,11 +220,11 @@ export default createReactClass({
                   className="form__control"
                   placeholder="Leave a message"
                 />
-                {this.state.errors.message
-                  ? <p className="message message--alert">
-                      {this.state.errors.message}
-                    </p>
-                  : null}
+                {this.state.errors.message ? (
+                  <p className="message message--alert">
+                    {this.state.errors.message}
+                  </p>
+                ) : null}
               </div>
             </div>
             <div className="form__note">
@@ -244,11 +244,11 @@ export default createReactClass({
               >
                 <span>Submit</span>
               </button>
-              {this.state.response
-                ? <span className="message form__response">
-                    {this.state.response}
-                  </span>
-                : null}
+              {this.state.response ? (
+                <span className="message form__response">
+                  {this.state.response}
+                </span>
+              ) : null}
             </div>
           </form>
         </ModalBody>

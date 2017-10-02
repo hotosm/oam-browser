@@ -4,7 +4,9 @@ const defaultConf = require("./wdio.default.conf.js").config;
 
 const date = new Date();
 const time = date.toLocaleTimeString();
-const tunnelId = Math.random().toString(36).slice(2);
+const tunnelId = Math.random()
+  .toString(36)
+  .slice(2);
 
 let browserStackConf = {
   user: process.env.BSTACK_USER,

@@ -118,20 +118,20 @@ class ModalParent extends React.Component {
         transitionEnterTimeout={300}
         transitionLeaveTimeout={300}
       >
-        {this.props.revealed
-          ? <section
-              className={klasses.join(" ")}
-              key={"modal-" + this.props.id}
-              onClick={this.onOverlayClick}
-              id={this.props.id}
-            >
-              <div className="modal__inner">
-                {this.getChild("ModalHeader")}
-                {this.getChild("ModalBody")}
-                {this.getChild("ModalFooter")}
-              </div>
-            </section>
-          : null}
+        {this.props.revealed ? (
+          <section
+            className={klasses.join(" ")}
+            key={"modal-" + this.props.id}
+            onClick={this.onOverlayClick}
+            id={this.props.id}
+          >
+            <div className="modal__inner">
+              {this.getChild("ModalHeader")}
+              {this.getChild("ModalBody")}
+              {this.getChild("ModalFooter")}
+            </div>
+          </section>
+        ) : null}
       </ReactCSSTransitionGroup>
     );
   }
@@ -174,11 +174,7 @@ class ModalBody extends React.Component {
   };
 
   render() {
-    return (
-      <div className="modal__body">
-        {this.props.children}
-      </div>
-    );
+    return <div className="modal__body">{this.props.children}</div>;
   }
 }
 
@@ -190,11 +186,7 @@ class ModalFooter extends React.Component {
   };
 
   render() {
-    return (
-      <footer className="modal__footer">
-        {this.props.children}
-      </footer>
-    );
+    return <footer className="modal__footer">{this.props.children}</footer>;
   }
 }
 

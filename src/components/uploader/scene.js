@@ -220,7 +220,7 @@ Please check the instructions on how to use files from Google Drive.
       <div className="form__group">
         <label className="form-label">Imagery location</label>
         <div className="form__control-set">
-          {this.props.data["img-loc"].map((o, imgI) =>
+          {this.props.data["img-loc"].map((o, imgI) => (
             <ImageryLocation
               key={imgI}
               onValueChange={this.onImgLocValueChange}
@@ -235,7 +235,7 @@ Please check the instructions on how to use files from Google Drive.
               total={this.props.data["img-loc"].length}
               data={o}
             />
-          )}
+          ))}
           <div className="imagery-location-import">
             <a
               type="button"

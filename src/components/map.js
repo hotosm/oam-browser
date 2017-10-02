@@ -305,7 +305,11 @@ export default createReactClass({
     this.mapGridLayer.clearLayers();
 
     // Recompute grid based on current map view (bounds + zoom).
-    var bounds = this.map.getBounds().toBBoxString().split(",").map(Number);
+    var bounds = this.map
+      .getBounds()
+      .toBBoxString()
+      .split(",")
+      .map(Number);
     var gridData = this.computeGrid(this.map.getZoom(), bounds);
 
     // Stick a 'count' property onto each grid square, based on the number of

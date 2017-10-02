@@ -25,9 +25,7 @@ export default class Notifications extends React.Component {
     var classes = "notification notification-" + this.props.type;
     return (
       <div className={classes} role="alert">
-        <p>
-          {this.props.children}
-        </p>
+        <p>{this.props.children}</p>
         <a
           className="notification-dismiss"
           title="Dismiss notification"

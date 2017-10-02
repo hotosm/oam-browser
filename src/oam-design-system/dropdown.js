@@ -67,7 +67,9 @@ export default class extends React.Component {
       }
       theSelf = theSelf.parentNode;
     } while (
-      theSelf && theSelf.tagName !== "BODY" && theSelf.tagName !== "HTML"
+      theSelf &&
+      theSelf.tagName !== "BODY" &&
+      theSelf.tagName !== "HTML"
     );
 
     if (theSelf !== this.refs.dropdown) {
@@ -175,9 +177,7 @@ export default class extends React.Component {
           data-hook="dropdown:btn"
           ref="trigger"
         >
-          <span>
-            {this.props.triggerText}
-          </span>
+          <span>{this.props.triggerText}</span>
         </this.props.triggerElement>
 
         <ReactCSSTransitionGroup
@@ -186,15 +186,15 @@ export default class extends React.Component {
           transitionEnterTimeout={300}
           transitionLeaveTimeout={300}
         >
-          {this.state.open
-            ? <div
-                className={klasses.join(" ")}
-                ref="dropdown"
-                data-hook="dropdown:content"
-              >
-                {this.props.children}
-              </div>
-            : null}
+          {this.state.open ? (
+            <div
+              className={klasses.join(" ")}
+              ref="dropdown"
+              data-hook="dropdown:content"
+            >
+              {this.props.children}
+            </div>
+          ) : null}
         </ReactCSSTransitionGroup>
       </TetherComponent>
     );

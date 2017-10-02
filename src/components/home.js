@@ -127,16 +127,16 @@ export default createReactClass({
     return (
       <div>
         <div className="sidebar-content">
-          {this.state.results.length
-            ? <ResultsPane
-                query={this.props.query}
-                params={this.props.params}
-                map={this.state.map}
-                results={this.state.results}
-                selectedItemId={this.state.selectedItemId}
-                selectedSquareQuadkey={this.state.selectedSquareQuadkey}
-              />
-            : null}
+          {this.state.results.length ? (
+            <ResultsPane
+              query={this.props.query}
+              params={this.props.params}
+              map={this.state.map}
+              results={this.state.results}
+              selectedItemId={this.state.selectedItemId}
+              selectedSquareQuadkey={this.state.selectedSquareQuadkey}
+            />
+          ) : null}
         </div>
 
         <MapBoxMap

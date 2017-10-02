@@ -36,8 +36,13 @@ export default createReactClass({
             .min(1)
             .items(
               Joi.object().keys({
-                url: Joi.string().uri().required().label("Imagery url"),
-                origin: Joi.string().required().label("Imagery file origin"),
+                url: Joi.string()
+                  .uri()
+                  .required()
+                  .label("Imagery url"),
+                origin: Joi.string()
+                  .required()
+                  .label("Imagery file origin"),
                 file: Joi.label("File").when("origin", {
                   is: "upload",
                   then: Joi.object().required()
@@ -261,7 +266,9 @@ export default createReactClass({
               const randomizeName = filename => {
                 const ext = filename.substr(filename.lastIndexOf("."));
                 const basename = filename.replace(ext, "");
-                const randStr = Math.random().toString(36).substring(5);
+                const randStr = Math.random()
+                  .toString(36)
+                  .substring(5);
                 return `${basename}-${randStr}${ext}`;
               };
               let files = [];
@@ -411,11 +418,7 @@ export default createReactClass({
       return null;
     }
 
-    return (
-      <p className="message message-alert">
-        {message}
-      </p>
-    );
+    return <p className="message message-alert">{message}</p>;
   },
 
   renderScene: function(data, index) {

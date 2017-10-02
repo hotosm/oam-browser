@@ -33,7 +33,7 @@ class MapLayers extends React.Component {
           alignment="top"
         >
           <ul className="drop__menu drop__menu--select map-layers-list">
-            {baseLayers.map(o =>
+            {baseLayers.map(o => (
               <li key={o.id}>
                 <MapLayerItem
                   selectedLayer={this.state.selectedLayer}
@@ -41,7 +41,7 @@ class MapLayers extends React.Component {
                   onLayerSelect={this.onLayerSelect}
                 />
               </li>
-            )}
+            ))}
           </ul>
         </Dropdown>
       </span>
@@ -94,9 +94,7 @@ class MapLayerItem extends React.Component {
         data-hook="dropdown:close"
       >
         <div className="map-layers-list__map" ref="map" />
-        <span className="map-layers-list__text">
-          {this.props.layer.name}
-        </span>
+        <span className="map-layers-list__text">{this.props.layer.name}</span>
       </a>
     );
   }

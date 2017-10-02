@@ -148,11 +148,7 @@ export default createReactClass({
       return null;
     }
 
-    return (
-      <p className="message message-alert">
-        {message}
-      </p>
-    );
+    return <p className="message message-alert">{message}</p>;
   },
 
   render: function() {

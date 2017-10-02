@@ -189,21 +189,21 @@ export default createReactClass({
       <span>
         <ContentCopyIcon /> Copy image URL
         <div className="actions">
-          {this.props.data.properties.tms
-            ? <ZcButton
-                onCopy={() => this.props.data.properties.tms}
-                title="Copy TMS url"
-                text="TMS"
-              />
-            : null}{" "}
+          {this.props.data.properties.tms ? (
+            <ZcButton
+              onCopy={() => this.props.data.properties.tms}
+              title="Copy TMS url"
+              text="TMS"
+            />
+          ) : null}{" "}
           |{" "}
-          {this.props.data.properties.wmts
-            ? <ZcButton
-                onCopy={() => this.props.data.properties.wmts}
-                title="Copy WMTS url"
-                text="WMTS"
-              />
-            : null}
+          {this.props.data.properties.wmts ? (
+            <ZcButton
+              onCopy={() => this.props.data.properties.wmts}
+              title="Copy WMTS url"
+              text="WMTS"
+            />
+          ) : null}
         </div>
       </span>
     );
@@ -367,19 +367,19 @@ export default createReactClass({
           >
             <span>Thumbnail</span>
           </button>
-          {this.props.data.properties.tms
-            ? <button
-                className={
-                  "preview-tms " + (sp === "tms" ? "button--active" : "")
-                }
-                type="button"
-                onClick={this.onPreviewSelect.bind(null, {
-                  type: "tms"
-                })}
-              >
-                <span>TMS</span>
-              </button>
-            : null}
+          {this.props.data.properties.tms ? (
+            <button
+              className={
+                "preview-tms " + (sp === "tms" ? "button--active" : "")
+              }
+              type="button"
+              onClick={this.onPreviewSelect.bind(null, {
+                type: "tms"
+              })}
+            >
+              <span>TMS</span>
+            </button>
+          ) : null}
         </div>
       </div>
     );
@@ -406,22 +406,26 @@ export default createReactClass({
           <div className="pane-body-inner">
             <div className="single-media">
               <span className="user-details">
-                {typeof this.props.user.name !== "undefined"
-                  ? <a
-                      onClick={e =>
-                        this.gotoUsersImages(e, this.props.user._id)}
-                    >
-                      {typeof this.props.user.profile_pic_uri !== "undefined"
-                        ? <div className="profile-pic-wrapper"><img src={this.props.user.profile_pic_uri} alt="Provider" /></div>
-                        : null}
-                      <div>
-                        <small className="provided_by">
-                          Provided by
-                        </small>
-                        {this.props.user.name}
+                {typeof this.props.user.name !== "undefined" ? (
+                  <a
+                    onClick={e => this.gotoUsersImages(e, this.props.user._id)}
+                  >
+                    {typeof this.props.user.profile_pic_uri !== "undefined" ? (
+                      <div className="profile-pic-wrapper">
+                        <img
+                          src={this.props.user.profile_pic_uri}
+                          alt="Provider"
+                        />
                       </div>
-                    </a>
-                  : <span>{d.provider}</span>}
+                    ) : null}
+                    <div>
+                      <small className="provided_by">Provided by</small>
+                      {this.props.user.name}
+                    </div>
+                  </a>
+                ) : (
+                  <span>{d.provider}</span>
+                )}
               </span>
               <div className="result-thumbnail">
                 <img
@@ -435,15 +439,9 @@ export default createReactClass({
             </div>
             <div className="single-actions">
               <ul>
-                <li>
-                  {this.previewOptions()}
-                </li>
-                <li>
-                  {this.renderOpenInOptions()}
-                </li>
-                <li>
-                  {this.renderTmsOptions()}
-                </li>
+                <li>{this.previewOptions()}</li>
+                <li>{this.renderOpenInOptions()}</li>
+                <li>{this.renderTmsOptions()}</li>
               </ul>
             </div>
             <dl className="single-details">
@@ -456,27 +454,19 @@ export default createReactClass({
               <dt>
                 <span>Resolution</span>
               </dt>
-              <dd>
-                {utils.gsdToUnit(d.gsd)}
-              </dd>
+              <dd>{utils.gsdToUnit(d.gsd)}</dd>
               <dt>
                 <span>Type</span>
               </dt>
-              <dd>
-                {d.properties.tms ? "Image + Map Layer" : "Image"}
-              </dd>
+              <dd>{d.properties.tms ? "Image + Map Layer" : "Image"}</dd>
               <dt>
                 <span>Image Size</span>
               </dt>
-              <dd className="cap">
-                {prettyBytes(d.file_size)}
-              </dd>
+              <dd className="cap">{prettyBytes(d.file_size)}</dd>
               <dt>
                 <span>Platform</span>
               </dt>
-              <dd className="cap">
-                {d.platform}
-              </dd>
+              <dd className="cap">{d.platform}</dd>
               <dt>
                 <span>Sensor</span>
               </dt>
@@ -485,25 +475,25 @@ export default createReactClass({
               </dd>
             </dl>
 
-            {d.custom_tms
-              ? <section className="single-related-tms">
-                  <header>
-                    <h1>Available map layers</h1>
-                    <p>This image is part of the following map layers:</p>
-                  </header>
-                  <ul>
-                    {d.custom_tms.map(
-                      function(o, i) {
-                        return (
-                          <li key={i}>
-                            {this.renderTmsOptions(o, i, "up", "right")}
-                          </li>
-                        );
-                      }.bind(this)
-                    )}
-                  </ul>
-                </section>
-              : null}
+            {d.custom_tms ? (
+              <section className="single-related-tms">
+                <header>
+                  <h1>Available map layers</h1>
+                  <p>This image is part of the following map layers:</p>
+                </header>
+                <ul>
+                  {d.custom_tms.map(
+                    function(o, i) {
+                      return (
+                        <li key={i}>
+                          {this.renderTmsOptions(o, i, "up", "right")}
+                        </li>
+                      );
+                    }.bind(this)
+                  )}
+                </ul>
+              </section>
+            ) : null}
           </div>
         </div>
         <footer className="pane-footer">

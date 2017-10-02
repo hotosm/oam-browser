@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
 import createReactClass from "create-react-class";
-import Keys from "react-keybinding";
 import _ from "lodash";
 
 import mapStore from "stores/map_store";

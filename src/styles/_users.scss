@@ -26,6 +26,8 @@
         float: left;
       }
       ul {
+        width: 80%;
+        margin-top: 0;
         float: left;
         li {
           list-style-type: none;
@@ -35,7 +37,8 @@
     &__body {
       padding: 1rem;
     }
-    .view-your-profile {
+    .view-your-profile,
+    .edit-your-profile {
       display: block;
       margin-top: 10px;
       padding: 1rem;
@@ -43,6 +46,9 @@
       .mdi-icon {
         float: right;
       }
+    }
+    .edit-your-profile {
+      margin-top: 0px;
     }
   }
 }

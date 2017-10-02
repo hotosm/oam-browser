@@ -30,7 +30,7 @@
     "chai-webdriverio": "^0.3.0",
     "custom-react-scripts": "^0.2.0",
     "enzyme": "^2.8.2",
-    "eslint": "^4.5.0",
+    "eslint": "^4.7.2",
     "eslint-plugin-prettier": "^2.2.0",
     "fetch-mock": "^5.12.2",
     "mocha": "^3.2.0",

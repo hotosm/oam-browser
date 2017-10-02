@@ -146,11 +146,24 @@ export default createReactClass({
               <li>
                 {user.contact_email}
               </li>
+              <li>
+                <a href={user.website}>
+                  {user.website}
+                </a>
+              </li>
+              <li>
+                {user.bio}
+              </li>
             </ul>
           </div>
           <div style={{ clear: "both" }} />
           <a href={`#/0/user/${user._id}`} className="view-your-profile">
             View your profile
+            <ChevronRightIcon />
+          </a>
+          <div style={{ clear: "both" }} />
+          <a href={`#/account/edit`} className="edit-your-profile">
+            Edit your profile
             <ChevronRightIcon />
           </a>
         </div>

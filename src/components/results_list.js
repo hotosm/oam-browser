@@ -54,6 +54,12 @@ export default class ResultsList extends React.Component {
           <h2 className="pane-title" title={"Imagery for user " + user.name}>
             {user.name}
           </h2>
+          <div>
+            <a href={user.website}>{user.website}</a>
+          </div>
+          <div>
+            <small>{user.bio}</small>
+          </div>
         </div>
       </div>
     );

@@ -215,7 +215,7 @@ describe("Imagery", function() {
       browser.pause(5000);
       getImageryResults();
       browser.click(".results-list li:first-child");
-      browser.click("a=Open Graph Test User");
+      browser.click("a=*Open Graph Test User");
       finishLoading();
       expect("h2*=Open Graph Test User").to.be.there();
       expect("h2=" + title).to.be.there();

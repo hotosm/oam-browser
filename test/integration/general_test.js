@@ -100,6 +100,7 @@ function inputRemoteImageryUri(imageryUri) {
 
 function getImageryResults() {
   const resultsSelector = ".results-list li";
+  finishLoading();
   browser.waitForExist(resultsSelector);
   return $$(resultsSelector);
 }

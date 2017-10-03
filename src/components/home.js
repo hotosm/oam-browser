@@ -40,15 +40,13 @@ export default createReactClass({
   },
 
   getImagery: function() {
-    if (!this.props.params.user_id && !this.props.params.square_id) {
-      return mapStore.getLatestImagery();
-    }
     if (this.props.params.square_id) {
       return mapStore.getSquareResults();
     }
     if (this.props.params.user_id) {
       return mapStore.getUserImagery();
     }
+    return mapStore.getLatestImagery();
   },
 
   loadImagery: function(_what) {
@@ -108,6 +106,10 @@ export default createReactClass({
       state.selectedItemId = nextProps.params.image_id;
     }
 
+    if (!nextProps.params.user_id && !nextProps.params.image_id) {
+      mapStore.queryLatestImagery();
+    }
+
     state.results = this.getImagery();
     this.setState(state);
   },
@@ -136,7 +138,9 @@ export default createReactClass({
               selectedItemId={this.state.selectedItemId}
               selectedSquareQuadkey={this.state.selectedSquareQuadkey}
             />
-          ) : null}
+          ) : (
+            "Loading imagery ..."
+          )}
         </div>
 
         <MapBoxMap

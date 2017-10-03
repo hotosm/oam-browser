@@ -481,11 +481,12 @@ export default createReactClass({
         tmsUrl = tmsUrl.replace("{zoom}", "{z}");
 
         this.disableSelectedSquare = true;
-        this.getLayerMaxZoom(item.properties.tms).then(data => {
+        this.getLayerMaxZoom(tmsUrl).then(data => {
           this.map.options.maxZoom = data.layerMaxZoom;
           this.mapOverImageLayer = L.tileLayer(tmsUrl, {
             maxZoom: this.map.options.maxZoom
           });
+          this.map.addLayer(this.mapOverImageLayer);
           this.updateSelectedSquare();
         });
       } else if (previewOptions.type === "thumbnail") {
@@ -497,8 +498,8 @@ export default createReactClass({
           item.properties.thumbnail,
           imageBounds
         );
+        this.map.addLayer(this.mapOverImageLayer);
       }
-      this.mapOverImageLayer && this.map.addLayer(this.mapOverImageLayer);
     }
     this.updateSelectedSquare();
   },

@@ -21,8 +21,11 @@ export default createReactClass({
 
   setupCurrentImage: function() {
     if (this.props.selectedItemId) {
-      this.currentIndex = _.findIndex(this.props.results, {
-        _id: this.props.selectedItemId
+      this.currentIndex = _.findIndex(this.props.results, i => {
+        return (
+          i._id === this.props.selectedItemId ||
+          i.uuid.includes(this.props.selectedItemId)
+        );
       });
       this.currentResult = this.props.results[this.currentIndex];
     } else {
@@ -31,7 +34,7 @@ export default createReactClass({
   },
 
   // The user may not be nested in the image object, say for displaying
-  // all the image for a particular user - in which case the images
+  // all the images for a particular user - in which case the images
   // themselves are nested in the user object. So here we decide where to
   // get the actual user data from.
   getUserForImage: function(image) {

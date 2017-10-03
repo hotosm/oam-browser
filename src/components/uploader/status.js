@@ -84,6 +84,15 @@ export default createReactClass({
     utils.imageUri(image);
   },
 
+  // Unfortunately the /upload endpoint on the API doesn't include the ID for the image's
+  // metadata. So we can use an alternate identifier to build the permalink for the imagery.
+  // The result_pane.js code will also accept the final filename portion of the UUID.
+  // Perhaps indeed that is ultimately a better identifier to use throughout all the code.
+  getAlternateIdentityForMeta: function(image) {
+    const imageFilename = image.metadata.uuid.split("/").slice(-1)[0];
+    return imageFilename;
+  },
+
   renderScene: function(scene) {
     return (
       <section className="panel status-panel">
@@ -133,6 +142,7 @@ export default createReactClass({
     });
     if (image.status === "finished") {
       status = "status-success";
+      image.metadata._id = this.getAlternateIdentityForMeta(image);
       messages.unshift(
         <li>
           <a

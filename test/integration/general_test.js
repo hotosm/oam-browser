@@ -5,7 +5,6 @@ const dbName = "oam-api-test";
 const everest =
   "https://github.com/openimagerynetwork/oin-meta-generator/blob/master/" +
   "test/fixtures/everest-utm.gtiff?raw=true";
-const everestUriCoords = "#/86.92655592750047,27.98899065877948,16";
 
 console.log(`Failing tests will be retried ${retryCount} times`);
 
@@ -207,15 +206,14 @@ describe("Imagery", function() {
         .slice(2);
       submitImagery(everest, title);
       logOut();
-      browser.url(everestUriCoords);
+      browser.url("#/");
       finishLoading();
-      browser.click("#map");
       // Just give the image a few moments to get into the DB. TODO: we shouldn't
       // have to wait.
       browser.pause(5000);
       getImageryResults();
       browser.click(".results-list li:first-child");
-      browser.click("a=*Open Graph Test User");
+      browser.click(".user-details a");
       finishLoading();
       expect("h2*=Open Graph Test User").to.be.there();
       expect("h2=" + title).to.be.there();

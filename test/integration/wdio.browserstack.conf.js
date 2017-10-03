@@ -39,7 +39,6 @@ let browserStackConf = {
         (process.env.CATALOG_API_VERSION || process.env.TRAVIS_BRANCH),
       os: "WINDOWS",
       os_version: "8",
-      resolution: "2048x1536",
       "browserstack.debug": true,
       "browserstack.local": true,
       "browserstack.networkLogs": true,

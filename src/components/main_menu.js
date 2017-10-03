@@ -160,10 +160,9 @@ export default createReactClass({
               <li>
                 <a
                   className="drop__menu-item"
-                  href="#modal-feedback"
                   title="Leave feedback"
                   data-hook="dropdown:close"
-                  onClick={this.feedbackClickHandler}
+                  onClick={() => actions.openModal("feedback")}
                 >
                   <span>Feedback</span>
                 </a>

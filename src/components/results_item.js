@@ -61,18 +61,15 @@ export default createReactClass({
     };
   },
 
+  componentDidMount: function() {
+    actions.selectPreview({
+      type: this.state.selectedPreview
+    });
+  },
+
   onPreviewSelect: function(what) {
-    let selected = what.type;
-    if (what.index !== undefined) {
-      selected += `-${what.index}`;
-      // Clicking again in a custom tms will de-select it, defaulting to none.
-      if (selected === this.state.selectedPreview) {
-        what = { type: "none" };
-        selected = "none";
-      }
-    }
     actions.selectPreview(what);
-    this.setState({ selectedPreview: selected });
+    this.setState({ selectedPreview: what.type });
   },
 
   gotoUsersImages: function(e, user_id) {

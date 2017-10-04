@@ -460,6 +460,7 @@ export default createReactClass({
     }
   },
 
+  // When changing between TMS/Thumbnail preview
   updateSelectedItemImageFootprint: function(previewOptions) {
     this.disableSelectedSquare = false;
     if (this.map.hasLayer(this.mapOverImageLayer)) {

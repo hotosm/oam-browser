@@ -1,7 +1,6 @@
 /* global L */
 
 import React from "react";
-import { hashHistory } from "react-router";
 import PropTypes from "prop-types";
 
 import utils from "utils/utils";
@@ -13,23 +12,20 @@ export default class extends React.Component {
   static displayName = "MiniMap";
 
   static propTypes = {
-    query: PropTypes.object,
-    map: PropTypes.object,
-    selectedSquare: PropTypes.string,
-    selectedSquareQuadkey: PropTypes.string,
-    selectedItemId: PropTypes.string
+    params: PropTypes.object
   };
 
   map = null;
   targetLines = null;
 
-  // Lifecycle method.
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.selectedSquare !== this.props.selectedSquare;
+  shouldComponentUpdate(nextProps, _nextState) {
+    return nextProps.params.map !== this.props.params.map;
   }
 
-  // Lifecycle method.
-  // Called once as soon as the component has a DOM representation.
+  componentDidUpdate() {
+    this.setCrosshair();
+  }
+
   componentDidMount() {
     this.map = L.mapbox
       .map(this.refs.mapContainer, null, {
@@ -59,12 +55,6 @@ export default class extends React.Component {
     utils.delayedMapContainerResize(this.map);
   }
 
-  // Lifecycle method.
-  // Called when the component gets updated.
-  componentDidUpdate(/* prevProps, prevState */) {
-    this.setCrosshair();
-  }
-
   render() {
     return (
       // TODO: Styling here is a hack, try upgrading mapbox.js
@@ -74,28 +64,21 @@ export default class extends React.Component {
 
   // Map event.
   onMapClick = e => {
-    var zoom = this.props.map.view.split(",")[2];
-    var path = utils.getMapViewString(e.latlng.lng, e.latlng.lat, zoom);
-    if (this.props.selectedSquareQuadkey) {
-      path += `/${this.props.selectedSquareQuadkey}`;
-    }
-    if (this.props.selectedItemId) {
-      path += `/${this.props.selectedItemId}`;
-    }
-
-    hashHistory.push({ pathname: path, query: this.props.query });
+    var zoom = this.props.params.map.split(",")[2];
+    var mapView = utils.getMapViewString(e.latlng.lng, e.latlng.lat, zoom);
+    utils.pushURI(this.props, {
+      map: mapView
+    });
   };
 
   setCrosshair = () => {
-    if (this.props.selectedSquare) {
-      var center = utils.tileCenterFromQuadkey(this.props.selectedSquare)
-        .geometry.coordinates;
-      this.targetLines.setLatLngs([
-        [[-90, center[0]], [90, center[0]]],
-        [[center[1], -220], [center[1], 220]]
-      ]);
-    } else {
-      this.targetLines.clearLayers();
-    }
+    if (!this.props.params.map) return;
+    var mapParts = this.props.params.map.split(",");
+    var lat = parseFloat(mapParts[0]);
+    var lng = parseFloat(mapParts[1]);
+    this.targetLines.setLatLngs([
+      [[-90, lat], [90, lat]],
+      [[lng, -220], [lng, 220]]
+    ]);
   };
 }

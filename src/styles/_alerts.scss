@@ -98,14 +98,26 @@
   position: fixed;
   bottom: 1rem;
   right: 1rem;
-  width: 15rem;
-  padding: 1rem;
+  left: $sidebar-width + 16px;
+  width: auto;
+  padding: 1rem 1rem .9375rem;
   border-radius: $global-radius;
-  background-color: rgba($grey1, 0.8);
+  background-color: rgba($darkBlue, 0.8);
+  color: $white;
+  p {
+    margin-top: 0;
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .notification-dismiss {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 15px;
+  right: 12px;
+  .mdi-icon {
+    fill: $grey1;
+    stroke: none;
+  }
 }

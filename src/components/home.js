@@ -142,7 +142,13 @@ export default createReactClass({
             "Loading imagery ..."
           )}
           <footer className="sidebar-footer">
-            <p>Made with ❤️ by HOT partners and community.</p>
+            <p>
+              Made with{" "}
+              <span role="img" aria-label="love">
+                ❤️
+              </span>{" "}
+              by HOT partners and community.
+            </p>
           </footer>
         </div>
 

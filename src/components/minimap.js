@@ -76,6 +76,7 @@ export default class extends React.Component {
     var mapParts = this.props.params.map.split(",");
     var lat = parseFloat(mapParts[0]);
     var lng = parseFloat(mapParts[1]);
+    if (isNaN(lat) || isNaN(lng)) return;
     this.targetLines.setLatLngs([
       [[-90, lat], [90, lat]],
       [[lng, -220], [lng, 220]]

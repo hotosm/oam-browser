@@ -98,6 +98,9 @@ function inputRemoteImageryUri(imageryUri) {
 function getImageryResults() {
   const resultsSelector = ".results-list li";
   finishLoading();
+  // Just give the image a few moments to get into the DB. TODO: we shouldn't
+  // have to wait.
+  browser.pause(1000);
   browser.waitForExist(resultsSelector);
   return $$(resultsSelector);
 }
@@ -173,8 +176,6 @@ describe("Imagery", function() {
         .slice(2);
       submitImagery(everest, title);
       browser.click("a=View image");
-      getImageryResults();
-      browser.click(".results-list li:first-child");
       expect("h2=" + title).to.be.there();
       const src = $(".result-thumbnail img").getAttribute("src");
       expect(src).to.match(/_thumb/);
@@ -206,9 +207,6 @@ describe("Imagery", function() {
       logOut();
       browser.url("#/");
       finishLoading();
-      // Just give the image a few moments to get into the DB. TODO: we shouldn't
-      // have to wait.
-      browser.pause(5000);
       getImageryResults();
       browser.click(".results-list li:first-child");
       browser.click(".user-details a");

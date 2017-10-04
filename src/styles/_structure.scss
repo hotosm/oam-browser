@@ -175,16 +175,10 @@ $menu-unit: 40px;
 }
 
 .leaflet-bottom .leaflet-control.zoom-controls {
-  margin-bottom: 128px;
-}
-
-.leaflet-bottom .leaflet-control.zoom-controls {
-  margin-right: 16px;
-}
-
-.zoom-controls {
   font-size: 25px;
   width: 40px;
+  margin-bottom: 180px;
+  margin-right: 16px;
   button {
     width: 40px;
     height: 40px;

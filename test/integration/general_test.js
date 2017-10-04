@@ -1,12 +1,10 @@
 const { spawnSync } = require("child_process");
 
-const retryCount = process.env.CI === "true" ? 3 : 0;
+const retryCount = 3;
 const dbName = "oam-api-test";
 const everest =
   "https://github.com/openimagerynetwork/oin-meta-generator/blob/master/" +
   "test/fixtures/everest-utm.gtiff?raw=true";
-
-console.log(`Failing tests will be retried ${retryCount} times`);
 
 function dropDatabase() {
   const child = spawnSync("mongo", [dbName, "--eval", "db.dropDatabase()"]);
@@ -17,7 +15,7 @@ function dropDatabase() {
 }
 
 function waitUntilGone(selector) {
-  // The `true` in the third arg rerverses the test, ie waiting for invisible
+  // The `true` in the third arg reverses the test, ie waiting for invisible
   browser.waitForVisible(selector, 300000, true);
 }
 

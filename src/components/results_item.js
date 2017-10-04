@@ -57,7 +57,7 @@ export default createReactClass({
 
   getInitialState: function() {
     return {
-      selectedPreview: "thumbnail"
+      selectedPreview: "tms"
     };
   },
 
@@ -355,18 +355,6 @@ export default createReactClass({
       <div className="preview-options">
         <ImageFilterIcon /> Display as
         <div className="actions">
-          <button
-            className={
-              "preview-thumbnail " +
-              (sp === "thumbnail" ? "button--active" : "")
-            }
-            type="button"
-            onClick={this.onPreviewSelect.bind(null, {
-              type: "thumbnail"
-            })}
-          >
-            <span>Thumbnail</span>
-          </button>
           {this.props.data.properties.tms ? (
             <button
               className={
@@ -380,6 +368,18 @@ export default createReactClass({
               <span>TMS</span>
             </button>
           ) : null}
+          <button
+            className={
+              "preview-thumbnail " +
+              (sp === "thumbnail" ? "button--active" : "")
+            }
+            type="button"
+            onClick={this.onPreviewSelect.bind(null, {
+              type: "thumbnail"
+            })}
+          >
+            <span>Thumbnail</span>
+          </button>
         </div>
       </div>
     );

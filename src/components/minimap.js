@@ -72,6 +72,7 @@ export default class extends React.Component {
   };
 
   setCrosshair = () => {
+    if (!this.props.params.map) return;
     var mapParts = this.props.params.map.split(",");
     var lat = parseFloat(mapParts[0]);
     var lng = parseFloat(mapParts[1]);

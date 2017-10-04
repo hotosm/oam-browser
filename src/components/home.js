@@ -141,6 +141,9 @@ export default createReactClass({
           ) : (
             "Loading imagery ..."
           )}
+          <footer className="sidebar-footer">
+            <p>Made with ❤️ by HOT partners and community.</p>
+          </footer>
         </div>
 
         <MapBoxMap

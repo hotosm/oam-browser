@@ -496,23 +496,25 @@ export default createReactClass({
             ) : null}
           </div>
         </div>
-        <footer className="pane-footer">
+        <footer className="single-footer">
           <div className="single-pager">
             <a
               onClick={this.prevResult}
-              className={this.props.pagination.prevId ? "" : "disabled"}
+              className={this.props.pagination.prevId ? "previous" : "disabled"}
               title="View previous result"
             >
               <ChevronLeftIcon />
+              Previous
             </a>
             <span className="pane-subtitle">
               {pagination.current} of {pagination.total} results
             </span>
             <a
               onClick={this.nextResult}
-              className={this.props.pagination.nextId ? "" : "disabled"}
+              className={this.props.pagination.nextId ? "next" : "disabled"}
               title="View next result"
             >
+              Next
               <ChevronRightIcon />
             </a>
           </div>

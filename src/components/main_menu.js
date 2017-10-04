@@ -79,22 +79,24 @@ export default createReactClass({
 
     return (
       <ul className="main-menu">
-        <li className="bttn menu-signin-upload">
-          {this.state.isUserLoggedIn ? (
+
+        {this.state.isUserLoggedIn ? (
+          <li className="bttn bttn-icon bttn-info">
             <a
               href="#/upload"
-              className="button-upload bttn-icon"
               title="Go to OAM Uploader"
             >
               <span>Upload</span>
               <UploadIcon />
             </a>
-          ) : (
+          </li>
+        ) : (
+          <li className="bttn menu-signin-upload">
             <a onClick={this.onLoginClick} title="Sign In">
               <span>Sign In</span>
             </a>
-          )}
-        </li>
+          </li>
+        )}
 
         <li className="menu-profile_pic">
           {this.state.isUserLoggedIn ? (

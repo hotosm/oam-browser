@@ -47,19 +47,21 @@ export default class ResultsList extends React.Component {
     let user = mapStore.getImageryOwner();
     return (
       <div className="profile">
-        <div className="profile-pic-wrapper">
-          <img src={user.profile_pic_uri} alt="Provider's profile" />
+        <div className="profile-header">
+          <div className="profile-pic-wrapper">
+            <img src={user.profile_pic_uri} alt="Provider's profile" />
+          </div>
+          <div className="profile-details">
+            <h2 className="pane-title" title={"Imagery for user " + user.name}>
+              {user.name}
+            </h2>
+            <div>
+              <a href={user.website}>{user.website}</a>
+            </div>
+          </div>
         </div>
-        <div className="profile-details">
-          <h2 className="pane-title" title={"Imagery for user " + user.name}>
-            {user.name}
-          </h2>
-          <div>
-            <a href={user.website}>{user.website}</a>
-          </div>
-          <div>
-            <small>{user.bio}</small>
-          </div>
+        <div className="profile-bio">
+          <p>{user.bio}</p>
         </div>
       </div>
     );

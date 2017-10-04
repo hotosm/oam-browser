@@ -16,16 +16,24 @@
 
 .pane-header {
   padding: 0 1rem;
+  display: flex;
+  margin-bottom: 10px;
   h2 {
     @extend .clearfix;
     width: 345px;
     text-overflow: ellipsis;
-    float: left;
-    margin-top: 0;
-    margin-bottom: 10px;
+    margin: 0;
   }
   .pane-menu {
-    float: right;
+    background-color: $grey3;
+    padding: 8px 8px 7px;
+    border-radius: $global-radius;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 112px;
+    .mdi-icon {
+      padding: 2px;
+    }
   }
   @extend .clearfix;
 }
@@ -212,6 +220,7 @@
   }
   .actions {
     float: right;
+    margin-top: 2px;
     button {
       border: none;
       cursor: pointer;
@@ -225,6 +234,10 @@
     }
   }
   .preview-options {
+    .actions {
+      position: relative;
+      top: -5px;
+    }
     .preview-tms {
       border-top-left-radius: $global-radius;
       border-bottom-left-radius: $global-radius;
@@ -321,25 +334,48 @@
 }
 
 .profile {
-  display: flex;
-  align-items: top;
   margin-top: 32px;
+  .profile-header {
+    display: flex;
+    align-items: top;
+    margin-bottom: 16px;
+  }
   .pane-title {
     font-size: 2rem;
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
-    margin-top: 0px;
+    margin-top: 6px;
   }
   .profile-pic-wrapper {
     width: 80px;
     height: 80px;
     border: 1px solid $grey3;
+    border-radius: $global-radius;
     margin-right: 12px;
     overflow: hidden;
     img {
       width: 80px;
       height: 80px;
       object-fit: cover;
+    }
+  }
+}
+
+.profile-details {
+  a {
+    font-size: 1rem;
+    position: relative;
+    top: -5px;
+  }
+}
+
+.profile-bio {
+  p {
+    font-size: 1rem;
+    color: $grey;
+    padding-right: 16px;
+    &:last-child {
+      margin-bottom: 0;
     }
   }
 }

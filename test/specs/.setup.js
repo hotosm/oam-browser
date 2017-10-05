@@ -7,7 +7,8 @@ global.window = {
   document: {},
   location: {
     href: ''
-  }
+  },
+  addEventListener: function () {}
 };
 
 // Stub all the Leaflet code

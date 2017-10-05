@@ -79,13 +79,9 @@ export default createReactClass({
 
     return (
       <ul className="main-menu">
-
         {this.state.isUserLoggedIn ? (
           <li className="bttn bttn-icon bttn-info">
-            <a
-              href="#/upload"
-              title="Go to OAM Uploader"
-            >
+            <a href="#/upload" title="Go to OAM Uploader">
               <span>Upload</span>
               <UploadIcon />
             </a>

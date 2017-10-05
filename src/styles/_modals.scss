@@ -9,7 +9,7 @@
 
 .modal {
   text-align: center;
-  background-color: rgba(white, 0.7);
+  background-color: rgba($grey4, 0.85);
   position: fixed;
   top: 0;
   bottom: 0;
@@ -43,7 +43,7 @@
   max-width: 48rem;
   background-color: white;
   padding: 0 2rem 2rem 2rem;
-
+  box-shadow: $box-shadow-default;
   > *:last-child {
     margin-bottom: 0;
   }
@@ -140,10 +140,9 @@
   }
 
   &__subtitle {
-    text-transform: uppercase;
-    font-weight: $base-font-regular;
-    color: rgba($base-font-color, 0.48);
-    font-size: 0.875rem;
+    font-weight: 400;
+    color: $darkBlue;
+    font-size: 1.375rem;
     line-height: 1.25;
     margin: 0;
     width: 100%;
@@ -257,11 +256,11 @@
     transform: translate(0, -25%);
   }
   .modal__body {
-    padding: 2rem;
-    padding-top: 1rem;
+    padding: 32px;
     text-align: center;
     small {
-      font-size: 0.75rem;
+      font-size: 1rem;
+      color: $grey;
     }
     .oauth-logins {
       a {

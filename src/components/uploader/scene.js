@@ -232,7 +232,7 @@ Please check the instructions on how to use files from Google Drive.
             />
           ))}
           <div className="imagery-location-import">
-            <a
+            <button
               type="button"
               className="bttn bttn-primary bttn-icon"
               onClick={() => this.addImageryLocation("upload")}
@@ -240,8 +240,8 @@ Please check the instructions on how to use files from Google Drive.
             >
               <FileIcon />
               <span>Local File</span>
-            </a>
-            <a
+            </button>
+            <button
               type="button"
               className="bttn bttn-primary bttn-icon"
               onClick={() => this.addImageryLocation("manual")}
@@ -249,8 +249,8 @@ Please check the instructions on how to use files from Google Drive.
             >
               <LinkVariantIcon />
               <span>Url</span>
-            </a>
-            <a
+            </button>
+            <button
               type="button"
               className="bttn bttn-primary bttn-icon"
               onClick={this.importDropboxClick}
@@ -258,8 +258,8 @@ Please check the instructions on how to use files from Google Drive.
             >
               <DropboxIcon />
               <span>Dropbox</span>
-            </a>
-            <a
+            </button>
+            <button
               type="button"
               className="bttn bttn-primary bttn-icon"
               onClick={this.importGDriveClick}
@@ -267,7 +267,7 @@ Please check the instructions on how to use files from Google Drive.
             >
               <GoogleDriveIcon />
               <span>Drive</span>
-            </a>
+            </button>
             {this.props.renderErrorMessage(
               this.props.getValidationMessages("scenes." + i + ".img-loc")[0]
             )}

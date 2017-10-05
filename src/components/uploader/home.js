@@ -462,7 +462,7 @@ export default createReactClass({
               {this.state.scenes.map(this.renderScene)}
 
               <div className="form-extra-actions">
-                <a
+                <button
                   type="button"
                   className="bttn bttn-secondary bttn-block bttn-icon"
                   onClick={this.addScene}
@@ -470,7 +470,7 @@ export default createReactClass({
                 >
                   <span>New dataset</span>
                   <PlusIcon />
-                </a>
+                </button>
               </div>
 
               <div className="form-note">
@@ -490,13 +490,13 @@ export default createReactClass({
               </div>
 
               <div className="form-actions">
-                <a
+                <button
                   type="submit"
                   className="bttn bttn-lg bttn-block bttn-submit"
                   onClick={this.onSubmit}
                 >
                   Submit
-                </a>
+                </button>
                 <div
                   id="upload-progress"
                   className={this.state.uploadActive ? "" : "upload-inactive"}

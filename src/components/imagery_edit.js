@@ -174,13 +174,13 @@ export default createReactClass({
               />
 
               <div className="form-actions">
-                <a
+                <button
                   type="submit"
                   className="bttn bttn-lg bttn-block bttn-submit"
                   onClick={this.onSubmit}
                 >
                   Submit
-                </a>
+                </button>
               </div>
             </form>
           </div>

@@ -142,11 +142,6 @@ export default class extends React.Component {
     setTimeout(() => {
       gDrive.picker().then(
         files => {
-          // let picked = files.length;
-          // let shared = _.sum(files, o => o.shared ? 1 : 0);
-          // if (picked !== shared) {
-          //   console.log('Some of the files you picked are not shared therefore will not be used');
-          // }
           let gDriveErrFiles = [];
           let validIndex = 0;
           files.forEach(o => {

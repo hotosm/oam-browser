@@ -500,9 +500,9 @@ export default createReactClass({
           imageBounds
         );
         this.map.addLayer(this.mapOverImageLayer);
+        this.updateSelectedSquare();
       }
     }
-    this.updateSelectedSquare();
   },
 
   // Mapbox.js doesn't seem to account for the new zoom levels when adding a layer.

@@ -244,6 +244,7 @@
 .single-details {
   background-color: $grey4;
   padding: 0 1rem;
+  margin-bottom: 0;
   line-height: 1.25rem;
   @extend .clearfix;
   dt, dd {
@@ -271,13 +272,51 @@
   }
 }
 
+.single-footer {
+  background-color: $grey4;
+  padding: 16px;
+  border-top: 1px solid $grey2;
+}
+
 .single-pager {
   text-align: center;
-  margin-bottom: 2rem;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  background-color: $grey3;
+  border-radius: $global-radius;
+  overflow: hidden;
+  a, span {
+    padding: 10px;
+  }
+  a {
+    display: block;
+    color: $darkBlue;
+    &:hover {
+      opacity: 1;
+      color: $teal;
+      .mdi-icon {
+        fill: $teal;
+      }
+    }
+    &.previous {
+      padding-right: 20px;
+    }
+    &.next {
+      padding-left: 20px;
+    }
+  }
+  span {
+    position: relative;
+    top: 2px;
+    color: $grey;
+  }
   .mdi-icon {
-    transform: scale(2);
+    transform: scale(1);
     stroke: none;
-    fill: $grey;
+    fill: $darkBlue;
+    position: relative;
+    top: 1px;
   }
 }
 

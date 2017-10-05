@@ -178,9 +178,12 @@
       height: 40px;
       border: 1px solid $grey1;
       margin-right: 10px;
+      overflow: hidden;
+      background-color: $white;
       img {
-        width: 40px;
-        height: 40px;
+        width: 38px;
+        height: 38px;
+        object-fit: cover;
       }
     }
     .provided_by {
@@ -354,8 +357,8 @@
     margin-right: 12px;
     overflow: hidden;
     img {
-      width: 80px;
-      height: 80px;
+      width: 78px;
+      height: 78px;
       object-fit: cover;
     }
   }

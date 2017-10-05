@@ -8,7 +8,7 @@ OAM_UP.developerKey = config.googleDeveloperKey;
 
 // The google api loads the different components needed one at a time.
 // This function is loaded once the core api code loads.
-const onGApiLoad = function() {
+const gApiBoot = function() {
   gapi.load("auth", {
     callback: () => {
       OAM_UP.gAuthApiLoaded = true;
@@ -88,7 +88,7 @@ const pickFiles = function() {
   return p;
 };
 
-window.onGApiLoad = onGApiLoad;
+window.addEventListener("load", gApiBoot, false);
 
 export default {
   picker: function() {

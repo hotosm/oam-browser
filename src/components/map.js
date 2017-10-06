@@ -73,6 +73,7 @@ export default createReactClass({
     this.requireSelectedItemUpdate =
       _.get(this.props.selectedItem, "_id", null) !==
       _.get(nextProps.selectedItem, "_id", null);
+    this.updateGrid();
   },
 
   // Lifecycle method.
@@ -313,6 +314,12 @@ export default createReactClass({
   updateGrid: function() {
     var _this = this;
     this.mapGridLayer.clearLayers();
+
+    // Don't show the grid if an image is selected. This actually originally
+    // derives from the difficulty of displaying a `tileLayer` over `geoJson`.
+    // The documented methods of temporal ordering and zIndex values do not
+    // seem to work.
+    if (this.props.params.image_id) return;
 
     // Recompute grid based on current map view (bounds + zoom).
     var bounds = this.map

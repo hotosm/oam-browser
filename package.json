@@ -22,6 +22,7 @@
     "build": "react-scripts build",
     "analyze": "source-map-explorer build/static/js/main.*",
     "lint": "eslint --ignore-pattern src/joi.js --ignore-pattern styles/ src/ test/",
+    "fix-lint": "eslint --ignore-pattern src/joi.js --fix --ignore-pattern styles/ src/ test/",
     "test": "NODE_ENV=test NODE_PATH=src:test/specs mocha --opts test/specs/mocha.opts test/specs/*_spec.js"
   },
   "devDependencies": {

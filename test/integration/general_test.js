@@ -59,7 +59,7 @@ function submitImagery(imageryUri, title = "Test imagery") {
   browser.url("#/upload");
   fillInUploadForm(title);
   inputRemoteImageryUri(imageryUri);
-  browser.click("a=Submit");
+  browser.click("button=Submit");
   return waitForImageryProcessing();
 }
 
@@ -86,7 +86,7 @@ function fillInUploadForm(title) {
 }
 
 function inputRemoteImageryUri(imageryUri) {
-  browser.click("a=Url");
+  browser.click("button=Url");
   $("#scene-0-img-loc-0-url").setValue(imageryUri);
   // The URL button is pretty sensitive, sometimes you press
   // it and 2 inputs appear.
@@ -192,9 +192,9 @@ describe("Imagery", function() {
       logIn();
       browser.url("#/upload");
       fillInUploadForm(title);
-      browser.click("a=Local File");
+      browser.click("button=Local File");
       browser.chooseFile("#scene-0-img-loc-0-url", localPath);
-      browser.click("a=Submit");
+      browser.click("button=Submit");
       waitForImageryProcessing();
       expect("a=View image").to.be.there();
     });
@@ -250,7 +250,7 @@ describe("Imagery", function() {
       browser.click("a=Edit");
       finishLoading();
       $("#scene-0-title").setValue("A different title");
-      browser.click("a=Submit");
+      browser.click("button=Submit");
       finishLoading();
       browser.url("#/account");
       finishLoading();

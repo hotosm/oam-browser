@@ -11,6 +11,7 @@ import userStore from "stores/user_store";
 import MapLayers from "components/map-layers";
 import MainMenu from "components/main_menu";
 import SearchBox from "components/search_box";
+import UploadIcon from "mdi-react/UploadIcon";
 
 import logo from "images/oam-logo-h-pos.svg";
 
@@ -61,6 +62,7 @@ export default createReactClass({
           <a className="main-logo" href="#/" title="Home">
             <img src={logo} alt="OpenAerialMap logo" />
           </a>
+          <MainMenu />
 
           {this.isMap() ? (
             <nav className="page__prime-nav">
@@ -80,7 +82,32 @@ export default createReactClass({
               </div>
             </nav>
           ) : null}
-          <MainMenu />
+
+          <ul className="login-menu">
+            {this.state.isUserLoggedIn ? (
+              <li className="bttn bttn-icon bttn-info">
+                <a href="#/upload" title="Go to OAM Uploader">
+                  <span>Upload</span>
+                  <UploadIcon />
+                </a>
+              </li>
+            ) : (
+              <li className="bttn menu-signin-upload">
+                <a onClick={this.onLoginClick} title="Sign In">
+                  <span>Sign In</span>
+                </a>
+              </li>
+            )}
+            <li className="menu-profile_pic">
+              {this.state.isUserLoggedIn ? (
+                <a href="#/account">
+                  <div className="profile-pic-wrapper">
+                    <img src={this.state.user.profile_pic_uri} alt="Profile" />
+                  </div>
+                </a>
+              ) : null}
+            </li>
+          </ul>
         </div>
       </header>
     );

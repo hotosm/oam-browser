@@ -3,7 +3,6 @@ import createReactClass from "create-react-class";
 import Reflux from "reflux";
 
 import MenuIcon from "mdi-react/MenuIcon";
-import UploadIcon from "mdi-react/UploadIcon";
 
 import config from "config";
 import actions from "actions/actions";
@@ -79,30 +78,6 @@ export default createReactClass({
 
     return (
       <ul className="main-menu">
-        {this.state.isUserLoggedIn ? (
-          <li className="bttn bttn-icon bttn-info">
-            <a href="#/upload" title="Go to OAM Uploader">
-              <span>Upload</span>
-              <UploadIcon />
-            </a>
-          </li>
-        ) : (
-          <li className="bttn menu-signin-upload">
-            <a onClick={this.onLoginClick} title="Sign In">
-              <span>Sign In</span>
-            </a>
-          </li>
-        )}
-
-        <li className="menu-profile_pic">
-          {this.state.isUserLoggedIn ? (
-            <a href="#/account">
-              <div className="profile-pic-wrapper">
-                <img src={this.state.user.profile_pic_uri} alt="Profile" />
-              </div>
-            </a>
-          ) : null}
-        </li>
         <li className="bttn menu-dropdown">
           <MenuIcon />
           <Dropdown

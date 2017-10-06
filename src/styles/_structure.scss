@@ -21,14 +21,21 @@ $menu-unit: 40px;
 
 .main-menu {
   position: absolute;
+  left: 420px;
+  top: 1em;
+  > li {
+    display: inline-block;
+    margin-left: 4px;
+  }
+}
+
+.login-menu {
+  position: absolute;
   right: 1rem;
   top: 1em;
   > li {
     display: inline-block;
     margin-left: 4px;
-    a {
-      // padding: 8px;
-    }
   }
 }
 
@@ -219,7 +226,8 @@ $menu-unit: 40px;
 
 .app-menu,
 .meta-menu,
-.main-menu {
+.main-menu,
+.login-menu {
   list-style: none;
   padding: 0;
   margin: 0;

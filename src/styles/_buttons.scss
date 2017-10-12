@@ -73,8 +73,8 @@
 
 .bttn-icon {
   @extend .clearfix;
-  padding-right: 0;
-  padding-left: .25rem;
+  padding-right: .5rem;
+  padding-left: 1rem;
   .mdi-icon {
     stroke: $white;
     fill: $white;

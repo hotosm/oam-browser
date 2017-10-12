@@ -269,8 +269,8 @@
 .drop__title {
   font-size: 0.875rem;
   line-height: 1.25rem;
-  margin: 0 0 $global-spacing 0 !important;
-  text-align: center;
+  margin: 0 0 $global-spacing -.5rem !important;
+  color: $grey1;
 }
 
 
@@ -309,9 +309,6 @@
 /* Select modifier */
 
 .drop__menu--select {
-  .drop__menu-item {
-    padding-right: $global-spacing * 2.5;
-  }
   .drop__menu-item--active {
     color: inherit;
     outline: 0;

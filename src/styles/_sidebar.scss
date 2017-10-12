@@ -17,6 +17,7 @@
 .pane-header {
   padding: 0 1rem;
   display: flex;
+  align-items: flex-start;
   margin-bottom: 10px;
   h2 {
     @extend .clearfix;
@@ -26,6 +27,7 @@
   }
   .pane-menu {
     background-color: $grey3;
+    height: 40px;
     padding: 8px 8px 7px;
     border-radius: $global-radius;
     flex-grow: 0;

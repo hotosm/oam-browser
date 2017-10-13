@@ -6,6 +6,7 @@ import Reflux from "reflux";
 import actions from "actions/actions";
 import Filters from "components/filters";
 import utils from "utils/utils";
+import OpenInNewIcon from "mdi-react/OpenInNewIcon";
 
 import userStore from "stores/user_store";
 import MapLayers from "components/map-layers";
@@ -58,11 +59,12 @@ export default createReactClass({
     return (
       <header className="main-header" role="banner">
         <div className="main-header-wrapper">
-          <a className="main-logo" href="#/" title="Home">
-            <img src={logo} alt="OpenAerialMap logo" />
-          </a>
 
           {this.isMap() ? (
+            <div>
+            <a className="main-logo" href="#/" title="Home">
+              <img src={logo} alt="OpenAerialMap logo" />
+            </a>
             <nav className="page__prime-nav">
               <div className="nav-block-prime">
                 <SearchBox />
@@ -79,7 +81,46 @@ export default createReactClass({
                 </ul>
               </div>
             </nav>
-          ) : null}
+            </div>
+          ) : (
+            <div className="standard-nav">
+              <a className="main-logo" href="#/" title="Home">
+                <img src={logo} alt="OpenAerialMap logo" />
+              </a>
+              <nav className="page__prime-nav" role="navigation">
+                <ul className="global-menu" id="primary-menu">
+                  <li>
+                    <a href="#" title="Visit page" className="global-menu-item">
+                      <span>Explore imagery</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#/account" title="Visit page" className="global-menu-item">
+                      <span>Your images</span>
+                    </a>
+                  </li>
+                </ul>
+                <ul className="global-menu" id="secondary-menu">
+                  <li>
+                    <a href="https://docs.openaerialmap.org" title="Visit page" className="global-menu-item">
+                      <span>Help</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="http://openaerialmap.org/about/" title="Visit page" className="global-menu-item">
+                      <span>About</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://blog.openaerialmap.org" title="Visit page" className="global-menu-item">
+                      <span>Blog <OpenInNewIcon className="mdi-icon-link" /></span>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+            )
+          }
           <MainMenu />
         </div>
       </header>

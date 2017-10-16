@@ -57,8 +57,42 @@
   background-color: $grey4;
   border-top: 1px solid $grey2;
   font-size: .875rem;
+  font-weight: 400;
+  color: $grey1;
   p {
     margin: 0;
+    color: $grey;
+    text-align: center;
+  }
+  li a, p a {
+    color: $grey;
+  }
+  .bttn {
+    margin-bottom: 16px
+  }
+  .footer-bottom {
+    display: flex;
+    p {
+      flex: 1;
+    }
+  }
+}
+
+.footer-nav {
+  ul {
+    display: flex;
+    padding: 0;
+    margin-top: 0;
+  }
+  li {
+    list-style: none;
+    margin-right: 10px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+  .footer-nav-terms {
+    flex: 1;
   }
 }
 

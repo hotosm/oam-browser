@@ -284,16 +284,13 @@ $menu-unit: 40px;
 }
 
 .status-item {
-  padding-right: 2rem !important;
   &:after {
-    position: absolute;
-    top: 50%;
-    right: 1rem;
-    height: 1rem;
-    width: 0.5rem;
     content: "";
-    transform: translate(0, -50%);
-    border-radius: $base-border-radius;
+    display: inline-block;
+    height: 8px;
+    width: 8px;
+    border-radius: 4px;
+    margin-left: 4px;
     background: $base-font-color;
   }
   &--up:after { background: $success-color; }

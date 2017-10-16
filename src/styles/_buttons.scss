@@ -20,6 +20,9 @@
   cursor: pointer;
   background-color: $darkBlue;
   vertical-align: top;
+  &:visited {
+    color: #FFF;
+  }
   a {
     color: white;
     display: block;
@@ -72,6 +75,37 @@
   border: 1px solid $grey2;
   box-shadow: none;
   color: $grey;
+  &:visited {
+    color: $grey;
+  }
+}
+
+.bttn-secondary-teal {
+  background-color: transparent;
+  border: 1px solid $teal;
+  box-shadow: none;
+  color: $teal;
+  &:visited {
+    color: $teal;
+  }
+}
+
+.bttn-secondary-darkblue {
+  background-color: transparent;
+  border: 1px solid $darkBlue;
+  box-shadow: none;
+  color: $darkBlue;
+  &:visited {
+    color: $darkBlue;
+  }
+}
+
+.bttn-grey {
+  background-color: $grey2;
+  color: $darkBlue;
+  &:visited {
+    color: $darkBlue;
+  }
 }
 
 .bttn-submit {

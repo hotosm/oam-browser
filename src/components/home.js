@@ -13,6 +13,7 @@ import cookie from "utils/cookie";
 import utils from "utils/utils";
 import actions from "actions/actions";
 import config from "config";
+import Status from "components/oam-status";
 
 export default createReactClass({
   displayName: "Home",
@@ -142,13 +143,45 @@ export default createReactClass({
             "Loading imagery ..."
           )}
           <footer className="sidebar-footer">
-            <p>
-              Made with{" "}
-              <span role="img" aria-label="love">
-                ❤️
-              </span>{" "}
-              by HOT partners and community.
-            </p>
+            <div className="footer-nav">
+              <ul>
+                <li className="footer-nav-contact">
+                  Contact:{" "}
+                  <a href="mailto:info@openaerialmap.org">
+                    info@openaerialmap.org
+                  </a>
+                </li>
+                <li>
+                  <a href="http://openaerialmap.org/about">About</a>
+                </li>
+                <li>
+                  <a href="https://docs.openaerialmap.org/browser/getting-started/">
+                    Help
+                  </a>
+                </li>
+                <li className="footer-nav-terms">
+                  <a href="http://openaerialmap.org/legal">Terms</a>
+                </li>
+                <li className="footer-nav-status">
+                  <Status />
+                </li>
+              </ul>
+            </div>
+            <a
+              className="bttn bttn-grey bttn-block"
+              onClick={() => actions.openModal("feedback")}
+            >
+              Feedback
+            </a>
+            <div className="footer-bottom">
+              <p>
+                Made with{" "}
+                <span role="img" aria-label="love">
+                  ❤️
+                </span>{" "}
+                by HOT partners and community.
+              </p>
+            </div>
           </footer>
         </div>
 

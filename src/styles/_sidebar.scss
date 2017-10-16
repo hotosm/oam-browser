@@ -188,7 +188,7 @@
         object-fit: cover;
       }
     }
-    .provided_by {
+    .uploaded_by {
       display: block;
       text-transform: uppercase;
       color: $grey;
@@ -287,6 +287,9 @@
   dd {
     width: 68%;
     text-align: right;
+  }
+  .cap {
+    text-transform: capitalize;
   }
 }
 

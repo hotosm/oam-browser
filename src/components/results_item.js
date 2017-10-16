@@ -411,12 +411,12 @@ export default createReactClass({
                       <div className="profile-pic-wrapper">
                         <img
                           src={this.props.user.profile_pic_uri}
-                          alt="Provider"
+                          alt="Uploader"
                         />
                       </div>
                     ) : null}
                     <div>
-                      <small className="provided_by">Provided by</small>
+                      <small className="uploaded_by">Uploaded by</small>
                       {this.props.user.name}
                     </div>
                   </a>
@@ -453,23 +453,28 @@ export default createReactClass({
               </dt>
               <dd>{utils.gsdToUnit(d.gsd)}</dd>
               <dt>
-                <span>Type</span>
+                <span>Provider</span>
               </dt>
-              <dd>{d.properties.tms ? "Image + Map Layer" : "Image"}</dd>
-              <dt>
-                <span>Image Size</span>
-              </dt>
-              <dd className="cap">{prettyBytes(d.file_size)}</dd>
+              <dd>{d.provider}</dd>
               <dt>
                 <span>Platform</span>
               </dt>
-              <dd className="cap">{d.platform}</dd>
+              <dd className="cap">{d.platform === "uav" ? d.platform.toUpperCase() 
+                : d.platform}</dd>
               <dt>
                 <span>Sensor</span>
               </dt>
               <dd className="cap">
                 {d.properties.sensor ? d.properties.sensor : "not available"}
               </dd>
+              <dt>
+                <span>Image Size</span>
+              </dt>
+              <dd className="cap">{prettyBytes(d.file_size)}</dd>
+              <dt>
+                <span>Type</span>
+              </dt>
+              <dd>{d.properties.tms ? "Image + Map Layer" : "Image"}</dd>
             </dl>
 
             {d.custom_tms ? (

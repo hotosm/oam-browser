@@ -142,13 +142,25 @@ export default createReactClass({
             "Loading imagery ..."
           )}
           <footer className="sidebar-footer">
-            <p>
-              Made with{" "}
-              <span role="img" aria-label="love">
-                ❤️
-              </span>{" "}
-              by HOT partners and community.
-            </p>
+            <div className="footer-nav">
+              <ul>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Help</a></li>
+                <li><a href="#">Terms</a></li>
+                <li className="footer-nav-status"><a href="https://status.openaerialmap.org">Status <span className="status-item-footer status-item--up"></span></a></li>
+                <li className="footer-nav-contact">Contact: <a href="mailto:info@openownership.org">info@openownership.org</a></li>
+              </ul>
+            </div>
+            <a href="#" className="bttn bttn-grey bttn-block">Feedback</a>
+            <div className="footer-bottom">
+              <p>
+                Made with{" "}
+                <span role="img" aria-label="love">
+                  ❤️
+                </span>{" "}
+                by HOT partners and community.
+              </p>
+            </div>
           </footer>
         </div>
 

@@ -57,8 +57,53 @@
   background-color: $grey4;
   border-top: 1px solid $grey2;
   font-size: .875rem;
+  font-weight: 400;
+  color: $grey1;
   p {
     margin: 0;
+    color: $grey;
+    text-align: center;
+  }
+  li a, p a {
+    color: $grey;
+  }
+  .bttn {
+    margin-bottom: 16px
+  }
+  .footer-bottom {
+    display: flex;
+    p {
+      flex: 1;
+    }
+  }
+}
+
+.footer-nav {
+  ul {
+    display: flex;
+    padding: 0;
+    margin-top: 0;
+  }
+  li {
+    list-style: none;
+    margin-right: 15px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+  .footer-nav-status {
+    flex: 1;
+  }
+  .status-item-footer {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    margin-left: 2px;
+    background-color: $grey;
+  }
+  .status-item--up {
+    background-color: $green;
   }
 }
 

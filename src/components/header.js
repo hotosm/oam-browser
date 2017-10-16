@@ -90,7 +90,7 @@ export default createReactClass({
               <nav className="page__prime-nav" role="navigation">
                 <ul className="global-menu" id="primary-menu">
                   <li>
-                    <a href="#" title="Visit page" className="global-menu-item">
+                    <a href="#/" title="Visit page" className="global-menu-item">
                       <span>Explore imagery</span>
                     </a>
                   </li>

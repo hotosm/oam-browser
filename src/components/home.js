@@ -13,6 +13,7 @@ import cookie from "utils/cookie";
 import utils from "utils/utils";
 import actions from "actions/actions";
 import config from "config";
+import Status from "components/oam-status";
 
 export default createReactClass({
   displayName: "Home",
@@ -144,14 +145,23 @@ export default createReactClass({
           <footer className="sidebar-footer">
             <div className="footer-nav">
               <ul>
-                <li><a href="#">About</a></li>
+                <li><a href="http://openaerialmap.org/about">About</a></li>
                 <li><a href="#">Help</a></li>
-                <li><a href="#">Terms</a></li>
-                <li className="footer-nav-status"><a href="https://status.openaerialmap.org">Status <span className="status-item-footer status-item--up"></span></a></li>
-                <li className="footer-nav-contact">Contact: <a href="mailto:info@openownership.org">info@openownership.org</a></li>
+                <li><a href="http://openaerialmap.org/legal">Terms</a></li>
+                <li className="footer-nav-status">
+                  <Status />
+                </li>
+                <li className="footer-nav-contact">
+                  Contact: <a href="mailto:info@openaerialmap.org" >info@openaerialmap.org</a>
+                </li>
               </ul>
             </div>
-            <a href="#" className="bttn bttn-grey bttn-block">Feedback</a>
+            <a 
+              className="bttn bttn-grey bttn-block"
+              onClick={() => actions.openModal("feedback")}
+            >
+              <span>Feedback</span>
+            </a>
             <div className="footer-bottom">
               <p>
                 Made with{" "}

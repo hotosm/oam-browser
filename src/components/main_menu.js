@@ -5,10 +5,11 @@ import Reflux from "reflux";
 import MenuIcon from "mdi-react/MenuIcon";
 import UploadIcon from "mdi-react/UploadIcon";
 
-import config from "config";
 import actions from "actions/actions";
 import Dropdown from "oam-design-system/dropdown";
 import userStore from "stores/user_store";
+
+import Status from "components/oam-status";
 
 export default createReactClass({
   displayName: "MainMenu",
@@ -38,44 +39,7 @@ export default createReactClass({
     actions.openModal("login");
   },
 
-  fetchOAMHealth: function() {
-    fetch(config.oamStatus)
-      .then(response => {
-        if (!response.ok)
-          return Promise.reject(new Error(`HTTP Error ${response.status}`));
-        return response.json();
-      })
-      .then(data => {
-        this.setState({
-          oamHealth: data.health
-        });
-      });
-  },
-
-  getOAMHealthClass: function() {
-    var oamHealthClass = "drop__menu-item status-item ";
-    switch (this.state.oamHealth) {
-      case "green":
-        oamHealthClass += "status-item--up";
-        break;
-      case "yellow":
-        oamHealthClass += "status-item--meh";
-        break;
-      case "red":
-        oamHealthClass += "status-item--down";
-        break;
-      default:
-        oamHealthClass += "status-item--unknown";
-    }
-    return oamHealthClass;
-  },
-
-  componentDidMount: function() {
-    this.fetchOAMHealth();
-  },
-
   render: function() {
-    let oamHealthClass = this.getOAMHealthClass();
 
     return (
       <ul className="main-menu">
@@ -177,13 +141,7 @@ export default createReactClass({
             </ul>
             <ul className="drop__menu info-menu" role="menu">
               <li>
-                <a
-                  href="https://status.openaerialmap.org/"
-                  className={oamHealthClass}
-                  title="Go to OAM Status"
-                >
-                  <span>Status</span>
-                </a>
+                <Status />
               </li>
             </ul>
           </Dropdown>

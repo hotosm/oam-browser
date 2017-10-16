@@ -61,22 +61,22 @@ export default createReactClass({
         <div className="main-header-wrapper">
           {this.isMap() ? (
             <div>
-            <nav className="page__prime-nav">
-              <div className="nav-block-prime">
-                <SearchBox />
-                <ul className="app-menu">
-                  <li className="bttn menu-filters">
-                    <Filters
-                      params={this.props.params}
-                      query={this.props.query}
-                    />
-                  </li>
-                  <li className="bttn map-control-layers">
-                    <MapLayers />
-                  </li>
-                </ul>
-              </div>
-            </nav>
+              <nav className="page__prime-nav">
+                <div className="nav-block-prime">
+                  <SearchBox />
+                  <ul className="app-menu">
+                    <li className="bttn menu-filters">
+                      <Filters
+                        params={this.props.params}
+                        query={this.props.query}
+                      />
+                    </li>
+                    <li className="bttn map-control-layers">
+                      <MapLayers />
+                    </li>
+                  </ul>
+                </div>
+              </nav>
             </div>
           ) : (
             <div className="standard-nav">

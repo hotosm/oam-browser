@@ -459,8 +459,9 @@ export default createReactClass({
               <dt>
                 <span>Platform</span>
               </dt>
-              <dd className="cap">{d.platform === "uav" ? d.platform.toUpperCase() 
-                : d.platform}</dd>
+              <dd className="cap">
+                {d.platform === "uav" ? d.platform.toUpperCase() : d.platform}
+              </dd>
               <dt>
                 <span>Sensor</span>
               </dt>

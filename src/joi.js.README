@@ -1,0 +1,21 @@
+Ok, so why is there a symlink to joi-browser??
+
+Joi is a validation library, it's used here to validate our big
+forms. However it was originally written for Node and has been
+slow to pick up browser support. So someone has created an NPM
+module purely for pacakging a stripped-down version of JOI that
+plays nicely with compilers like Webpack and is lighter-weight.
+This version is called: https://github.com/jeffbski/joi-browser
+
+However, joi-browser, must be imported as "joi-browser". This
+is a problem for our "react-validation-mixin" dependency,
+which is currently locked to a version that explictly depends
+on "joi". Thus, by placing a symlink called `joi.js` under
+`src/` then Webpack will essentially be coerced into proxying
+any requests for "joi" to "joi-browser".
+
+In conclusion I think there are many reasons to stop using JOI
+in any shape or form. Not least that the stripped-down
+joi-browser version is 330k (44k minified and zipped). I would
+suggest using something like;
+https://github.com/christianalfoni/formsy-react

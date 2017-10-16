@@ -1,0 +1,123 @@
+/* ==========================================================================
+   Map
+   ========================================================================== */
+
+#map {
+  // See map.js for position styling
+  //position: fixed;
+  top: 0;
+  left: $sidebar-width;
+  bottom: 0;
+  right: 0;
+  border-left: 1px solid $grey2;
+}
+
+/* Grid
+   ========================================================================== */
+
+.gl {
+  fill-opacity: 0;
+  stroke: rgba($base-color, 0.08);
+  stroke-width: 1;
+}
+
+.gs {
+  fill-opacity: 0;
+  fill: $primary-color;
+  stroke: rgba($base-color, 0.08);
+  stroke-width: 1;
+  transition: all 0.2s ease 0s;
+
+  // Style cell shading according to layer
+  .base-layer--oam-base & {
+    fill: $primary-color;
+  }
+  .base-layer--osm & {
+    fill: $primary-color;
+  }
+  .base-layer--satellite & {
+    fill: #FFF;
+    stroke: rgba(#FFF, 0.05);
+  }
+  &.gs-active {
+    fill-opacity: 0.64;
+    fill: $secondary-color;
+  }
+}
+
+.gs-density-high {
+  fill-opacity: 0.7;
+}
+.gs-density-medhigh {
+  fill-opacity: 0.5;
+}
+.gs-density-med {
+  fill-opacity: 0.4;
+}
+.gs-density-low {
+  fill-opacity: 0.3;
+}
+
+.gs-density-high.gs-inactive,
+.gs-density-med.gs-inactive,
+.gs-density-low.gs-inactive {
+  opacity: 0.48;
+}
+
+.g-footprint {
+  fill-opacity: 0;
+  stroke: rgba($base-color, 0.64);
+  stroke-width: 1;
+}
+.gs-highlight {
+  stroke: rgba($base-color, 0.64) !important;
+  stroke-width: 1 !important;
+}
+
+.gs-tooltip-count {
+  & > * {
+    pointer-events: none;
+  }
+  .leaflet-popup-content-wrapper {
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    pointer-events: none;
+  }
+  .leaflet-popup-content {
+    @extend .antialiased;
+    text-align: center;
+    font-weight: $base-font-bold;
+    background: rgba($base-color, 0.48);
+    display: block;
+    color: #fff;
+    border-radius: $base-border-radius;
+    padding: 0 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    width: auto !important;
+  }
+  .leaflet-popup-tip-container {
+    display: none;
+  }
+}
+
+
+/* Minimap
+   ========================================================================== */
+
+#minimap {
+  position: absolute;
+  right: 1rem;
+  bottom: 2rem;
+  width: 16rem;
+  height: 10rem;
+  background: #fff;
+  box-shadow: $box-shadow-default;
+  border-radius: $base-border-radius;
+  overflow: hidden;
+}
+
+.map-menu-layers {
+  border: 0;
+}

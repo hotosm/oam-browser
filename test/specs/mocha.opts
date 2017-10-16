@@ -1,1 +1,2 @@
 --require test/specs/.setup.js
+--compilers babel-core/register

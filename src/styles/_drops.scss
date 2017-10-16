@@ -1,0 +1,373 @@
+/* ==========================================================================
+   Drops
+   ========================================================================== */
+
+.drop {
+  position: relative;
+  display: inline-block;
+}
+
+.drop__toggle {
+  &--caret {
+    &:after {
+      font-size: 1rem;
+      line-height: inherit;
+      vertical-align: top;
+      margin-left: 0.25rem;
+    }
+  }
+  &:focus {
+    outline: 0;
+  }
+}
+
+.drop__content {
+  position: absolute;
+  z-index: 1000;
+  width: 12rem;
+  margin: 0;
+  padding: $global-spacing;
+  overflow: hidden;
+  text-align: left;
+  color: $base-font-color;
+  font-size: 1rem;
+  line-height: 1.5;
+  background: #fff;
+  box-shadow: 0 2px 12px 2px $base-alpha-color, 0 0 0 1px $base-alpha-color;
+  border-radius: $global-radius;
+
+  /* Animation */
+
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.16s ease 0s, margin 0.16s ease 0s, visibility 0.16s linear 0s;
+
+  /* Positioning modifiers */
+
+  .drop--down > & {
+    top: 100%;
+    margin-top: -$global-spacing;
+  }
+
+  .drop--up > & {
+    bottom: 100%;
+    margin-bottom: -$global-spacing;
+  }
+
+  /* Aligning modifiers */
+
+  .drop--align-left > & {
+    left: 0;
+  }
+
+  .drop--align-center > & {
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
+
+  .drop--align-right > & {
+    right: 0;
+    left: auto;
+  }
+
+  /* Animation modifiers */
+
+  .drop--open > & {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .drop--down.drop--open > & {
+    margin-top: $global-spacing / 2;
+  }
+
+  .drop--up.drop--open > & {
+    margin-bottom: $global-spacing / 2;
+  }
+}
+
+[data-hook^="dropdown:close"],
+[data-hook=" dropdown:close"] {
+  * {
+    pointer-events: none;
+  }
+}
+
+/*
+  React specific styles to handle animations.
+  The tether library is being used and needs animations for all directions.
+ */
+
+.drop__content--react {
+  position: relative;
+  opacity: 1;
+  visibility: visible;
+  transition: none;
+}
+
+.tether-element {
+  z-index: 9999;
+}
+
+.drop-trans--up,
+.drop-trans--down {
+  &.drop__content {
+    transition: opacity .16s ease, transform .16s ease;
+  }
+}
+
+.drop-trans--right {
+  &.drop__content {
+    transition: opacity .16s ease, right .16s ease;
+    margin-right: 1rem;
+  }
+}
+
+.drop-trans--left {
+  &.drop__content {
+    transition: opacity .16s ease, left .16s ease;
+    margin-left: 1rem;
+  }
+}
+
+@mixin drop-top-start() {
+  opacity: 0;
+  transform: translate(0, -($global-spacing / 2));
+}
+
+@mixin drop-top-end() {
+  opacity: 1;
+  transform: translate(0, ($global-spacing / 2));
+}
+
+@mixin drop-bottom-start() {
+  opacity: 0;
+  transform: translate(0, ($global-spacing / 2));
+}
+
+@mixin drop-bottom-end() {
+  opacity: 1;
+  transform: translate(0, -($global-spacing / 2));
+}
+
+@mixin drop-left-start() {
+  opacity: 0;
+  left: -100%;
+  // transform: translate(-100%, 0);
+}
+
+@mixin drop-left-end() {
+  opacity: 1;
+  left: 0;
+  // transform: translate(1rem, 0);
+}
+
+@mixin drop-right-start() {
+  opacity: 0;
+  right: -100%;
+  // transform: translate(100%, 0);
+}
+
+@mixin drop-right-end() {
+  opacity: 1;
+  right: 0;
+  // transform: translate(-1rem, 0);
+}
+
+.drop-trans--down {
+  &.drop__content {
+    @include drop-top-end();
+  }
+
+  &.drop-trans-enter {
+    @include drop-top-start();
+
+    &.drop-trans-enter-active {
+      @include drop-top-end();
+    }
+  }
+
+  &.drop-trans-leave {
+    @include drop-top-end();
+
+    &.drop-trans-leave-active {
+      @include drop-top-start();
+    }
+  }
+}
+
+.drop-trans--up {
+  &.drop__content {
+    @include drop-bottom-end();
+  }
+
+  &.drop-trans-enter {
+    @include drop-bottom-start();
+
+    &.drop-trans-enter-active {
+      @include drop-bottom-end();
+    }
+  }
+
+  &.drop-trans-leave {
+    @include drop-bottom-end();
+
+    &.drop-trans-leave-active {
+      @include drop-bottom-start();
+    }
+  }
+}
+
+.drop-trans--left {
+  &.drop__content {
+    // @include drop-left-end();
+  }
+
+  &.drop-trans-enter {
+    @include drop-left-start();
+
+    &.drop-trans-enter-active {
+      @include drop-left-end();
+    }
+  }
+
+  &.drop-trans-leave {
+    @include drop-left-end();
+
+    &.drop-trans-leave-active {
+      @include drop-left-start();
+    }
+  }
+}
+
+.drop-trans--right {
+  &.drop__content {
+    // @include drop-right-end();
+  }
+
+  &.drop-trans-enter {
+    @include drop-right-start();
+
+    &.drop-trans-enter-active {
+      @include drop-right-end();
+    }
+  }
+
+  &.drop-trans-leave {
+    @include drop-right-end();
+
+    &.drop-trans-leave-active {
+      @include drop-right-start();
+    }
+  }
+}
+
+
+/* Drop title
+   ========================================================================== */
+
+.drop__title {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  margin: 0 0 $global-spacing -.5rem !important;
+  color: $grey1;
+}
+
+
+/* Drop menu
+   ========================================================================== */
+
+.drop__menu {
+  @extend .clearfix;
+  list-style: none;
+  margin: (-$global-spacing) (-$global-spacing) $global-spacing (-$global-spacing);
+  box-shadow: 0 1px 0 0 $base-alpha-color;
+  padding: ($global-spacing / 4) 0;
+  max-width: 16rem;
+  font-weight: $base-font-regular;
+
+  &:last-child {
+    margin-bottom: (-$global-spacing);
+    box-shadow: none;
+  }
+
+  .drop__menu-item {
+    position: relative;
+    display: block;
+    padding: 0.1rem 1rem;
+    color: inherit;
+    transition: all 0.16s ease 0s;
+    &:hover,
+    &:focus {
+      color: $link-color;
+      background-color: tint($link-color, 92%);
+      opacity: 1;
+    }
+  }
+}
+
+/* Select modifier */
+
+.drop__menu--select {
+  .drop__menu-item--active {
+    color: inherit;
+    outline: 0;
+    font-weight: $base-font-bold;
+    &:after {
+      position: absolute;
+      z-index: 1;
+      top: $global-spacing / 4;
+      right: $global-spacing / 2;
+      font-size: 1rem;
+      line-height: 1.5rem;
+      opacity: 0.32;
+      width: 1.5rem;
+      text-align: center;
+    }
+  }
+}
+
+/* Iconified modifier */
+
+.drop__menu--iconified {
+  .drop__menu-item {
+    padding-left: $global-spacing * 2.75;
+    &:before {
+      position: absolute;
+      z-index: 1;
+      top: $global-spacing / 4;
+      left: $global-spacing;
+      font-size: 1rem;
+      line-height: 1.5rem;
+      width: 1.5rem;
+      text-align: center;
+    }
+  }
+}
+
+/* Drop inset
+   ========================================================================== */
+
+.drop__inset {
+  background: tint($base-color, 96%);
+  color: tint($base-font-color, 32%);
+  box-shadow: inset 0 1px 0 0 $base-alpha-color, inset 0 -1px 0 0 $base-alpha-color;
+  margin: (-$global-spacing) (-$global-spacing) $global-spacing (-$global-spacing);
+  padding: $global-spacing;
+  &:first-child {
+    box-shadow: inset 0 -1px 0 0 $base-alpha-color;
+  }
+  &:last-child {
+    margin-bottom: (-$global-spacing);
+    box-shadow: inset 0 1px 0 0 $base-alpha-color;
+  }
+  &:only-child {
+    box-shadow: none;
+  }
+  > *:first-child {
+    margin-top: 0;
+  }
+  > *:last-child {
+    margin-bottom: 0;
+  }
+}

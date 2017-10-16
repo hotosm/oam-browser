@@ -1,0 +1,2 @@
+# Ensure that all text files have their line endings normalized
+* text=auto

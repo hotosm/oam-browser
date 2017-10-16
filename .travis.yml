@@ -1,53 +1,74 @@
+sudo: required
+
 language: node_js
 
-# As long as the "Build on push" and "Build on PR" settings are on, then
-# building only the develop anad master  branches here means that we can
-# dedeuplicate the occurence of PR and Push builds on PRs.
-branches:
-  only:
-    - develop
-    - master 
+services:
+  - mongodb
+  - docker
 
 env:
   global:
-    - CXX=g++-4.8
-    - DEPLOY_BRANCH=master
-    - STAGING_BRANCH=develop
-    - secure: fZv+ikPPQFtFe6Trfj4dptPGwVS6tgzwv1L/omCtjan+EmM6soYzUjXb+TCOXhcU0D8fJZIPDpbjFE/p5VQYpeXV7YSPbkSy5/vvRy67NQPLsWcyraRpe8fwc/r/fgGEyDnFVlm0Qwd7AFU8xy0Zl3R5McUljUHVG/WXwiXhttM=
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-4.8
-cache:
-  apt: true
-  directories:
-    - node_modules
-before_install:
-  - chmod +x ./.build_scripts/deploy.sh
-  - chmod +x ./.build_scripts/lint.sh
-  - chmod +x ./.build_scripts/build.sh
-before_script:
-  - "./.build_scripts/lint.sh"
-  - npm test
-script:
-  - ".build_scripts/build.sh"
-deploy:
-  - provider: script
-    skip_cleanup: true
-    script: ".build_scripts/deploy.sh"
-    on:
-      branch: "${DEPLOY_BRANCH}"
-  - provider: s3
-    access_key_id: AKIAIQZ7AFVTXS64KG4A
-    secret_access_key:
-      secure: oiV9oH3ujdsu/LtjHPec9HIBntQISoc0cRWXsfOmEj1a4Wo4v6ZEIOTpXgfyFqrAyBkQVT8WhbbXwg1Dlxxk6fsJDoTNDstwVtRPzYZW+rER5YP8rfuxfR45JJ0OrHhgJhzbuD07xZhvlKzXfW+2fxKIOqaGVuSdNFZXIqEIfbQ=
-    bucket: hotosm-oam-staging
-    region: us-east-1
-    skip_cleanup: true
-    local_dir: dist
-    acl: public_read
-    on:
-      repo: hotosm/oam-browser
-      branch: "${STAGING_BRANCH}"
+    - NODE_ENV=test
+    - OAM_ENV=test
+    - BSTACK_USER=thomasbuckleyhou1
+    - FACEBOOK_APP_ID=228592690987600
+    # OAM ENV
+    - secure: xzQ/kTbycCCR7IV9izc22se8j9vRO2F8XfVlNk78SpfytUVbupLfTdbfCBjxxY8L97Xv2WOS+FMIschb8slYUQqrFUY1AmstHap8mVbp/02lTNOovAuc3oYXi5R11DqaFNVs1jfmTeNdkqYIx79pIEqFyszBYca9RGZJFFeiw98=
+    - secure: eaZ4CZUipVZVdjb1q/HYyVsgWuIt+w1/dD4bV4wGTVfse5Ho6enwY2kyLYCtuj/MqRyReuDAzjxU56fwnvuaPtp/pE57b7wxv6WgC0Gmqpn/WbASZ08cXlGxamq/M45OaTeRmuzo1lbo82/TGyW6StK8bEGkoCVH+Nao6UgFJXA=
+    # Facebook App secret
+    - secure: rtfJJDiqqtt8bHu/bpqEtEkztf2yVfrChEkgToc3Xqt7WglMzfAF8Cpv4XFDFw3yCDD1OqU3ro3CjiTvMiJZ53koKPy2nMFymtox97r1kIiZbKgWRRtCwYlqR31FlaNUycJDzjDGXvc/Ed2IFfltQAtXPgNHTZTThxwlcqMUEBo=
+    # Browserstack key
+    - secure: vqxmbfHBZ20WrX0tQwysZAIy8JscR63EfuHX22OBFwbsvWuKoBeywJZOBCWNxMq3RpIsAZFdc4BUZ4TI4WWqj+Xb0cGwFiNmzzXIXPTnyeTBQHX1tRMFJkicvRLkxtQa9653iIzgiLwoAF36DmBk10CkFrQ6+wjHuDX96nKRPKw=
+
+jobs:
+  include:
+    - stage: "Specs :factory:"
+      before_script: yarn lint
+      script: yarn test
+
+    - &integration-test
+      stage: "Integration against Catalog API versions :earth_asia:"
+      env: CATALOG_API_VERSION=pinned BROWSER=chrome
+      before_script: test/integration/build.sh $CATALOG_API_VERSION
+      script: test/integration/run.sh $BROWSER
+      after_failure:
+        - docker ps
+        - docker logs test_test-app_1
+        - sleep 10 # Give the docker logs a chance to output
+
+    - <<: *integration-test
+      env: CATALOG_API_VERSION=pinned BROWSER=edge
+    - <<: *integration-test
+      env: CATALOG_API_VERSION=latest BROWSER=chrome
+    - <<: *integration-test
+      env: CATALOG_API_VERSION=latest BROWSER=edge
+
+    - stage: "Deploy :rocket:"
+      script: true #noop
+      deploy:
+        # Only for staging branch: deploys to s3
+        - provider: s3
+          access_key_id: AKIAIQZ7AFVTXS64KG4A
+          secret_access_key:
+            secure: oiV9oH3ujdsu/LtjHPec9HIBntQISoc0cRWXsfOmEj1a4Wo4v6ZEIOTpXgfyFqrAyBkQVT8WhbbXwg1Dlxxk6fsJDoTNDstwVtRPzYZW+rER5YP8rfuxfR45JJ0OrHhgJhzbuD07xZhvlKzXfW+2fxKIOqaGVuSdNFZXIqEIfbQ=
+          bucket: hotosm-oam-staging
+          region: us-east-1
+          skip_cleanup: true
+          local_dir: build
+          acl: public_read
+          on:
+            repo: hotosm/oam-browser
+            branch: develop
+
+  allow_failures:
+    # TODO: Edge just has a problem with entering text into the
+    # autocomplete.
+    - <<: *integration-test
+      env: CATALOG_API_VERSION=pinned BROWSER=edge
+    # Latest (bleeding edge) is always allowed to fail. It's just here to give
+    # developers forewarning about any upstream breaking change they
+    # might introduce.
+    - <<: *integration-test
+      env: CATALOG_API_VERSION=latest BROWSER=chrome
+    - <<: *integration-test
+      env: CATALOG_API_VERSION=latest BROWSER=edge

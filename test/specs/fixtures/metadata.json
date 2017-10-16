@@ -1,0 +1,28 @@
+{
+    "uuid": "http://oin-hotosm.s3.amazonaws.com/593164d3e407d7001138610d/0/6f407df9-a342-4fe8-a802-6cd81ca8974a.tif",
+    "title": "Finca La escalera",
+    "platform": "uav",
+    "provider": "Aeracoop",
+    "contact": "Aeracoop,aeracoop@gmail.com",
+    "properties": {
+        "thumbnail": "http://oin-hotosm.s3.amazonaws.com/593164d3e407d7001138610d/0/6f407df9-a342-4fe8-a802-6cd81ca8974a_thumb.png",
+        "tms": "https://tiles.openaerialmap.org/593164d3e407d7001138610d/0/6f407df9-a342-4fe8-a802-6cd81ca8974a/{z}/{x}/{y}.png",
+        "wmts": "https://tiles.openaerialmap.org/593164d3e407d7001138610d/0/6f407df9-a342-4fe8-a802-6cd81ca8974a/wmts",
+        "sensor": "DJI Mavic",
+        "license": "CC-BY 4.0",
+        "tags": "La Marina, mr10"
+    },
+    "acquisition_start": "2017-05-31T22:00:00.000Z",
+    "acquisition_end": "2017-06-01T17:01:26.728Z",
+    "uploaded_at": "2017-06-02T13:15:01.400Z",
+    "file_size": 28943182,
+    "projection": "PROJCS[\"WGS 84 / UTM zone 30N\",GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4326\"]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"latitude_of_origin\",0],PARAMETER[\"central_meridian\",-3],PARAMETER[\"scale_factor\",0.9996],PARAMETER[\"false_easting\",500000],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH],AUTHORITY[\"EPSG\",\"32630\"]]",
+    "gsd": 0.013380000000015912,
+    "bbox": [
+        -0.6393963452039436,
+        38.144621849739245,
+        -0.6371749068107655,
+        38.145986701138774
+    ],
+    "footprint": "POLYGON ((-0.639396345203944 38.1446218497392,-0.637174906810765 38.1446218497392,-0.637174906810765 38.1459867011388,-0.639396345203944 38.1459867011388,-0.639396345203944 38.1446218497392))"
+}

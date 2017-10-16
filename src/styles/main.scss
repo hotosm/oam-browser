@@ -1,0 +1,39 @@
+/**
+ * Normalize.css, a modern, HTML5-ready alternative to CSS resets:
+ * http://necolas.github.io/normalize.css/
+ */
+@import "normalize";
+
+// The blue loading progress bar that runs across the top like on github.com
+@import "nprogress/nprogress";
+
+// Sass for React Widgets datepicker
+// We need to include everything by hand because CRA doesn't pick up
+// the paths. Also including them by hand means we can exclude uneeded
+// files.
+$rw-font-path: "react-widgets/fonts";
+$rw-img-path: "react-widgets/img";
+@import "react-widgets/scss/variables";
+@import "react-widgets/scss/bootstrap-theme";
+@import "react-widgets/scss/mixins";
+@import "react-widgets/scss/normalize";
+@import "react-widgets/scss/icons";
+@import "react-widgets/scss/core";
+@import "react-widgets/scss/datepicker";
+
+// Site-specific Sass
+@import "variables";
+@import "functions";
+@import "mixins";
+@import "base";
+@import "buttons";
+@import "drops";
+@import "alerts";
+@import "modals";
+@import "forms";
+@import "structure";
+@import "helpers";
+@import "map";
+@import "sidebar";
+@import "users";
+@import "uploader";

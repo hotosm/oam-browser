@@ -1,0 +1,85 @@
+/* ==========================================================================
+   Variables
+   ========================================================================== */
+
+/* Colors
+   ========================================================================== */
+
+$darkBlue: #203C46;
+$teal: #449BB5;
+$green: #68C39F;
+
+$grey: #6E8087;
+$grey1: #B1BBBF;
+$grey2: #D1D7D9;
+$grey3: #DEE2E4;
+$grey4: #EFF1F2;
+$grey5: #F4F5F6;
+
+$white: #FFFFFF;
+$black: $darkBlue;
+$base-color: $grey;
+$primary-color: $teal;
+$secondary-color: $green;
+
+$danger-color: #ea4f54;
+$success-color: $green;
+$warning-color: #f6d55f;
+$info-color: $primary-color;
+
+$link-color: $teal;
+$base-alpha-color: rgba($base-color, 0.12);
+$base-semi-alpha-color: rgba($base-color, 0.08);
+
+
+/* Typography
+   ========================================================================== */
+
+$root-font-size: 16px;
+
+$base-font-color: $black;
+$base-font-family: "Yantramanav", sans-serif;
+$base-font-style: normal;
+$base-font-light: 400;
+$base-font-regular: 500;
+$base-font-bold: 600;
+$base-font-weight: $base-font-light;
+$base-font-size: 1rem;
+$base-line-height: 1.5;
+
+/* Decoration
+   ========================================================================== */
+
+/* Border radius */
+
+$global-radius: 2px;
+$base-border-radius: $global-radius;
+$full-border-radius: 60rem;
+
+
+/* Sizing, spacing and media queries
+   ========================================================================== */
+
+// Size of left-hand sidebar
+$sidebar-width: 480px;
+
+/* Sizing */
+
+$page-header-y: 0 !default;
+
+/* Spacing */
+
+$global-spacing: 1rem;
+
+/* Rows */
+
+$row-min-width: 320px;
+$row-max-width: 1280px;
+$jeet-max-width: $row-max-width; // reset jeet.gs max width
+
+$screen: "only screen";
+
+$global-spacing: 24px;
+
+$box-shadow-default: 0px 0px 6px 0px rgba(0,0,0,.09);
+$box-shadow-hover: 0px 0px 9px 0px rgba(0,0,0,.15);

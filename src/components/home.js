@@ -145,22 +145,22 @@ export default createReactClass({
           <footer className="sidebar-footer">
             <div className="footer-nav">
               <ul>
-                <li><a href="http://openaerialmap.org/about">About</a></li>
-                <li><a href="#">Help</a></li>
-                <li><a href="http://openaerialmap.org/legal">Terms</a></li>
-                <li className="footer-nav-status">
-                  <Status />
-                </li>
                 <li className="footer-nav-contact">
                   Contact: <a href="mailto:info@openaerialmap.org" >info@openaerialmap.org</a>
                 </li>
+                <li><a href="http://openaerialmap.org/about">About</a></li>
+                <li><a href="#">Help</a></li>
+                <li className="footer-nav-terms"><a href="http://openaerialmap.org/legal">Terms</a></li>
+                <li className="footer-nav-status">
+                  <Status />
+                </li>
               </ul>
             </div>
-            <a 
+            <a
               className="bttn bttn-grey bttn-block"
               onClick={() => actions.openModal("feedback")}
             >
-              <span>Feedback</span>
+              Feedback
             </a>
             <div className="footer-bottom">
               <p>

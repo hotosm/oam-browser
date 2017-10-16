@@ -27,7 +27,7 @@ export default createReactClass({
   },
 
   getOAMHealthClass: function() {
-    var oamHealthClass = "drop__menu-item status-item status-item-footer ";
+    var oamHealthClass = "drop__menu-item status-item ";
     switch (this.state.oamHealth) {
       case "green":
         oamHealthClass += "status-item--up";
@@ -57,7 +57,7 @@ export default createReactClass({
           className={oamHealthClass}
           title="Go to OAM Status"
         >
-          <span>Status</span>
+          Status
         </a>
     );
   }

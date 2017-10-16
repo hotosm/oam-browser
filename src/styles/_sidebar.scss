@@ -86,24 +86,13 @@
   }
   li {
     list-style: none;
-    margin-right: 15px;
+    margin-right: 10px;
     &:last-child {
       margin-right: 0;
     }
   }
-  .footer-nav-status {
+  .footer-nav-terms {
     flex: 1;
-  }
-  .status-item-footer {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 4px;
-    margin-left: 2px;
-    background-color: $grey;
-  }
-  .status-item--up {
-    background-color: $green;
   }
 }
 

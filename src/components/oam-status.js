@@ -52,13 +52,13 @@ export default createReactClass({
     let oamHealthClass = this.getOAMHealthClass();
 
     return (
-        <a
-          href="https://status.openaerialmap.org/"
-          className={oamHealthClass}
-          title="Go to OAM Status"
-        >
-          Status
-        </a>
+      <a
+        href="https://status.openaerialmap.org/"
+        className={oamHealthClass}
+        title="Go to OAM Status"
+      >
+        Status
+      </a>
     );
   }
 });

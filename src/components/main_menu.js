@@ -40,7 +40,6 @@ export default createReactClass({
   },
 
   render: function() {
-
     return (
       <ul className="main-menu">
         {this.state.isUserLoggedIn ? (

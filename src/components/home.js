@@ -146,11 +146,22 @@ export default createReactClass({
             <div className="footer-nav">
               <ul>
                 <li className="footer-nav-contact">
-                  Contact: <a href="mailto:info@openaerialmap.org" >info@openaerialmap.org</a>
+                  Contact:{" "}
+                  <a href="mailto:info@openaerialmap.org">
+                    info@openaerialmap.org
+                  </a>
                 </li>
-                <li><a href="http://openaerialmap.org/about">About</a></li>
-                <li><a href="#">Help</a></li>
-                <li className="footer-nav-terms"><a href="http://openaerialmap.org/legal">Terms</a></li>
+                <li>
+                  <a href="http://openaerialmap.org/about">About</a>
+                </li>
+                <li>
+                  <a href="https://docs.openaerialmap.org/browser/getting-started/">
+                    Help
+                  </a>
+                </li>
+                <li className="footer-nav-terms">
+                  <a href="http://openaerialmap.org/legal">Terms</a>
+                </li>
                 <li className="footer-nav-status">
                   <Status />
                 </li>

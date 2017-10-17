@@ -103,7 +103,10 @@ export default createReactClass({
     fields["contact-type"] = "other";
     fields["contact-name"] = contact[0];
     fields["contact-email"] = contact[1];
-    fields["license"] = "CC-BY 4.0";
+    fields["license"] = meta.properties.license;
+    fields["thumbnail"] = meta.properties.thumbnail;
+    fields["tms"] = meta.properties.tms;
+    fields["wmts"] = meta.properties.wmts;
     return fields;
   },
 
@@ -115,8 +118,16 @@ export default createReactClass({
     meta["acquisition_start"] = fields["date-start"];
     meta["acquisition_end"] = fields["date-end"];
     delete meta["sensor"];
+    delete meta["tms"];
+    delete meta["wmts"];
+    delete meta["thumbnail"];
+    delete meta["license"];
     meta["properties"] = {
-      sensor: fields["sensor"]
+      sensor: fields["sensor"],
+      tms: fields["tms"],
+      wmts: fields["wmts"],
+      thumbnail: fields["thumbnail"],
+      license: fields["license"]
     };
     return meta;
   },

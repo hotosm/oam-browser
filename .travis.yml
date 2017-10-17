@@ -44,7 +44,7 @@ jobs:
       env: CATALOG_API_VERSION=latest BROWSER=edge
 
     - stage: "Deploy :rocket:"
-      script: true #noop
+      script: "REACT_APP_OAM_ENV=staging yarn build"
       deploy:
         # For staging branch: deploys to s3
         - provider: s3
@@ -59,6 +59,9 @@ jobs:
           on:
             repo: hotosm/oam-browser
             branch: develop
+    - stage: "Deploy :rocket:"
+      script: "REACT_APP_OAM_ENV=production yarn build"
+      deploy:            
         # For production branch: deploys to s3
         - provider: s3
           access_key_id: AKIAI64NYOAFFWZEKWEA

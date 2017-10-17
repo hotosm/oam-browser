@@ -13,8 +13,8 @@ env:
     - BSTACK_USER=thomasbuckleyhou1
     - FACEBOOK_APP_ID=228592690987600
     # OAM ENV
-    - secure: xzQ/kTbycCCR7IV9izc22se8j9vRO2F8XfVlNk78SpfytUVbupLfTdbfCBjxxY8L97Xv2WOS+FMIschb8slYUQqrFUY1AmstHap8mVbp/02lTNOovAuc3oYXi5R11DqaFNVs1jfmTeNdkqYIx79pIEqFyszBYca9RGZJFFeiw98=
-    - secure: eaZ4CZUipVZVdjb1q/HYyVsgWuIt+w1/dD4bV4wGTVfse5Ho6enwY2kyLYCtuj/MqRyReuDAzjxU56fwnvuaPtp/pE57b7wxv6WgC0Gmqpn/WbASZ08cXlGxamq/M45OaTeRmuzo1lbo82/TGyW6StK8bEGkoCVH+Nao6UgFJXA=
+    #- secure: xzQ/kTbycCCR7IV9izc22se8j9vRO2F8XfVlNk78SpfytUVbupLfTdbfCBjxxY8L97Xv2WOS+FMIschb8slYUQqrFUY1AmstHap8mVbp/02lTNOovAuc3oYXi5R11DqaFNVs1jfmTeNdkqYIx79pIEqFyszBYca9RGZJFFeiw98=
+    #- secure: eaZ4CZUipVZVdjb1q/HYyVsgWuIt+w1/dD4bV4wGTVfse5Ho6enwY2kyLYCtuj/MqRyReuDAzjxU56fwnvuaPtp/pE57b7wxv6WgC0Gmqpn/WbASZ08cXlGxamq/M45OaTeRmuzo1lbo82/TGyW6StK8bEGkoCVH+Nao6UgFJXA=
     # Facebook App secret
     - secure: rtfJJDiqqtt8bHu/bpqEtEkztf2yVfrChEkgToc3Xqt7WglMzfAF8Cpv4XFDFw3yCDD1OqU3ro3CjiTvMiJZ53koKPy2nMFymtox97r1kIiZbKgWRRtCwYlqR31FlaNUycJDzjDGXvc/Ed2IFfltQAtXPgNHTZTThxwlcqMUEBo=
     # Browserstack key

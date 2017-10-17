@@ -46,12 +46,25 @@ jobs:
     - stage: "Deploy :rocket:"
       script: true #noop
       deploy:
-        # Only for staging branch: deploys to s3
+        # For staging branch: deploys to s3
         - provider: s3
-          access_key_id: AKIAIQZ7AFVTXS64KG4A
+          access_key_id: AKIAI64NYOAFFWZEKWEA
           secret_access_key:
-            secure: oiV9oH3ujdsu/LtjHPec9HIBntQISoc0cRWXsfOmEj1a4Wo4v6ZEIOTpXgfyFqrAyBkQVT8WhbbXwg1Dlxxk6fsJDoTNDstwVtRPzYZW+rER5YP8rfuxfR45JJ0OrHhgJhzbuD07xZhvlKzXfW+2fxKIOqaGVuSdNFZXIqEIfbQ=
-          bucket: hotosm-oam-staging
+            secure: "c05H81Jsi51+FvV3ZCUMUJG4D1jTiVux/KT+Zi2gIXMnZwFiyVMdsIzkfhD/cXN0Dn5vQba434WqVWH6fSDXyeyBXfRjGVCiwFI0wyDWyBZXoJ6og22d8TbAF9Nui9n/sId8bJzdh2pRmPlwKX1z8L8MGWD+wnrLPKQazPVuqhs="
+          bucket: map-staging.openaerialmap.org
+          region: us-east-1
+          skip_cleanup: true
+          local_dir: build
+          acl: public_read
+          on:
+            repo: hotosm/oam-browser
+            branch: develop
+        # For production branch: deploys to s3
+        - provider: s3
+          access_key_id: AKIAI64NYOAFFWZEKWEA
+          secret_access_key:
+            secure: "c05H81Jsi51+FvV3ZCUMUJG4D1jTiVux/KT+Zi2gIXMnZwFiyVMdsIzkfhD/cXN0Dn5vQba434WqVWH6fSDXyeyBXfRjGVCiwFI0wyDWyBZXoJ6og22d8TbAF9Nui9n/sId8bJzdh2pRmPlwKX1z8L8MGWD+wnrLPKQazPVuqhs="
+          bucket: map.openaerialmap.org
           region: us-east-1
           skip_cleanup: true
           local_dir: build

@@ -48,9 +48,8 @@ jobs:
       deploy:
         # For staging branch: deploys to s3
         - provider: s3
-          access_key_id: AKIAI64NYOAFFWZEKWEA
-          secret_access_key:
-            secure: "c05H81Jsi51+FvV3ZCUMUJG4D1jTiVux/KT+Zi2gIXMnZwFiyVMdsIzkfhD/cXN0Dn5vQba434WqVWH6fSDXyeyBXfRjGVCiwFI0wyDWyBZXoJ6og22d8TbAF9Nui9n/sId8bJzdh2pRmPlwKX1z8L8MGWD+wnrLPKQazPVuqhs="
+          access_key_id: $AWS_ACCESS_KEY_ID
+          secret_access_key: $AWS_SECRET_ACCESS_KEY
           bucket: map-staging.openaerialmap.org
           region: us-east-1
           skip_cleanup: true
@@ -64,9 +63,8 @@ jobs:
       deploy:            
         # For production branch: deploys to s3
         - provider: s3
-          access_key_id: AKIAI64NYOAFFWZEKWEA
-          secret_access_key:
-            secure: "c05H81Jsi51+FvV3ZCUMUJG4D1jTiVux/KT+Zi2gIXMnZwFiyVMdsIzkfhD/cXN0Dn5vQba434WqVWH6fSDXyeyBXfRjGVCiwFI0wyDWyBZXoJ6og22d8TbAF9Nui9n/sId8bJzdh2pRmPlwKX1z8L8MGWD+wnrLPKQazPVuqhs="
+          access_key_id: $AWS_ACCESS_KEY_ID
+          secret_access_key: $AWS_SECRET_ACCESS_KEY
           bucket: map.openaerialmap.org
           region: us-east-1
           skip_cleanup: true

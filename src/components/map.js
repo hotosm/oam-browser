@@ -490,7 +490,7 @@ export default createReactClass({
 
         this.disableSelectedSquare = true;
         this.getLayerMaxZoom(tmsUrl).then(data => {
-          this.map.options.maxZoom = data.layerMaxZoom;
+          this.map.options.maxZoom = data.maxzoom;
           this.mapOverImageLayer = L.tileLayer(tmsUrl, {
             maxZoom: this.map.options.maxZoom
           });

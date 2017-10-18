@@ -4,8 +4,11 @@ import createReactClass from "create-react-class";
 
 import ChevronRightIcon from "mdi-react/ChevronRightIcon";
 
+import actions from "actions/actions";
 import utils from "utils/utils";
 import api from "utils/api";
+
+import ConfirmDeleteModal from "components/modals/confirm_delete_modal";
 
 export default createReactClass({
   displayName: "Account",
@@ -101,13 +104,15 @@ export default createReactClass({
                           </a>{" "}
                           |&nbsp;
                           <a
-                            onClick={() => this.deleteImagery(image._id)}
+                            onClick={() => actions.openModal("confirmdelete")}
                             className="imagery-delete"
                           >
                             Delete
                           </a>
                         </span>
                       ) : null}
+                    <ConfirmDeleteModal
+                      deleteImage={() => this.deleteImagery(image._id)} />
                     </li>
                   </ul>
                 </div>

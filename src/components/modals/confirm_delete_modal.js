@@ -46,7 +46,7 @@ export default createReactClass({
     this.setState({ revealed: true });
   },
 
-  render: function()  {
+  render: function() {
     return (
       <ModalParent
         id="modal-about"
@@ -76,5 +76,4 @@ export default createReactClass({
       </ModalParent>
     );
   }
-
 });

@@ -94,23 +94,23 @@ export default createReactClass({
     let contact = meta.contact.split(",");
 
     fields["platform-type"] = meta.platform;
-    fields["sensor"] = meta.properties.sensor ?
-        meta.properties.sensor : meta.sensor;
+    fields["sensor"] = meta.properties.sensor
+      ? meta.properties.sensor
+      : meta.sensor;
     fields["date-start"] = start.toISOString();
     fields["date-end"] = end.toISOString();
     fields["contact-type"] = "other";
     fields["contact-name"] = contact[0];
     fields["contact-email"] = contact[1];
-    fields["tags"] = meta.properties.tags ?
-        meta.properties.tags : meta.tags;
-    fields["license"] = meta.properties.license ?
-        meta.properties.license : meta.license;
-    fields["thumbnail"] = meta.properties.thumbnail ?
-        meta.properties.thumbnail : '';
-    fields["tms"] = meta.properties.tms ?
-        meta.properties.tms : '';
-    fields["wmts"] = meta.properties.wmts ?
-        meta.properties.wmts : '';
+    fields["tags"] = meta.properties.tags ? meta.properties.tags : meta.tags;
+    fields["license"] = meta.properties.license
+      ? meta.properties.license
+      : meta.license;
+    fields["thumbnail"] = meta.properties.thumbnail
+      ? meta.properties.thumbnail
+      : "";
+    fields["tms"] = meta.properties.tms ? meta.properties.tms : "";
+    fields["wmts"] = meta.properties.wmts ? meta.properties.wmts : "";
     return fields;
   },
 

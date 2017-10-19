@@ -111,8 +111,9 @@ export default createReactClass({
                           </a>
                         </span>
                       ) : null}
-                    <ConfirmDeleteModal
-                      deleteImage={() => this.deleteImagery(image._id)} />
+                      <ConfirmDeleteModal
+                        deleteImage={() => this.deleteImagery(image._id)}
+                      />
                     </li>
                   </ul>
                 </div>

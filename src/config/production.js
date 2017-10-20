@@ -17,11 +17,11 @@ module.exports = {
     initialView: [-18.632, 18.479]
   },
   catalog: {
-    url: "http://34.224.18.156"
+    url: "https://api.openaerialmap.org"
   },
   oamStatus: "https://status.openaerialmap.org/healthcheck",
   feedbackSubmissionURL:
     "https://getsimpleform.com/messages/ajax?form_api_token=506fc2ac58582416b6086a68a343e344",
   OAMBrowserUrl:
-    "http://map.openaerialmap.org.s3-website-us-east-1.amazonaws.com/"
+    "http://map.openaerialmap.org"
 };

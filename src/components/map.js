@@ -521,9 +521,7 @@ export default createReactClass({
   //       This will prevent the need for;
   //       1. Hacking the `tms` field to get the base tileJSON URI.
   getLayerMaxZoom: function(tmsURI) {
-    const tileJSONURI = tmsURI
-      .replace(/\/\{z\}\/\{x\}\/\{y\}.*/, "")
-      .replace("http://", "https://");
+    const tileJSONURI = tmsURI.replace(/\/\{z\}\/\{x\}\/\{y\}.*/, "/");
     return fetch(tileJSONURI).then(response => {
       if (!response.ok)
         return Promise.reject(new Error(`HTTP Error ${response.status}`));

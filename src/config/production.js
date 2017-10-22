@@ -22,5 +22,5 @@ module.exports = {
   oamStatus: "https://status.openaerialmap.org/healthcheck",
   feedbackSubmissionURL:
     "https://getsimpleform.com/messages/ajax?form_api_token=506fc2ac58582416b6086a68a343e344",
-  OAMBrowserUrl: "http://map.openaerialmap.org"
+  OAMBrowserUrl: "https://map.openaerialmap.org"
 };

@@ -18,7 +18,7 @@
   "homepage": "http://openaerialmap.org",
   "scripts": {
     "postinstall": "[ -f src/config/local.js ] || echo 'module.exports = {};' > src/config/local.js",
-    "start": "react-scripts start",
+    "start": "NODE_PATH=src react-scripts start",
     "build": "react-scripts build",
     "analyze": "source-map-explorer build/static/js/main.*",
     "lint": "eslint --ignore-pattern src/joi.js --ignore-pattern styles/ src/ test/",
@@ -30,6 +30,7 @@
     "chai-webdriverio": "^0.3.0",
     "custom-react-scripts": "^0.2.0",
     "enzyme": "^2.8.2",
+    "eslint": "^4.10.0",
     "eslint-plugin-prettier": "^2.2.0",
     "fetch-mock": "^5.12.2",
     "mocha": "^3.2.0",

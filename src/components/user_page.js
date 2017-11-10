@@ -4,11 +4,10 @@ import createReactClass from "create-react-class";
 
 import ChevronRightIcon from "mdi-react/ChevronRightIcon";
 
-import actions from "actions/actions";
+//import actions from "actions/actions";
 import utils from "utils/utils";
 import api from "utils/api";
-
-import ConfirmDeleteModal from "components/modals/confirm_delete_modal";
+import ConfirmDeleteLink from "./confirm_delete_link";
 
 export default createReactClass({
   displayName: "Account",
@@ -78,7 +77,7 @@ export default createReactClass({
         <ul className="account__images">
           {this.state.user.images.length > 0 ? (
             this.state.user.images.map((image, i) => (
-              <li className="account__images-upload">
+              <li className="account__images-upload" key={image._id}>
                 <div className="images-thumbnail">
                   <a onClick={() => utils.imageUri(image)}>
                     <img
@@ -103,15 +102,10 @@ export default createReactClass({
                             Edit
                           </a>{" "}
                           |&nbsp;
-                          <a
-                            onClick={() => actions.openModal("confirmdelete")}
-                            className="imagery-delete"
-                          >
-                            Delete
-                          </a>
                         </span>
                       ) : null}
-                      <ConfirmDeleteModal
+                      <ConfirmDeleteLink
+                        id={image._id}
                         deleteImage={() => this.deleteImagery(image._id)}
                       />
                     </li>

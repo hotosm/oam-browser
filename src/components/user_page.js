@@ -4,7 +4,6 @@ import createReactClass from "create-react-class";
 
 import ChevronRightIcon from "mdi-react/ChevronRightIcon";
 
-//import actions from "actions/actions";
 import utils from "utils/utils";
 import api from "utils/api";
 import ConfirmDeleteLink from "./confirm_delete_link";

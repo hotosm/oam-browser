@@ -26,6 +26,7 @@
     "test": "NODE_ENV=test NODE_PATH=src:test/specs mocha --opts test/specs/mocha.opts test/specs/*_spec.js"
   },
   "devDependencies": {
+    "babel-preset-react-app": "^3.1.0",
     "chai": "^3.5.0",
     "chai-webdriverio": "^0.3.0",
     "custom-react-scripts": "^0.2.0",

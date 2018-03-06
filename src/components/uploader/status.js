@@ -2,16 +2,9 @@ import { Router } from "react-router";
 import PropTypes from "prop-types";
 import React from "react";
 import createReactClass from "create-react-class";
-import moment from "moment";
-
 import util from "util";
-import utils from "utils/utils";
 import api from "utils/api";
-
-function dateFormat(date) {
-  // http://momentjs.com/docs/#/displaying/
-  return moment(date).format("YYYY-M-D [at] H:mm");
-}
+import StatusScene from "./StatusScene";
 
 export default createReactClass({
   displayName: "Status",
@@ -79,140 +72,11 @@ export default createReactClass({
     );
   },
 
-  gotoImage: function(e, image) {
-    e.preventDefault();
-    utils.imageUri(image);
-  },
-
-  // Unfortunately the /upload endpoint on the API doesn't include the ID for the image's
-  // metadata. So we can use an alternate identifier to build the permalink for the imagery.
-  // The result_pane.js code will also accept the final filename portion of the UUID.
-  // Perhaps indeed that is ultimately a better identifier to use throughout all the code.
-  getAlternateIdentityForMeta: function(image) {
-    const imageFilename = image.metadata.uuid.split("/").slice(-1)[0];
-    return imageFilename;
-  },
-
-  renderScene: function(scene) {
-    return (
-      <section className="panel status-panel">
-        <header className="panel-header">
-          <div className="panel-headline">
-            <h1 className="panel-title">
-              Dataset: <span className="given-title">{scene.title}</span>
-            </h1>
-          </div>
-        </header>
-        <div className="panel-body">
-          <dl className="status-details">
-            <dt>Platform</dt>
-            <dd>{scene.platform}</dd>
-            <dt>Sensor</dt>
-            <dd>{scene.sensor || ""}</dd>
-            <dt>Provider</dt>
-            <dd>{scene.provider}</dd>
-            <dt>Acquisition Date</dt>
-            <dd>
-              {dateFormat(scene.acquisition_start)} -{" "}
-              {dateFormat(scene.acquisition_end)}
-            </dd>
-            {scene.tms ? [<dt>Tile service</dt>, <dd>{scene.tms}</dd>] : ""}
-            {scene.contact
-              ? [
-                  <dt>Contact</dt>,
-                  <dd>
-                    <span className="name">{scene.contact.name}</span>
-                    <span className="email">{scene.contact.email}</span>
-                  </dd>
-                ]
-              : ""}
-          </dl>
-
-          {scene.images.map(this.renderImage)}
-        </div>
-        <footer className="panel-footer" />
-      </section>
-    );
-  },
-
-  renderImage: function(image, i) {
-    var status;
-    var messages = (image.messages || []).map(function(msg) {
-      return <li>{msg}</li>;
-    });
-    if (image.status === "finished") {
-      status = "status-success";
-      image.metadata._id = this.getAlternateIdentityForMeta(image);
-      messages.unshift(
-        <li>
-          <a
-            onClick={e => this.gotoImage(e, image.metadata)}
-            title="View image on OpenAerialMap"
-            className="bttn-view-image"
-          >
-            View image
-          </a>
-        </li>
-      );
-    } else if (image.status === "processing") {
-      status = "status-processing";
-      messages.unshift(<li>Upload in progress.</li>);
-    } else if (image.status === "errored") {
-      status = "status-error";
-      messages.unshift(
-        <li>
-          <strong>Upload failed: </strong> {image.error.message}
-        </li>
-      );
-    }
-
-    status = " " + status + " ";
-
-    var imgStatusMatrix = {
-      initial: "Pending",
-      processing: "Processing",
-      finished: "Finished",
-      errored: "Errored"
-    };
-
-    return (
-      <div className={"image-block" + status}>
-        <h2 className="image-block-title">Image {i}</h2>
-        <dl className="status-details">
-          <dt>Started</dt>
-          <dd>{dateFormat(image.startedAt)}</dd>
-          {image.stoppedAt
-            ? [
-                <dt>{image.status === "finished" ? "Finished" : "Stopped"}</dt>,
-                <dd>{dateFormat(image.stoppedAt)}</dd>
-              ]
-            : ""}
-          <dt>Status</dt>
-          <dd>
-            <div className={"status " + status}>
-              {imgStatusMatrix[image.status]}
-              {image.status === "initial" || image.status === "processing" ? (
-                <div className="sk-folding-cube">
-                  <div className="sk-cube1 sk-cube" />
-                  <div className="sk-cube2 sk-cube" />
-                  <div className="sk-cube4 sk-cube" />
-                  <div className="sk-cube3 sk-cube" />
-                </div>
-              ) : (
-                ""
-              )}
-            </div>
-          </dd>
-          <dt>Info</dt>
-          <dd className="info-detail">
-            <ul>{messages}</ul>
-          </dd>
-        </dl>
-      </div>
-    );
-  },
-
   render: function() {
+    const statusScenes = this.state.data.scenes.map(scene => (
+      <StatusScene scene={scene} />
+    ));
+
     if (this.state.errored) {
       return (
         <div className="intro-block">
@@ -221,16 +85,8 @@ export default createReactClass({
           <pre>{util.inspect(this.state.data)}</pre>
         </div>
       );
+    } else {
+      return <div>{statusScenes}</div>;
     }
-
-    return (
-      <div>
-        {this.state.data.scenes.map(
-          function(scene) {
-            return this.renderScene(scene);
-          }.bind(this)
-        )}
-      </div>
-    );
   }
 });

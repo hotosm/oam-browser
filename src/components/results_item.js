@@ -107,58 +107,58 @@ export default createReactClass({
   },
 
   onOpenJosm: function(tmsUrl) {
-    var d = this.props.data;
-    var source = "OpenAerialMap - " + d.provider + " - " + d.uuid;
-    var urlPrefix =
+    const data = this.props.data;
+    const source = `OpenAerialMap - ${data.provider} - ${data.uuid}`;
+    const urlPrefix =
       document.location.protocol === "https:"
         ? "https://127.0.0.1:8112"
         : "http://127.0.0.1:8111";
+
+    const boundingBox = {
+      left: data.bbox[0],
+      right: data.bbox[2],
+      bottom: data.bbox[1],
+      top: data.bbox[3]
+    };
+
+    const josmQueryString = qs.stringify(
+      Object.assign({}, boundingBox, { source })
+    );
+
     // Reference:
     // http://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl#load_and_zoom
-    fetch(
-      urlPrefix +
-        "/load_and_zoom?" +
-        qs.stringify({
-          left: d.bbox[0],
-          right: d.bbox[2],
-          bottom: d.bbox[1],
-          top: d.bbox[3],
-          source: source
-        })
-    )
+    fetch(`${urlPrefix}/load_and_zoom?${josmQueryString}`)
       .then(response => {
-        if (!response.ok)
-          return Promise.reject(new Error(`HTTP Error ${response.status}`));
-        return response.json();
+        let promise;
+        if (response.ok) {
+          promise = response;
+        } else {
+          promise = Promise.reject(new Error(`HTTP Error ${response.status}`));
+        }
+        return promise;
       })
-      .then(function(data) {
+      .then(data => {
         // Reference:
         // http://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl#imagery
         // Note: `url` needs to be the last parameter.
-        fetch(
-          urlPrefix +
-            "/imagery?" +
-            qs.stringify({
-              type: "tms",
-              title: source
-            }) +
-            "&url=" +
-            tmsUrl
-        )
-          .then(response => {
-            if (!response.ok)
-              return Promise.reject(new Error(`HTTP Error ${response.status}`));
-            return response.json();
-          })
-          .success(function() {
-            // all good!
-            actions.openModal("message", {
-              title: "Success",
-              message: <p>This scene has been loaded into JOSM.</p>
-            });
-          });
+        const imageryQueryString = qs.stringify({
+          type: "tms",
+          title: source,
+          url: tmsUrl
+        });
+        return fetch(`${urlPrefix}/imagery?${imageryQueryString}`);
       })
-      .catch(function(err) {
+      .then(response => {
+        if (response.ok) {
+          actions.openModal("message", {
+            title: "Success",
+            message: <p>This scene has been loaded into JOSM.</p>
+          });
+        } else {
+          return Promise.reject(new Error(`HTTP Error ${response.status}`));
+        }
+      })
+      .catch(err => {
         console.error(err);
         actions.openModal("message", {
           title: "Error",

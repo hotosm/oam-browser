@@ -31,6 +31,8 @@ var config;
 
 // If the developer hasn't put anything in local.js then give them
 // the values from staging.
+
+
 if (_.isEmpty(configurations.local)) {
   config = configurations.staging;
 } else {
@@ -55,6 +57,8 @@ if (process.env.REACT_APP_OAM_ENV === "staging") {
 if (process.env.REACT_APP_OAM_ENV === "production") {
   config = configurations.production;
 }
+
+
 
 // Copy over any production settings that weren't specifically set above
 // TODO: Explicitly declare each environment's config. Defaulting to production

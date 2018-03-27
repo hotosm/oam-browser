@@ -2,15 +2,68 @@ import React from "react";
 import createReactClass from "create-react-class";
 import ValidationMixin from "react-validation-mixin";
 import Joi from "joi-browser";
+import Evaporate from "evaporate";
+import crypto from "crypto";
+import buffer from "buffer";
 import Scene from "components/uploader/scene";
 import AppActions from "actions/actions";
 import imageryValidations from "components/shared/imagery_validations";
 import _ from "lodash";
-
 import PlusIcon from "mdi-react/PlusIcon";
-
 import config from "config";
 import api from "utils/api";
+
+function createProgressTracker (progressStats, fileName, component) {
+  return function (p, stats) {
+    progressStats[fileName] = stats;
+    const progressStatsValues = Object.values(progressStats);
+    const progress = progressStatsValues.reduce((accumulator, current) => {
+      return {
+        sumTotalUploaded: accumulator.sumTotalUploaded + current.totalUploaded,
+        sumFilesize: accumulator.sumFilesize + current.fileSize
+      };
+    }, { sumTotalUploaded: 0, sumFilesize: 0 });
+
+    const percentComplete = progress.sumTotalUploaded / progress.sumFilesize * 100;
+    const percentDisplay = Math.round(percentComplete);
+    const plural = progressStatsValues.length > 1 ? "s" : "";
+    const uploadStatus
+      = `Uploading ${progressStatsValues.length} image${plural} (${percentDisplay}%).`
+    component.setState({
+      uploadProgress: percentComplete,
+      uploadActive: true,
+      uploadStatus
+    });
+  };
+};
+
+function uploadFile(file, progressTracker) {
+  const signerUrl = `${config.catalog.url}/signupload`;
+  const bucket = config.uploadBucket;
+  const aws_key = config.awsKey;
+  const Buffer = buffer.Buffer;
+  return Evaporate.create({
+    aws_key,
+    signerUrl,
+    bucket,
+    computeContentMd5: true,
+    cryptoMd5Method: function(data) {
+      return crypto.createHash('md5').update(Buffer.from(data)).digest('base64');
+    },
+    cryptoHexEncodedHash256: function(data) {
+      return crypto.createHash('sha256').update(Buffer.from(data)).digest('hex');
+    },
+    cloudfront: true,
+    xhrWithCredentials: true
+  })
+  .then(evaporate => {
+    return evaporate.add({
+      name: file.newName,
+      file: file.data,
+      progress: progressTracker
+    });
+  });
+}
 
 // Sanity note:
 // There are some places where the component state is being altered directly.
@@ -169,52 +222,6 @@ export default createReactClass({
     });
   },
 
-  uploadFile: function(file, callback) {
-    api({
-      uri: "/uploads/url",
-      auth: true,
-      method: "POST",
-      body: {
-        name: file.newName,
-        type: file.data.type
-      }
-    }).then(data => {
-      callback(null, {
-        type: "beforeSend"
-      });
-      this.xhrUploadToS3(data.results.url, file, callback);
-    });
-  },
-
-  xhrUploadToS3: function(presignedUrl, file, callback) {
-    let xhr = new window.XMLHttpRequest();
-    xhr.upload.addEventListener(
-      "progress",
-      function(evt) {
-        if (evt.lengthComputable) {
-          return callback(null, {
-            type: "progress",
-            fileName: file.newName,
-            val: evt.loaded
-          });
-        }
-      },
-      false
-    );
-    xhr.addEventListener("error", e => {
-      callback(e);
-    });
-    xhr.addEventListener("load", e => {
-      callback(null, {
-        type: "success",
-        val: e
-      });
-    });
-    xhr.responseType = "text";
-    xhr.open("PUT", presignedUrl, true);
-    xhr.send(file.data);
-  },
-
   onSubmit: function(event) {
     event.preventDefault();
 
@@ -314,11 +321,9 @@ export default createReactClass({
 
           // Gather list of files to upload
           let uploads = [];
-          let totalBytes = 0;
           data.scenes.forEach(scene => {
             if (scene.files.length) {
               scene.files.forEach(file => {
-                totalBytes += file.data.size;
                 if (file.data) uploads.push(file);
               });
             }
@@ -332,60 +337,34 @@ export default createReactClass({
           } else {
             // Upload list of files before submitting the form
             let progressStats = {};
+            const uploadPromises = [];
             uploads.forEach(file => {
-              // Init progress status to 0
-              progressStats[file.data.name] = 0;
-              this.uploadFile(file, (err, result) => {
-                if (err) {
-                  console.log("error", err);
-                  this.setState({
-                    uploadError: true,
-                    uploadActive: false,
-                    loading: false
-                  });
-                  AppActions.showNotification(
-                    "alert",
-                    <span>There was a problem uploading the files.</span>
-                  );
-                  return;
-                }
-                if (result.type === "progress") {
-                  const { fileName, val } = result;
-                  // Update progress stats.
-                  progressStats[fileName] = val;
-                  let totalBytesComplete = _.reduce(
-                    progressStats,
-                    (sum, n) => sum + n,
-                    0
-                  );
-                  let percentComplete = totalBytesComplete / totalBytes * 100;
-                  let percentDisplay = Math.round(percentComplete);
-
-                  let uploadStatus = "";
-                  if (totalFiles === 1) {
-                    uploadStatus = `Uploading image (${percentDisplay}%)...`;
-                  } else {
-                    uploadStatus = `Uploading ${totalFiles} images (${percentDisplay}%)...`;
-                  }
-                  this.setState({
-                    uploadProgress: percentComplete,
-                    uploadStatus: uploadStatus
-                  });
-                } else if (result.type === "beforeSend") {
-                  this.setState({ uploadError: false, uploadActive: true });
-                } else if (
-                  result.type === "success" &&
-                  this.state.uploadProgress >= 100
-                ) {
-                  this.setState({
-                    uploadError: false,
-                    uploadActive: false,
-                    uploadStatus: "Upload complete!"
-                  });
-                  this.submitData(data);
-                }
-              });
+              const progressTracker
+                = createProgressTracker(progressStats, file.newName, this);
+              uploadPromises.push(uploadFile(file, progressTracker));
             });
+            Promise.all(uploadPromises)
+              .then(values => {
+                console.log(values)
+                this.setState({
+                  uploadError: false,
+                  uploadActive: false,
+                  uploadStatus: "Upload complete!"
+                });
+                this.submitData(data);
+              })
+              .catch(error => {
+                console.log(error)
+                this.setState({
+                  uploadError: true,
+                  uploadActive: false,
+                  loading: false
+                });
+                AppActions.showNotification(
+                  "alert",
+                  <span>There was a problem uploading the files.</span>
+                );
+              });
           }
         }
       }.bind(this)

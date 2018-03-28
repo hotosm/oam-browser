@@ -54,7 +54,8 @@ function uploadFile(file, progressTracker) {
       return crypto.createHash('sha256').update(Buffer.from(data)).digest('hex');
     },
     cloudfront: true,
-    xhrWithCredentials: true
+    xhrWithCredentials: true,
+    logging: false
   })
   .then(evaporate => {
     return evaporate.add({
@@ -238,6 +239,7 @@ export default createReactClass({
           console.log(validationErrors);
           AppActions.showNotification("alert", "Form contains errors!");
         } else {
+
           if (this.state.loading) {
             // Submit already in process.
             return;
@@ -343,14 +345,14 @@ export default createReactClass({
                 = createProgressTracker(progressStats, file.newName, this);
               uploadPromises.push(uploadFile(file, progressTracker));
             });
+
             Promise.all(uploadPromises)
               .then(values => {
-                console.log(values)
                 this.setState({
                   uploadError: false,
                   uploadActive: false,
                   uploadStatus: "Upload complete!"
-                });
+                })
                 this.submitData(data);
               })
               .catch(error => {
@@ -360,6 +362,7 @@ export default createReactClass({
                   uploadActive: false,
                   loading: false
                 });
+
                 AppActions.showNotification(
                   "alert",
                   <span>There was a problem uploading the files.</span>

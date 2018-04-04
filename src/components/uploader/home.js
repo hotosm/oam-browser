@@ -13,29 +13,33 @@ import PlusIcon from "mdi-react/PlusIcon";
 import config from "config";
 import api from "utils/api";
 
-function createProgressTracker (progressStats, fileName, component) {
-  return function (p, stats) {
+function createProgressTracker(progressStats, fileName, component) {
+  return function(p, stats) {
     progressStats[fileName] = stats;
     const progressStatsValues = Object.values(progressStats);
-    const progress = progressStatsValues.reduce((accumulator, current) => {
-      return {
-        sumTotalUploaded: accumulator.sumTotalUploaded + current.totalUploaded,
-        sumFilesize: accumulator.sumFilesize + current.fileSize
-      };
-    }, { sumTotalUploaded: 0, sumFilesize: 0 });
+    const progress = progressStatsValues.reduce(
+      (accumulator, current) => {
+        return {
+          sumTotalUploaded:
+            accumulator.sumTotalUploaded + current.totalUploaded,
+          sumFilesize: accumulator.sumFilesize + current.fileSize
+        };
+      },
+      { sumTotalUploaded: 0, sumFilesize: 0 }
+    );
 
-    const percentComplete = progress.sumTotalUploaded / progress.sumFilesize * 100;
+    const percentComplete =
+      progress.sumTotalUploaded / progress.sumFilesize * 100;
     const percentDisplay = Math.round(percentComplete);
     const plural = progressStatsValues.length > 1 ? "s" : "";
-    const uploadStatus
-      = `Uploading ${progressStatsValues.length} image${plural} (${percentDisplay}%).`
+    const uploadStatus = `Uploading ${progressStatsValues.length} image${plural} (${percentDisplay}%).`;
     component.setState({
       uploadProgress: percentComplete,
       uploadActive: true,
       uploadStatus
     });
   };
-};
+}
 
 function uploadFile(file, progressTracker) {
   const signerUrl = `${config.catalog.url}/signupload`;
@@ -48,16 +52,21 @@ function uploadFile(file, progressTracker) {
     bucket,
     computeContentMd5: true,
     cryptoMd5Method: function(data) {
-      return crypto.createHash('md5').update(Buffer.from(data)).digest('base64');
+      return crypto
+        .createHash("md5")
+        .update(Buffer.from(data))
+        .digest("base64");
     },
     cryptoHexEncodedHash256: function(data) {
-      return crypto.createHash('sha256').update(Buffer.from(data)).digest('hex');
+      return crypto
+        .createHash("sha256")
+        .update(Buffer.from(data))
+        .digest("hex");
     },
     cloudfront: true,
     xhrWithCredentials: true,
     logging: false
-  })
-  .then(evaporate => {
+  }).then(evaporate => {
     return evaporate.add({
       name: file.newName,
       file: file.data,
@@ -239,7 +248,6 @@ export default createReactClass({
           console.log(validationErrors);
           AppActions.showNotification("alert", "Form contains errors!");
         } else {
-
           if (this.state.loading) {
             // Submit already in process.
             return;
@@ -341,8 +349,11 @@ export default createReactClass({
             let progressStats = {};
             const uploadPromises = [];
             uploads.forEach(file => {
-              const progressTracker
-                = createProgressTracker(progressStats, file.newName, this);
+              const progressTracker = createProgressTracker(
+                progressStats,
+                file.newName,
+                this
+              );
               uploadPromises.push(uploadFile(file, progressTracker));
             });
 
@@ -352,11 +363,11 @@ export default createReactClass({
                   uploadError: false,
                   uploadActive: false,
                   uploadStatus: "Upload complete!"
-                })
+                });
                 this.submitData(data);
               })
               .catch(error => {
-                console.log(error)
+                console.log(error);
                 this.setState({
                   uploadError: true,
                   uploadActive: false,

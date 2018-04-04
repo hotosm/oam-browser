@@ -53,6 +53,8 @@
   "dependencies": {
     "classnames": "^2.2.5",
     "clipboard": "^1.5.10",
+    "crypto": "^1.0.1",
+    "evaporate": "^2.1.4",
     "form-serialize": "^0.7.1",
     "joi-browser": "^10.6.1",
     "lodash": "^3.8.0",

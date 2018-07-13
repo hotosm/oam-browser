@@ -162,8 +162,8 @@ export default createReactClass({
             <ChevronRightIcon />
           </a>
           <div style={{ clear: "both" }} />
-            <RequestToken fetchToken={this.fetchToken} token={this.state.token} />
-          </div>
+          <RequestToken fetchToken={this.fetchToken} token={this.state.token} />
+        </div>
       </div>
     );
   },

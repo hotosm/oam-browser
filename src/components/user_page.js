@@ -7,6 +7,7 @@ import ChevronRightIcon from "mdi-react/ChevronRightIcon";
 import utils from "utils/utils";
 import api from "utils/api";
 import ConfirmDeleteLink from "./confirm_delete_link";
+import RequestToken from "./RequestToken";
 
 export default createReactClass({
   displayName: "Account",
@@ -55,6 +56,17 @@ export default createReactClass({
     }).then(response => {
       this.setState({
         user: response.results
+      });
+    });
+  },
+
+  fetchToken: function() {
+    api({
+      uri: "/getToken",
+      auth: true
+    }).then(response => {
+      this.setState({
+        token: response.token
       });
     });
   },
@@ -149,7 +161,9 @@ export default createReactClass({
             Edit your profile
             <ChevronRightIcon />
           </a>
-        </div>
+          <div style={{ clear: "both" }} />
+            <RequestToken fetchToken={this.fetchToken} token={this.state.token} />
+          </div>
       </div>
     );
   },

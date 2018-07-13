@@ -109,9 +109,7 @@ export default createReactClass({
                     <li>
                       {this.requestedUser === "current" ? (
                         <span>
-                          <a href={"/#/imagery/" + image._id + "/edit"}>
-                            Edit
-                          </a>{" "}
+                          <a href={"/#/imagery/" + image._id + "/edit"}>Edit</a>{" "}
                           |&nbsp;
                         </span>
                       ) : null}
@@ -162,8 +160,8 @@ export default createReactClass({
             <ChevronRightIcon />
           </a>
           <div style={{ clear: "both" }} />
-            <RequestToken fetchToken={this.fetchToken} token={this.state.token} />
-          </div>
+          <RequestToken fetchToken={this.fetchToken} token={this.state.token} />
+        </div>
       </div>
     );
   },

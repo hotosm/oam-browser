@@ -1,6 +1,6 @@
 /**
  * Central wrapper for making all API requests
-**/
+ **/
 
 import fetchProgressStore from "stores/fetch_progress_store";
 

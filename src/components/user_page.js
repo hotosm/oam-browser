@@ -109,9 +109,7 @@ export default createReactClass({
                     <li>
                       {this.requestedUser === "current" ? (
                         <span>
-                          <a href={"/#/imagery/" + image._id + "/edit"}>
-                            Edit
-                          </a>{" "}
+                          <a href={"/#/imagery/" + image._id + "/edit"}>Edit</a>{" "}
                           |&nbsp;
                         </span>
                       ) : null}

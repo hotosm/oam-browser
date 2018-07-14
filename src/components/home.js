@@ -130,7 +130,7 @@ export default createReactClass({
     return (
       <div>
         <div className="sidebar-content">
-          {this.state.results.length ? (
+          {this.state.results ? (
             <ResultsPane
               query={this.props.query}
               params={this.props.params}

@@ -29,10 +29,12 @@ function createProgressTracker(progressStats, fileName, component) {
     );
 
     const percentComplete =
-      progress.sumTotalUploaded / progress.sumFilesize * 100;
+      (progress.sumTotalUploaded / progress.sumFilesize) * 100;
     const percentDisplay = Math.round(percentComplete);
     const plural = progressStatsValues.length > 1 ? "s" : "";
-    const uploadStatus = `Uploading ${progressStatsValues.length} image${plural} (${percentDisplay}%).`;
+    const uploadStatus = `Uploading ${
+      progressStatsValues.length
+    } image${plural} (${percentDisplay}%).`;
     component.setState({
       uploadProgress: percentComplete,
       uploadActive: true,

@@ -626,6 +626,34 @@ Please check the instructions on how to use files from Google Drive.
                 </a>
               </label>
             </div>
+            <div className="radio">
+              <label>
+                <input
+                  type="radio"
+                  name={this.getRadioName("license")}
+                  onChange={this.onChange}
+                  value="CC BY-NC 4.0"
+                  checked={this.props.data["license"] === "CC BY-NC 4.0"}
+                />
+                <a href="https://creativecommons.org/licenses/by-nc/4.0/">
+                  CC BY-NC 4.0
+                </a>
+              </label>
+            </div>
+            <div className="radio">
+              <label>
+                <input
+                  type="radio"
+                  name={this.getRadioName("license")}
+                  onChange={this.onChange}
+                  value="CC BY-SA 4.0"
+                  checked={this.props.data["license"] === "CC BY-SA 4.0"}
+                />
+                <a href="https://creativecommons.org/licenses/by-sa/4.0/">
+                  CC BY-SA 4.0
+                </a>
+              </label>
+            </div>
           </div>
         </div>
       </fieldset>

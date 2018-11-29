@@ -479,8 +479,9 @@ export default createReactClass({
                   <a href="https://creativecommons.org/licenses/by/4.0/">
                     CC-BY 4.0
                   </a>
-                  , with attribution as contributors of Open Imagery Network.
-                  All imagery is available to be traced in OpenStreetMap.
+                  , with attribution as contributors of Open Imagery Network, 
+                  unless further specified by a specific license. All imagery 
+                  is available to be traced in OpenStreetMap.
                 </p>
               </div>
 

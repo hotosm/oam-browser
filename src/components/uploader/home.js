@@ -29,12 +29,10 @@ function createProgressTracker(progressStats, fileName, component) {
     );
 
     const percentComplete =
-      (progress.sumTotalUploaded / progress.sumFilesize) * 100;
+      progress.sumTotalUploaded / progress.sumFilesize * 100;
     const percentDisplay = Math.round(percentComplete);
     const plural = progressStatsValues.length > 1 ? "s" : "";
-    const uploadStatus = `Uploading ${
-      progressStatsValues.length
-    } image${plural} (${percentDisplay}%).`;
+    const uploadStatus = `Uploading ${progressStatsValues.length} image${plural} (${percentDisplay}%).`;
     component.setState({
       uploadProgress: percentComplete,
       uploadActive: true,
@@ -479,9 +477,9 @@ export default createReactClass({
                   <a href="https://creativecommons.org/licenses/by/4.0/">
                     CC-BY 4.0
                   </a>
-                  , with attribution as contributors of Open Imagery Network, 
-                  unless further specified by a specific license. All imagery 
-                  is available to be traced in OpenStreetMap.
+                  , with attribution as contributors of Open Imagery Network,
+                  unless further specified by a specific license. All imagery is
+                  available to be traced in OpenStreetMap.
                 </p>
               </div>
 

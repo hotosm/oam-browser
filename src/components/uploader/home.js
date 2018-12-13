@@ -473,13 +473,22 @@ export default createReactClass({
                   <a href="https://github.com/openimagerynetwork/oin-register#open-imagery-network">
                     Open Imagery Network (OIN)
                   </a>
-                  . All imagery contained in OIN is licensed{" "}
+                </p>
+                <p>
+                  Except when permitted by the OpenStreetMap exception (see
+                  below), all imagery contained in OIN is licensed{" "}
                   <a href="https://creativecommons.org/licenses/by/4.0/">
                     CC-BY 4.0
                   </a>
-                  , with attribution as contributors of Open Imagery Network,
-                  unless further specified by a specific license. All imagery is
-                  available to be traced in OpenStreetMap.
+                  , with attribution as "© OIN contributors", and specific
+                  additional SA/NC conditions if selected upon upload.
+                </p>
+                <p>
+                  IMPORTANT NOTICE - OPENSTREETMAP EXCEPTION: You agree that
+                  users do not have to comply with the selected license when the
+                  imagery is used for tracing in OpenStreetMap. In these cases,
+                  you agree that the derived data from the imagery is made
+                  available under the ODBL license.
                 </p>
               </div>
 

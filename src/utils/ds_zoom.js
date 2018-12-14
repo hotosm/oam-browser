@@ -76,7 +76,8 @@ export default L.Control.extend({
     var link = L.DomUtil.create("button", className, container);
     link.innerHTML = html;
 
-    L.DomEvent.on(link, "mousedown dblclick", L.DomEvent.stopPropagation)
+    L.DomEvent
+      .on(link, "mousedown dblclick", L.DomEvent.stopPropagation)
       .on(link, "click", L.DomEvent.stop)
       .on(link, "click", fn, this)
       .on(link, "click", this._refocusOnMap, this);

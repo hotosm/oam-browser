@@ -109,10 +109,7 @@ export default createReactClass({
   onOpenJosm: function(tmsUrl) {
     const data = this.props.data;
     const source = `OpenAerialMap - ${data.provider} - ${data.uuid}`;
-    const urlPrefix =
-      document.location.protocol === "https:"
-        ? "https://127.0.0.1:8112"
-        : "http://127.0.0.1:8111";
+    const urlPrefix = "http://127.0.0.1:8111";
 
     const boundingBox = {
       left: data.bbox[0],

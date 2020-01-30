@@ -1,6 +1,5 @@
 import React from "react";
 import { Router, Route, IndexRoute, hashHistory } from "react-router";
-import PiwikReackRouter from 'piwik-react-router';
 
 import App from "./components/app";
 import Home from "./components/home";
@@ -12,19 +11,8 @@ import UploaderStatus from "./components/uploader/status";
 
 import User from "./utils/user";
 
-const piwik = PiwikReackRouter({
-  url: 'https://matomo.hotosm.org',
-  siteId: 19,
-  trackErrors: true,
-});
-
-// piwik.push(['requireConsent']);
-piwik.push(["setDomains", ["*.openaerialmap.org"]]);
-piwik.push(['trackPageView']);
-piwik.push(['trackVisibleContentImpressions']);  // Tracks content blocks
-
 export default (
-  <Router history={piwik.connectToHistory(hashHistory)}>
+  <Router history={hashHistory}>
     <Route path="/" component={App}>
       <IndexRoute component={Home} />
       <Route

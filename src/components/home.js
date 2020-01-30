@@ -14,6 +14,7 @@ import utils from "utils/utils";
 import actions from "actions/actions";
 import config from "config";
 import Status from "components/oam-status";
+import Banner from "components/banner";
 
 export default createReactClass({
   displayName: "Home",
@@ -196,6 +197,8 @@ export default createReactClass({
         />
 
         <MiniMap params={this.props.params} />
+
+        <Banner />
       </div>
     );
   },

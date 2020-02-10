@@ -26,16 +26,17 @@ function finishLoading() {
 function logIn() {
   browser.url("#/");
   browser.click("a=Sign In");
-  browser.waitForVisible(".facebook_login");
-  browser.click(".facebook_login");
+  browser.waitForVisible(".google_login");
+  browser.click(".google_login");
   if (browser.getUrl().match(/facebook.com/)) {
     // Note that if you change the user, you will need to manually
     // step in at the point where you accept authorisation of the app.
     // ie: the bit where Facebook says something like, "This app would
     // like access to your personal, click 'Accept' to continue."
-    $("#email").setValue("open_dtqgedz_user@tfbnw.net");
-    $("#pass").setValue("oamtestpassword");
-    browser.click("#loginbutton");
+    $("#identifierId").setValue("oam_tester@hotosm.org");
+    browser.click("#identifierNext");
+    $("#password").setValue("n954m9CJF4r3");
+    browser.click("#passwordNext");
   }
   expect(browser.waitForVisible("a=Upload")).to.eq(true);
 }

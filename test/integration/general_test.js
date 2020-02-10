@@ -28,7 +28,7 @@ function logIn() {
   browser.click("a=Sign In");
   browser.waitForVisible(".google_login");
   browser.click(".google_login");
-  if (browser.getUrl().match(/facebook.com/)) {
+  if (browser.getUrl().match(/google.com/)) {
     // Note that if you change the user, you will need to manually
     // step in at the point where you accept authorisation of the app.
     // ie: the bit where Facebook says something like, "This app would

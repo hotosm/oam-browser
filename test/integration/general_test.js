@@ -14,9 +14,9 @@ function dropDatabase() {
   }
 }
 
-function waitUntilGone(selector) {
+function waitUntilGone(selector, timeout=300000) {
   // The `true` in the third arg reverses the test, ie waiting for invisible
-  browser.waitForVisible(selector, 300000, true);
+  $(selector).waitForDisplayed({timeout: timeout, reverse: true});
 }
 
 function finishLoading() {
@@ -25,19 +25,20 @@ function finishLoading() {
 
 function logIn() {
   browser.url("#/");
-  browser.click("a=Sign In");
-  browser.waitForVisible(".facebook_login");
-  browser.click(".facebook_login");
+  $("a=Sign In").click();
+  $(".facebook_login").waitForDisplayed();
+  $(".facebook_login").click();
   if (browser.getUrl().match(/facebook.com/)) {
     // Note that if you change the user, you will need to manually
     // step in at the point where you accept authorisation of the app.
     // ie: the bit where Facebook says something like, "This app would
     // like access to your personal, click 'Accept' to continue."
-    $("#email").setValue("open_dtqgedz_user@tfbnw.net");
+    //$("#email").setValue("open_dtqgedz_user@tfbnw.net");
+    $('#email').setValue("oam_ccxaflp_user@tfbnw.net");
     $("#pass").setValue("oamtestpassword");
-    browser.click("#loginbutton");
+    $("#loginbutton").click();
   }
-  expect(browser.waitForVisible("a=Upload")).to.eq(true);
+  expect($("a=Upload").waitForDisplayed()).to.eq(true);
 }
 
 // Use the following instead once IE Edge supports cookie and localStorage deletion.
@@ -48,9 +49,10 @@ function logIn() {
 function logOut() {
   browser.keys("Escape");
   browser.pause(500);
-  browser.click("a.menu_dropdown_button");
+  $("a.menu_dropdown_button").click();
   if ($("a=Logout").isExisting()) {
-    browser.click("a=Logout");
+    $("a=Logout").click();
+    waitUntilGone(".menu-profile_pic");
   }
 }
 
@@ -59,7 +61,7 @@ function submitImagery(imageryUri, title = "Test imagery") {
   browser.url("#/upload");
   fillInUploadForm(title);
   inputRemoteImageryUri(imageryUri);
-  browser.click("button=Submit");
+  $("button=Submit").click();
   return waitForImageryProcessing();
 }
 
@@ -68,11 +70,11 @@ function waitForImageryProcessing() {
   // The file has to upload from the local machine, it is small but let's
   // give a few seconds in case there's a slow connection (like when you're
   // writing tests over your phone's 3G connection :/)
-  browser.waitForVisible("a=Check upload status.", 10000);
-  browser.click("a=Check upload status.");
-  browser.waitForVisible(".status");
+  $("a=Check upload status.").waitForDisplayed(10000);
+  $("a=Check upload status.").click();
+  $(".status").waitForDisplayed();
   for (var i = 0; i < 1000; i++) {
-    status = browser.getText(".status").toLowerCase();
+    status = $(".status").getText().toLowerCase();
     if (status !== "pending" && status !== "processing") return status;
     browser.pause(500);
   }
@@ -86,7 +88,7 @@ function fillInUploadForm(title) {
 }
 
 function inputRemoteImageryUri(imageryUri) {
-  browser.click("button=Url");
+  $("button=Url").click();
   $("#scene-0-img-loc-0-url").setValue(imageryUri);
   // The URL button is pretty sensitive, sometimes you press
   // it and 2 inputs appear.
@@ -101,7 +103,7 @@ function getImageryResults() {
   // Just give the image a few moments to get into the DB. TODO: we shouldn't
   // have to wait.
   browser.pause(1000);
-  browser.waitForExist(resultsSelector);
+  $(resultsSelector).waitForExist();
   return $$(resultsSelector);
 }
 
@@ -120,10 +122,10 @@ describe("Map", function() {
       submitImagery(everest);
       browser.url("#/");
       $("#global-search__input").setValue(["Mount Everest", "Enter"]);
-      waitUntilGone(".autocomplete__menu-item*=Loading...");
-      browser.click(".autocomplete__menu-item.is-highlighted");
+      $(".autocomplete__menu-item.is-highlighted").waitForDisplayed(1000);
+      $(".autocomplete__menu-item.is-highlighted").click();
       finishLoading();
-      browser.click("#map");
+      $('#map').click();
       finishLoading();
       let results = getImageryResults();
       expect(results.length).to.be.at.least(1);
@@ -142,9 +144,9 @@ describe("User authentication", function() {
 
     it("should log a user out", () => {
       logIn();
-      expect(".menu-profile_pic img").to.be.there();
+      expect(".menu-profile_pic").to.be.there();
       logOut();
-      expect(".menu-profile_pic img").to.not.be.there();
+      expect(".menu-profile_pic").to.not.be.there();
     });
   });
 
@@ -152,7 +154,7 @@ describe("User authentication", function() {
     it("should not let you access the upload page", () => {
       browser.url("#/upload");
       expect("p*=You must be logged in").to.be.there();
-      expect("p*=By submitting imagery to OpenAerialMap").to.not.be.there();
+      expect("p*=By submitting imagery to OpenAerialMap").to.not.be.displayed();
     });
   });
 
@@ -160,7 +162,7 @@ describe("User authentication", function() {
     it("should let you access the upload page", () => {
       logIn();
       browser.url("#/upload");
-      expect("p*=You must be logged in").to.not.be.there();
+      expect("p*=You must be logged in").to.not.be.displayed();
       expect("p*=By submitting imagery to OpenAerialMap").to.be.there();
     });
   });
@@ -175,7 +177,7 @@ describe("Imagery", function() {
         .toString(36)
         .slice(2);
       submitImagery(everest, title);
-      browser.click("a=View image");
+      $("a=View image").click();
       expect("h2=" + title).to.be.there();
       const src = $(".result-thumbnail img").getAttribute("src");
       expect(src).to.match(/_thumb/);
@@ -192,9 +194,9 @@ describe("Imagery", function() {
       logIn();
       browser.url("#/upload");
       fillInUploadForm(title);
-      browser.click("button=Local File");
+      $("button=Local File").click();
       browser.chooseFile("#scene-0-img-loc-0-url", localPath);
-      browser.click("button=Submit");
+      $("button=Submit").click();
       waitForImageryProcessing();
       expect("a=View image").to.be.there();
     });
@@ -208,8 +210,8 @@ describe("Imagery", function() {
       browser.url("#/");
       finishLoading();
       getImageryResults();
-      browser.click(".results-list li:first-child");
-      browser.click(".user-details a");
+      $(".results-list li:first-child").click();
+      $(".user-details a").click();
       finishLoading();
       expect("h2*=Open Graph Test User").to.be.there();
       expect("h2=" + title).to.be.there();
@@ -232,8 +234,8 @@ describe("Imagery", function() {
       finishLoading();
       expect(".button-zoom--in.disabled");
       // Click the 'TMS' button
-      browser.waitForVisible("button=TMS");
-      browser.click("button=TMS");
+      $("button=TMS").waitForDisplayed();
+      $("button=TMS").click();
       // TODO: waiting here is necessary because of a blocking sync AJAX hack
       // in map.js getLayerMaxZoom().
       waitUntilGone(".button-zoom--in.disabled");
@@ -247,10 +249,10 @@ describe("Imagery", function() {
       submitImagery(everest);
       browser.url("#/account");
       finishLoading();
-      browser.click("a=Edit");
+      $("a=Edit").click();
       finishLoading();
       $("#scene-0-title").setValue("A different title");
-      browser.click("button=Submit");
+      $("button=Submit").click();
       finishLoading();
       browser.url("#/account");
       finishLoading();
@@ -262,7 +264,7 @@ describe("Imagery", function() {
       browser.url("#/account");
       finishLoading();
       expect("strong=Delete me :(").to.be.there();
-      browser.click("a=Delete");
+      $("a=Delete").click();
       finishLoading();
       browser.url("#/account");
       finishLoading();

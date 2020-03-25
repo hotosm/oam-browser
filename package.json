@@ -26,9 +26,16 @@
     "test": "NODE_ENV=test NODE_PATH=src:test/specs mocha --opts test/specs/mocha.opts test/specs/*_spec.js"
   },
   "devDependencies": {
+    "@wdio/browserstack-service": "^6.0.4",
+    "@wdio/cli": "^6.0.5",
+    "@wdio/local-runner": "^6.0.5",
+    "@wdio/mocha-framework": "^6.0.4",
+    "@wdio/spec-reporter": "^6.0.4",
+    "@wdio/sync": "^6.0.1",
     "babel-preset-react-app": "^3.1.0",
-    "chai": "^3.5.0",
-    "chai-webdriverio": "^0.3.0",
+    "chai": "^4.2.0",
+    "chai-webdriverio": "^1.0.0",
+    "chromedriver": "^80.0.1",
     "custom-react-scripts": "^0.2.0",
     "enzyme": "^2.8.2",
     "eslint": "^4.10.0",
@@ -44,10 +51,8 @@
     "react-addons-test-utils": "^15.5.1",
     "react-test-renderer": "^15.5.4",
     "source-map-explorer": "^1.4.0",
-    "wdio-browserstack-service": "^0.1.11",
-    "wdio-mocha-framework": "^0.5.10",
-    "wdio-spec-reporter": "^0.1.0",
-    "webdriverio": "^4.7.1"
+    "wdio-chromedriver-service": "^5.0.2",
+    "webdriverio": "^6.0.5"
   },
   "dependencies": {
     "classnames": "^2.2.5",
@@ -75,12 +80,14 @@
     "react-validation-mixin": "^4.2.0",
     "react-widgets": "^3.4.6",
     "reflux": "^0.4.1",
+    "sinon": "^9.0.1",
     "tilebelt": "^1.0.1",
     "titlecase": "^1.0.2",
     "turf-centroid": "^1.1.2",
     "turf-extent": "^1.0.4",
     "turf-inside": "^1.1.4",
     "turf-overlaps": "^1.0.3",
+    "wdio-spec-reporter": "^0.1.5",
     "wellknown": "^0.5.0"
   },
   "babel": {

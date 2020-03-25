@@ -37,11 +37,15 @@ Then copy the `build/` folder to your web server or S3.
 ## Testing
 2 distinct test suites exist.
 
-**Unit-like tests**, under `test/specs`    
+### Unit-like tests
+These live under `test/specs`.
+
 These should be isolated and fast, with as much mocking/stubbing as possible, suitable for TDD. Run with:    
 `mocha --opts test/specs/mocha.opts test/specs` or `npm test`
 
-**Integration tests**, under `test/integration`    
+### Integration tests
+
+These live under `test/integration`
 These are end-to-end, cross-browser tests, that should test as much of the stack as possible. Currently they are run on Browser Stack against various browsers. They can be run locally against a Web Driver compatible browser client like [chromedriver](https://sites.google.com/a/chromium.org/chromedriver/) or [geckodriver](https://github.com/mozilla/geckodriver). 
 You will need a running [Catalog API](https://github.com/hotosm/oam-catalog), the repo has a Dockerfile to quickly get
 a local version of the API running. Then you can run tests with;
@@ -51,6 +55,26 @@ Note that Browserstack tests both a pinned version of the API (defined in `packa
 
 Because `wdio` wraps `mocha`, you can send `mocha` args via `wdio.default.conf.js`'s `mochaOpts` field. For instance `grep` has been added so you can isolate a single test run with:    
 `MOCHA_MATCH='should find imagery' wdio test/integration/wdio.local.conf.js`
+
+#### Example running on chrome
+
+1. Start oam-api:
+
+   `oam-api$ docker-compose up`
+
+2. Start chromedriver:
+
+    `chromdriver`
+
+3. Run the tests, specifying `WD_BROWSER` to point to chrome:
+
+    `WD_BROWSER="chrome" node_modules/.bin/wdio test/integration/wdio.local.conf.js`
+
+
+#### Running on your own upload bucket
+
+Note that if you have configured oam-api to target your own S3 buckets for testing, you also need
+to adapt the `uploadBucket` in `src/config/test.js`
 
 ## Contributing
 

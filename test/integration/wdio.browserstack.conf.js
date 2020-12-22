@@ -8,9 +8,12 @@ const tunnelId = Math.random()
   .toString(36)
   .slice(2);
 
+const username = process.env.BROWSERSTACK_USERNAME;
+const accessKey = process.env.BROWSERSTACK_ACCESS_KEY;
+
 let browserStackConf = {
-  user: process.env.BSTACK_USER,
-  key: process.env.BSTACK_KEY,
+  user: username,
+  key: accessKey,
 
   // This module gives us the Browser Stack Local tool and
   // REST requests to set the status of each test run.
@@ -37,7 +40,7 @@ let browserStackConf = {
       name:
         "Against API from " +
         (process.env.CATALOG_API_VERSION || process.env.TRAVIS_BRANCH),
-      os: "WINDOWS",
+      os: "Windows",
       os_version: "8",
       "browserstack.debug": true,
       "browserstack.local": true,

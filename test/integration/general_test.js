@@ -25,18 +25,14 @@ function finishLoading() {
 
 function logIn() {
   browser.url("#/");
-  browser.click("a=Sign In");
-  browser.waitForVisible(".facebook_login");
-  browser.click(".facebook_login");
-  if (browser.getUrl().match(/facebook.com/)) {
-    // Note that if you change the user, you will need to manually
-    // step in at the point where you accept authorisation of the app.
-    // ie: the bit where Facebook says something like, "This app would
-    // like access to your personal, click 'Accept' to continue."
-    $("#email").setValue("open_dtqgedz_user@tfbnw.net");
-    $("#pass").setValue("oamtestpassword");
-    browser.click("#loginbutton");
-  }
+  browser.execute(
+    function(key, value) {
+      this.localStorage.setItem(key, value);
+    },
+    "oam-user",
+    `{"_id": "100018305533162", "name": "Open Graph Test User", "contact_email": "open_dtqgedz_user@tfbnw.net", "profile_pic_uri": "https://lh6.googleusercontent.com/photo.jpg", "images": []}`
+  );
+  browser.refresh();
   expect(browser.waitForVisible("a=Upload")).to.eq(true);
 }
 

@@ -50,7 +50,7 @@ export default createReactClass({
 
   render: function() {
     var resultsPane = null;
-    if (this.props.selectedItemId) {
+    if (this.props.selectedItemId && this.props.results.length) {
       this.setupCurrentImage();
       var pg = {
         total: this.props.results.length,

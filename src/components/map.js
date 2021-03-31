@@ -270,7 +270,7 @@ export default createReactClass({
       this.map.removeLayer(this.baseLayer);
     }
     this.baseLayer = L.tileLayer(layer.url);
-    this.map.addLayer(this.baseLayer);
+    this.baseLayer.addTo(this.map).bringToBack();
   },
 
   // Actions listener.

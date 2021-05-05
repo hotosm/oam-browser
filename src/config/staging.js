@@ -2,7 +2,7 @@ module.exports = {
   feedbackSubmissionURL:
     "https://getsimpleform.com/messages/ajax?form_api_token=506fc2ac58582416b6086a68a343e344",
   catalog: {
-    url: "https://api-staging.openaerialmap.org"
+    url: "https://api.openaerialmap.org"
   },
   environment: "staging",
   uploadBucket: "oam-uploader-staging-temp",

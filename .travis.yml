@@ -27,22 +27,22 @@ jobs:
       before_script: yarn lint
       script: yarn test
 
-    - &integration-test
-      stage: "Integration against Catalog API versions :earth_asia:"
-      env: CATALOG_API_VERSION=pinned BROWSER=chrome
-      before_script: test/integration/build.sh $CATALOG_API_VERSION
-      script: test/integration/run.sh $BROWSER
-      after_failure:
-        - docker ps
-        - docker logs test_test-app_1
-        - sleep 10 # Give the docker logs a chance to output
+    # - &integration-test
+    #   stage: "Integration against Catalog API versions :earth_asia:"
+    #   env: CATALOG_API_VERSION=pinned BROWSER=chrome
+    #   before_script: test/integration/build.sh $CATALOG_API_VERSION
+    #   script: test/integration/run.sh $BROWSER
+    #   after_failure:
+    #     - docker ps
+    #     - docker logs test_test-app_1
+    #     - sleep 10 # Give the docker logs a chance to output
 
-    - <<: *integration-test
-      env: CATALOG_API_VERSION=pinned BROWSER=edge
-    - <<: *integration-test
-      env: CATALOG_API_VERSION=latest BROWSER=chrome
-    - <<: *integration-test
-      env: CATALOG_API_VERSION=latest BROWSER=edge
+    # - <<: *integration-test
+    #   env: CATALOG_API_VERSION=pinned BROWSER=edge
+    # - <<: *integration-test
+    #   env: CATALOG_API_VERSION=latest BROWSER=chrome
+    # - <<: *integration-test
+    #   env: CATALOG_API_VERSION=latest BROWSER=edge
 
     - stage: "Deploy :rocket:"
       script: "REACT_APP_OAM_ENV=staging yarn build"
@@ -73,17 +73,19 @@ jobs:
           acl: public_read
           on:
             repo: hotosm/oam-browser
-            branch: develop
+            branch: master
 
-  allow_failures:
-    # TODO: Edge just has a problem with entering text into the
-    # autocomplete.
-    - <<: *integration-test
-      env: CATALOG_API_VERSION=pinned BROWSER=edge
-    # Latest (bleeding edge) is always allowed to fail. It's just here to give
-    # developers forewarning about any upstream breaking change they
-    # might introduce.
-    - <<: *integration-test
-      env: CATALOG_API_VERSION=latest BROWSER=chrome
-    - <<: *integration-test
-      env: CATALOG_API_VERSION=latest BROWSER=edge
+  # allow_failures:
+  #   # TODO: Edge just has a problem with entering text into the
+  #   # autocomplete.
+  #   - <<: *integration-test
+  #     env: CATALOG_API_VERSION=pinned BROWSER=edge
+  #   - <<: *integration-test
+  #     env: CATALOG_API_VERSION=pinned BROWSER=chrome
+  #   # Latest (bleeding edge) is always allowed to fail. It's just here to give
+  #   # developers forewarning about any upstream breaking change they
+  #   # might introduce.
+  #   - <<: *integration-test
+  #     env: CATALOG_API_VERSION=latest BROWSER=chrome
+  #   - <<: *integration-test
+  #     env: CATALOG_API_VERSION=latest BROWSER=edge

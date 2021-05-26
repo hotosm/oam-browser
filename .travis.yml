@@ -89,3 +89,6 @@ jobs:
   #     env: CATALOG_API_VERSION=latest BROWSER=chrome
   #   - <<: *integration-test
   #     env: CATALOG_API_VERSION=latest BROWSER=edge
+
+notifications:
+    webhooks: https://api.opsgenie.com/v1/json/travisci?apiKey=$OPSGENIE_API_KEY

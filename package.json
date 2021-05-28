@@ -59,7 +59,7 @@
     "history":"^3.0.0",
     "joi-browser": "^10.6.1",
     "lodash": "^3.8.0",
-    "lodash.defaultsdeep": "^4.3.5",
+    "lodash.defaultsdeep": "^4.6.1",
     "mapbox.js": "^2.4.0",
     "mdi-react": "^2.0.46",
     "moment": "^2.10.6",

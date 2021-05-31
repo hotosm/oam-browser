@@ -67,7 +67,10 @@ export default class extends React.Component {
     // Try to be helpful by syncing the end date to the start date
     // the first time the start date is changed. Most useful if you
     // go a long way back in time.
-    if (field === "date-start" && this.firstStartDateChange) {
+    if (
+      field === "date-start" &&
+      (this.firstStartDateChange || this.getValueForDate("date-end") < date)
+    ) {
       date.setHours(date.getHours() + 1);
       this.props.onValueChange(
         this.props.index,
@@ -463,7 +466,6 @@ Please check the instructions on how to use files from Google Drive.
           <div className="form-control-set">
             <DateTimePicker
               ref="dateStart"
-              max={this.dateOrUndefined("date-end")}
               finalView="decade"
               timeFormat={"HH:mm"}
               value={this.getValueForDate("date-start")}

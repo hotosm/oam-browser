@@ -299,7 +299,7 @@ export default createReactClass({
           title="Download raw .tiff image file"
           className="button-download"
           target="_blank"
-          href={this.props.data.uuid}
+          href={this.props.data.uuid.replace("http://", "https://")}
         >
           <DownloadIcon />
         </a>

@@ -99,6 +99,12 @@ export default createReactClass({
     });
   },
 
+  licenseLinks: {
+    "CC-BY 4.0": "https://creativecommons.org/licenses/by/4.0/",
+    "CC BY-NC 4.0": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "CC BY-SA 4.0": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+
   onCopy: function(key, trigger) {
     // Close the dropdown.
     this.refs[`tms-drop-${key}`].close();
@@ -473,6 +479,18 @@ export default createReactClass({
                 <span>Type</span>
               </dt>
               <dd>{d.properties.tms ? "Image + Map Layer" : "Image"}</dd>
+              <dt>
+                <span>License</span>
+              </dt>
+              <dd>
+                <a
+                  href={this.licenseLinks[d.properties.license]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {d.properties.license}
+                </a>
+              </dd>
             </dl>
 
             {d.custom_tms ? (

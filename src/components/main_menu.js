@@ -121,16 +121,6 @@ export default createReactClass({
               <li>
                 <a
                   className="drop__menu-item"
-                  title="Leave feedback"
-                  data-hook="dropdown:close"
-                  onClick={() => actions.openModal("feedback")}
-                >
-                  <span>Feedback</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  className="drop__menu-item"
                   href="mailto:info@openaerialmap.org"
                   title="Get in touch"
                 >

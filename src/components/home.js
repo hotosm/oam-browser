@@ -168,12 +168,6 @@ export default createReactClass({
                 </li>
               </ul>
             </div>
-            <a
-              className="bttn bttn-grey bttn-block"
-              onClick={() => actions.openModal("feedback")}
-            >
-              Feedback
-            </a>
             <div className="footer-bottom">
               <p>
                 Made with{" "}

@@ -104,7 +104,7 @@ export default createReactClass({
                     <strong>{image.title}</strong>
                     <li>Uploaded: {image.uploaded_at}</li>
                     <li>Sensor: {image.properties.sensor}</li>
-                    <li>Resolution: {image.gsd}m</li>
+                    <li>Resolution: {utils.gsdToUnit(image.gsd)}</li>
                     <li>File size: {image.file_size / 1000}k</li>
                     <li>
                       {this.requestedUser === "current" ? (

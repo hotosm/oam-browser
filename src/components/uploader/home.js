@@ -68,7 +68,7 @@ function uploadFile(file, progressTracker) {
     logging: false
   }).then(evaporate => {
     return evaporate.add({
-      name: file.newName,
+      name: file.newName.replace(/ /g,''),
       file: file.data,
       progress: progressTracker
     });
@@ -281,8 +281,8 @@ export default createReactClass({
 
               // Generate random filenames, to avoid collisions at the API
               const randomizeName = filename => {
-                const ext = filename.substr(filename.lastIndexOf("."));
-                const basename = filename.replace(ext, "");
+                const ext = filename.replace(/ /g,'').substr(filename.replace(/ /g,'').lastIndexOf("."));
+                const basename = filename.replace(/ /g,'').replace(ext, "");
                 const randStr = Math.random()
                   .toString(36)
                   .substring(5);

@@ -89,7 +89,7 @@ export default class extends React.Component {
     // the url. The url here is just to avoid errors.
     if (fieldName === "upload") {
       vals[fieldIndex].file = fieldValue;
-      vals[fieldIndex].url = `file://${fieldValue.name}`;
+      vals[fieldIndex].url = `file://${fieldValue.name.replace(/ /g,'')}`;
     } else {
       vals[fieldIndex][fieldName] = fieldValue;
     }

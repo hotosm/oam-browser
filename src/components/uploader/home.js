@@ -291,6 +291,14 @@ export default createReactClass({
               let files = [];
               let urls = [];
               scene["img-loc"].forEach(o => {
+                if (o.file && Object.keys(o.file).length === 0 && o.origin === "upload") {
+                  // NOTE: Content of placeholder uploading field need to be ignored
+                  // this is not an issue when there is at least one "local" file selected
+                  // but resuluts in malformed request when all files are uploaded from
+                  // dropbox or google drive
+                  return;
+                }
+
                 if (o.file) {
                   const name = randomizeName(o.file.name);
                   files.push({ newName: name, data: o.file });

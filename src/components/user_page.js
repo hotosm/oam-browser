@@ -109,7 +109,7 @@ export default createReactClass({
                     <li>
                       {this.requestedUser === "current" ? (
                         <span>
-                          <a href={"/#/imagery/" + image._id + "/edit"}>
+                          <a href={`${process.env.PUBLIC_URL}/#/imagery/${image._id}/edit`}>
                             Edit
                           </a>{" "}
                           |&nbsp;

@@ -44,9 +44,10 @@ export default createReactClass({
     return oamHealthClass;
   },
 
-  componentDidMount: function() {
-    this.fetchOAMHealth();
-  },
+  // OAM health endpoint is currently down
+  // componentDidMount: function() {
+  //   this.fetchOAMHealth();
+  // },
 
   render: function() {
     let oamHealthClass = this.getOAMHealthClass();

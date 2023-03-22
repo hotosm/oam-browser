@@ -6,8 +6,10 @@ import rbush from "rbush";
 
 import actions from "actions/actions";
 import searchQueryStore from "stores/search_query_store";
-import baseLayers from "utils/map-layers";
 import api from "utils/api";
+import config from "../config";
+
+const baseLayers = config.map.baseLayers;
 
 export default Reflux.createStore({
   storage: {

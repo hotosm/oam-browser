@@ -10,5 +10,20 @@ module.exports = {
     "36015894456-3d5ka80qtpaqcjhco3lsl38s1fj0dr71.apps.googleusercontent.com",
   googleDeveloperKey: "",
   OAMBrowserUrl: "http://map-staging.openaerialmap.org/",
-  awsKey: "AKIAI4XOYETOVGTNP5HA"
+  awsKey: "AKIAI4XOYETOVGTNP5HA",
+  map: {
+    initialZoom: 3,
+    minZoom: 2,
+    maxZoom: 18,
+
+    initialView: [-18.632, 18.479],
+
+    baseLayers: [
+      {
+        id: "osm",
+        name: "OpenStreetMap (Standard)",
+        url: "http://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      }
+    ]
+  }
 };

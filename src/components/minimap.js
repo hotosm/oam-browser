@@ -4,9 +4,11 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import utils from "utils/utils";
-import mapLayers from "utils/map-layers";
+import config from "../config";
 
 import "mapbox.js";
+
+const mapLayers = config.map.baseLayers;
 
 export default class extends React.Component {
   static displayName = "MiniMap";

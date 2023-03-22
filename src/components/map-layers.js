@@ -5,9 +5,11 @@ import React from "react";
 import LayersIcon from "mdi-react/LayersIcon";
 
 import Dropdown from "oam-design-system/dropdown";
-import baseLayers from "utils/map-layers";
 import actions from "actions/actions";
 import mapStore from "stores/map_store";
+import config from "../config";
+
+const baseLayers = config.map.baseLayers;
 
 class MapLayers extends React.Component {
   static displayName = "MapLayers";

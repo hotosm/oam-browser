@@ -16,6 +16,8 @@ module.exports = {
 
     initialView: [-18.632, 18.479],
 
+    oamMosaicLayer: null,
+
     baseLayers: [
       {
         id: "oam-base",

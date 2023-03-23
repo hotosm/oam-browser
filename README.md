@@ -6,20 +6,75 @@ Built on top of the [Open Imagery Network](https://openimagerynetwork.github.io/
 
 ![](./contrib/oam_screenshot.jpg)
 
+## Config
+
+The all project configuration is stored in `src/config` directory.
+It contains the following files:
+
+- `local.js` - local development configuration (not tracked by git)
+- `staging.js` - staging configuration
+- `test.js` - test configuration
+- `production.js` - production configuration
+
+By defaut the `local.js` configuration is used. If it is not present, the `staging.js` configuration is used instead.
+To use another configuration, set the `REACT_APP_OAM_ENV` environment variable to the name of the configuration file (without the `.js` extension).
+
+If some key is missing in the configuration object, it will be taken from the `production.js` configuration.
+
 ## Local setup
 
-[Create React App](https://github.com/facebookincubator/create-react-app) is used to scaffold, compile and build the project.
+### Prerequisites
 
-So you will first need recent versions of Node and Yarn on your system. Then, in the project's root, run;
+- [Node.js](https://nodejs.org/en/) supported version is 8.2.1
+- [Python](https://www.python.org/downloads/) supported version is 2.7.18 (required for node-gyp)
+- [Yarn](https://yarnpkg.com/en/docs/install)
+
+To manage Node and Python versions, we recommend using:
+
+- [nvm](https://github.com/nvm-sh/nvm)
+- [pyenv](https://github.com/pyenv/pyenv)
+
+If you are using nvm, you can run `nvm use` to switch to the correct Node version.
+And if you are using pyenv, you can run `pyenv local` to switch to the correct Python version.
+
+The corresponding `.python-version` and `.nvmrc` files are included in the repository.
+
+
+### Install dependencies
+
+After `nvm` and `pyenv` are installed, run the following commands:
+
+**To install and use the correct Node version**
 
 ```bash
+nvm install 
+nvm use
+```
+
+**To install and use the correct Python version**
+
+```bash
+pyenv install
+pyenv local 
+```
+
+**Then install the app dependencies**
+```bash
 yarn install
+```
+
+Then you can run the app with:
+
 yarn start
 ```
 
 You should be able to see the site in your browser at `http://localhost:3000`
 
 However, to get all functionality you will also need to point it at a running [Catalog API](https://github.com/hotosm/oam-catalog). By default the endpoint of the staging instance of the API will be used, however you can change the endpoint to a locally running API in `src/config/local.js`.
+
+### Configuration
+
+The configuration is stored in `src/config` directory. The `local.js` file is used for local development and not tracked by git. See the [config](##config) section for more details.
 
 ## Deployment
 

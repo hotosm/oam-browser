@@ -87,6 +87,9 @@ export default createReactClass({
       attributionControl: false
     });
 
+    if (config.map.oamMosaicLayer)
+      this.oamMosaicLayer = L.tileLayer(config.map.oamMosaicLayer.url);
+
     this.baseLayer = L.tileLayer(mapStore.getBaseLayer().url);
     this.map.addLayer(this.baseLayer);
 
@@ -144,6 +147,16 @@ export default createReactClass({
     utils.delayedMapContainerResize(this.map);
   },
 
+  addMosaicLayer: function() {
+    if (!this.oamMosaicLayer || this.map.hasLayer(this.oamMosaicLayer)) return;
+    this.map.addLayer(this.oamMosaicLayer);
+  },
+
+  removeMosaicLayer: function() {
+    if (!this.oamMosaicLayer || !this.map.hasLayer(this.oamMosaicLayer)) return;
+    this.map.removeLayer(this.oamMosaicLayer);
+  },
+
   // Lifecycle method.
   // Called when the component gets updated.
   componentDidUpdate: function(prevProps, prevState) {
@@ -161,6 +174,17 @@ export default createReactClass({
 
     // Ensure there's always a coordinate in the URI
     if (!this.props.params.map) this.onMapMoveend();
+
+    const isFiltersEnabled = Object.values(this.props.filterParams).some(
+      item => item !== "all"
+    );
+
+    if (
+      !this.getSqrQuadKey() && // if we don't have a selected square
+      !isFiltersEnabled // and there are no filters enabled
+    )
+      this.addMosaicLayer(); // then show the mosaic
+    else this.removeMosaicLayer(); // otherwise hide it
   },
 
   componentWillUnmount: function() {

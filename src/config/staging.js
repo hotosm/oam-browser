@@ -9,6 +9,7 @@ module.exports = {
   googleClient:
     "36015894456-3d5ka80qtpaqcjhco3lsl38s1fj0dr71.apps.googleusercontent.com",
   googleDeveloperKey: "",
+  googleAppId: "",
   OAMBrowserUrl: "http://map-staging.openaerialmap.org/",
   awsKey: "AKIAI4XOYETOVGTNP5HA",
   map: {

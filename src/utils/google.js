@@ -3,76 +3,79 @@ import config from "config";
 
 OAM_UP.gPickerApiLoaded = false;
 OAM_UP.gAuthApiLoaded = false;
-OAM_UP.gAuthToken = false;
+OAM_UP.gAuthToken = null;
 OAM_UP.developerKey = config.googleDeveloperKey;
 
 // The google api loads the different components needed one at a time.
 // This function is loaded once the core api code loads.
-const gApiBoot = function() {
+const gApiBoot = function () {
   gapi.load("auth", {
     callback: () => {
       OAM_UP.gAuthApiLoaded = true;
-    }
+
+      OAM_UP.tokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: config.googleClient,
+        scope: "https://www.googleapis.com/auth/drive",
+        callback: "", // defined later
+      });
+    },
   });
   gapi.load("picker", {
-    callback: () => {
+    callback: async () => {
       OAM_UP.gPickerApiLoaded = true;
-    }
+    },
   });
 };
 
-const getAuthToken = function() {
-  let p = new Promise((resolve, reject) => {
+const getAuthToken = function () {
+  return new Promise((resolve, reject) => {
     if (OAM_UP.gAuthToken) {
       return resolve();
     }
-    if (OAM_UP.gAuthApiLoaded) {
-      gapi.auth.authorize(
-        {
-          client_id: config.googleClient,
-          scope: "https://www.googleapis.com/auth/drive.readonly",
-          immediate: false
-        },
-        authResult => {
-          if (authResult && !authResult.error) {
-            OAM_UP.gAuthToken = authResult.access_token;
-            return resolve();
-          } else {
-            return reject(`gapi.auth.authorize error: ${authResult.error}`);
-          }
-        }
-      );
+
+    OAM_UP.tokenClient.callback = async (response) => {
+      if (response.error !== undefined) {
+        reject(response.error);
+      } else {
+        OAM_UP.gAuthToken = response.access_token;
+        resolve();
+      }
+    };
+
+    if (OAM_UP.gAuthToken === null) {
+      // Prompt the user to select a Google Account and ask for consent to share their data
+      // when establishing a new session.
+      OAM_UP.tokenClient.requestAccessToken({ prompt: "consent" });
     } else {
-      return reject("auth api not loaded");
+      // Skip display of account chooser and consent dialog for an existing session.
+      OAM_UP.tokenClient.requestAccessToken({ prompt: "" });
     }
   });
-  return p;
 };
 
-const pickFiles = function() {
-  let p = new Promise((resolve, reject) => {
-    if (!OAM_UP.gPickerApiLoaded) {
-      return reject("gpicker api not loaded");
-    }
-    if (!OAM_UP.gAuthToken) {
-      return reject("auth token not available");
-    }
-    new google.picker.PickerBuilder()
+const pickFiles = function () {
+  return new Promise((resolve, reject) => {
+    const view = new google.picker.View(google.picker.ViewId.DOCS);
+    view.setMimeTypes('image/tiff');
+    const picker = new google.picker.PickerBuilder()
+      .enableFeature(google.picker.Feature.NAV_HIDDEN)
       .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
-      .addView(google.picker.ViewId.DOCS)
       .setOAuthToken(OAM_UP.gAuthToken)
+      .setAppId(config.googleAppId)
       .setDeveloperKey(OAM_UP.developerKey)
-      .setCallback(data => {
+      .addView(view)
+      .addView(new google.picker.DocsUploadView())
+      .setCallback((data) => {
         console.log("data", data);
         if (
           data[google.picker.Response.ACTION] === google.picker.Action.PICKED
         ) {
-          let res = data[google.picker.Response.DOCUMENTS].map(o => {
+          let res = data[google.picker.Response.DOCUMENTS].map((o) => {
             return {
               name: o.name,
               shared: o.isShared,
               // dlUrl: o.isShared ? `https://drive.google.com/uc?export=download&id=${o.id}` : null
-              dlUrl: o.isShared ? `gdrive://${o.id}` : null
+              dlUrl: o.isShared ? `gdrive://${o.id}` : null,
             };
           });
           return resolve(res);
@@ -82,16 +85,15 @@ const pickFiles = function() {
           return reject("google picker canceled");
         }
       })
-      .build()
-      .setVisible(true);
+      .build();
+    picker.setVisible(true);
   });
-  return p;
 };
 
 window.addEventListener("load", gApiBoot, false);
 
 export default {
-  picker: function() {
+  picker: function () {
     return getAuthToken().then(pickFiles);
-  }
+  },
 };

@@ -4,6 +4,7 @@ module.exports = {
   googleClient:
     "36015894456-cln93odnr88523ssjkaaf8km7fi0snos.apps.googleusercontent.com",
   googleDeveloperKey: "",
+  googleAppId: "",
   map: {
     mapbox: {
       accessToken:

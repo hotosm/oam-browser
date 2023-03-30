@@ -77,6 +77,7 @@ export default class extends React.Component {
           <div>
             <input
               type="file"
+              accept=".tif, .tiff"
               className=""
               placeholder="Local file"
               {...opts}

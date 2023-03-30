@@ -180,7 +180,7 @@ export default createReactClass({
     );
 
     if (
-      !this.getSqrQuadKey() && // if we don't have a selected square
+      !this.mapOverImageLayer && // if we don't have a selected image layer
       !isFiltersEnabled // and there are no filters enabled
     )
       this.addMosaicLayer(); // then show the mosaic

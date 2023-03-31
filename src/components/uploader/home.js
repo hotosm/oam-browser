@@ -47,6 +47,7 @@ function uploadFile(file, progressTracker) {
   const aws_key = config.awsKey;
   const Buffer = buffer.Buffer;
   return Evaporate.create({
+    awsRegion: config.awsRegion,
     aws_key,
     signerUrl,
     bucket,

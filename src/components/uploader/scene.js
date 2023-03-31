@@ -623,7 +623,11 @@ Please check the instructions on how to use files from Google Drive.
                   value="CC-BY 4.0"
                   checked={this.props.data["license"] === "CC-BY 4.0"}
                 />
-                <a href="https://creativecommons.org/licenses/by/4.0/">
+                <a
+                  href="https://creativecommons.org/licenses/by/4.0/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   CC-BY 4.0
                 </a>
               </label>
@@ -637,7 +641,11 @@ Please check the instructions on how to use files from Google Drive.
                   value="CC BY-NC 4.0"
                   checked={this.props.data["license"] === "CC BY-NC 4.0"}
                 />
-                <a href="https://creativecommons.org/licenses/by-nc/4.0/">
+                <a
+                  href="https://creativecommons.org/licenses/by-nc/4.0/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   CC BY-NC 4.0
                 </a>
               </label>
@@ -651,7 +659,11 @@ Please check the instructions on how to use files from Google Drive.
                   value="CC BY-SA 4.0"
                   checked={this.props.data["license"] === "CC BY-SA 4.0"}
                 />
-                <a href="https://creativecommons.org/licenses/by-sa/4.0/">
+                <a
+                  href="https://creativecommons.org/licenses/by-sa/4.0/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   CC BY-SA 4.0
                 </a>
               </label>

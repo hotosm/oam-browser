@@ -303,12 +303,7 @@ export default createReactClass({
                 if (o.file) {
                   const name = randomizeName(o.file.name);
                   files.push({ newName: name, data: o.file });
-                  urls.unshift(
-                    "https://s3.amazonaws.com/" +
-                      config.uploadBucket +
-                      "/" +
-                      name
-                  );
+                  urls.push(`https://${config.uploadBucket}.s3.${config.awsRegion}.amazonaws.com/${name}`);
                 } else {
                   urls.push(o.url);
                 }

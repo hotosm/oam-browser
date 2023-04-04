@@ -109,9 +109,34 @@ export default class extends React.Component {
           </div>
         );
       case "dropbox":
+        if (this.props.data.url === "") {
+          return (
+            <div>
+              <div>Waiting to select the file from Dropbox...</div>
+              {this.props.renderErrorMessage(
+                this.props.getValidationMessages(validationName)[0]
+              )}
+            </div>
+          );
+        }
+
+        opts = {
+          name: this.getName("url"),
+          id: this.getId("url"),
+          readOnly: true,
+          value: this.props.data.url
+        };
+        return <input type="url" className="form-control" {...opts} />;
       case "gdrive":
         if (this.props.data.url === "") {
-          return <p>Loading file selector. Please wait...</p>;
+          return (
+            <div>
+              <div>Waiting to select the file from GoogleDrive...</div>
+              {this.props.renderErrorMessage(
+                this.props.getValidationMessages(validationName)[0]
+              )}
+            </div>
+          );
         }
 
         opts = {

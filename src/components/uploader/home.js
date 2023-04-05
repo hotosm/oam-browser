@@ -13,9 +13,6 @@ import PlusIcon from "mdi-react/PlusIcon";
 import config from "config";
 import api from "utils/api";
 
-// Remove previous form data from local storage, because it's no longer valid.
-localStorage.removeItem("upload-form-fields");
-
 const LS_SCENES_KEY = "scenes-form-fields";
 
 function getSceneDefaultState() {

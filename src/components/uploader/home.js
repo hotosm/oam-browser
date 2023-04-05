@@ -13,6 +13,33 @@ import PlusIcon from "mdi-react/PlusIcon";
 import config from "config";
 import api from "utils/api";
 
+const LS_SCENES_KEY = "scenes-form-fields";
+
+function getSceneDefaultState() {
+  var midnight = new Date();
+  midnight.setMilliseconds(0);
+  midnight.setSeconds(0);
+  midnight.setMinutes(0);
+  midnight.setHours(0);
+  var now = new Date();
+
+  return {
+    title: "",
+    "platform-type": "satellite",
+    sensor: "",
+    "date-start": midnight.toISOString(),
+    "date-end": now.toISOString(),
+    "img-loc": [],
+    "tile-url": "",
+    provider: "",
+    "contact-type": "uploader",
+    "contact-name": "",
+    "contact-email": "",
+    license: "CC-BY 4.0",
+    tags: ""
+  };
+}
+
 function createProgressTracker(progressStats, fileName, component) {
   return function(p, stats) {
     progressStats[fileName] = stats;
@@ -141,7 +168,7 @@ export default createReactClass({
     return {
       loading: false,
       // Form properties.
-      scenes: [this.getSceneDataTemplate()],
+      scenes: this.getScenesDataTemplate(),
       uploadActive: false,
       uploadProgress: 0,
       uploadError: false,
@@ -149,49 +176,21 @@ export default createReactClass({
     };
   },
 
-  getSceneDataTemplate: function() {
-    var midnight = new Date();
-    midnight.setMilliseconds(0);
-    midnight.setSeconds(0);
-    midnight.setMinutes(0);
-    midnight.setHours(0);
-    var now = new Date();
-
-    let defaults = {
-      title: "",
-      "platform-type": "satellite",
-      sensor: "",
-      "date-start": midnight.toISOString(),
-      "date-end": now.toISOString(),
-      "img-loc": [],
-      "tile-url": "",
-      provider: "",
-      "contact-type": "uploader",
-      "contact-name": "",
-      "contact-email": "",
-      license: "CC-BY 4.0",
-      tags: ""
-    };
-
-    // Merge in any fields from a previous upload
-    defaults = _.defaults(
-      JSON.parse(localStorage.getItem("upload-form-fields")) || {},
-      defaults
+  getScenesDataTemplate: function() {
+    return (
+      JSON.parse(localStorage.getItem(LS_SCENES_KEY)) || [
+        getSceneDefaultState()
+      ]
     );
-
-    return defaults;
   },
 
-  getSceneImgLocTemplate: function() {
-    return {
-      url: "",
-      origin: ""
-    };
+  getSceneImgLocTemplate: function(origin) {
+    return { url: "", origin };
   },
 
   addScene: function() {
     var scenes = this.state.scenes;
-    scenes.push(this.getSceneDataTemplate());
+    scenes.push(getSceneDefaultState());
     this.setState({ scenes: scenes });
   },
 
@@ -203,9 +202,8 @@ export default createReactClass({
 
   addImageryLocationToScene: function(sceneIndex, origin) {
     let scenes = this.state.scenes;
-    let tmp = this.getSceneImgLocTemplate();
-    tmp.origin = origin;
-    scenes[sceneIndex]["img-loc"].push(tmp);
+    let imgLoc = this.getSceneImgLocTemplate(origin);
+    scenes[sceneIndex]["img-loc"].push(imgLoc);
     this.setState({ scenes: scenes });
   },
 
@@ -229,8 +227,22 @@ export default createReactClass({
 
   resetForm: function() {
     this.setState({
-      scenes: [this.getSceneDataTemplate()]
+      scenes: [getSceneDefaultState()]
     });
+  },
+
+  componentDidUpdate: function() {
+    // Store entered values to these values in order to keep the form populated
+    // Exept imagery locations
+    localStorage.setItem(
+      LS_SCENES_KEY,
+      JSON.stringify(
+        this.state.scenes.map(scene => ({
+          ...scene,
+          "img-loc": []
+        }))
+      )
+    );
   },
 
   onSubmit: function(event) {
@@ -326,13 +338,6 @@ export default createReactClass({
             })
           };
 
-          // Use the values from the first dataset/scene to save for prepopulation of
-          // future uploads
-          localStorage.setItem(
-            "upload-form-fields",
-            JSON.stringify(this.state.scenes[0])
-          );
-
           // Gather list of files to upload
           let uploads = [];
           data.scenes.forEach(scene => {
@@ -369,6 +374,9 @@ export default createReactClass({
                   uploadStatus: "Upload complete!"
                 });
                 this.submitData(data);
+
+                // Clear form data from localStorage after successful upload
+                localStorage.removeItem(LS_SCENES_KEY);
               })
               .catch(error => {
                 console.log(error);
@@ -501,6 +509,7 @@ export default createReactClass({
                   type="submit"
                   className="bttn bttn-lg bttn-block bttn-submit"
                   onClick={this.onSubmit}
+                  disabled={this.state.loading || this.state.uploadActive}
                 >
                   Submit
                 </button>

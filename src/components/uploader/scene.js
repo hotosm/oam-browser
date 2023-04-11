@@ -276,6 +276,11 @@ Please check the instructions on how to use files from Google Drive.
             )}
             <p className="form-help">
               Select file source location. <br />
+              <strong className="accepted-files">
+                Only georeferenced TIFF files in natural colors or monochrome
+                ones (4 bands or less, 8 bits) are accepted.
+              </strong>
+              <br />
               Click{" "}
               <a
                 href="https://docs.openaerialmap.org/uploader/uploader-form/#via-google-drive"

@@ -112,7 +112,7 @@ export default class extends React.Component {
         if (this.props.data.url === "") {
           return (
             <div>
-              <div>Waiting to select the file from Dropbox...</div>
+              <div>Waiting for a file being selected from Dropbox...</div>
               {this.props.renderErrorMessage(
                 this.props.getValidationMessages(validationName)[0]
               )}
@@ -131,7 +131,7 @@ export default class extends React.Component {
         if (this.props.data.url === "") {
           return (
             <div>
-              <div>Waiting to select the file from GoogleDrive...</div>
+              <div>Waiting for a file being selected from GoogleDrive...</div>
               {this.props.renderErrorMessage(
                 this.props.getValidationMessages(validationName)[0]
               )}

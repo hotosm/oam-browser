@@ -379,6 +379,7 @@ export default createReactClass({
 
                 // Clear form data from localStorage after successful upload
                 localStorage.removeItem(LS_SCENES_KEY);
+                this.resetForm();
               })
               .catch(error => {
                 console.log(error);

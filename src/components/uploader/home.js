@@ -488,14 +488,22 @@ export default createReactClass({
                 <p>
                   By submitting imagery to OpenAerialMap, you agree to place
                   your imagery into the{" "}
-                  <a href="https://github.com/openimagerynetwork/oin-register#open-imagery-network">
+                  <a
+                    href="https://github.com/openimagerynetwork/oin-register#open-imagery-network"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     Open Imagery Network (OIN)
                   </a>
                 </p>
                 <p>
                   Except when permitted by the OpenStreetMap exception (see
                   below), all imagery contained in OIN is licensed{" "}
-                  <a href="https://creativecommons.org/licenses/by/4.0/">
+                  <a
+                    href="https://creativecommons.org/licenses/by/4.0/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     CC-BY 4.0
                   </a>
                   , with attribution as "© OIN contributors", and specific

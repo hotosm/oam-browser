@@ -285,6 +285,8 @@ Please check the instructions on how to use files from Google Drive.
               <a
                 href="https://docs.openaerialmap.org/uploader/uploader-form/#via-google-drive"
                 title="How to select files from google drive"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 here
               </a>{" "}

@@ -127,10 +127,13 @@ export default createReactClass({
             .min(1)
             .items(
               Joi.object().keys({
-                url: Joi.string()
-                  .uri()
-                  .required()
-                  .label("Imagery url"),
+                url: Joi.label("Imagery url").when("origin", {
+                  is: "upload",
+                  then: Joi.string().required(),
+                  otherwise: Joi.string()
+                    .uri()
+                    .required()
+                }),
                 origin: Joi.string()
                   .required()
                   .label("Imagery file origin"),

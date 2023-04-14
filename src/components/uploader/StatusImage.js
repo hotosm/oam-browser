@@ -26,7 +26,7 @@ const imgStatusMatrix = {
 function getMessageList(image) {
   let messages;
   if (image.messages) {
-    messages = image.messages.map(message => <li key={message}>{message}</li>);
+    messages = image.messages.map((message, index) => <li key={index}>{message.message}</li>);
   } else {
     messages = [];
   }

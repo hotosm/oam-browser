@@ -26,7 +26,16 @@ const imgStatusMatrix = {
 function getMessageList(image) {
   let messages;
   if (image.messages) {
-    messages = image.messages.map((message, index) => <li key={index}>{message.message}</li>);
+    messages = image.messages.map((message, index) => {
+      if (message.status === "failed")
+        return (
+          <div className="failed-message" key={index}>
+            {message.message}
+          </div>
+        );
+
+      return <div key={message.message}>{message.message}</div>;
+    });
   } else {
     messages = [];
   }
@@ -37,7 +46,7 @@ function getStatusMessage(image) {
   let statusMessage;
   if (image.status === "finished") {
     statusMessage = (
-      <li>
+      <div>
         <a
           onClick={event => imageClick(event, image.metadata)}
           title="View image on OpenAerialMap"
@@ -45,16 +54,16 @@ function getStatusMessage(image) {
         >
           View image
         </a>
-      </li>
+      </div>
     );
   } else if (image.status === "processing") {
-    statusMessage = <li>Upload in progress.</li>;
+    statusMessage = <div>Upload in progress.</div>;
   } else if (image.status === "errored") {
     statusMessage = (
-      <li>
-        <strong>Upload failed: </strong>
+      <div>
+        <strong className="failed-message">Upload failed</strong>
         {image.error ? image.error.message : ""}
-      </li>
+      </div>
     );
   }
   return statusMessage;
@@ -109,10 +118,12 @@ const StatusImage = props => {
           </div>
         </dd>
         <dt>Info</dt>
-        <dd className="info-detail">
-          <ul>{statusMessage}</ul>
-          <ul>{messages}</ul>
-        </dd>
+        <dd>{statusMessage}</dd>
+        <div className="status-info">
+          <div className="steps">
+            <div>{messages}</div>
+          </div>
+        </div>
       </dl>
     </div>
   );

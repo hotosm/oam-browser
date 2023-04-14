@@ -73,8 +73,8 @@ export default createReactClass({
   },
 
   render: function() {
-    const statusScenes = this.state.data.scenes.map(scene => (
-      <StatusScene scene={scene} />
+    const statusScenes = this.state.data.scenes.map((scene, index) => (
+      <StatusScene key={scene._id || index} scene={scene} />
     ));
 
     if (this.state.errored) {

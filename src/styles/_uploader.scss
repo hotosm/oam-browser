@@ -19,6 +19,20 @@
   }
 }
 
+.failed-message {
+  color: red;
+}
+
+.status-info {
+  font-family: monospace;
+
+  .steps {
+    padding: 0 1rem 0.5rem;
+
+    max-height: 275px;
+    overflow-y: auto;
+  }
+}
 
 .status-details {
   margin: 0 -1rem 1rem -1rem;

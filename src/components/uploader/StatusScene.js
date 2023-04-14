@@ -14,7 +14,7 @@ const StatusScene = props => {
     return <StatusImage image={image} index={index} />;
   });
   return (
-    <section key={scene._id} className="panel status-panel">
+    <section className="panel status-panel">
       <header className="panel-header">
         <div className="panel-headline">
           <h1 className="panel-title">

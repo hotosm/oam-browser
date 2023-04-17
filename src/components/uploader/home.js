@@ -373,26 +373,17 @@ export default createReactClass({
             });
 
             Promise.all(uploadPromises)
-              .then(values => {
+              .then(async () => {
                 this.setState({
                   uploadError: false,
                   uploadActive: false,
                   uploadStatus: "Upload complete!"
                 });
-                this.submitData(data);
+                await this.submitData(data);
               })
               .catch(error => {
                 console.log(error);
-                this.setState({
-                  uploadError: true,
-                  uploadActive: false,
-                  loading: false
-                });
-
-                AppActions.showNotification(
-                  "alert",
-                  <span>There was a problem uploading the files.</span>
-                );
+                this.onSubmitError();
               });
           }
         }
@@ -400,8 +391,21 @@ export default createReactClass({
     );
   },
 
-  submitData: function(data) {
-    api({
+  onSubmitError: function() {
+    this.setState({
+      uploadError: true,
+      uploadActive: false,
+      loading: false
+    });
+
+    AppActions.showNotification(
+      "alert",
+      <span>There was a problem uploading the files.</span>
+    );
+  },
+
+  submitData: async function(data) {
+    await api({
       uri: "/uploads",
       auth: true,
       method: "POST",

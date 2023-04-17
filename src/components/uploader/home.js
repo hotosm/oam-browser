@@ -299,10 +299,11 @@ export default createReactClass({
               const randomizeName = filename => {
                 const ext = filename.substr(filename.lastIndexOf("."));
                 const basename = filename.replace(ext, "");
+                const encoded = encodeURIComponent(basename);
                 const randStr = Math.random()
                   .toString(36)
                   .substring(5);
-                return `${basename}-${randStr}${ext}`;
+                return `${encoded}-${randStr}${ext}`;
               };
               let files = [];
               let urls = [];

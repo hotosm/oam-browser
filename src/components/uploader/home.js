@@ -380,10 +380,6 @@ export default createReactClass({
                   uploadStatus: "Upload complete!"
                 });
                 this.submitData(data);
-
-                // Clear form data from localStorage after successful upload
-                this.resetForm();
-                localStorage.removeItem(LS_SCENES_KEY);
               })
               .catch(error => {
                 console.log(error);
@@ -413,6 +409,10 @@ export default createReactClass({
     }).then(data => {
       this.setState({ loading: false });
       var id = data.results.upload;
+
+      // Clear form data from localStorage after successful upload
+      this.resetForm();
+      localStorage.removeItem(LS_SCENES_KEY);
 
       AppActions.showNotification(
         "success",

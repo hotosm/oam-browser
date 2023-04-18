@@ -8,5 +8,6 @@ export function sanitizeFilenameForURL(filename) {
   // Remove any invalid URL characters
   const sanitizedFilename = hyphenatedFilename.replace(/[^a-zA-Z0-9\-_.]/g, "");
 
-  return sanitizedFilename === "" ? "file" : sanitizedFilename;
+  // If the filename is just hyphens, remove them, then if it's empty, replace it with "file"
+  return sanitizedFilename.replace(/^-+$/g, "").replace(/^$/g, "file");
 }

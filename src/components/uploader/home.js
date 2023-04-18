@@ -12,6 +12,7 @@ import _ from "lodash";
 import PlusIcon from "mdi-react/PlusIcon";
 import config from "config";
 import api from "utils/api";
+import { sanitizeFilenameForURL } from "utils/sanitize-filename";
 
 const LS_SCENES_KEY = "scenes-form-fields";
 
@@ -299,11 +300,11 @@ export default createReactClass({
               const randomizeName = filename => {
                 const ext = filename.substr(filename.lastIndexOf("."));
                 const basename = filename.replace(ext, "");
-                const encoded = encodeURIComponent(basename);
+                const sanitized = sanitizeFilenameForURL(basename);
                 const randStr = Math.random()
                   .toString(36)
                   .substring(5);
-                return `${encoded}-${randStr}${ext}`;
+                return `${sanitized}-${randStr}${ext}`;
               };
               let files = [];
               let urls = [];

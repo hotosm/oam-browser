@@ -1,0 +1,37 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup ssh
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Create SSH key
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ../private.key
+          chmod 600 ../private.key
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+
+      - name: Deploy to server
+        run: |
+          ssh -p 33322 -o "StrictHostKeyChecking no" gis@geocint.kontur.io << 'ENDSSH'
+          cd ~/oam-browser && git pull
+          rm -rf build && REACT_APP_DROPBOX_APP_KEY=cx0acz45lpnrpn1 PUBLIC_URL=/oam yarn build && cd build && cp -r . /var/www/html/oam
+          ENDSSH

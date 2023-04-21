@@ -31,9 +31,10 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -p 33322 -o "StrictHostKeyChecking no" gis@geocint.kontur.io << 'ENDSSH'
+          ssh -p 33322 -o "StrictHostKeyChecking no" gis@geocint.kontur.io -t << 'ENDSSH'
           cd ~/oam-browser && git pull
           source ~/.bashrc
           nvm use
           sudo rm -rf build && REACT_APP_DROPBOX_APP_KEY=${{ secrets.REACT_APP_DROPBOX_APP_KEY }} PUBLIC_URL=/oam yarn build && cd build && cp -r . /var/www/html/oam
+          exit
           ENDSSH

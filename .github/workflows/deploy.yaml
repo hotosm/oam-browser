@@ -33,6 +33,7 @@ jobs:
         run: |
           ssh -p 33322 -o "StrictHostKeyChecking no" gis@geocint.kontur.io -t << 'ENDSSH'
           [ ! -d ~/oam-browser ] && git clone https://github.com/konturio/oam-browser.git ~/oam-browser
+          set -e
           cd ~/oam-browser && git pull
           source ~/.bashrc
           export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"

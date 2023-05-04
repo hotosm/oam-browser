@@ -13,6 +13,7 @@ import PlusIcon from "mdi-react/PlusIcon";
 import config from "config";
 import api from "utils/api";
 import { sanitizeFilenameForURL } from "utils/sanitize-filename";
+import UploadModal from "components/modals/upload_modal";
 
 const LS_SCENES_KEY = "scenes-form-fields";
 
@@ -41,7 +42,7 @@ function getSceneDefaultState() {
   };
 }
 
-function createProgressTracker(progressStats, fileName, component) {
+function createProgressTracker({ progressStats, fileName, onProgress }) {
   return function(p, stats) {
     progressStats[fileName] = stats;
     const progressStatsValues = Object.values(progressStats);
@@ -61,7 +62,7 @@ function createProgressTracker(progressStats, fileName, component) {
     const percentDisplay = Math.round(percentComplete);
     const plural = progressStatsValues.length > 1 ? "s" : "";
     const uploadStatus = `Uploading ${progressStatsValues.length} image${plural} (${percentDisplay}%).`;
-    component.setState({
+    onProgress({
       uploadProgress: percentComplete,
       uploadActive: true,
       uploadStatus
@@ -69,12 +70,19 @@ function createProgressTracker(progressStats, fileName, component) {
   };
 }
 
-function uploadFile(file, progressTracker) {
+function uploadFile({
+  file,
+  progressTracker,
+  onUploadComplete = () => {},
+  onCancel = () => {}
+}) {
   const signerUrl = `${config.catalog.url}/signupload`;
   const bucket = config.uploadBucket;
   const aws_key = config.awsKey;
   const Buffer = buffer.Buffer;
+
   return Evaporate.create({
+    // aws_url: "http://s3.amazonaws.com",
     awsRegion: config.awsRegion,
     aws_key,
     signerUrl,
@@ -96,11 +104,18 @@ function uploadFile(file, progressTracker) {
     xhrWithCredentials: true,
     logging: false
   }).then(evaporate => {
-    return evaporate.add({
-      name: file.newName,
-      file: file.data,
-      progress: progressTracker
+    onCancel(() => {
+      console.log("cancel file", file.newName);
+      evaporate.cancel(`${bucket}/${file.newName}`);
     });
+
+    return evaporate
+      .add({
+        name: file.newName,
+        file: file.data,
+        progress: progressTracker
+      })
+      .then(onUploadComplete);
   });
 }
 
@@ -176,7 +191,8 @@ export default createReactClass({
       uploadActive: false,
       uploadProgress: 0,
       uploadError: false,
-      uploadStatus: ""
+      uploadStatus: "",
+      uploadedCount: 0
     };
   },
 
@@ -364,32 +380,72 @@ export default createReactClass({
             // Upload list of files before submitting the form
             let progressStats = {};
             const uploadPromises = [];
+            this.cancelPromises = [];
+            this.setState({ uploadedCount: 0 });
             uploads.forEach(file => {
-              const progressTracker = createProgressTracker(
+              const progressTracker = createProgressTracker({
                 progressStats,
-                file.newName,
-                this
-              );
-              uploadPromises.push(uploadFile(file, progressTracker));
+                fileName: file.newName,
+                onProgress: nextState => this.setState(nextState)
+              });
+
+              const promise = uploadFile({
+                file,
+                progressTracker,
+                onUploadComplete: () =>
+                  this.setState({
+                    uploadedCount: this.state.uploadedCount + 1
+                  }),
+                onCancel: cancel => this.cancelPromises.push(cancel)
+              });
+
+              uploadPromises.push(promise);
             });
 
+            // async function doPromises() {
+            //   for (const promise of uploadPromises) {
+            //     await promise;
+            //   }
+            // }
+
+            // doPromises()
             Promise.all(uploadPromises)
               .then(async () => {
                 this.setState({
                   uploadError: false,
                   uploadActive: false,
-                  uploadStatus: "Upload complete!"
+                  uploadStatus: "Upload complete!",
+                  uploadedCount: 0
                 });
+
                 await this.submitData(data);
               })
               .catch(error => {
-                console.log(error);
+                console.error(error);
+                if (error === "User aborted the upload") return;
+
                 this.onSubmitError();
               });
           }
         }
       }.bind(this)
     );
+  },
+
+  cancelPromises: [],
+
+  onCancel: function() {
+    console.log(this.cancelPromises);
+
+    this.setState({
+      uploadActive: false,
+      uploadProgress: 0,
+      uploadError: false,
+      uploadStatus: "",
+      uploadedCount: 0
+    });
+
+    this.cancelPromises.forEach(cancel => cancel());
   },
 
   onSubmitError: function() {
@@ -458,8 +514,24 @@ export default createReactClass({
   },
 
   render: function() {
+    const uploadingFilesCount = this.state.scenes.reduce(
+      (acc, scene) =>
+        acc +
+        scene["img-loc"].filter(o => o.file && o.origin === "upload").length,
+      0
+    );
+
+    const currentImageNum = 1 + this.state.uploadedCount;
+
     return (
       <div className="form-wrapper">
+        <UploadModal
+          revealed={this.state.uploadActive}
+          progress={this.state.uploadProgress}
+          imageCount={uploadingFilesCount}
+          currentImageNum={currentImageNum}
+          onCancel={this.onCancel}
+        />
         <section className="panel upload-panel">
           <header className="panel-header">
             <div className="panel-headline">

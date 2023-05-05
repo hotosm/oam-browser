@@ -186,7 +186,8 @@ export default createReactClass({
       uploadError: false,
       uploadStatus: "",
       uploadedCount: 0,
-      uploadCancelled: false
+      uploadCancelled: false,
+      submitting: false
     };
   },
 
@@ -275,7 +276,7 @@ export default createReactClass({
           console.log(validationErrors);
           AppActions.showNotification("alert", "Form contains errors!");
         } else {
-          this.setState({ uploadActive: true });
+          this.setState({ submitting: true });
 
           AppActions.clearNotification();
 
@@ -371,7 +372,7 @@ export default createReactClass({
             let progressStats = {};
             const uploadPromises = [];
             this.cancelPromises = [];
-            this.setState({ uploadedCount: 0 });
+            this.setState({ uploadedCount: 0, uploadActive: true });
             uploads.forEach(file => {
               const progressTracker = createProgressTracker({
                 progressStats,
@@ -408,7 +409,8 @@ export default createReactClass({
                   uploadError: false,
                   uploadActive: false,
                   uploadStatus: "Upload complete!",
-                  uploadedCount: 0
+                  uploadedCount: 0,
+                  submitting: false
                 });
 
                 await this.submitData(data);
@@ -422,7 +424,8 @@ export default createReactClass({
                     uploadError: false,
                     uploadStatus: "",
                     uploadedCount: 0,
-                    uploadCancelled: false
+                    uploadCancelled: false,
+                    submitting: false
                   });
                   return;
                 }
@@ -448,7 +451,8 @@ export default createReactClass({
   onSubmitError: function() {
     this.setState({
       uploadError: true,
-      uploadActive: false
+      uploadActive: false,
+      submitting: false
     });
 
     AppActions.showNotification(
@@ -464,6 +468,8 @@ export default createReactClass({
       method: "POST",
       body: data
     }).then(data => {
+      this.setState({ submitting: false });
+
       var id = data.results.upload;
 
       // Clear form data from localStorage after successful upload
@@ -596,7 +602,7 @@ export default createReactClass({
                   type="submit"
                   className="bttn bttn-lg bttn-block bttn-submit"
                   onClick={this.onSubmit}
-                  disabled={this.state.uploadActive}
+                  disabled={this.state.submitting || this.state.uploadActive}
                 >
                   Submit
                 </button>

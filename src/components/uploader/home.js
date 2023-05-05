@@ -423,7 +423,17 @@ export default createReactClass({
               })
               .catch(error => {
                 console.error(error);
-                if (this.state.uploadCancelled) return;
+                if (this.state.uploadCancelled) {
+                  this.setState({
+                    uploadActive: false,
+                    uploadProgress: 0,
+                    uploadError: false,
+                    uploadStatus: "",
+                    uploadedCount: 0,
+                    uploadCancelled: false
+                  });
+                  return;
+                }
 
                 this.onSubmitError();
               });
@@ -435,21 +445,12 @@ export default createReactClass({
 
   cancelPromises: [],
 
-  onCancel: async function() {
+  onCancel: function() {
     this.setState({
       uploadCancelled: true
     });
 
-    await Promise.all(this.cancelPromises.map(cancel => cancel()));
-
-    this.setState({
-      uploadActive: false,
-      uploadProgress: 0,
-      uploadError: false,
-      uploadStatus: "",
-      uploadedCount: 0,
-      uploadCancelled: false
-    });
+    this.cancelPromises.forEach(cancel => cancel());
   },
 
   onSubmitError: function() {

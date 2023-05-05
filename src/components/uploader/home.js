@@ -57,11 +57,11 @@ function createProgressTracker({ progressStats, fileName, onProgress }) {
       { sumTotalUploaded: 0, sumFilesize: 0 }
     );
 
-    const percentComplete =
-      progress.sumTotalUploaded / progress.sumFilesize * 100;
-    const percentDisplay = Math.round(percentComplete);
+    const percentComplete = Math.round(
+      progress.sumTotalUploaded / progress.sumFilesize * 100
+    );
     const plural = progressStatsValues.length > 1 ? "s" : "";
-    const uploadStatus = `Uploading ${progressStatsValues.length} image${plural} (${percentDisplay}%).`;
+    const uploadStatus = `Uploading ${progressStatsValues.length} image${plural} (${percentComplete}%).`;
     onProgress({
       uploadProgress: percentComplete,
       uploadActive: true,
@@ -192,7 +192,8 @@ export default createReactClass({
       uploadProgress: 0,
       uploadError: false,
       uploadStatus: "",
-      uploadedCount: 0
+      uploadedCount: 0,
+      uploadCancelled: false
     };
   },
 
@@ -422,7 +423,12 @@ export default createReactClass({
               })
               .catch(error => {
                 console.error(error);
-                if (error === "User aborted the upload") return;
+                if (this.state.uploadCancelled) {
+                  this.setState({
+                    uploadCancelled: false
+                  });
+                  return;
+                }
 
                 this.onSubmitError();
               });
@@ -435,14 +441,13 @@ export default createReactClass({
   cancelPromises: [],
 
   onCancel: function() {
-    console.log(this.cancelPromises);
-
     this.setState({
       uploadActive: false,
       uploadProgress: 0,
       uploadError: false,
       uploadStatus: "",
-      uploadedCount: 0
+      uploadedCount: 0,
+      uploadCancelled: true
     });
 
     this.cancelPromises.forEach(cancel => cancel());
@@ -605,17 +610,6 @@ export default createReactClass({
                 >
                   Submit
                 </button>
-                <div
-                  id="upload-progress"
-                  className={this.state.uploadActive ? "" : "upload-inactive"}
-                >
-                  <div className="meter">
-                    <span style={{ width: this.state.uploadProgress + "%" }} />
-                  </div>
-                  <span className="upload-status">
-                    {this.state.uploadStatus}
-                  </span>
-                </div>
               </div>
             </form>
           </div>

@@ -424,7 +424,15 @@ export default createReactClass({
               .catch(error => {
                 console.error(error);
                 if (this.state.uploadCancelled) {
-                  this.setState(this.getInitialState());
+                  this.setState({
+                    loading: false,
+                    uploadActive: false,
+                    uploadProgress: 0,
+                    uploadError: false,
+                    uploadStatus: "",
+                    uploadedCount: 0,
+                    uploadCancelled: false
+                  });
                   return;
                 }
 

@@ -440,7 +440,7 @@ export default createReactClass({
       uploadCancelled: true
     });
 
-    await Promise.all(this.cancelPromises);
+    await Promise.all(this.cancelPromises.map(cancel => cancel()));
 
     this.setState({
       uploadActive: false,

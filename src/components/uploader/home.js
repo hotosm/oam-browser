@@ -60,13 +60,8 @@ function createProgressTracker({ progressStats, fileName, onProgress }) {
     const percentComplete = Math.round(
       progress.sumTotalUploaded / progress.sumFilesize * 100
     );
-    const plural = progressStatsValues.length > 1 ? "s" : "";
-    const uploadStatus = `Uploading ${progressStatsValues.length} image${plural} (${percentComplete}%).`;
-    onProgress({
-      uploadProgress: percentComplete,
-      uploadActive: true,
-      uploadStatus
-    });
+
+    onProgress(percentComplete);
   };
 }
 
@@ -185,8 +180,6 @@ export default createReactClass({
 
   getInitialState: function() {
     return {
-      loading: false,
-      // Form properties.
       scenes: this.getScenesDataTemplate(),
       uploadActive: false,
       uploadProgress: 0,
@@ -282,11 +275,7 @@ export default createReactClass({
           console.log(validationErrors);
           AppActions.showNotification("alert", "Form contains errors!");
         } else {
-          if (this.state.loading) {
-            // Submit already in process.
-            return;
-          }
-          this.setState({ loading: true });
+          this.setState({ uploadActive: true });
 
           AppActions.clearNotification();
 
@@ -387,7 +376,10 @@ export default createReactClass({
               const progressTracker = createProgressTracker({
                 progressStats,
                 fileName: file.newName,
-                onProgress: nextState => this.setState(nextState)
+                onProgress: uploadProgress => {
+                  if (!this.state.uploadCancelled)
+                    this.setState({ uploadProgress });
+                }
               });
 
               const promise = uploadFile({
@@ -425,7 +417,6 @@ export default createReactClass({
                 console.error(error);
                 if (this.state.uploadCancelled) {
                   this.setState({
-                    loading: false,
                     uploadActive: false,
                     uploadProgress: 0,
                     uploadError: false,
@@ -457,8 +448,7 @@ export default createReactClass({
   onSubmitError: function() {
     this.setState({
       uploadError: true,
-      uploadActive: false,
-      loading: false
+      uploadActive: false
     });
 
     AppActions.showNotification(
@@ -474,7 +464,6 @@ export default createReactClass({
       method: "POST",
       body: data
     }).then(data => {
-      this.setState({ loading: false });
       var id = data.results.upload;
 
       // Clear form data from localStorage after successful upload
@@ -607,7 +596,7 @@ export default createReactClass({
                   type="submit"
                   className="bttn bttn-lg bttn-block bttn-submit"
                   onClick={this.onSubmit}
-                  disabled={this.state.loading || this.state.uploadActive}
+                  disabled={this.state.uploadActive}
                 >
                   Submit
                 </button>

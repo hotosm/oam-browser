@@ -16,7 +16,10 @@ module.exports = {
 
     initialView: [-18.632, 18.479],
 
-    oamMosaicLayer: null,
+    oamMosaicLayer: {
+      url:
+        "https://geocint-raster-tiler.k8s-01.konturlabs.com/tiles/{z}/{x}/{y}.png"
+    },
 
     baseLayers: [
       {

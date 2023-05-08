@@ -16,7 +16,11 @@ module.exports = {
 
     initialView: [-18.632, 18.479],
 
-    oamMosaicLayer: null,
+    oamMosaicLayer: {
+      id: "oam-mosaic",
+      name: "OAM Mosaic",
+      url: "https://apps.kontur.io/raster-tiler/oam/mosaic/{z}/{x}/{y}.png"
+    },
 
     baseLayers: [
       {

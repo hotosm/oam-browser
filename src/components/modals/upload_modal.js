@@ -23,6 +23,12 @@ class UploadModal extends React.Component {
     this.setState({ confirmingCancel: false });
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.revealed && !this.props.revealed) {
+      this.setState({ confirmingCancel: false });
+    }
+  }
+
   render() {
     const {
       revealed,

@@ -13,6 +13,7 @@ import PlusIcon from "mdi-react/PlusIcon";
 import config from "config";
 import api from "utils/api";
 import { sanitizeFilenameForURL } from "utils/sanitize-filename";
+import UploadModal from "components/modals/upload_modal";
 
 const LS_SCENES_KEY = "scenes-form-fields";
 
@@ -41,39 +42,43 @@ function getSceneDefaultState() {
   };
 }
 
-function createProgressTracker(progressStats, fileName, component) {
-  return function(p, stats) {
+function createProgressTracker({ progressStats, fileName, onProgress }) {
+  return function(_percentComplete, stats) {
+    console.log("progress", stats);
     progressStats[fileName] = stats;
     const progressStatsValues = Object.values(progressStats);
-    const progress = progressStatsValues.reduce(
+    const { sumTotalUploaded, sumFilesize } = progressStatsValues.reduce(
       (accumulator, current) => {
-        return {
-          sumTotalUploaded:
-            accumulator.sumTotalUploaded + current.totalUploaded,
-          sumFilesize: accumulator.sumFilesize + current.fileSize
-        };
+        if (current.loaded >= 0)
+          return {
+            sumTotalUploaded:
+              accumulator.sumTotalUploaded + current.totalUploaded,
+            sumFilesize: accumulator.sumFilesize + current.fileSize
+          };
+
+        return accumulator;
       },
       { sumTotalUploaded: 0, sumFilesize: 0 }
     );
 
     const percentComplete =
-      progress.sumTotalUploaded / progress.sumFilesize * 100;
-    const percentDisplay = Math.round(percentComplete);
-    const plural = progressStatsValues.length > 1 ? "s" : "";
-    const uploadStatus = `Uploading ${progressStatsValues.length} image${plural} (${percentDisplay}%).`;
-    component.setState({
-      uploadProgress: percentComplete,
-      uploadActive: true,
-      uploadStatus
-    });
+      sumFilesize === 0 ? 0 : Math.round(sumTotalUploaded / sumFilesize * 100);
+
+    onProgress(percentComplete);
   };
 }
 
-function uploadFile(file, progressTracker) {
+function uploadFile({
+  file,
+  progressTracker,
+  onUploadComplete = () => {},
+  setCancelCallback = () => {}
+}) {
   const signerUrl = `${config.catalog.url}/signupload`;
   const bucket = config.uploadBucket;
   const aws_key = config.awsKey;
   const Buffer = buffer.Buffer;
+
   return Evaporate.create({
     awsRegion: config.awsRegion,
     aws_key,
@@ -96,11 +101,17 @@ function uploadFile(file, progressTracker) {
     xhrWithCredentials: true,
     logging: false
   }).then(evaporate => {
-    return evaporate.add({
-      name: file.newName,
-      file: file.data,
-      progress: progressTracker
+    setCancelCallback(() => {
+      evaporate.cancel(`${bucket}/${file.newName}`);
     });
+
+    return evaporate
+      .add({
+        name: file.newName,
+        file: file.data,
+        progress: progressTracker
+      })
+      .then(onUploadComplete);
   });
 }
 
@@ -170,13 +181,14 @@ export default createReactClass({
 
   getInitialState: function() {
     return {
-      loading: false,
-      // Form properties.
       scenes: this.getScenesDataTemplate(),
       uploadActive: false,
       uploadProgress: 0,
       uploadError: false,
-      uploadStatus: ""
+      uploadedCount: 0,
+      uploadCancelled: false,
+      submitting: false,
+      online: navigator.onLine
     };
   },
 
@@ -235,6 +247,31 @@ export default createReactClass({
     });
   },
 
+  onOnlineStatusChange: function() {
+    if (this.state.online === navigator.onLine) return;
+
+    this.setState(prevState => {
+      if (prevState.online && !navigator.onLine) {
+        AppActions.showNotification(
+          "alert",
+          "Uploading was stopped. Check your internet connection."
+        );
+      }
+      return { ...prevState, online: navigator.onLine };
+    });
+  },
+
+  componentDidMount: function() {
+    window.addEventListener("online", this.onOnlineStatusChange);
+    window.addEventListener("offline", this.onOnlineStatusChange);
+    this.onOnlineStatusChange();
+  },
+
+  componentWillUnmount: function() {
+    window.removeEventListener("online", this.onOnlineStatusChange);
+    window.removeEventListener("offline", this.onOnlineStatusChange);
+  },
+
   componentDidUpdate: function() {
     // Store entered values to these values in order to keep the form populated
     // Exept imagery locations
@@ -265,11 +302,7 @@ export default createReactClass({
           console.log(validationErrors);
           AppActions.showNotification("alert", "Form contains errors!");
         } else {
-          if (this.state.loading) {
-            // Submit already in process.
-            return;
-          }
-          this.setState({ loading: true });
+          this.setState({ submitting: true });
 
           AppActions.clearNotification();
 
@@ -364,13 +397,36 @@ export default createReactClass({
             // Upload list of files before submitting the form
             let progressStats = {};
             const uploadPromises = [];
+            this.cancelPromises = [];
+            this.setState({ uploadedCount: 0, uploadActive: true });
             uploads.forEach(file => {
-              const progressTracker = createProgressTracker(
+              const progressTracker = createProgressTracker({
                 progressStats,
-                file.newName,
-                this
-              );
-              uploadPromises.push(uploadFile(file, progressTracker));
+                fileName: file.newName,
+                onProgress: uploadProgress => {
+                  this.setState(prevState => {
+                    if (
+                      !this.state.uploadCancelled &&
+                      prevState.uploadProgress <= uploadProgress
+                    )
+                      return { ...prevState, uploadProgress };
+
+                    return prevState;
+                  });
+                }
+              });
+
+              const promise = uploadFile({
+                file,
+                progressTracker,
+                onUploadComplete: () =>
+                  this.setState({
+                    uploadedCount: this.state.uploadedCount + 1
+                  }),
+                setCancelCallback: cancel => this.cancelPromises.push(cancel)
+              });
+
+              uploadPromises.push(promise);
             });
 
             Promise.all(uploadPromises)
@@ -378,12 +434,29 @@ export default createReactClass({
                 this.setState({
                   uploadError: false,
                   uploadActive: false,
-                  uploadStatus: "Upload complete!"
+                  uploadedCount: 0,
+                  submitting: false
                 });
+
                 await this.submitData(data);
               })
               .catch(error => {
-                console.log(error);
+                console.error(error);
+                if (this.state.uploadCancelled) {
+                  this.setState({
+                    uploadActive: false,
+                    uploadProgress: 0,
+                    uploadError: false,
+                    uploadedCount: 0,
+                    uploadCancelled: false,
+                    submitting: false
+                  });
+
+                  AppActions.clearNotification();
+
+                  return;
+                }
+
                 this.onSubmitError();
               });
           }
@@ -392,11 +465,23 @@ export default createReactClass({
     );
   },
 
+  cancelPromises: [],
+
+  onCancel: function() {
+    if (this.state.uploadCancelled) return;
+
+    AppActions.showNotification("alert", "Cancelling the current upload");
+
+    this.setState({ uploadCancelled: true });
+
+    this.cancelPromises.forEach(cancel => cancel());
+  },
+
   onSubmitError: function() {
     this.setState({
       uploadError: true,
       uploadActive: false,
-      loading: false
+      submitting: false
     });
 
     AppActions.showNotification(
@@ -412,7 +497,8 @@ export default createReactClass({
       method: "POST",
       body: data
     }).then(data => {
-      this.setState({ loading: false });
+      this.setState({ submitting: false });
+
       var id = data.results.upload;
 
       // Clear form data from localStorage after successful upload
@@ -458,8 +544,25 @@ export default createReactClass({
   },
 
   render: function() {
+    const uploadingFilesCount = this.state.scenes.reduce(
+      (acc, scene) =>
+        acc +
+        scene["img-loc"].filter(o => o.file && o.origin === "upload").length,
+      0
+    );
+
+    const currentImageNum = 1 + this.state.uploadedCount;
+
     return (
       <div className="form-wrapper">
+        <UploadModal
+          revealed={this.state.uploadActive}
+          progress={this.state.uploadProgress}
+          imageCount={uploadingFilesCount}
+          currentImageNum={currentImageNum}
+          onCancel={this.onCancel}
+          stopped={!this.state.online}
+        />
         <section className="panel upload-panel">
           <header className="panel-header">
             <div className="panel-headline">
@@ -529,21 +632,10 @@ export default createReactClass({
                   type="submit"
                   className="bttn bttn-lg bttn-block bttn-submit"
                   onClick={this.onSubmit}
-                  disabled={this.state.loading || this.state.uploadActive}
+                  disabled={this.state.submitting || this.state.uploadActive}
                 >
                   Submit
                 </button>
-                <div
-                  id="upload-progress"
-                  className={this.state.uploadActive ? "" : "upload-inactive"}
-                >
-                  <div className="meter">
-                    <span style={{ width: this.state.uploadProgress + "%" }} />
-                  </div>
-                  <span className="upload-status">
-                    {this.state.uploadStatus}
-                  </span>
-                </div>
               </div>
             </form>
           </div>

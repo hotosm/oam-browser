@@ -55,7 +55,7 @@ nvm use
 
 ```bash
 pyenv install
-pyenv local 
+pyenv local
 ```
 
 **Then install the app dependencies**

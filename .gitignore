@@ -26,3 +26,5 @@ tmp
 .tmp
 dist
 test/bower_components
+
+.vscode

@@ -409,14 +409,14 @@ export default createReactClass({
             // Submit the form now
             this.submitData(data);
           } else {
-            if (urls.length) {
+            if (urls.length !== uploads.length) {
               AppActions.showNotification(
-                "info",
+                "success",
                 "Processing has already started. Please, wait for downloading of file(s) to processing server to be finished."
               );
             } else {
               AppActions.showNotification(
-                "info",
+                "success",
                 "Please, do not close the browser page before uploading is finished."
               );
             }

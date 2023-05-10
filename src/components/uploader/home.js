@@ -257,17 +257,28 @@ export default createReactClass({
           "Uploading was stopped. Check your internet connection."
         );
       }
+
+      if (!prevState.online && navigator.onLine) {
+        AppActions.closeNotification();
+      }
+
       return { ...prevState, online: navigator.onLine };
     });
   },
 
   componentDidMount: function() {
+    window.onbeforeunload = () => {
+      return "Are you sure you want to leave this page?";
+    };
+
     window.addEventListener("online", this.onOnlineStatusChange);
     window.addEventListener("offline", this.onOnlineStatusChange);
     this.onOnlineStatusChange();
   },
 
   componentWillUnmount: function() {
+    window.onbeforeunload = null;
+
     window.removeEventListener("online", this.onOnlineStatusChange);
     window.removeEventListener("offline", this.onOnlineStatusChange);
   },
@@ -389,11 +400,27 @@ export default createReactClass({
             // Remove file references from JSON data (not saved in database)
             delete scene.files;
           });
-          const totalFiles = uploads.length;
-          if (!totalFiles) {
+
+          const urls = data.scenes.reduce((acc, scene) => {
+            return acc + scene.urls.length;
+          }, 0);
+
+          if (!uploads.length) {
             // Submit the form now
             this.submitData(data);
           } else {
+            if (urls.length) {
+              AppActions.showNotification(
+                "info",
+                "Processing has already started. Please, wait for downloading of file(s) to processing server to be finished."
+              );
+            } else {
+              AppActions.showNotification(
+                "info",
+                "Please, do not close the browser page before uploading is finished."
+              );
+            }
+
             // Upload list of files before submitting the form
             let progressStats = {};
             const uploadPromises = [];
@@ -442,6 +469,11 @@ export default createReactClass({
                 await this.submitData(data);
               })
               .catch(error => {
+                AppActions.showNotification(
+                  "alert",
+                  "Uploading failed. See the details at the uploading form messages."
+                );
+
                 console.error(error);
                 if (this.state.uploadCancelled) {
                   this.setState({
@@ -506,10 +538,12 @@ export default createReactClass({
 
       AppActions.showNotification(
         "success",
-        <span>
-          Your upload request was successfully submitted and is being processed.{" "}
-          <a href={"#/upload/status/" + id}>Check upload status.</a>
-        </span>
+        <div>
+          <div>Processing of your image(s) is in progress.</div>
+          <div>
+            <a href={"#/upload/status/" + id}>Check processing status →</a>
+          </div>
+        </div>
       );
     });
   },

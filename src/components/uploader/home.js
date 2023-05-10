@@ -407,6 +407,7 @@ export default createReactClass({
                   this.setState(prevState => {
                     if (
                       !this.state.uploadCancelled &&
+                      this.state.online &&
                       prevState.uploadProgress <= uploadProgress
                     )
                       return { ...prevState, uploadProgress };
@@ -500,8 +501,8 @@ export default createReactClass({
       var id = data.results.upload;
 
       // Clear form data from localStorage after successful upload
-      this.setState(this.getInitialState());
       localStorage.removeItem(LS_SCENES_KEY);
+      this.setState(this.getInitialState());
 
       AppActions.showNotification(
         "success",
@@ -549,15 +550,12 @@ export default createReactClass({
       0
     );
 
-    const currentImageNum = 1 + this.state.uploadedCount;
-
     return (
       <div className="form-wrapper">
         <UploadModal
           revealed={this.state.uploadActive}
           progress={this.state.uploadProgress}
           imageCount={uploadingFilesCount}
-          currentImageNum={currentImageNum}
           onCancel={this.onCancel}
           stopped={!this.state.online}
         />

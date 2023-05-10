@@ -34,15 +34,14 @@ class UploadModal extends React.Component {
       stopped,
       revealed,
       imageCount,
-      currentImageNum,
       progress,
       onCancel: onConfirmCancel
     } = this.props;
 
     const text =
       imageCount > 1
-        ? `Uploading ${currentImageNum} of ${imageCount} images...`
-        : `Uploading ${currentImageNum} image...`;
+        ? `Uploading ${imageCount} images...`
+        : `Uploading 1 image...`;
 
     return (
       <ModalParent id="upload-modal" revealed={revealed}>
@@ -56,7 +55,7 @@ class UploadModal extends React.Component {
             <span className="actions">
               {this.state.confirmingCancel ? (
                 <span>
-                  <a onClick={onConfirmCancel}>Confirm cancel</a>
+                  <a onClick={onConfirmCancel}>Confirm cancellation</a>
                   &nbsp;|&nbsp;
                   <a onClick={this.onDismiss}>Continue uploading</a>
                 </span>

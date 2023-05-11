@@ -127,7 +127,7 @@ function uploadFile({
 // The solution would be to clone the state every time, but since we're
 // ALWAYS calling setState after one of these changes, it's not a problem.
 
-export default createReactClass({
+const UploadPage = createReactClass({
   displayName: "Home",
 
   mixins: [ValidationMixin],
@@ -686,3 +686,5 @@ export default createReactClass({
     );
   }
 });
+
+export default withRouter(UploadPage);

@@ -14,7 +14,7 @@ import config from "config";
 import api from "utils/api";
 import { sanitizeFilenameForURL } from "utils/sanitize-filename";
 import UploadModal from "components/modals/upload_modal";
-import { withRouter } from "react-router";
+import { Prompt } from "react-router-dom";
 
 const LS_SCENES_KEY = "scenes-form-fields";
 
@@ -127,7 +127,7 @@ function uploadFile({
 // The solution would be to clone the state every time, but since we're
 // ALWAYS calling setState after one of these changes, it's not a problem.
 
-const UploadPage = createReactClass({
+export default createReactClass({
   displayName: "Home",
 
   mixins: [ValidationMixin],
@@ -267,15 +267,10 @@ const UploadPage = createReactClass({
     });
   },
 
-  routerWillLeave() {
-    // Return false to prevent a transition w/o prompting the user,
-    // or return a string to allow the user to decide.
-    if (this.state.uploadActive || this.state.submitting)
-      return "Are you sure you want to leave this page?";
-  },
-
   componentDidMount: function() {
-    this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
+    window.onbeforeunload = () => {
+      return "Are you sure you want to leave this page?";
+    };
 
     window.addEventListener("online", this.onOnlineStatusChange);
     window.addEventListener("offline", this.onOnlineStatusChange);
@@ -283,8 +278,12 @@ const UploadPage = createReactClass({
   },
 
   componentWillUnmount: function() {
+    window.onbeforeunload = null;
+
     window.removeEventListener("online", this.onOnlineStatusChange);
     window.removeEventListener("offline", this.onOnlineStatusChange);
+
+    this.onCancel({ showNotification: false });
   },
 
   componentDidUpdate: function() {
@@ -504,10 +503,13 @@ const UploadPage = createReactClass({
 
   cancelPromises: [],
 
-  onCancel: function() {
+  onCancel: function({ showNotification = true } = {}) {
     if (this.state.uploadCancelled) return;
 
-    AppActions.showNotification("alert", "Cancelling the current upload");
+    console.log("Call cancel");
+
+    if (showNotification)
+      AppActions.showNotification("alert", "Cancelling the current upload");
 
     this.setState({ uploadCancelled: true });
 
@@ -592,6 +594,10 @@ const UploadPage = createReactClass({
 
     return (
       <div className="form-wrapper">
+        <Prompt
+          when={isLoading}
+          message="Are you sure you want to leave this page?"
+        />
         <UploadModal
           revealed={this.state.uploadActive}
           progress={this.state.uploadProgress}
@@ -681,5 +687,3 @@ const UploadPage = createReactClass({
     );
   }
 });
-
-export default withRouter(UploadPage);

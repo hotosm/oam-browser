@@ -40,5 +40,5 @@ jobs:
           source ~/.bashrc
           export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
           nvm use 8
-          sudo rm -rf build && REACT_APP_DROPBOX_APP_KEY=${{ secrets.REACT_APP_DROPBOX_APP_KEY }} PUBLIC_URL=/oam yarn build && cd build && sudo cp -r . /var/www/html/oam
+          sudo rm -rf build && REACT_APP_DROPBOX_APP_KEY=${{ secrets.REACT_APP_DROPBOX_APP_KEY }} PUBLIC_URL=/oam sudo yarn build && cd build && sudo cp -r . /var/www/html/oam
           ENDSSH

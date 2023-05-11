@@ -4,14 +4,16 @@ on:
   push:
     branches:
       - develop
+  pull_request:
+    types: [opened, edited]
 
 jobs:
-  deploy:
+  deploy-dev:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      # - name: Checkout code
+      #   uses: actions/checkout@v3
 
       - name: Setup ssh
         uses: webfactory/ssh-agent@v0.5.3
@@ -34,7 +36,7 @@ jobs:
           ssh -p 33322 -o "StrictHostKeyChecking no" gis@geocint.kontur.io << 'ENDSSH'
           [ ! -d ~/oam-browser ] && git clone https://github.com/konturio/oam-browser.git ~/oam-browser
           set -e
-          cd ~/oam-browser && git pull
+          cd ~/oam-browser && sudo git pull
           source ~/.bashrc
           export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
           nvm use 8

@@ -14,7 +14,7 @@ import config from "config";
 import api from "utils/api";
 import { sanitizeFilenameForURL } from "utils/sanitize-filename";
 import UploadModal from "components/modals/upload_modal";
-import { Prompt } from "react-router-dom";
+import { withRouter } from "react-router";
 
 const LS_SCENES_KEY = "scenes-form-fields";
 
@@ -267,7 +267,15 @@ export default createReactClass({
     });
   },
 
+  routerWillLeave(nextLocation) {
+    // Return false to prevent a transition w/o prompting the user,
+    // or return a string to allow the user to decide.
+    return "Are you sure you want to leave this page?";
+  },
+
   componentDidMount: function() {
+    this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
+
     window.onbeforeunload = () => {
       return "Are you sure you want to leave this page?";
     };
@@ -589,10 +597,6 @@ export default createReactClass({
 
     return (
       <div className="form-wrapper">
-        <Prompt
-          when={isLoading}
-          message="Are you sure you want to leave this page?"
-        />
         <UploadModal
           revealed={this.state.uploadActive}
           progress={this.state.uploadProgress}

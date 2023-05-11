@@ -267,19 +267,15 @@ const UploadPage = createReactClass({
     });
   },
 
-  routerWillLeave(nextLocation) {
+  routerWillLeave() {
     // Return false to prevent a transition w/o prompting the user,
     // or return a string to allow the user to decide.
-    return "Are you sure you want to leave this page?";
+    if (this.state.uploadActive || this.state.submitting)
+      return "Are you sure you want to leave this page?";
   },
 
   componentDidMount: function() {
-    console.log(this.props);
     this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
-
-    // window.onbeforeunload = () => {
-    //   return "Are you sure you want to leave this page?";
-    // };
 
     window.addEventListener("online", this.onOnlineStatusChange);
     window.addEventListener("offline", this.onOnlineStatusChange);
@@ -287,8 +283,6 @@ const UploadPage = createReactClass({
   },
 
   componentWillUnmount: function() {
-    // window.onbeforeunload = null;
-
     window.removeEventListener("online", this.onOnlineStatusChange);
     window.removeEventListener("offline", this.onOnlineStatusChange);
   },

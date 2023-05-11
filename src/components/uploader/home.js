@@ -14,7 +14,6 @@ import config from "config";
 import api from "utils/api";
 import { sanitizeFilenameForURL } from "utils/sanitize-filename";
 import UploadModal from "components/modals/upload_modal";
-import { Prompt } from "react-router-dom";
 
 const LS_SCENES_KEY = "scenes-form-fields";
 
@@ -594,10 +593,6 @@ export default createReactClass({
 
     return (
       <div className="form-wrapper">
-        <Prompt
-          when={isLoading}
-          message="Are you sure you want to leave this page?"
-        />
         <UploadModal
           revealed={this.state.uploadActive}
           progress={this.state.uploadProgress}

@@ -218,22 +218,24 @@ Please check the instructions on how to use files from Google Drive.
       <div className="form__group">
         <label className="form-label">Imagery location</label>
         <div className="form__control-set">
-          {this.props.data["img-loc"].map((o, imgI) => (
-            <ImageryLocation
-              key={imgI}
-              onValueChange={this.onImgLocValueChange}
-              renderErrorMessage={this.props.renderErrorMessage}
-              getValidationMessages={this.props.getValidationMessages}
-              handleValidation={this.props.handleValidation}
-              removeImageryLocation={this.removeImageryLocation}
-              sceneName={this.getName("img-loc")}
-              sceneId={this.getId("img-loc")}
-              index={imgI}
-              validationName={"scenes." + i + ".img-loc"}
-              total={this.props.data["img-loc"].length}
-              data={o}
-            />
-          ))}
+          {this.props.data["img-loc"].map((o, imgI) => {
+            return (
+              <ImageryLocation
+                key={o.id}
+                onValueChange={this.onImgLocValueChange}
+                renderErrorMessage={this.props.renderErrorMessage}
+                getValidationMessages={this.props.getValidationMessages}
+                handleValidation={this.props.handleValidation}
+                removeImageryLocation={this.removeImageryLocation}
+                sceneName={this.getName("img-loc")}
+                sceneId={this.getId("img-loc")}
+                index={imgI}
+                validationName={"scenes." + i + ".img-loc"}
+                total={this.props.data["img-loc"].length}
+                data={o}
+              />
+            );
+          })}
           <div className="imagery-location-import">
             <button
               type="button"

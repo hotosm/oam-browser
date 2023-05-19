@@ -98,10 +98,11 @@
   z-index: 9997;
   position: fixed;
   bottom: 1rem;
-  right: 1rem;
-  left: $sidebar-width + 16px;
+  left: 50%;
+  transform: translateX(-50%);
   width: auto;
-  padding: 1rem 1rem .9375rem;
+  padding: 1rem 2.5rem 1rem 1rem;
+  max-width: 364px;
   border-radius: $global-radius;
   background-color: rgba($darkBlue, 0.8);
   color: $white;

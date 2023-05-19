@@ -14,6 +14,9 @@ import config from "config";
 import api from "utils/api";
 import { sanitizeFilenameForURL } from "utils/sanitize-filename";
 import UploadModal from "components/modals/upload_modal";
+import { withRouter } from "react-router";
+
+import { generateUniqueId } from "utils/generate-uniq-id";
 
 const LS_SCENES_KEY = "scenes-form-fields";
 
@@ -126,7 +129,7 @@ function uploadFile({
 // The solution would be to clone the state every time, but since we're
 // ALWAYS calling setState after one of these changes, it's not a problem.
 
-export default createReactClass({
+const UploadHome = createReactClass({
   displayName: "Home",
 
   mixins: [ValidationMixin],
@@ -184,8 +187,6 @@ export default createReactClass({
       scenes: this.getScenesDataTemplate(),
       uploadActive: false,
       uploadProgress: 0,
-      uploadError: false,
-      uploadedCount: 0,
       uploadCancelled: false,
       submitting: false,
       online: navigator.onLine
@@ -201,7 +202,7 @@ export default createReactClass({
   },
 
   getSceneImgLocTemplate: function(origin) {
-    return { url: "", origin };
+    return { url: "", origin, id: generateUniqueId() };
   },
 
   addScene: function() {
@@ -226,6 +227,7 @@ export default createReactClass({
   removeImageryLocatioFromScene: function(sceneIndex, imgLocIndex) {
     var scenes = this.state.scenes;
     scenes[sceneIndex]["img-loc"].splice(imgLocIndex, 1);
+    console.log(scenes[sceneIndex]["img-loc"]);
     this.setState({ scenes: scenes });
   },
 
@@ -247,29 +249,58 @@ export default createReactClass({
     });
   },
 
+  reset: function() {
+    this.setState(this.getInitialState());
+  },
+
   onOnlineStatusChange: function() {
     if (this.state.online === navigator.onLine) return;
 
     this.setState(prevState => {
-      if (prevState.online && !navigator.onLine) {
+      if (
+        prevState.online &&
+        !navigator.onLine &&
+        (this.state.uploadActive || this.state.submitting)
+      ) {
         AppActions.showNotification(
           "alert",
           "Uploading was stopped. Check your internet connection."
         );
       }
+
+      if (!prevState.online && navigator.onLine) {
+        AppActions.clearNotificationAfter(3000);
+      }
+
       return { ...prevState, online: navigator.onLine };
     });
   },
 
+  routerWillLeave(nextLocation) {
+    if (this.state.uploadActive || this.state.submitting)
+      return "Are you sure you want to leave this page?";
+  },
+
   componentDidMount: function() {
+    this.props.router.setRouteLeaveHook(this.props.route, this.routerWillLeave);
+
+    window.onbeforeunload = () => {
+      if (this.state.uploadActive || this.state.submitting)
+        return "Are you sure you want to leave this page?";
+    };
+
     window.addEventListener("online", this.onOnlineStatusChange);
     window.addEventListener("offline", this.onOnlineStatusChange);
     this.onOnlineStatusChange();
   },
 
   componentWillUnmount: function() {
+    window.onbeforeunload = null;
+
     window.removeEventListener("online", this.onOnlineStatusChange);
     window.removeEventListener("offline", this.onOnlineStatusChange);
+
+    this.onCancel({ showNotification: false });
   },
 
   componentDidUpdate: function() {
@@ -302,7 +333,7 @@ export default createReactClass({
           console.log(validationErrors);
           AppActions.showNotification("alert", "Form contains errors!");
         } else {
-          this.setState({ submitting: true });
+          this.setState({ submitting: true, uploadCancelled: false });
 
           AppActions.clearNotification();
 
@@ -389,16 +420,23 @@ export default createReactClass({
             // Remove file references from JSON data (not saved in database)
             delete scene.files;
           });
-          const totalFiles = uploads.length;
-          if (!totalFiles) {
+
+          if (!uploads.length) {
             // Submit the form now
             this.submitData(data);
           } else {
+            AppActions.showNotification(
+              "alert",
+              "Please, do not close the browser page before uploading is finished."
+            );
+
+            AppActions.clearNotificationAfter(5000);
+
             // Upload list of files before submitting the form
             let progressStats = {};
             const uploadPromises = [];
             this.cancelPromises = [];
-            this.setState({ uploadedCount: 0, uploadActive: true });
+            this.setState({ uploadActive: true });
             uploads.forEach(file => {
               const progressTracker = createProgressTracker({
                 progressStats,
@@ -420,22 +458,18 @@ export default createReactClass({
               const promise = uploadFile({
                 file,
                 progressTracker,
-                onUploadComplete: () =>
-                  this.setState({
-                    uploadedCount: this.state.uploadedCount + 1
-                  }),
                 setCancelCallback: cancel => this.cancelPromises.push(cancel)
               });
 
               uploadPromises.push(promise);
             });
 
+            console.log(data.scenes);
+
             Promise.all(uploadPromises)
               .then(async () => {
                 this.setState({
-                  uploadError: false,
                   uploadActive: false,
-                  uploadedCount: 0,
                   submitting: false
                 });
 
@@ -443,17 +477,14 @@ export default createReactClass({
               })
               .catch(error => {
                 console.error(error);
+
                 if (this.state.uploadCancelled) {
                   this.setState({
                     uploadActive: false,
                     uploadProgress: 0,
-                    uploadError: false,
-                    uploadedCount: 0,
                     uploadCancelled: false,
                     submitting: false
                   });
-
-                  AppActions.clearNotification();
 
                   return;
                 }
@@ -468,10 +499,13 @@ export default createReactClass({
 
   cancelPromises: [],
 
-  onCancel: function() {
+  onCancel: function({ showNotification = true } = {}) {
     if (this.state.uploadCancelled) return;
 
-    AppActions.showNotification("alert", "Cancelling the current upload");
+    if (showNotification) {
+      AppActions.showNotification("alert", "Cancelling the current upload");
+      AppActions.clearNotificationAfter(3000);
+    }
 
     this.setState({ uploadCancelled: true });
 
@@ -480,38 +514,77 @@ export default createReactClass({
 
   onSubmitError: function() {
     this.setState({
-      uploadError: true,
+      uploadProgress: 0,
       uploadActive: false,
       submitting: false
     });
 
     AppActions.showNotification(
       "alert",
-      <span>There was a problem uploading the files.</span>
+      "Uploading failed. See the details at the uploading form messages."
     );
+
+    AppActions.clearNotificationAfter(5000);
   },
 
   submitData: async function(data) {
-    await api({
-      uri: "/uploads",
-      auth: true,
-      method: "POST",
-      body: data
-    }).then(data => {
-      var id = data.results.upload;
+    try {
+      await api({
+        uri: "/uploads",
+        auth: true,
+        method: "POST",
+        body: data
+      }).then(data => {
+        var id = data.results.upload;
 
-      // Clear form data from localStorage after successful upload
-      localStorage.removeItem(LS_SCENES_KEY);
-      this.setState(this.getInitialState());
+        // Clear form data from localStorage after successful upload
+        localStorage.removeItem(LS_SCENES_KEY);
+        this.reset();
+
+        AppActions.showNotification(
+          "success",
+          <div>
+            <div>Processing of your image(s) is in progress.</div>
+            <div>
+              <a href={"#/upload/status/" + id}>Check processing status →</a>
+            </div>
+          </div>
+        );
+      });
+    } catch (error) {
+      if (error.response.status === 401) {
+        AppActions.showNotification(
+          "alert",
+          <div>
+            <div>The session has expired.</div>
+            <div>
+              <a
+                onClick={() => {
+                  AppActions.openModal("login");
+                }}
+              >
+                Login →
+              </a>
+            </div>
+          </div>
+        );
+
+        return;
+      }
+
+      console.error(error);
+
+      this.setState({
+        uploadActive: false,
+        submitting: false,
+        uploadProgress: 0
+      });
 
       AppActions.showNotification(
-        "success",
-        <span>
-          Your upload request was successfully submitted and is being processed.{" "}
-          <a href={"#/upload/status/" + id}>Check upload status.</a>
-        </span>
+        "alert",
+        "Uploading failed. See the details at the uploading form messages."
       );
-    });
+    }
   },
 
   renderErrorMessage: function(message) {
@@ -543,19 +616,20 @@ export default createReactClass({
   },
 
   render: function() {
-    const uploadingFilesCount = this.state.scenes.reduce(
-      (acc, scene) =>
-        acc +
-        scene["img-loc"].filter(o => o.file && o.origin === "upload").length,
+    const uploadingsCount = this.state.scenes.reduce(
+      (acc, scene) => acc + scene["img-loc"].length,
       0
     );
+
+    const isLoading = this.state.submitting || this.state.uploadActive;
 
     return (
       <div className="form-wrapper">
         <UploadModal
+          disabled={this.state.uploadCancelled}
           revealed={this.state.uploadActive}
           progress={this.state.uploadProgress}
-          imageCount={uploadingFilesCount}
+          imageCount={uploadingsCount}
           onCancel={this.onCancel}
           stopped={!this.state.online}
         />
@@ -628,7 +702,7 @@ export default createReactClass({
                   type="submit"
                   className="bttn bttn-lg bttn-block bttn-submit"
                   onClick={this.onSubmit}
-                  disabled={this.state.submitting || this.state.uploadActive}
+                  disabled={isLoading}
                 >
                   Submit
                 </button>
@@ -641,3 +715,5 @@ export default createReactClass({
     );
   }
 });
+
+export default withRouter(UploadHome);

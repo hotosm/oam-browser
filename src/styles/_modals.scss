@@ -281,6 +281,11 @@
 // Upload modal
 
 #upload-modal {
+  &.disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
   .modal__inner {
     padding: 19px 41px 21px;
     min-width: 300px;
@@ -312,5 +317,9 @@
     line-height: 16px;
     letter-spacing: 0em;
     text-align: left;
+
+    a {
+      user-select: none;
+    }
   }
 }

@@ -513,10 +513,7 @@ const UploadHome = createReactClass({
       submitting: false
     });
 
-    AppActions.showNotification(
-      "alert",
-      "Uploading failed. See the details at the uploading form messages."
-    );
+    AppActions.showNotification("alert", "Uploading failed");
 
     AppActions.clearNotificationAfter(5000);
   },
@@ -574,10 +571,7 @@ const UploadHome = createReactClass({
         uploadProgress: 0
       });
 
-      AppActions.showNotification(
-        "alert",
-        "Uploading failed. See the details at the uploading form messages."
-      );
+      AppActions.showNotification("alert", "Uploading failed");
     }
   },
 

@@ -35,7 +35,6 @@ function getSceneDefaultState() {
     "date-start": midnight.toISOString(),
     "date-end": now.toISOString(),
     "img-loc": [],
-    "tile-url": "",
     provider: "",
     "contact-type": "uploader",
     "contact-name": "",
@@ -172,7 +171,6 @@ const UploadHome = createReactClass({
       "sensor",
       "date-start",
       "dte-end",
-      "tile-url",
       "provider",
       "contact-type",
       "contact-name",
@@ -357,9 +355,6 @@ const UploadHome = createReactClass({
                 };
               }
 
-              var tms = scene["tile-url"].trim();
-              tms = tms.length === 0 ? undefined : tms;
-
               // Generate random filenames, to avoid collisions at the API
               const randomizeName = filename => {
                 const ext = filename.substr(filename.lastIndexOf("."));
@@ -400,7 +395,6 @@ const UploadHome = createReactClass({
                 sensor: scene.sensor,
                 acquisition_start: scene["date-start"],
                 acquisition_end: scene["date-end"],
-                tms: tms,
                 license: scene.license,
                 tags: scene.tags,
                 urls: urls,

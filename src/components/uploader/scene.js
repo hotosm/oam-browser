@@ -510,31 +510,6 @@ Please check the instructions on how to use files from Google Drive.
         </div>
         {this.props.type === "uploader" ? this.renderImagerySource(i) : null}
         <div className="form-group">
-          <label className="form-label" htmlFor={this.getId("tile-url")}>
-            Tile service
-          </label>
-          <div className="form-control-set">
-            <input
-              type="url"
-              className="form-control"
-              placeholder="URL (optional)"
-              name={this.getName("tile-url")}
-              id={this.getId("tile-url")}
-              onBlur={this.props.handleValidation("scenes." + i + ".tile-url")}
-              onChange={this.onChange}
-              value={this.props.data["tile-url"]}
-              aria-describedby={"help-tile-" + i}
-            />
-            {this.props.renderErrorMessage(
-              this.props.getValidationMessages("scenes." + i + ".tile-url")[0]
-            )}
-            <p id={"help-tile-" + i} className="form-help">
-              Enter a tile URL template. Valid tokens are{" "}
-              {"{z}, {x}, {y} for Z/X/Y, and {u}"} for quadtile scheme.
-            </p>
-          </div>
-        </div>
-        <div className="form-group">
           <label className="form-label" htmlFor={this.getId("provider")}>
             Provider
           </label>

@@ -19,9 +19,6 @@ module.exports = {
     .max("now")
     .required()
     .label("Date End"),
-  "tile-url": Joi.string()
-    .allow("")
-    .label("Tile service"),
   provider: Joi.string()
     .required()
     .label("Provider"),

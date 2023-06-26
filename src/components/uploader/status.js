@@ -18,7 +18,6 @@ export default createReactClass({
 
   getInitialState: function() {
     return {
-      pauseProcessingChecks: false,
       data: {
         scenes: [{ images: [{ status: "initial" }] }]
       }
@@ -30,14 +29,21 @@ export default createReactClass({
   },
 
   componentWillUnmount: function() {
-    this.setState({ pauseProcessingChecks: true });
+    this.stopWatchProcessingStatus();
+  },
+
+  stopWatchProcessingStatus: function() {
+    if (this.timer) clearTimeout(this.timer);
   },
 
   watchProcessingStatus: function() {
-    if (this.state.pauseProcessingChecks) return;
     this.checkProcessingStatus(() => {
-      if (this.isProcessingStopped()) return;
-      setTimeout(this.watchProcessingStatus, 1000);
+      if (this.isProcessingStopped()) {
+        this.stopWatchProcessingStatus();
+        return;
+      }
+
+      this.timer = setTimeout(this.watchProcessingStatus, 1000);
     });
   },
 

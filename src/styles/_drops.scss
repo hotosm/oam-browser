@@ -310,7 +310,7 @@
 
 .drop__menu--select {
   .drop__menu-item--active {
-    color: inherit;
+    color: $primary-color;
     outline: 0;
     font-weight: $base-font-bold;
     &:after {

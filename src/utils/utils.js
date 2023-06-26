@@ -211,6 +211,6 @@ export default {
       path += `/${parts.image}`;
     }
 
-    hashHistory.replace({ pathname: path, query: props.query });
+    hashHistory.push({ pathname: path, query: props.query });
   }
 };

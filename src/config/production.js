@@ -1,4 +1,5 @@
 module.exports = {
+  awsRegion: "us-east-1",
   environment: "production",
   uploadBucket: "oam-uploader-production-temp",
   googleClient:
@@ -17,7 +18,9 @@ module.exports = {
 
     initialView: [-18.632, 18.479],
 
-    oamMosaicLayer: null,
+    oamMosaicLayer: {
+      url: "https://apps.kontur.io/raster-tiler/oam/mosaic/{z}/{x}/{y}.png"
+    },
 
     baseLayers: [
       {
@@ -48,5 +51,5 @@ module.exports = {
   feedbackSubmissionURL:
     "https://getsimpleform.com/messages/ajax?form_api_token=506fc2ac58582416b6086a68a343e344",
   OAMBrowserUrl: "https://map.openaerialmap.org",
-  awsKey: "AKIAJJRD6S67FNI7SZWQ"
+  awsKey: "AKIAZYDVV4ILMV4K5IGF"
 };

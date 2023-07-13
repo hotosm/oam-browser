@@ -7,7 +7,7 @@ module.exports = {
   environment: "staging",
   uploadBucket: "oam-uploader-staging-temp",
   googleClient:
-    "36015894456-3d5ka80qtpaqcjhco3lsl38s1fj0dr71.apps.googleusercontent.com",
+    "1042122770280-48a70vjt7bgiq8lhfnvbdem33kpgqk1n.apps.googleusercontent.com", // maintained by dqunbp@gmail.com
   googleDeveloperKey: "",
   googleAppId: "",
   OAMBrowserUrl: "https://map-staging.openaerialmap.org/",

@@ -3,7 +3,7 @@ module.exports = {
   environment: "production",
   uploadBucket: "oam-uploader-production-temp",
   googleClient:
-    "36015894456-cln93odnr88523ssjkaaf8km7fi0snos.apps.googleusercontent.com",
+    "331227716208-0km1eicosmgs97uvcfgpq8gtmpok8l9b.apps.googleusercontent.com",
   googleDeveloperKey: "",
   googleAppId: "331227716208",
   map: {

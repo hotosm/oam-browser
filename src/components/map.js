@@ -513,7 +513,9 @@ export default createReactClass({
         tmsUrl = tmsUrl.replace("{zoom}", "{z}");
 
         this.disableSelectedSquare = true;
-        this.getLayerMaxZoom(tmsUrl).then(data => {
+
+        const layerUrl = config.useTitiler ? item.properties.tilejson : tmsUrl;
+        this.getLayerMaxZoom(layerUrl).then(data => {
           this.map.options.maxZoom = data.maxzoom;
           this.mapOverImageLayer = L.tileLayer(tmsUrl, {
             maxZoom: this.map.options.maxZoom
@@ -545,9 +547,11 @@ export default createReactClass({
   //       This will prevent the need for;
   //       1. Hacking the `tms` field to get the base tileJSON URI.
   getLayerMaxZoom: function(tmsURI) {
-    const tileJSONURI = tmsURI
-      .replace(/\/\{z\}\/\{x\}\/\{y\}.*/, "/")
-      .replace("http://", "https://");
+    const tileJSONURI = config.useTitiler
+      ? tmsURI
+      : tmsURI
+          .replace(/\/\{z\}\/\{x\}\/\{y\}.*/, "/")
+          .replace("http://", "https://");
     return fetch(tileJSONURI).then(response => {
       if (!response.ok)
         return Promise.reject(new Error(`HTTP Error ${response.status}`));

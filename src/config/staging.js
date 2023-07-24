@@ -34,5 +34,6 @@ module.exports = {
         url: "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
       }
     ]
-  }
+  },
+  useTitiler: true
 };

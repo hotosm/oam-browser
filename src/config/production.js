@@ -51,5 +51,6 @@ module.exports = {
   feedbackSubmissionURL:
     "https://getsimpleform.com/messages/ajax?form_api_token=506fc2ac58582416b6086a68a343e344",
   OAMBrowserUrl: "https://map.openaerialmap.org",
-  awsKey: "AKIAZYDVV4ILMV4K5IGF"
+  awsKey: "AKIAZYDVV4ILMV4K5IGF",
+  useTitiler: false
 };

@@ -19,6 +19,8 @@ module.exports = {
     initialView: [-18.632, 18.479],
 
     oamMosaicLayer: {
+      id: "oam-mosaic",
+      name: "OAM Mosaic",
       url: "https://apps.kontur.io/raster-tiler/oam/mosaic/{z}/{x}/{y}.png"
     },
 
@@ -47,7 +49,7 @@ module.exports = {
   catalog: {
     url: "https://api.openaerialmap.org"
   },
-  oamStatus: "https://status.openaerialmap.org/healthcheck",
+  oamStatus: "https://uptime.hotosm.org",
   feedbackSubmissionURL:
     "https://getsimpleform.com/messages/ajax?form_api_token=506fc2ac58582416b6086a68a343e344",
   OAMBrowserUrl: "https://map.openaerialmap.org",

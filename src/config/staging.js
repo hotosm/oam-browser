@@ -24,8 +24,12 @@ module.exports = {
         "pk.eyJ1Ijoib3BlbmFlcmlhbG1hcCIsImEiOiJjaXl4MjM5c20wMDBmMzNucnZtbnYwZTcxIn0.IKG5flWCS6QfpO3iOdRveg"
     },
 
-    oamMosaicLayer:
-      "https://api-staging.openaerialmap.org/mosaic/oam/mosaic/{z}/{x}/{y}.png",
+    oamMosaicLayer: {
+      id: "oam-mosaic",
+      name: "OAM Mosaic",
+      url:
+        "https://api-staging.openaerialmap.org/mosaic/oam/mosaic/{z}/{x}/{y}.png"
+    },
 
     baseLayers: [
       {

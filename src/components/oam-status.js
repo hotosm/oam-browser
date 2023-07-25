@@ -54,7 +54,7 @@ export default createReactClass({
 
     return (
       <a
-        href="https://status.openaerialmap.org/"
+        href="https://uptime.hotosm.org/"
         className={oamHealthClass}
         title="Go to OAM Status"
       >

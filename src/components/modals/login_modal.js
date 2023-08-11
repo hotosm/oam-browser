@@ -61,13 +61,13 @@ export default createReactClass({
         </ModalHeader>
         <ModalBody>
           <p className="modal__subtitle">
-            Sign in with your Facebook or Google identities. <br />
+            Sign in with your Google account.<br />
             <small>We will never post anything on your behalf.</small>
           </p>
           <div className="oauth-logins">
-            <a href={userStore.facebookLoginUri} className="facebook_login">
+            {/* <a href={userStore.facebookLoginUri} className="facebook_login">
               <FacebookBoxIcon />
-            </a>
+            </a> */}
             <a href={userStore.googleLoginUri} className="google_login">
               <GoogleIcon />
             </a>

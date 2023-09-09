@@ -264,7 +264,7 @@ Please check the instructions on how to use files from Google Drive.
               <DropboxIcon />
               <span>Dropbox</span>
             </button>
-            <button
+            {/* <button
               type="button"
               className="bttn bttn-primary bttn-icon"
               onClick={this.importGDriveClick}
@@ -272,7 +272,7 @@ Please check the instructions on how to use files from Google Drive.
             >
               <GoogleDriveIcon />
               <span>Drive</span>
-            </button>
+            </button> */}
             {this.props.renderErrorMessage(
               this.props.getValidationMessages("scenes." + i + ".img-loc")[0]
             )}

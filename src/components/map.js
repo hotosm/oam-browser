@@ -76,6 +76,39 @@ export default createReactClass({
     this.updateGrid();
   },
 
+  getMosaicLayerUrl: function(dateFilter, resolutionFilter) {
+    const url = config.map.oamMosaicLayer.url;
+    const start = dateFilter === "all" ? null : new Date();
+
+    if (dateFilter === "week") {
+      start.setDate(start.getDate() - 7);
+    } else if (dateFilter === "month") {
+      start.setMonth(start.getMonth() - 1);
+    } else if (dateFilter === "year") {
+      start.setFullYear(start.getFullYear() - 1);
+    }
+
+    const resolution = resolutionFilter === "all" ? null : resolutionFilter;
+
+    const params = {
+      start: start ? start.toISOString() : null,
+      resolution
+    };
+
+    const paramString = Object.keys(params)
+      .filter(key => params[key])
+      .map(key => `${key}=${params[key]}`)
+      .join("&");
+
+    return `${url}?${paramString}`;
+  },
+
+  setOamMosaicLayer: function(dateFilter, resolutionFilter) {
+    this.oamMosaicLayer = L.tileLayer(
+      this.getMosaicLayerUrl(dateFilter, resolutionFilter)
+    );
+  },
+
   // Lifecycle method.
   // Called once as soon as the component has a DOM representation.
   componentDidMount: function() {
@@ -87,8 +120,13 @@ export default createReactClass({
       attributionControl: false
     });
 
-    if (config.map.oamMosaicLayer)
-      this.oamMosaicLayer = L.tileLayer(config.map.oamMosaicLayer.url);
+    if (config.map.oamMosaicLayer) {
+      // set the new mosaic layer to oamMosaicLayer property
+      this.setOamMosaicLayer(
+        this.props.filterParams.date,
+        this.props.filterParams.resolution
+      );
+    }
 
     this.baseLayer = L.tileLayer(mapStore.getBaseLayer().url);
     this.map.addLayer(this.baseLayer);
@@ -175,13 +213,25 @@ export default createReactClass({
     // Ensure there's always a coordinate in the URI
     if (!this.props.params.map) this.onMapMoveend();
 
-    const isFiltersEnabled = Object.values(this.props.filterParams).some(
-      item => item !== "all"
+    const isFiltersChanged = Object.keys(this.props.filterParams).some(
+      item =>
+        item !== "dataType" &&
+        this.props.filterParams[item] !== prevProps.filterParams[item]
     );
 
+    if (isFiltersChanged) {
+      this.removeMosaicLayer(); // remove previous mosaic layer
+
+      // set the new mosaic layer to oamMosaicLayer property
+      this.setOamMosaicLayer(
+        this.props.filterParams.date,
+        this.props.filterParams.resolution
+      );
+    }
+
     if (
-      !this.mapOverImageLayer && // if we don't have a selected image layer
-      !isFiltersEnabled // and there are no filters enabled
+      !this.mapOverImageLayer || // if we don't have a selected image layer
+      isFiltersChanged // or filters have changed
     )
       this.addMosaicLayer(); // then show the mosaic
     else this.removeMosaicLayer(); // otherwise hide it

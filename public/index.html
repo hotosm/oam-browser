@@ -61,6 +61,7 @@
       /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
       _paq.push(['requireConsent']);
       _paq.push(["setDomains", ["*.hotosm.org"]]);
+      _paq.push(['setDownloadExtensions', "tif|tiff|jpg|png"]);
       _paq.push(['trackPageView']);
       _paq.push(['enableLinkTracking']);   // Tracks downloads
       _paq.push(['trackVisibleContentImpressions']);  // Tracks content blocks

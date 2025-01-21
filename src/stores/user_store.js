@@ -50,6 +50,7 @@ export default Reflux.createStore({
       // TEMPORARY FIX (OAM triage 2025 01 15)
       for (let i = 0; i < response.results.length; i++) {
         for (let j = 0; j < response.results[i].images; j++) {
+          console.log(response.results[i].images[j].uuid);
           response.results[i].images[j].uuid = response.results[i].images[j].uuid.replace("oin-hotosm.", "oin-hotosm-temp.");
           response.results[i].images[j].meta_uri = response.results[i].images[j].meta_uri.replace("oin-hotosm.", "oin-hotosm-temp.");
         }

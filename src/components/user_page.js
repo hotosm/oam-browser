@@ -91,8 +91,12 @@ export default createReactClass({
               <li className="account__images-upload" key={image._id}>
                 <div className="images-thumbnail">
                   <a onClick={() => utils.imageUri(image)}>
+                    {/* // TEMPORARY FIX (OAM triage 2025 01 15) */}
                     <img
-                      src={image.properties.thumbnail}
+                      src={image.properties.thumbnail.replace(
+                        "oin-hotosm.",
+                        "oin-hotosm-temp."
+                      )}
                       width="100"
                       key={i}
                       alt="Imagery thumbnail"

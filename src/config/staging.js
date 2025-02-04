@@ -15,7 +15,7 @@ module.exports = {
   map: {
     initialZoom: 3,
     minZoom: 2,
-    maxZoom: 18,
+    maxZoom: 24,
 
     initialView: [-18.632, 18.479],
 

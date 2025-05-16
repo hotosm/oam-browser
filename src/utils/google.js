@@ -16,7 +16,8 @@ const gApiBoot = function () {
       OAM_UP.tokenClient = google.accounts.oauth2.initTokenClient({
         client_id: config.googleClient,
         scope: "https://www.googleapis.com/auth/drive",
-        callback: "", // defined later
+        callback: "", // defined later,
+        ux_mode: "popup"
       });
     },
   });

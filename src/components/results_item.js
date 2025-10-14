@@ -491,6 +491,10 @@ export default createReactClass({
                   {d.properties.license}
                 </a>
               </dd>
+              <dt>
+                <span>ID</span>
+              </dt>
+              <dd>{d._id}</dd>
             </dl>
 
             {d.custom_tms ? (

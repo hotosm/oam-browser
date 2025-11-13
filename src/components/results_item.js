@@ -430,9 +430,14 @@ export default createReactClass({
               <div className="result-thumbnail">
                 <img
                   alt="Result thumbnail"
+                  {/* // TEMPORARY FIX (OAM triage 2025 01 15) */}
                   src={
-                    d.properties.thumbnail ||
-                    "assets/graphics/layout/img-placeholder.svg"
+                    d.properties.thumbnail
+                      ? d.properties.thumbnail.replace(
+                          "oin-hotosm.",
+                          "oin-hotosm-temp."
+                        )
+                      : "assets/graphics/layout/img-placeholder.svg"
                   }
                 />
               </div>
@@ -491,6 +496,10 @@ export default createReactClass({
                   {d.properties.license}
                 </a>
               </dd>
+              <dt>
+                <span>ID</span>
+              </dt>
+              <dd>{d._id}</dd>
             </dl>
 
             {d.custom_tms ? (

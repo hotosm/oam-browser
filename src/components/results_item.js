@@ -303,7 +303,7 @@ export default createReactClass({
       <div className="pane-menu">
         <a
           title="Download raw .tiff image file"
-          className="button-download"
+          className="matomo_download button-download"
           target="_blank"
           href={this.props.data.uuid.replace("http://", "https://")}
         >

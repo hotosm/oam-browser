@@ -26,16 +26,14 @@ module.exports = {
 
     baseLayers: [
       {
-        id: "oam-base",
-        name: "Mapbox Light",
-        url:
-          "https://api.mapbox.com/styles/v1/openaerialmap/ciyx269by002w2rldex1768f5/tiles/256/{z}/{x}/{y}?access_token=" +
-          "pk.eyJ1Ijoib3BlbmFlcmlhbG1hcCIsImEiOiJjaXl4MjM5c20wMDBmMzNucnZtbnYwZTcxIn0.IKG5flWCS6QfpO3iOdRveg"
+        id: 'hot',
+        name: 'Humanitarian',
+        url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
       },
       {
-        id: "osm",
-        name: "OpenStreetMap (Standard)",
-        url: "http://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        id: 'osm',
+        name: 'OpenStreetMap (Standard)',
+        url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
       },
       {
         id: "satellite",

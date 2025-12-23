@@ -218,6 +218,7 @@ export default createReactClass({
       "http://www.openstreetmap.org/edit?editor=id" +
       "#map=" +
       [zoom, center[1], center[0]].join("/") +
+      "&source=OpenAerialMap" +
       "&" +
       qs.stringify({
         background: "custom:" + this.props.data.properties.tms
